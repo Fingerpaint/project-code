@@ -25,5 +25,5 @@ Managers
 --------
 
 -  Simon Burg
--  Areti Paziouriou
+-  Areti Paziourou
 -  Luc de Smet
