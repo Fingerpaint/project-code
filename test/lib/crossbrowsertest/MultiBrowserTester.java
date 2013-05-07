@@ -46,8 +46,19 @@ public class MultiBrowserTester<ResultObject> {
 	 */
 	public static class ResultTriple<ResultObject> {
 
+		/**
+		 * The result
+		 */
 		private ResultObject result;
+		
+		/**
+		 * The browser
+		 */
 		private DesiredCapabilities browser;
+		
+		/**
+		 * The dimension of the browser
+		 */
 		private Dimension dimension;
 
 		/**
@@ -127,6 +138,9 @@ public class MultiBrowserTester<ResultObject> {
 	 */
 	private Map<DesiredCapabilities, Thread> lastAddedTest = new HashMap<>();
 
+	/**
+	 * A list of results that have been returned by a {@link TestRunner}
+	 */
 	private List<ResultTriple<ResultObject>> results = new ArrayList<>();
 
 	/**
@@ -312,10 +326,8 @@ public class MultiBrowserTester<ResultObject> {
 	 * Runs the specified {@link CrossBrowserTest} on all browsers (as specified
 	 * by the {@link CapabilitiesProvider} with a given {@link Dimension}.
 	 * 
-	 * @param dimension
-	 *            The dimension the browsers need to have during the tests
-	 * @throws MultiBrowserTesterException
-	 *             If something goes wrong with a test
+	 * @param dimension The dimension the browsers need to have during the tests
+	 * @return A list of test-thread that have been started
 	 */
 	private List<Thread> testDimensionAsync(Dimension dimension) {
 		List<Thread> threadList = new ArrayList<>();
@@ -334,8 +346,7 @@ public class MultiBrowserTester<ResultObject> {
 	 *            The dimension the browser should have
 	 * @param browser
 	 *            The browser to run the test against
-	 * @throws MultiBrowserTesterException
-	 *             If something goes wrong with a test
+	 * @return The test-thread that has been started
 	 */
 	private synchronized Thread testSpecificAsync(Dimension dimension,
 			DesiredCapabilities browser) {

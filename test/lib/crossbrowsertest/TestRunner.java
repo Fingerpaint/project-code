@@ -70,6 +70,9 @@ public class TestRunner<ResultObject> implements Runnable {
 	 */
 	private WebDriver driver;
 
+	/**
+	 * The thread the current thread needs to wait for. Might be null.
+	 */
 	private Thread waitFor;
 
 	/**
@@ -224,6 +227,8 @@ public class TestRunner<ResultObject> implements Runnable {
 	 * If the resizing of the window to the correct dimension fails, an
 	 * exception is thrown. The most likely cause is that the screen of the
 	 * Selenium host is of insufficient size.
+	 * 
+	 * @throws MultiBrowserTesterException If the driver was not able to set the dimension of the view-port correctly
 	 */
 	private void setViewportDimension() throws MultiBrowserTesterException {
 		int viewportWidth;
