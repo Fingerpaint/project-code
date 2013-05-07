@@ -1,7 +1,7 @@
 package lib.crossbrowsertest;
 
 /**
- * Generic Exception class thrown if there is an error with the {@link CrossBrowserTester}.
+ * Generic Exception class thrown if there is an error with the {@link MultiBrowserTester}.
  * 
  * @author Lasse Blaauwbroek
  */

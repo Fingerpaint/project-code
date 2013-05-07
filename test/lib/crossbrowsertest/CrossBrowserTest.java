@@ -12,7 +12,7 @@ import org.openqa.selenium.WebDriver;
  * cases this will be a {@link Boolean}
  * 
  * @author Lasse Blaauwbroek
- * @param ResultObject The object that will be returned as the result of the test.
+ * @param <ResultObject> The object that will be returned as the result of the test.
  */
 public interface CrossBrowserTest<ResultObject> {
 	
@@ -26,6 +26,7 @@ public interface CrossBrowserTest<ResultObject> {
 	 * 
 	 * @param driver Driver to run the test against
 	 * @param tester Can be used to take screenshots and compare them with other test-runs
+	 * @return The result of the test
 	 */
 	public ResultObject test(WebDriver driver, TestRunner<ResultObject> tester);
 }
