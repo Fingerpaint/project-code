@@ -169,30 +169,21 @@ public class TestRunner<ResultObject> implements Runnable {
 	 * dimensions.
 	 */
 	public void takeScreenshot() {
-
+		String overflowVal = (String) ((JavascriptExecutor) driver).executeScript("return document.body.style.overflow;");
+		((JavascriptExecutor) driver)
+				.executeScript("document.body.style.overflow = \"hidden\";");
+		File screenshotFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+		BufferedImage screenshot;
 		try {
-			String overflowVal = (String) ((JavascriptExecutor) driver)
-					.executeScript("return document.body.style.overflow;");
+			screenshot = ImageIO.read(screenshotFile);
+			screenshot = screenshot.getSubimage(0, 0, browserDimension.getWidth(), browserDimension.getHeight());
+			master.notifyScreenshotTaken(browserDimension, browser, screenshot);
 			((JavascriptExecutor) driver)
-					.executeScript("document.body.style.overflow = \"hidden\";");
-			File test = ((TakesScreenshot) driver)
-					.getScreenshotAs(OutputType.FILE);
-			BufferedImage image = ImageIO.read(test);
-			image = image.getSubimage(0, 0, browserDimension.getWidth(),
-					browserDimension.getHeight());
-			File outputFile = new File("screen" + master.getI() + ".png");
-			ImageIO.write(image, "png", outputFile);
-			((JavascriptExecutor) driver)
-					.executeScript("document.body.style.overflow = \""
-							+ overflowVal + "\";");
+					.executeScript("document.body.style.overflow = \"" + overflowVal + "\";");
 		} catch (IOException e) {
-			// This should not occur really, but if it does,
-			// print the stacktrace for debugging purposes.
-			// Program execution does not depend on the screenshot
-			// being written, so execution continues.
-			e.printStackTrace();
+			// Should not occur
+			throw new Error(e);
 		}
-
 	}
 
 	/**

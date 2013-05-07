@@ -1,10 +1,15 @@
 package lib.crossbrowsertest;
 
+import java.awt.image.BufferedImage;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+
+import lib.screenshotcomp.ScreenshotComparator;
 
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -142,11 +147,42 @@ public class MultiBrowserTester<ResultObject> {
 	 * A list of results that have been returned by a {@link TestRunner}
 	 */
 	private List<ResultTriple<ResultObject>> results = new ArrayList<>();
+	
+	/**
+	 * Keeps the screenshots the test makes. For every screenshot the test makes, there is an entry
+	 * in the list, with a mapping from a dimension to a mapping of the browser with that dimension to the
+	 * screenshot resulting from that browser.
+	 */
+	private List<Map<Dimension, Map<DesiredCapabilities, BufferedImage>>> screenshots = new ArrayList<>();
 
 	/**
 	 * Provides a list of supported browser by the host.
 	 */
 	private CapabilitiesProvider browserProvider;
+	
+	/**
+	 * Compares screenshots taken by different browsers.
+	 */
+	private ScreenshotComparator screenshotComparator;
+	
+	/**
+	 * Creates a new MultiBrowserTester instance given a test to be run, the
+	 * {@link URL} to the remote server and a {@link CapabilitiesProvider}.
+	 * 
+	 * A standard screenshot comparator will be used when this constructor is called.
+	 * 
+	 * @param test
+	 *            The test to be run
+	 * @param seleniumServer
+	 *            The remote host
+	 * @param browserProvider
+	 *            Provides capabilities for different browsers and dimensions of
+	 *            these browsers
+	 */
+	public MultiBrowserTester(CrossBrowserTest<ResultObject> test,
+			URL seleniumServer, CapabilitiesProvider browserProvider) {
+		this(test, seleniumServer, browserProvider, new ScreenshotComparator());
+	}
 
 	/**
 	 * Creates a new MultiBrowserTester instance given a test to be run, the
@@ -159,9 +195,10 @@ public class MultiBrowserTester<ResultObject> {
 	 * @param browserProvider
 	 *            Provides capabilities for different browsers and dimensions of
 	 *            these browsers
+	 * @param screenshotComparator The comparator for the screenshots the test takes
 	 */
 	public MultiBrowserTester(CrossBrowserTest<ResultObject> test,
-			URL seleniumServer, CapabilitiesProvider browserProvider) {
+			URL seleniumServer, CapabilitiesProvider browserProvider, ScreenshotComparator screenshotComparator) {
 
 		if (test == null) {
 			throw new NullPointerException("Agrument test cannot be null");
@@ -174,25 +211,15 @@ public class MultiBrowserTester<ResultObject> {
 			throw new NullPointerException(
 					"Argument browserProvider cannot be null");
 		}
+		if (screenshotComparator == null) {
+			throw new NullPointerException(
+					"Argument screenshotComparator cannot be null");
+		}
 
 		this.test = test;
 		this.seleniumServer = seleniumServer;
 		this.browserProvider = browserProvider;
-	}
-
-	private int i = 0;
-
-	/**
-	 * Return a unique index every time this method is called.
-	 * 
-	 * This is used to create unique filenames in the {@link CrossBrowserTest}.
-	 * 
-	 * @return A unique index. The first time this method is called, {@code 0}
-	 *         is returned. The, {@code 1}, {@code 2}, et cetera.
-	 */
-	public synchronized int getI() {
-		i++;
-		return i;
+		this.screenshotComparator = screenshotComparator;
 	}
 
 	/**
@@ -206,10 +233,12 @@ public class MultiBrowserTester<ResultObject> {
 	public List<ResultTriple<ResultObject>> testAll()
 			throws MultiBrowserTesterException {
 		List<Thread> threadList = new ArrayList<>();
+		screenshots = new ArrayList<>();
 		for (Dimension dimension : browserProvider.getDimensions()) {
 			threadList.addAll(testDimensionAsync(dimension));
 		}
 		for (Thread thread : threadList) {
+			
 			while (thread.isAlive()) {
 				try {
 					thread.join();
@@ -240,6 +269,7 @@ public class MultiBrowserTester<ResultObject> {
 	 */
 	public List<ResultTriple<ResultObject>> testDimension(Dimension dimension)
 			throws MultiBrowserTesterException {
+		screenshots = new ArrayList<>();
 		List<Thread> threadList = testDimensionAsync(dimension);
 		for (Thread thread : threadList) {
 			while (thread.isAlive()) {
@@ -274,6 +304,7 @@ public class MultiBrowserTester<ResultObject> {
 	 */
 	public ResultTriple<ResultObject> testSpecific(Dimension dimension,
 			DesiredCapabilities browser) throws MultiBrowserTesterException {
+		screenshots = new ArrayList<>();
 		Thread thread = testSpecificAsync(dimension, browser);
 		while (thread.isAlive()) {
 			try {
@@ -289,6 +320,52 @@ public class MultiBrowserTester<ResultObject> {
 		results = new ArrayList<>();
 		return ret;
 	}
+	
+	/**
+	 * Retrieves the list of screenshots taken by the last test-run.
+	 * 
+	 * Each screenshot taken by a test is an entry in the list. The entry is a mapping from a dimension
+	 * to a mapping of browsers with that dimension to the screenshot resulting from that browser.
+	 * 
+	 * @return The list of screenshots
+	 */
+	public synchronized List<Map<Dimension, Map<DesiredCapabilities, BufferedImage>>> getLastScreenshots() {
+		return screenshots;
+	}
+	
+	/**
+	 * Compares the screenshots taken by the last test-run and returns the result.
+	 * 
+	 * For each screenshot taken there is an entry in the returned list. Each entry is a mapping from a tested
+	 * dimension to a boolean representing whether or not all browsers with that dimension returned an equal
+	 * screenshot.
+	 * 
+	 * @return The list
+	 */
+	public synchronized List<Map<Dimension, Boolean>> compareLastScreenshots() {
+		List<Map<Dimension, Boolean>> result = new ArrayList<>();
+		Iterator<BufferedImage> it;
+		BufferedImage reference;
+		Map<Dimension, Boolean> resultMap;
+		boolean correct;
+		for (Map<Dimension, Map<DesiredCapabilities, BufferedImage>> dimensionMap : screenshots) {
+			resultMap = new HashMap<>();
+			result.add(resultMap);
+			for (Entry<Dimension, Map<DesiredCapabilities, BufferedImage>> dimensionEntry : dimensionMap.entrySet()) {
+				correct = true;
+				it = dimensionEntry.getValue().values().iterator();
+				reference = it.next();
+				while (it.hasNext()) {
+					if (!screenshotComparator.equals(reference, it.next())) {
+						correct = false;
+						break;
+					}
+				}
+				resultMap.put(dimensionEntry.getKey(), correct);
+			}
+		}
+		return result;
+	}
 
 	/**
 	 * Invoked by a {@link TestRunner} if it's test is complete.
@@ -300,9 +377,36 @@ public class MultiBrowserTester<ResultObject> {
 	 * @param result
 	 *            The result of the test
 	 */
-	public synchronized void notifyTestComplete(Dimension dimension,
+	synchronized void notifyTestComplete(Dimension dimension,
 			DesiredCapabilities browser, ResultObject result) {
 		results.add(new ResultTriple<>(result, browser, dimension));
+	}
+	
+	/**
+	 * Invoked by a {@link TestRunner} to notify a screenshot has been taken.
+	 * This method adds the screenshot to the {@link MultiBrowserTester#screenshots} list.
+	 * 
+	 * @param dimension The dimension of the browser in this test
+	 * @param browser The browser used for the test
+	 * @param screenshot The screenshot that has been taken
+	 */
+	synchronized void notifyScreenshotTaken(Dimension dimension, DesiredCapabilities browser, BufferedImage screenshot) {
+		Map<DesiredCapabilities, BufferedImage> addMap = null;
+		for (Map<Dimension, Map<DesiredCapabilities, BufferedImage>> dimensionMap : screenshots) {
+			if (!dimensionMap.containsKey(dimension)) {
+				addMap = new HashMap<>();
+				dimensionMap.put(dimension, addMap);
+				break;
+			} else if (!dimensionMap.get(dimension).containsKey(browser)) {
+				addMap = dimensionMap.get(dimension);
+			}
+		}
+		if (addMap == null) {
+			screenshots.add(new HashMap<Dimension, Map<DesiredCapabilities, BufferedImage>>());
+			addMap = new HashMap<>();
+			screenshots.get(screenshots.size() - 1).put(dimension, addMap);
+		}
+		addMap.put(browser, screenshot);
 	}
 
 	/**
@@ -315,7 +419,7 @@ public class MultiBrowserTester<ResultObject> {
 	 * @param browser
 	 *            The browser the test was ran against
 	 */
-	public synchronized void notifyTestException(MultiBrowserTesterException e,
+	synchronized void notifyTestException(MultiBrowserTesterException e,
 			Dimension dimension, DesiredCapabilities browser) {
 		if (exception == null) {
 			exception = e;
