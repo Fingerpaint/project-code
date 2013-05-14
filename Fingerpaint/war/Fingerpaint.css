@@ -32,3 +32,9 @@ h1 {
 #closeButton {
   margin: 15px 6px 6px;
 }
+
+.paintCanvas {
+  border: solid 1px #000;
+  margin-left: 20px;
+  margin-top: 20px;
+}
