@@ -22,6 +22,8 @@
 #include <semaphore.h>      /* for p-thread semaphores        */
 /* ------------------------------------------------------------------------ */ 
  
+#include <unistd.h>
+
 //----- HTTP response messages ----------------------------------------------
 #define OK_IMAGE    "HTTP/1.0 200 OK\nContent-Type:image/gif\n\n"
 #define OK_TEXT     "HTTP/1.0 200 OK\nContent-Type:text/html\n\n"
@@ -111,11 +113,11 @@ void *my_thread(void * arg)
           }
  
           close(fh);       // close the file
-          close(client_s); // close the client connection
-          pthread_exit(NULL);
         }
+        close(client_s); // close the client connection
+        pthread_exit(NULL);
       }
- 
+      return NULL;
 }
  
 //===== Main program ========================================================
@@ -133,6 +135,8 @@ int main(void)
   pthread_attr_t        attr;                   //  pthread attributes
   pthread_t             threads;                // Thread ID (used by OS)
  
+  /* required for eclipse to flush the prints to stdout ------------------- */
+  setvbuf (stdout, NULL, _IONBF, 0);
   /* create a new socket -------------------------------------------------- */
   server_s = socket(AF_INET, SOCK_STREAM, 0);
  
