@@ -263,25 +263,24 @@ end subroutine flip_ver
 
 !______________________________________________
 ! main function called to run an arbitrary simulation
-subroutine simulate (geometry, matrix, distribution, 
-                     step, stepid, segregation)
+subroutine simulate (geometry, matrix, distribution, step, stepid, segregation)
     ! in\out parameters
     integer , intent(in) :: geometry ! Geometry selector
     integer , intent(in) :: matrix ! Matrix selector
     real(8) , dimension(:), intent(inout) :: distribution ! concentration vector
     real(8) , intent(in) :: step ! size of the step
-    integer , intent(in) :: stepid ! the id of the step-type that needs to be made
+    character(24) , intent(in) :: stepid ! the id of the step-type that needs to be made
     real(8) , intent(out) :: segregation ! the segregation
     
     if (geometry==0) then
-        if (stepid==0) then
+        if (stepid=="TR") then
             call conc_final(step,1,1,distribution)
-        elseif (stepid==1) then
-            call conc_final(step,1,0,distribution)
-        elseif (stepid==2) then
-            call conc_final(step,0,1,distribution)
-        elseif (stepid==3) then
-            call conc_final(step,0,0,distribution)
+        elseif (stepid=="BR") then
+            call conc_final(step,1,-1,distribution)
+        elseif (stepid=="BL") then
+            call conc_final(step,-1,-1,distribution)
+        elseif (stepid=="TL") then
+            call conc_final(step,-1,1,distribution)
         endif
     endif
     
