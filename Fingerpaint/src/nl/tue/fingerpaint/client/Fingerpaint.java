@@ -20,7 +20,7 @@ public class Fingerpaint implements EntryPoint {
 		private ToggleButton toggleColor;
 		
 		//Rectangular geometry to draw on
-		private RectangleGeometry geom;
+		private Geometry geom;
 		
 		//Vertical panel to contain geometry and button
 		private HorizontalPanel panel = new HorizontalPanel();
