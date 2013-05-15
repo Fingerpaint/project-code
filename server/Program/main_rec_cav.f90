@@ -7,21 +7,19 @@ use subs_m
 
 !input parameters
 real(8) :: dt      ! displacement
-integer :: dir,  & ! direction of the displacement, dir=1 to the right
-                   !                                dir=-1 to the left
-           wall    ! moving wal top or bottom, wall=1 - top wall
-                   !                           wall=-1 - bottom wall
 ! concentration vector
 real(8), allocatable :: conc(:)
 ! intensity of segregation
-real(8) :: segr 
+real(8) :: segr
+! id for calling the simulate
+character(24) :: stepid ! in case of the rectangular geometry, the stepid can be:
+                        ! "TL", "TR", "BL" or "BR"
 
 
 !---------------------------------
 ! set parameters
 dt=19.75   ! set displacement
-dir=-1   ! set direction 
-wall=-1  ! set wall
+stepid="TL"
 
 
 !---------------------------------
@@ -43,7 +41,8 @@ close(11)
 
 !---------------------------------
 ! compute concentration
-  call conc_final(dt, dir, wall, conc)
+!   call conc_final(dt, dir, wall, conc)
+  call simulate(0, 0, conc, dt, stepid, segr)
 
 
 !---------------------------------
