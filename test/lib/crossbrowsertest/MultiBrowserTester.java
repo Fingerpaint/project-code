@@ -27,11 +27,7 @@ import org.openqa.selenium.remote.DesiredCapabilities;
  * ensure compatibility with all browsers.
  * 
  * In order to keep everything as generic as possible, is ResultObject can be
- * specified, that will be returned by the {@CrossBrowserTest
- * 
- * 
- * 
- * } and in turn reported back for each test by this class. In
+ * specified, that will be returned by the {@CrossBrowserTest} and in turn reported back for each test by this class. In
  * most cases this will be a {@link Boolean}.
  * 
  * @author Lasse Blaauwbroek

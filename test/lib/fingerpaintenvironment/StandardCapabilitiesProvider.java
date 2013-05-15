@@ -14,7 +14,7 @@ import org.openqa.selenium.remote.DesiredCapabilities;
  * <ul>
  *  <li>Mozilla Firefox</li>
  *  <li>Microsoft Internet Explorer</li>
- *  <li>Opera Chrome</li>
+ *  <li>Google Chrome</li>
  *  <li>Apple Safari</li>
  * </ul>
  * 
@@ -50,9 +50,7 @@ public class StandardCapabilitiesProvider implements CapabilitiesProvider {
 	 * List of browsers that currently need to run in sequential mode.
 	 */
 	private static final DesiredCapabilities[] SEQUENTIAL_BROWSERS = new DesiredCapabilities[] {
-		DesiredCapabilities.firefox(),
 		DesiredCapabilities.internetExplorer(),
-		DesiredCapabilities.chrome(),
 		DesiredCapabilities.safari()
 	};
 	
@@ -73,7 +71,7 @@ public class StandardCapabilitiesProvider implements CapabilitiesProvider {
 	 * <ul>
 	 *  <li>Mozilla Firefox</li>
 	 *  <li>Microsoft Internet Explorer</li>
-	 *  <li>Opera Chrome</li>
+	 *  <li>Google Chrome</li>
 	 *  <li>Apple Safari</li>
 	 * </ul>
 	 * 
