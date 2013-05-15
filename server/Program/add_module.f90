@@ -180,8 +180,6 @@ subroutine conc_multip (dt, conc)
 end subroutine conc_multip
 
 
-
-
 !______________________________________________
 ! concentration vector after displacement
 subroutine conc_final (dt, dir, wall, conc)
@@ -263,6 +261,31 @@ subroutine flip_ver (conc)
   deallocate ( temp )
 end subroutine flip_ver
 
+!______________________________________________
+! main function called to run an arbitrary simulation
+subroutine simulate (geometry, matrix, distribution, 
+                     step, stepid, segregation)
+    ! in\out parameters
+    integer , intent(in) :: geometry ! Geometry selector
+    integer , intent(in) :: matrix ! Matrix selector
+    real(8) , dimension(:), intent(inout) :: distribution ! concentration vector
+    real(8) , intent(in) :: step ! size of the step
+    integer , intent(in) :: stepid ! the id of the step-type that needs to be made
+    real(8) , intent(out) :: segregation ! the segregation
+    
+    if (geometry==0) then
+        if (stepid==0) then
+            call conc_final(step,1,1,distribution)
+        elseif (stepid==1) then
+            call conc_final(step,1,0,distribution)
+        elseif (stepid==2) then
+            call conc_final(step,0,1,distribution)
+        elseif (stepid==3) then
+            call conc_final(step,0,0,distribution)
+        endif
+    endif
+    
+end subroutine simulate
 
 
 end module subs_m
