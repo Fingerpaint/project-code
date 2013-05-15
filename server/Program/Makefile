@@ -1,10 +1,10 @@
 #compiler and options
 #-------------------------------------------------------------------------------
-#Open MPI -> Intel Fortran compiler
-FC = ifort
+#Open MPI -> GNU Fortran compiler
+FC = gfortran
 
 #compiler options
-FLAGS    = -O2 -fpe0
+FLAGS    = -O2
 #-------------------------------------------------------------------------------
 #make executable without explicit executable name
 all : main_rec_cav 
