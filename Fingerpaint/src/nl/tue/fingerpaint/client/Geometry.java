@@ -16,12 +16,17 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 
+/**
+ * Abstract class representing a geometry
+ * 
+ * @author Tessa Belder
+ */
 public abstract class Geometry {
 
 	/*
 	 * Internal representation of the geometry
 	 */
-	protected int[] representationVector;
+	protected double[] representationVector;
 
 	/*
 	 * The canvas and its parameters
@@ -43,14 +48,14 @@ public abstract class Geometry {
 	protected CssColor currentColor;
 
 	// ----Contructor-----------------------------------------------
-	/*
+	/**
 	 * Creates a new Geometry, initial color is black.
 	 * 
-	 * @param clientHeight The height of the window in which the application is
-	 * displayed
+	 * @param clientHeight
+	 *            The height of the window in which the application is displayed
 	 * 
-	 * @param clientWidth The width of the window in which the application is
-	 * displayed
+	 * @param clientWidth
+	 *            The width of the window in which the application is displayed
 	 */
 	public Geometry(int clientHeight, int clientWidth) {
 		initialiseRepresentation();
@@ -67,7 +72,7 @@ public abstract class Geometry {
 	}
 
 	// ----Getters and Setters---------------------------------------
-	/*
+	/**
 	 * Returns the canvas belonging to this Geometry
 	 * 
 	 * @return The canvas belonging to this Geometry
@@ -76,7 +81,7 @@ public abstract class Geometry {
 		return this.canvas;
 	}
 
-	/*
+	/**
 	 * Returns the current drawing color
 	 * 
 	 * @return The current color which is used for drawing
@@ -85,10 +90,11 @@ public abstract class Geometry {
 		return this.currentColor;
 	}
 
-	/*
+	/**
 	 * Sets the current drawing color
 	 * 
-	 * @param color The color which becomes the current drawing color
+	 * @param color
+	 *            The color which becomes the current drawing color
 	 * 
 	 * @post The current drawing color is set to @param{color}
 	 */
@@ -96,30 +102,30 @@ public abstract class Geometry {
 		this.currentColor = color;
 	}
 
-	/*
+	/**
 	 * Returns the representation vector
 	 * 
 	 * @return The representation vector of this geometry
 	 */
-	public int[] getRepresentationVector() {
+	public double[] getRepresentationVector() {
 		return this.representationVector;
 	}
 
-	/*
+	/**
 	 * Returns the base height of the geometry
 	 * 
-	 * @Return The minimum height of this geometry
+	 * @return The minimum height of this geometry
 	 */
 	abstract public int getBaseHeight();
 
-	/*
+	/**
 	 * Returns the base width of the geometry
 	 * 
-	 * @Return The minimum width of this geometry
+	 * @return The minimum width of this geometry
 	 */
 	abstract public int getBaseWidth();
 
-	/*
+	/**
 	 * Sets the factor to multiply the outline of the geometry with.
 	 * 
 	 * @post The multiply factor has been set to @param{factor}
@@ -128,10 +134,15 @@ public abstract class Geometry {
 
 	// ----Private methods for initialization and drawing------------
 
-	/*
+	/**
 	 * Initialization method which creates the canvas. Also initialises and adds
 	 * MouseHandlers to the canvas. If the browser doesn't support HTML5 canvas,
 	 * adds a message stating this to the RootPanel and returns.
+	 * 
+	 * @param height
+	 *            The height of the canvas to be created
+	 * @param width
+	 *            The width of the canvas to be created
 	 */
 	protected void createCanvas(int height, int width) {
 		// Create the canvas
@@ -239,29 +250,47 @@ public abstract class Geometry {
 		}
 	}
 
-	/*
+	/**
 	 * Initialises the internal representation of the drawing area
+	 * 
+	 * @post {@code representationVector} is initialised
 	 */
 	abstract protected void initialiseRepresentation();
 
-	/*
+	/**
 	 * Draws the border around the drawing area
+	 * 
+	 * @post The outline of the geometry has been drawn on the {@code canvas}
 	 */
 	abstract protected void drawGeometryOutline();
 
-	/*
-	 * Colors the pixel(s) with coordinates (x, y). Also updates the internal
-	 * represenation accordingly.
+	/**
+	 * Colors the pixel(s) corresponding to coordinates ({@code x}, {@code y}).
+	 * Also updates the internal represenation accordingly.
+	 * 
+	 * @param x
+	 *            The horizontal positon of the mouse click relative to the
+	 *            top-left corner of the {@code canvas}
+	 * @param y
+	 *            The vertical positon of the mouse click relative to the
+	 *            top-left corner of the {@code canvas}
+	 * 
+	 * @post The cell of the {@code internalRepresenationVector} corresponding
+	 *       to the coordinates ({@code x}, {@code y}) has been updated, and the
+	 *       corresponding pixels on the canvas have colored
 	 */
 	abstract protected void fillPixel(int x, int y);
 
-	/*
-	 * @return True if coordinates (x, y) are inside the drawing area. False
-	 * otherwise.
+	/**
+	 * Returns whether the position ({@code x}, {@code y}) is inside the drawing
+	 * area on the {@code canvas}.
+	 * 
+	 * @return {@code true} if coordinates (x, y) are inside the drawing area.
+	 *         {@code false} otherwise.
 	 */
 	abstract protected boolean isInside(int x, int y);
 
-	/*
+	/**
 	 * Draws a line manually, filling a single pixel at a time. Can't use the
 	 * standard 'drawLine()' method for this purpose, since this makes it
 	 * impossible to update internal representation.
@@ -270,11 +299,18 @@ public abstract class Geometry {
 	 * http://tech-algorithm.com/articles
 	 * /drawing-line-using-bresenham-algorithm/
 	 * 
-	 * @param newX x-coordinate, relative to the canvas element, of the endpoint
-	 * of the line
-	 * 
-	 * @param newY y-coordinate, relative to the canvas element, of the endpoint
-	 * of the line
+	 * @param x1
+	 *            x-coordinate, relative to the canvas element, of the
+	 *            startpoint of the line
+	 * @param y1
+	 *            y-coordinate, relative to the canvas element, of the
+	 *            startpoint of the line
+	 * @param x2
+	 *            x-coordinate, relative to the canvas element, of the endpoint
+	 *            of the line
+	 * @param y2
+	 *            y-coordinate, relative to the canvas element, of the endpoint
+	 *            of the line
 	 */
 	private void drawLine(int x1, int y1, int x2, int y2) {
 		int w = x2 - x1;
