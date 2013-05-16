@@ -34,7 +34,7 @@ import com.google.gwt.view.client.TreeViewModel;
  */
 public class Fingerpaint implements EntryPoint {
 	// Class to remember which Geometry and Mixer the user has selected
-	private ApplicationState uc;
+	private ApplicationState as;
 
 	// Label that displays the userChoice values
 	private Label mixingDetails = new Label();
@@ -81,7 +81,7 @@ public class Fingerpaint implements EntryPoint {
 	 */
 	public void onModuleLoad() {
 		// initialise the UC
-		uc = new ApplicationState();
+		as = new ApplicationState();
 
 		// Create a model for the cellbrowser.
 		TreeViewModel model = new CustomTreeModel();
@@ -126,8 +126,8 @@ public class Fingerpaint implements EntryPoint {
 				case Rectangle:
 					for (RectangleMixers rm : RectangleMixers.values()) {
 						if ((rm.toString()).equals(selected)) {
-							uc.setGeometry(gn);
-							uc.setMixer(rm);
+							as.setGeometry(gn);
+							as.setMixer(rm);
 						}
 					}
 					break;
@@ -135,8 +135,8 @@ public class Fingerpaint implements EntryPoint {
 					for (ExampleGeometryMixers egm : ExampleGeometryMixers
 							.values()) {
 						if ((egm.toString()).equals(selected)) {
-							uc.setGeometry(gn);
-							uc.setMixer(egm);
+							as.setGeometry(gn);
+							as.setMixer(egm);
 						}
 					}
 					break;
@@ -162,12 +162,12 @@ public class Fingerpaint implements EntryPoint {
 								// TODO: Make decent close-code
 								RootPanel.get().clear();
 
-								if (uc.getGeometryChoice() != null
-										&& uc.getMixerChoice() != null) {
+								if (as.getGeometryChoice() != null
+										&& as.getMixerChoice() != null) {
 									mixingDetails.setText("Geometry: "
-											+ uc.getGeometryChoice().toString()
+											+ as.getGeometryChoice().toString()
 											+ ", Mixer: "
-											+ uc.getMixerChoice().toString());
+											+ as.getMixerChoice().toString());
 								} else {// This should never happen. Just to be
 										// safe i made this msg so fails are visible
 									mixingDetails
@@ -193,6 +193,7 @@ public class Fingerpaint implements EntryPoint {
 
 									// TODO: Initialise other menu items and add
 									// them to menuPanel
+									// Initialise and add the spinner for #steps to the menuPanel.
 									createNrStepsSpinner();
 									menuPanel.add(nrStepsLabel);
 									menuPanel.add(nrStepsSpinner);
@@ -292,21 +293,23 @@ public class Fingerpaint implements EntryPoint {
 	}
 	
 	/*
-	 * Initialises the 
+	 * Initialises the number of steps numberspinner and attaches a {@code NumberSpinnerListener}
+	 * that updates the number of steps parameter.
 	 */
 	private void createNrStepsSpinner(){
 		// Initialise the spinner with the required settings.
 		nrStepsSpinner = new NumberSpinner(NRSTEPS_DEFAULT, NRSTEPS_RATE, NRSTEPS_MIN, NRSTEPS_MAX, true);
+		// Also initialise the initial value in the ApplicationState class.
+		as.setNrSteps(NRSTEPS_DEFAULT);
 		
 		// The spinner for #steps should update the nrSteps variable whenever the value is changed.
-//		nrStepsSpinner.setSpinnerListener(new NumberSpinnerListener() {
-//			
-//			@Override
-//			public void onValueChange(double value) {
-//				// TODO Auto-generated method stub
-//				
-//			}
-//		});
+		nrStepsSpinner.setSpinnerListener(new NumberSpinnerListener() {
+			
+			@Override
+			public void onValueChange(double value) {
+				as.setNrSteps(value);
+			}
+		});
 	}
 
 	/*
