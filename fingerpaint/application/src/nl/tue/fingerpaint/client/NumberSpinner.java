@@ -15,7 +15,8 @@ import com.google.gwt.user.client.ui.DoubleBox;
  * Code of this class was obtained from:
  * http://pavanandhukuri.wordpress.com/2012/01/28/gwt-number-spinner-control/
  * 
- * @author Pavan Andhukuri, Tessa Belder
+ * @author Pavan Andhukuri
+ * @author Group Fingerpaint
  */
 public class NumberSpinner extends Composite {
 
@@ -51,10 +52,12 @@ public class NumberSpinner extends Composite {
 	 *            The minimum value this spinner can take
 	 * @param max
 	 *            The maximum value this spinner can take
-	 *            
-	 * @throws IllegalArgumentException if {@code min} > {@code max}
+	 * 
+	 * @throws IllegalArgumentException
+	 *             if {@code min} > {@code max}
 	 */
-	public NumberSpinner(double min, double max) throws IllegalArgumentException {
+	public NumberSpinner(double min, double max)
+			throws IllegalArgumentException {
 		this(min, 1, min, max, true);
 	}
 
@@ -139,14 +142,7 @@ public class NumberSpinner extends Composite {
 
 			@Override
 			public void onChange(ChangeEvent event) {
-				if (hasLimits) {
-					if (getValue() < MIN) {
-						setValue(MIN);
-					} else if (getValue() > MAX) {
-						setValue(MAX);
-					}
-				}
-				setValue(Math.round(getValue() / RATE) * RATE);
+				roundValue();
 			}
 
 		});
@@ -196,7 +192,24 @@ public class NumberSpinner extends Composite {
 	 *            Value to be set
 	 */
 	public void setValue(double d) {
+		setValue(d, false);
+	}
+	
+	/**
+	 * Sets the value to the control and possibly performs rounding
+	 * of the given {@param d}.
+	 * 
+	 * @param d
+	 * 			Value to be set
+	 * @param round
+	 * 			Boolean to indicate whether rounding should be performed.
+	 */
+	public void setValue(double d, boolean round){
 		numberBox.setValue(d);
+		
+		if(round){
+			roundValue();
+		}	
 	}
 
 	/**
@@ -207,5 +220,19 @@ public class NumberSpinner extends Composite {
 	 */
 	public void setRate(double rate) {
 		this.RATE = rate;
+	}
+
+	/**
+	 * Rounds the current value of this numberspinner. 
+	 */
+	private void roundValue() {
+		if (hasLimits) {
+			if (getValue() < MIN) {
+				setValue(MIN, false);
+			} else if (getValue() > MAX) {
+				setValue(MAX, false);
+			}
+		}
+		setValue(Math.round(getValue() / RATE) * RATE, false);
 	}
 }
