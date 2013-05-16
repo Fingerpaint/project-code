@@ -5,6 +5,7 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.ToggleButton;
@@ -17,13 +18,17 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  */
 public class Fingerpaint implements EntryPoint {
 
-	// Button to toggle between black and white drawing color
+	// Button to toggle between black and white drawing colour
 	private ToggleButton toggleColor;
+
+	// Button to load predefined distribution half black, half white
+	// Needed for testing purposes for story 32
+	private Button loadDistButton;
 
 	// Rectangular geometry to draw on
 	private Geometry geom;
 
-	// Horizontal panel to contain drawing canvas and menubar
+	// Horizontal panel to contain drawing canvas and menu bar
 	private HorizontalPanel panel = new HorizontalPanel();
 
 	// Vertical panel to contain all menu items
@@ -35,7 +40,7 @@ public class Fingerpaint implements EntryPoint {
 
 	// Height of address-bar / tabs / menu-bar in the
 	// browser in pixels. If this is not taken into account,
-	// a vertical scrollbar appears.
+	// a vertical scroll bar appears.
 	private static final int topBarHeight = 50;
 
 	/**
@@ -49,6 +54,10 @@ public class Fingerpaint implements EntryPoint {
 		// Initialise toggleButton and add to menuPanel
 		createToggleButton();
 		menuPanel.add(toggleColor);
+
+		//Initialise the loadDistButton and add to menuPanel
+		createLoadDistButton();
+		menuPanel.add(loadDistButton);
 
 		// TODO: Initialise other menu items and add them to menuPanel
 
@@ -68,7 +77,7 @@ public class Fingerpaint implements EntryPoint {
 	 * Initialises the toggleColor button. TODO: Use pictures instead of text on
 	 * the button.
 	 * 
-	 * Note: If the button shows "black" it means the current drawing color is
+	 * Note: If the button shows "black" it means the current drawing colour is
 	 * black. Not 'toggle to black'.
 	 */
 	private void createToggleButton() {
@@ -84,7 +93,7 @@ public class Fingerpaint implements EntryPoint {
 	}
 
 	/*
-	 * Changes the current drawing color from black to white, and from white to
+	 * Changes the current drawing colour from black to white, and from white to
 	 * black.
 	 */
 	private void toggleColor() {
@@ -93,5 +102,30 @@ public class Fingerpaint implements EntryPoint {
 		} else {
 			geom.setColor(CssColor.make("black"));
 		}
+	}
+
+	/*
+	 * Initialises the Load Distribution button. This button only exists for
+	 * testing purposes. When it is pressed, the distribution of the geometry is
+	 * set to a colour bar from black to white, from left to right. This
+	 * distribution is then drawn on the canvas, to demonstrate we can load an
+	 * arbitrary distribution, with 256 gray scale colours.
+	 */
+	private void createLoadDistButton() {
+		loadDistButton = new Button("Load Dist");
+		loadDistButton.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				RectangleDistribution dist = new RectangleDistribution();
+				for (int x = 0; x < 400; x++) {
+					for (int y = 0; y < 240; y++) {
+						dist.setValue(x, y, (double) x / 400);
+					}
+				}
+
+				geom.drawDistribution(dist);
+			}
+		});
 	}
 }
