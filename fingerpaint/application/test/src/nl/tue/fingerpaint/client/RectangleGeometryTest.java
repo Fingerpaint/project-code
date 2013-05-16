@@ -51,9 +51,9 @@ public class RectangleGeometryTest extends GWTTestCase {
 		geom = new RectangleGeometry(Window.getClientHeight(),
 				Window.getClientWidth());
 		assertEquals("Length of representation vector", 240 * 400,
-				geom.getRepresentationVector().length);
-		for (int i = 0; i < geom.getRepresentationVector().length; i++) {
-			geom.getRepresentationVector()[i] = 0;
+				geom.getDistribution().getVector().length);
+		for (int i = 0; i < geom.getDistribution().getVector().length; i++) {
+			geom.getDistribution().getVector()[i] = 0;
 		}
 		assertNotNull(geom.getCanvas());
 		assertEquals("Initial drawing color",
@@ -75,12 +75,12 @@ public class RectangleGeometryTest extends GWTTestCase {
 			geom.fillPixel((int) borderTests[i].getX(),
 					(int) borderTests[i].getY());
 			assertEquals("BorderTest " + i, 1.0,
-					geom.getRepresentationVector()[borderResults[i]]);
+					geom.getDistribution().getVector()[borderResults[i]]);
 
 			geom.fillPixel((int) innerTests[i].getX(),
 					(int) innerTests[i].getY());
 			assertEquals("InnerTest " + i, 1.0,
-					geom.getRepresentationVector()[innerResults[i]]);
+					geom.getDistribution().getVector()[innerResults[i]]);
 		}
 
 		// Test whether drawing pixels white is done correct.
@@ -90,12 +90,12 @@ public class RectangleGeometryTest extends GWTTestCase {
 			geom.fillPixel((int) borderTests[i].getX(),
 					(int) borderTests[i].getY());
 			assertEquals("BorderTest " + i, 0.0,
-					geom.getRepresentationVector()[borderResults[i]]);
+					geom.getDistribution().getVector()[borderResults[i]]);
 
 			geom.fillPixel((int) innerTests[i].getX(),
 					(int) innerTests[i].getY());
 			assertEquals("InnerTest " + i, 0.0,
-					geom.getRepresentationVector()[innerResults[i]]);
+					geom.getDistribution().getVector()[innerResults[i]]);
 		}
 	}
 }
