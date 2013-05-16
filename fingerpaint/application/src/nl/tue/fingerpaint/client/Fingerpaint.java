@@ -23,7 +23,6 @@ import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
@@ -352,7 +351,7 @@ public class Fingerpaint implements EntryPoint {
 	 * Updates the protocol label to show the textual representation of {@code step}.
 	 * @param step The new {@code Step} of which the textual representation should be added.
 	 */
-	public void addMixingProtocolStep(Step step) {
+	public void updateProtocolLabel(Step step) {
 		String protocolText = protocolLabel.getText();
 		String stepString;
 		
@@ -395,5 +394,10 @@ public class Fingerpaint implements EntryPoint {
 				geom.drawDistribution(dist);
 			}
 		});
+	}
+	
+	public void addStep(Step step) {
+		uc.addStep(step);
+		updateProtocolLabel(step);
 	}
 }

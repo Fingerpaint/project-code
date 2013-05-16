@@ -51,12 +51,6 @@ public abstract class Geometry {
 	 * Stores the x-coordinate of the mouse event that initiates swiping.
 	 */
 	protected int swipeStartX;
-	
-	/**
-	 * Stores the mixing protocol for this geometry. Should probably be moved to
-	 * another class in the future.
-	 */
-	protected Protocol protocol = new Protocol();
 
 	// ----Constructor-----------------------------------------------
 	/**

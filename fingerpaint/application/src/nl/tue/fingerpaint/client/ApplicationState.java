@@ -81,4 +81,20 @@ public class ApplicationState {
 	}
 	
 	// TODO: Roel, hier komt jouw code!
+	
+	// TODO: Benjamin's code.
+	
+	/**
+	 * Stores the mixing protocol for the selected geometry.
+	 */
+	private Protocol protocol = new Protocol();
+	
+	/**
+	 * Add a step to the protocol.
+	 * @param step The {@code Step} to be added to the protocol.
+	 */
+	public void addStep(Step step) {
+		protocol.addStep(step);
+		
+	}
 }

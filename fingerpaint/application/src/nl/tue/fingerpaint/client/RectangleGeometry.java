@@ -233,7 +233,9 @@ public class RectangleGeometry extends Geometry {
 
 		Step mixingStep = new Step(1, movement); // TODO: Get value from spinner
 
-		protocol.addStep(mixingStep);
+		// TODO: Actually add the step somewhere...
+		// protocol.addStep(mixingStep);
+	}
 		
 	/**
 	 * Sets the given distribution as the current distribution, and draws it on
