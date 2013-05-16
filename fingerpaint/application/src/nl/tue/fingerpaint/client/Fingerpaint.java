@@ -34,7 +34,7 @@ import com.google.gwt.view.client.TreeViewModel;
  */
 public class Fingerpaint implements EntryPoint {
 	// Class to remember which Geometry and Mixer the user has selected
-	private ApplicationState uc;
+	private ApplicationState ac;
 
 	// Label that displays the userChoice values
 	private Label mixingDetails = new Label();
@@ -63,15 +63,6 @@ public class Fingerpaint implements EntryPoint {
 	private final double NRSTEPS_RATE = 1.0;
 	private final double NRSTEPS_MIN = 1.0;
 	private final double NRSTEPS_MAX = 50.0;
-	
-	/*
-	 * The NumberSpinner to set the #steps parameter. Its settings are
-	 * described via the following parameters.
-	 */
-	private final double STEPSIZE_DEFAULT = 1.0;
-	private final double STEPSIZE_RATE = 0.25;
-	private final double STEPSIZE_MIN = 0.25;
-	private final double STEPSIZE_MAX = 50.0;
 
 	private NumberSpinner nrStepsSpinner;
 	private NumberSpinner sizeSpinner;
@@ -91,7 +82,7 @@ public class Fingerpaint implements EntryPoint {
 	 */
 	public void onModuleLoad() {
 		// initialise the UC
-		uc = new ApplicationState();
+		ac = new ApplicationState();
 
 		// Create a model for the cellbrowser.
 		TreeViewModel model = new CustomTreeModel();
@@ -136,8 +127,8 @@ public class Fingerpaint implements EntryPoint {
 				case Rectangle:
 					for (RectangleMixers rm : RectangleMixers.values()) {
 						if ((rm.toString()).equals(selected)) {
-							uc.setGeometry(gn);
-							uc.setMixer(rm);
+							ac.setGeometry(gn);
+							ac.setMixer(rm);
 						}
 					}
 					break;
@@ -145,8 +136,8 @@ public class Fingerpaint implements EntryPoint {
 					for (ExampleGeometryMixers egm : ExampleGeometryMixers
 							.values()) {
 						if ((egm.toString()).equals(selected)) {
-							uc.setGeometry(gn);
-							uc.setMixer(egm);
+							ac.setGeometry(gn);
+							ac.setMixer(egm);
 						}
 					}
 					break;
@@ -172,12 +163,12 @@ public class Fingerpaint implements EntryPoint {
 								// TODO: Make decent close-code
 								RootPanel.get().clear();
 
-								if (uc.getGeometryChoice() != null
-										&& uc.getMixerChoice() != null) {
+								if (ac.getGeometryChoice() != null
+										&& ac.getMixerChoice() != null) {
 									mixingDetails.setText("Geometry: "
-											+ uc.getGeometryChoice().toString()
+											+ ac.getGeometryChoice().toString()
 											+ ", Mixer: "
-											+ uc.getMixerChoice().toString());
+											+ ac.getMixerChoice().toString());
 								} else {// This should never happen. Just to be
 										// safe i made this msg so fails are visible
 									mixingDetails
@@ -315,7 +306,20 @@ public class Fingerpaint implements EntryPoint {
 	 * initialises the spinner for the stepSize
 	 */
 	private void createStepSizeSpinner() {
-		sizeSpinner = new NumberSpinner(STEPSIZE_DEFAULT, STEPSIZE_RATE, STEPSIZE_MIN, STEPSIZE_MAX, true);
+		//initial initialisation of the spinner
+		sizeSpinner = new NumberSpinner(MixingStep.STEP_DEFAULT, 
+				MixingStep.STEP_UNIT, MixingStep.STEP_MIN, MixingStep.STEP_MAX, true);
+		
+		//set a listener for the spinner
+		sizeSpinner.setSpinnerListener(new NumberSpinnerListener(){
+
+			@Override
+			public void onValueChange(double value) {
+				// TODO pass the new value to the current mixing step
+				
+			}
+			
+		});
 	}
 	
 	/*
