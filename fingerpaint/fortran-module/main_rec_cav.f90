@@ -42,12 +42,12 @@ close(11)
 !---------------------------------
 ! compute concentration
 !   call conc_final(dt, dir, wall, conc)
-  call simulate(0, 0, conc, dt, stepid, segr)
+  call simulate(0, 0, conc, nc, dt, stepid, 2, segr)
 
 
 !---------------------------------
 ! compute intensity of segregation
-   call intens_segr(conc, segr)
+!    call intens_segr(conc, segr)
  
 
 !-----------------------------------
