@@ -3,7 +3,7 @@ package nl.tue.fingerpaint.client;
 import org.junit.Test;
 import com.google.gwt.junit.client.GWTTestCase;
 
-public class UserChoiceTest extends GWTTestCase{ 
+public class ApplicationStateTest extends GWTTestCase{ 
 	ApplicationState uc;
 	
 	
