@@ -10,6 +10,8 @@ public class ApplicationState {
 
 	private GeometryNames geoChoice = null;
 	private Mixer mixChoice = null;
+	
+	// TODO: hier komt Femke's code!
 
 	/**
 	 * Sets {@code geoChoice} to the given geometry {@code g}
@@ -48,4 +50,6 @@ public class ApplicationState {
 	public Mixer getMixerChoice() {
 		return mixChoice;
 	}
+	
+	// TODO: Roel, hier komt jouw code!
 }
