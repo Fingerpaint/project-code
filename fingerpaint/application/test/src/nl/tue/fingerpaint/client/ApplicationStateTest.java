@@ -29,8 +29,7 @@ public class ApplicationStateTest extends GWTTestCase{
 
 	@Override
 	public String getModuleName() {
-		//return "nl.tue.fingerpaint.Fingerpaint";
-		return "selectMixingGeometry.SelectMixingGeometry";
+		return "nl.tue.fingerpaint.Fingerpaint";
 	}
 
 }

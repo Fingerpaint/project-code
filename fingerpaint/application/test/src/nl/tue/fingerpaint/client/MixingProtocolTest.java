@@ -4,9 +4,9 @@ import org.junit.Test;
 
 import com.google.gwt.junit.client.GWTTestCase;
 
-public class MixingProgramTest extends GWTTestCase {
+public class MixingProtocolTest extends GWTTestCase {
 
-	MixingProgram programClass;
+	MixingProtocol program;
 	MixingStep step0;
 	MixingStep step1;
 	MixingStep step2;
@@ -15,10 +15,13 @@ public class MixingProgramTest extends GWTTestCase {
 	 * Setup method
 	 */
 	private void init() {
-		programClass = new MixingProgram();
+		program = new MixingProtocol();
 		step0 = new MixingStep(0.5, true, false);
 		step1 = new MixingStep(1.75, true, true);
 		step2 = new MixingStep(1.0, false, false);
+		program.addStep(step0);
+		program.addStep(step1);
+		program.addStep(step2);
 	}
 
 	/*
@@ -28,13 +31,13 @@ public class MixingProgramTest extends GWTTestCase {
 	public void testAddStep() {
 		init();
 		MixingStep newStep = new MixingStep(2.0, false, false);
-		programClass.addStep(newStep);
+		program.addStep(newStep);
 		// test if the new step is appended
-		assertEquals(newStep, programClass.getStep(3));
+		assertEquals(newStep, program.getStep(3));
 		// assert that the rest of the program is unchanged
-		assertEquals(step0, programClass.getStep(0));
-		assertEquals(step1, programClass.getStep(1));
-		assertEquals(step2, programClass.getStep(2));
+		assertEquals(step0, program.getStep(0));
+		assertEquals(step1, program.getStep(1));
+		assertEquals(step2, program.getStep(2));
 	}
 
 	/*
@@ -44,13 +47,13 @@ public class MixingProgramTest extends GWTTestCase {
 	public void testRemoveStep() {
 		init();
 		// should remove step1
-		programClass.removeStep(1);
+		program.removeStep(1);
 		// check if the total size is correct
-		assertEquals(2, programClass.getProgramSize());
+		assertEquals(2, program.getProgramSize());
 		// check if the first element is unchanged
-		assertEquals(step0, programClass.getStep(0));
+		assertEquals(step0, program.getStep(0));
 		// check if the last element is moved up correctly
-		assertEquals(step2, programClass.getStep(1));
+		assertEquals(step2, program.getStep(1));
 	}
 
 	/*
@@ -59,10 +62,10 @@ public class MixingProgramTest extends GWTTestCase {
 	@Test
 	public void testEditStepSize() {
 		init();
-		MixingStep edited = programClass.getStep(1);
+		MixingStep edited = program.getStep(1);
 		// should change the stepsize of step1 to 2.25
-		programClass.editStep(1, 2.25, edited.movesForward(),edited.isTopWall());
-		assertEquals(2.25, programClass.getStep(1).getStepSize());
+		program.editStep(1, 2.25, edited.movesForward(),edited.isTopWall());
+		assertEquals(2.25, program.getStep(1).getStepSize());
 	}
 
 	/*
@@ -71,10 +74,10 @@ public class MixingProgramTest extends GWTTestCase {
 	@Test
 	public void testEditStepDirection() {
 		init();
-		MixingStep edited = programClass.getStep(0);
+		MixingStep edited = program.getStep(0);
 		// should change the stepDirection of step0 equal to false
-		programClass.editStep(0, edited.getStepSize(), false,edited.isTopWall());
-		assertEquals(false, programClass.getStep(0).movesForward());
+		program.editStep(0, edited.getStepSize(), false,edited.isTopWall());
+		assertEquals(false, program.getStep(0).movesForward());
 	}
 
 	/*
@@ -83,10 +86,10 @@ public class MixingProgramTest extends GWTTestCase {
 	@Test
 	public void testEditStepWall() {
 		init();
-		MixingStep edited = programClass.getStep(2);
+		MixingStep edited = program.getStep(2);
 		// should change the stepWall of step2 equal to true
-		programClass.editStep(2, edited.getStepSize(), true, edited.isTopWall());
-		assertEquals(true, programClass.getStep(2).movesForward());
+		program.editStep(2, edited.getStepSize(), true, edited.isTopWall());
+		assertEquals(true, program.getStep(2).movesForward());
 	}
 
 	/*
@@ -96,25 +99,25 @@ public class MixingProgramTest extends GWTTestCase {
 	public void testMoveStepForward() {
 		init();
 		// move step1 one down
-		programClass.moveStep(1, 0);
+		program.moveStep(1, 0);
 		// check if the order is correct
-		assertEquals(step1, programClass.getStep(0));
-		assertEquals(step0, programClass.getStep(1));
-		assertEquals(step2, programClass.getStep(2));
+		assertEquals(step1, program.getStep(0));
+		assertEquals(step0, program.getStep(1));
+		assertEquals(step2, program.getStep(2));
 	}
 
 	/*
 	 * Tests if a step can be moved to a higher index correctly
 	 */
 	@Test
-	public void testMoveStepBackward() {
+	public void testMoveStepBack() {
 		init();
 		// move step1 one up
-		programClass.moveStep(1, 2);
+		program.moveStep(1, 2);
 		// check if the order is correct
-		assertEquals(step0, programClass.getStep(0));
-		assertEquals(step2, programClass.getStep(1));
-		assertEquals(step1, programClass.getStep(2));
+		assertEquals(step0, program.getStep(0));
+		assertEquals(step2, program.getStep(1));
+		assertEquals(step1, program.getStep(2));
 	}
 
 	// exception tests----------------------------------------------------------
@@ -127,13 +130,13 @@ public class MixingProgramTest extends GWTTestCase {
 		init();
 		try {
 			// out of bounds index
-			programClass.getStep(3);
+			program.getStep(3);
+			fail("IndexOutOfBoundsException expected");
 		} catch (IndexOutOfBoundsException e) {
 			assertTrue(true);
 		} catch (Exception e) {
 			fail(e.toString());
 		}
-		fail("IndexOutOfBoundsException expected");
 	}
 
 	/*
@@ -143,13 +146,13 @@ public class MixingProgramTest extends GWTTestCase {
 	public void testAddStepException() {
 		init();
 		try {
-			programClass.addStep(null);
+			program.addStep(null);
+			fail("NullPointerException expected");
 		} catch (NullPointerException e) {
 			assertTrue(true);
 		} catch (Exception e) {
 			fail(e.toString());
 		}
-		fail("NullPointerException expected");
 	}
 
 	/*
@@ -160,13 +163,13 @@ public class MixingProgramTest extends GWTTestCase {
 		init();
 		try {
 			// out of bounds index, rest is bogus
-			programClass.editStep(3, 666, false, false);
+			program.editStep(3, 666, false, false);
+			fail("IndexOutOfBoundsException expected");
 		} catch (IndexOutOfBoundsException e) {
 			assertTrue(true);
 		} catch (Exception e) {
 			fail(e.toString());
 		}
-		fail("IndexOutOfBoundsException expected");
 	}
 
 	/*
@@ -178,13 +181,13 @@ public class MixingProgramTest extends GWTTestCase {
 		init();
 		try {
 			// out of bounds index for the initialIndex
-			programClass.moveStep(3, 1);
+			program.moveStep(3, 1);
+			fail("IndexOutOfBoundsException expected");
 		} catch (IndexOutOfBoundsException e) {
 			assertTrue(true);
 		} catch (Exception e) {
 			fail(e.toString());
 		}
-		fail("IndexOutOfBoundsException expected");
 	}
 	
 	/*
@@ -196,13 +199,13 @@ public class MixingProgramTest extends GWTTestCase {
 		init();
 		try {
 			// out of bounds index for the initialIndex
-			programClass.moveStep(1, 3);
+			program.moveStep(1, 3);
+			fail("IndexOutOfBoundsException expected");
 		} catch (IndexOutOfBoundsException e) {
 			assertTrue(true);
 		} catch (Exception e) {
 			fail(e.toString());
 		}
-		fail("IndexOutOfBoundsException expected");
 	}
 
 	/*
@@ -213,13 +216,13 @@ public class MixingProgramTest extends GWTTestCase {
 		init();
 		try {
 			// out of bounds index
-			programClass.getStep(3);
+			program.removeStep(3);
+			fail("IndexOutOfBoundsException expected");
 		} catch (IndexOutOfBoundsException e) {
 			assertTrue(true);
 		} catch (Exception e) {
 			fail(e.toString());
 		}
-		fail("IndexOutOfBoundsException expected");
 	}
 
 	@Override

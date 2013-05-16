@@ -82,19 +82,33 @@ public class ApplicationState {
 	
 	// TODO: Roel, hier komt jouw code!
 	
+	public MixingProtocol getProtocol(){
+		return protocol;
+	}
+	
+	public void setProtocol(MixingProtocol mixingProtocol){
+		if(mixingProtocol == null){
+			throw new NullPointerException();
+		}
+		protocol = mixingProtocol;
+		
+	}
+	
+	private MixingProtocol protocol = new MixingProtocol();
+	
 	// TODO: Benjamin's code.
 	
 	/**
 	 * Stores the mixing protocol for the selected geometry.
 	 */
-	private Protocol protocol = new Protocol();
+	private Protocol bProtocol = new Protocol();
 	
 	/**
 	 * Add a step to the protocol.
 	 * @param step The {@code Step} to be added to the protocol.
 	 */
 	public void addStep(Step step) {
-		protocol.addStep(step);
+		bProtocol.addStep(step);
 		
 	}
 }
