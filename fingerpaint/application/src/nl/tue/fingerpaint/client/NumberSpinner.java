@@ -25,6 +25,7 @@ public class NumberSpinner extends Composite {
 	private double MAX;
 	private double MIN;
 	private boolean hasLimits;
+	private NumberSpinnerListener spinnerListener;
 
 	// ----Constructors--------------------------------------------
 
@@ -206,6 +207,9 @@ public class NumberSpinner extends Composite {
 	 */
 	public void setValue(double d, boolean round){
 		numberBox.setValue(d);
+		if (spinnerListener != null) {
+			spinnerListener.onValueChange(d);
+		}
 		
 		if(round){
 			roundValue();
@@ -220,6 +224,15 @@ public class NumberSpinner extends Composite {
 	 */
 	public void setRate(double rate) {
 		this.RATE = rate;
+	}
+
+	/**
+	 * Change or set the listener attached to this NumberSpinner.
+	 * 
+	 * @param spinnerListener The (new) listener that will be attached to this spinner.
+	 */
+	public void setSpinnerListener(NumberSpinnerListener spinnerListener) {
+		this.spinnerListener = spinnerListener;
 	}
 
 	/**

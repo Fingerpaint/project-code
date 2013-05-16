@@ -28,7 +28,8 @@ public class MixingStep {
 	 */
 	public MixingStep(double stepSize, boolean direction, boolean wall){
 		setStepSize(stepSize);
-		
+		setDirection(direction);
+		setWall(wall);
 	}
 	
 	/**
