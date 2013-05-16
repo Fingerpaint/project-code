@@ -36,3 +36,4 @@
 *.kate-swp
 *.backup
 *~
+Fingerpaint/application/war/WEB-INF/classes/
