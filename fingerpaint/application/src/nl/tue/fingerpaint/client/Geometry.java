@@ -34,7 +34,7 @@ public abstract class Geometry {
 	protected Canvas canvas;
 	protected Context2d context;
 
-	/*
+	/**
 	 * Reference to the current MouseMoveHandler attached to the canvas
 	 */
 	private HandlerRegistration mouseMove;
@@ -46,6 +46,11 @@ public abstract class Geometry {
 	private int previousY;
 	private boolean dragging;
 	protected CssColor currentColor;
+
+	/**
+	 * Stores the x-coordinate of the mouse event that initiates swiping.
+	 */
+	protected int swipeStartX;
 
 	// ----Constructor-----------------------------------------------
 	/**
@@ -196,6 +201,7 @@ public abstract class Geometry {
 			 */
 			@Override
 			public void onMouseDown(MouseDownEvent event) {
+
 				Element elem = event.getRelativeElement();
 				int x = event.getRelativeX(elem);
 				int y = event.getRelativeY(elem);
@@ -227,6 +233,7 @@ public abstract class Geometry {
 								}
 							});
 				}
+				startDefineMixingStep(event.getX());
 			}
 		});
 
@@ -238,6 +245,7 @@ public abstract class Geometry {
 			@Override
 			public void onMouseUp(MouseUpEvent event) {
 				removeMouseMoveHandler();
+				stopDefineMixingStep(event.getX(), event.getY());
 
 			}
 
@@ -254,6 +262,7 @@ public abstract class Geometry {
 					dragging = false;
 					mouseMove.removeHandler();
 				}
+				stopDefineMixingStep(event.getX(), event.getY());
 			}
 		});
 
@@ -396,6 +405,35 @@ public abstract class Geometry {
 	}
 
 	/**
+	 * Together with {@code stopDefineProtocol()}, this function checks whether
+	 * the protocol should be updated by adding a new {@code Step}. This
+	 * particular function only stores the coordinates of the press event, to
+	 * calculate the distance travelled when the mouse or the user's finger is
+	 * lifted from the canvas.
+	 * 
+	 * @param mouseX
+	 *            x-coordinate of the mouseEvent.
+	 */
+	protected void startDefineMixingStep(int mouseX) {
+		// TODO: Only execute if the user actually wants to define a protocol
+		// step (but when is that?)
+		swipeStartX = mouseX;
+	}
+
+	/**
+	 * Together with {@code startDefineProtocol()}, this function checks whether
+	 * the protocol should be updated by adding a new {@code Step}. This
+	 * particular function should be implemented by geometries to detail when and
+	 * how a new {@code Step} should be defined.
+	 * 
+	 * @param mouseX
+	 *            x-coordinate of the mouseEvent.
+	 * @param mouseY
+	 *            y-coordinate of the mouseEvent.
+	 */
+	protected abstract void stopDefineMixingStep(int mouseX, int mouseY);
+	
+	/**
 	 * Returns a CssColor object with the gray scale colour corresponding to the
 	 * given value
 	 * 
@@ -430,5 +468,4 @@ public abstract class Geometry {
 	 *            The distribution to be set and drawn
 	 */
 	abstract public void drawDistribution(double[] dist);
-
 }
