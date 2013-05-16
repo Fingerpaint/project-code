@@ -63,8 +63,18 @@ public class Fingerpaint implements EntryPoint {
 	private final double NRSTEPS_RATE = 1.0;
 	private final double NRSTEPS_MIN = 1.0;
 	private final double NRSTEPS_MAX = 50.0;
+	
+	/*
+	 * The NumberSpinner to set the #steps parameter. Its settings are
+	 * described via the following parameters.
+	 */
+	private final double STEPSIZE_DEFAULT = 1.0;
+	private final double STEPSIZE_RATE = 0.25;
+	private final double STEPSIZE_MIN = 0.25;
+	private final double STEPSIZE_MAX = 50.0;
 
 	private NumberSpinner nrStepsSpinner;
+	private NumberSpinner sizeSpinner;
 	private Label nrStepsLabel = new Label("#steps");
 
 	// Width of the menu in which buttons are displayed
@@ -176,44 +186,54 @@ public class Fingerpaint implements EntryPoint {
 
 								RootPanel.get().add(mixingDetails);
 								{
-									// Initialise geometry
-									geom = new RectangleGeometry(Window
-											.getClientHeight() - topBarHeight,
-											Window.getClientWidth() - menuWidth);
-
-									// Initialise toggleButton and add to
-									// menuPanel
-									createToggleButton();
-									menuPanel.add(toggleColor);
-
-									// Initialise the loadDistButton and add to
-									// menuPanel
-									createLoadDistButton();
-									menuPanel.add(loadDistButton);
-
-									// TODO: Initialise other menu items and add
-									// them to menuPanel
-									createNrStepsSpinner();
-									menuPanel.add(nrStepsLabel);
-									menuPanel.add(nrStepsSpinner);
-
-									// Add canvas and menuPanel to the panel
-									// Make the canvas the entire width of the
-									// screen except for the
-									// menuWidth
-									panel.setWidth("100%");
-									panel.add(geom.getCanvas());
-									panel.add(menuPanel);
-									panel.setCellWidth(menuPanel,
-											Integer.toString(menuWidth));
-
-									// Add panel to RootPanel
-									RootPanel.get().add(panel);
+									createMixingWidgets();
 								}
 
 							}
 						}
 					});
+		}
+		
+		/**
+		 * Helper method that initialises the widgets for the mixing interface
+		 */
+		void createMixingWidgets(){
+			// Initialise geometry
+			geom = new RectangleGeometry(Window
+					.getClientHeight() - topBarHeight,
+					Window.getClientWidth() - menuWidth);
+
+			// Initialise toggleButton and add to
+			// menuPanel
+			createToggleButton();
+			menuPanel.add(toggleColor);
+
+			// Initialise the loadDistButton and add to
+			// menuPanel
+			createLoadDistButton();
+			menuPanel.add(loadDistButton);
+
+			// TODO: Initialise other menu items and add
+			// them to menuPanel
+			createNrStepsSpinner();
+			menuPanel.add(nrStepsLabel);
+			menuPanel.add(nrStepsSpinner);
+			
+			// Create a spinner for changing the length of a mixing protocol step
+			createStepSizeSpinner();
+
+			// Add canvas and menuPanel to the panel
+			// Make the canvas the entire width of the
+			// screen except for the
+			// menuWidth
+			panel.setWidth("100%");
+			panel.add(geom.getCanvas());
+			panel.add(menuPanel);
+			panel.setCellWidth(menuPanel,
+					Integer.toString(menuWidth));
+
+			// Add panel to RootPanel
+			RootPanel.get().add(panel);
 		}
 
 		/**
@@ -289,6 +309,13 @@ public class Fingerpaint implements EntryPoint {
 /*		public void setCellBrowser(CellBrowser cellbrowser) {
 			this.cb = cellbrowser;
 		}*/
+	}
+	
+	/*
+	 * initialises the spinner for the stepSize
+	 */
+	private void createStepSizeSpinner() {
+		sizeSpinner = new NumberSpinner(STEPSIZE_DEFAULT, STEPSIZE_RATE, STEPSIZE_MIN, STEPSIZE_MAX, true);
 	}
 	
 	/*

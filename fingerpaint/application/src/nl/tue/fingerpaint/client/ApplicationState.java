@@ -80,5 +80,17 @@ public class ApplicationState {
 		return mixChoice;
 	}
 	
-	// TODO: Roel, hier komt jouw code!
+	public MixingProtocol getProtocol(){
+		return protocol;
+	}
+	
+	public void setProtocol(MixingProtocol mixingProtocol){
+		if(mixingProtocol == null){
+			throw new NullPointerException();
+		}
+		protocol = mixingProtocol;
+		
+	}
+	
+	private MixingProtocol protocol = new MixingProtocol();
 }

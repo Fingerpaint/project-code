@@ -9,7 +9,7 @@ import java.util.ArrayList;
  * This class symbolises a mixing program consisting of a number of mixing steps
  *
  */
-public class MixingProgram {
+public class MixingProtocol {
 
 	//the current mixing program
 	private ArrayList<MixingStep> program = new ArrayList<MixingStep>();
@@ -17,7 +17,7 @@ public class MixingProgram {
 	/**
 	 * Constructs an empty program
 	 */
-	public MixingProgram(){
+	public MixingProtocol(){
 		
 	}
 	
@@ -88,9 +88,6 @@ public class MixingProgram {
 		}
 		MixingStep movedStep = program.get(originalIndex);
 		program.remove(originalIndex);
-		if(newIndex > originalIndex){
-			newIndex++; //to accommodate for the removed original
-		}
 		program.add(newIndex, movedStep);
 	}
 	
