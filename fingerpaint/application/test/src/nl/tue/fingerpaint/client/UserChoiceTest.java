@@ -4,11 +4,11 @@ import org.junit.Test;
 import com.google.gwt.junit.client.GWTTestCase;
 
 public class UserChoiceTest extends GWTTestCase{ 
-	UserChoice uc;
+	ApplicationState uc;
 	
 	
 	private void init(){
-		uc = new UserChoice();	
+		uc = new ApplicationState();	
 	}
 	
 	@Test

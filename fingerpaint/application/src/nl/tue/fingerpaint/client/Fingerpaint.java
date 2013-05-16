@@ -34,7 +34,7 @@ import com.google.gwt.view.client.TreeViewModel;
  */
 public class Fingerpaint implements EntryPoint {
 	// Class to remember which Geometry and Mixer the user has selected
-	private UserChoice uc;
+	private ApplicationState uc;
 
 	// Label that displays the userChoice values
 	private Label mixingDetails = new Label();
@@ -81,7 +81,7 @@ public class Fingerpaint implements EntryPoint {
 	 */
 	public void onModuleLoad() {
 		// initialise the UC
-		uc = new UserChoice();
+		uc = new ApplicationState();
 
 		// Create a model for the cellbrowser.
 		TreeViewModel model = new CustomTreeModel();
