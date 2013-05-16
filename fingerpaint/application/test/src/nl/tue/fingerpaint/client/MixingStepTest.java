@@ -10,32 +10,45 @@ public class MixingStepTest extends GWTTestCase{
 	
 	MixingStep stepClass;
 	
+	/*
+	 * Setup method
+	 */
 	private void init(){
-		stepClass = new MixingStep();
+		stepClass = new MixingStep(1, true, true);
 	}
 	
+	/*
+	 * Tests if the getter returns the stepsize it was initialised with
+	 */
 	@Test
 	public void testGetStepSize(){
 		init();
-		assertEquals(stepClass.getStepSize(),0.25); //initialised on 0.25, convenient
+		assertEquals(1.0, stepClass.getStepSize()); //initialised on 1.0, convenient
 	}
 	
+	/*
+	 * Tests if the method setStepSize sets the stepsize correctly
+	 */
 	@Test
 	public void testSetStepSize(){
 		init();
 		stepClass.setStepSize(42.0);
-		assertEquals(stepClass.getStepSize(),42.0);
+		assertEquals(42.0, stepClass.getStepSize());
 	}
 
+	/*
+	 * Tests if the implemented rounding function rounds up and down correctly to produce a stepSize that is a multiple of
+	 * {@code MixingStep.tepUnit}
+	 */
 	@Test
 	public void testRounding(){
 		init();
 		//for rounding down
 		stepClass.setStepSize(1.1);
-		assertEquals(stepClass.getStepSize(),1.0);
+		assertEquals(1.0, stepClass.getStepSize());
 		//for rounding up
 		stepClass.setStepSize(0.9);
-		assertEquals(stepClass.getStepSize(),1.0);
+		assertEquals(1.0, stepClass.getStepSize());
 	}
 	
 	@Override

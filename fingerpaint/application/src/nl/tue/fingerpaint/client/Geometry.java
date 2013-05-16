@@ -26,7 +26,7 @@ public abstract class Geometry {
 	/*
 	 * Internal representation of the geometry
 	 */
-	protected double[] representationVector;
+	protected Distribution distribution;
 
 	/*
 	 * The canvas and its parameters
@@ -69,7 +69,7 @@ public abstract class Geometry {
 	 *            The width of the window in which the application is displayed
 	 */
 	public Geometry(int clientHeight, int clientWidth) {
-		initialiseRepresentation();
+		initialiseDistribution();
 
 		setFactor(Math.max(
 				1,
@@ -78,7 +78,7 @@ public abstract class Geometry {
 		createCanvas(clientHeight, clientWidth);
 		drawGeometryOutline();
 
-		// Initialize drawing color to black
+		// Initialise drawing colour to black
 		setColor(CssColor.make("black"));
 	}
 
@@ -93,9 +93,9 @@ public abstract class Geometry {
 	}
 
 	/**
-	 * Returns the current drawing color
+	 * Returns the current drawing colour
 	 * 
-	 * @return The current color which is used for drawing
+	 * @return The current colour which is used for drawing
 	 */
 	public CssColor getColor() {
 		return this.currentColor;
@@ -105,22 +105,40 @@ public abstract class Geometry {
 	 * Sets the current drawing colour
 	 * 
 	 * @param color
-	 *            The color which becomes the current drawing color
+	 *            The colour which becomes the current drawing colour
 	 * 
-	 * @post The current drawing color is set to @param{color}
+	 * @post The current drawing colour is set to @param{color}
 	 */
 	public void setColor(CssColor color) {
 		this.currentColor = color;
 	}
 
 	/**
-	 * Returns the representation vector
+	 * Returns the distribution
 	 * 
-	 * @return The representation vector of this geometry
+	 * @return The distribution of this geometry
 	 */
-	public double[] getRepresentationVector() {
-		return this.representationVector;
+	public Distribution getDistribution() {
+		return this.distribution;
 	}
+
+	/**
+	 * Sets the distribution to {@code dist}
+	 * 
+	 * @param dist
+	 *            The distribution to set
+	 */
+	public void setDistribution(Distribution dist) {
+		this.distribution = dist;
+	}
+
+	/**
+	 * Sets the distribution to {@code dist}
+	 * 
+	 * @param dist
+	 *            The distribution to set
+	 */
+	abstract public void setDistribution(double[] dist);
 
 	/**
 	 * Returns the base height of the geometry
@@ -143,10 +161,11 @@ public abstract class Geometry {
 	 */
 	abstract public void setFactor(int factor);
 
-	// ----Private methods for initialization and drawing------------
+	// ----Protected and private methods for initialisation and
+	// drawing------------
 
 	/**
-	 * Initialization method which creates the canvas. Also initialises and adds
+	 * Initialisation method which creates the canvas. Also initialises and adds
 	 * MouseHandlers to the canvas. If the browser doesn't support HTML5 canvas,
 	 * adds a message stating this to the RootPanel and returns.
 	 * 
@@ -159,7 +178,7 @@ public abstract class Geometry {
 		// Create the canvas
 		canvas = Canvas.createIfSupported();
 
-		// If canvas wan't created, add a label to the Rootpanel stating this
+		// If canvas wan't created, add a label to the root panel stating this
 		// and return.
 		if (canvas == null) {
 			RootPanel
@@ -169,7 +188,7 @@ public abstract class Geometry {
 			return;
 		}
 
-		// Initialize canvas
+		// Initialise canvas
 		canvas.setStyleName("paintCanvas");
 		canvas.setWidth(width + "px");
 		canvas.setCoordinateSpaceWidth(width);
@@ -266,11 +285,11 @@ public abstract class Geometry {
 	}
 
 	/**
-	 * Initialises the internal representation of the drawing area
+	 * Initialises the distribution of the drawing area
 	 * 
-	 * @post {@code representationVector} is initialised
+	 * @post {@code distribution} is initialised
 	 */
-	abstract protected void initialiseRepresentation();
+	abstract protected void initialiseDistribution();
 
 	/**
 	 * Draws the border around the drawing area
@@ -280,21 +299,43 @@ public abstract class Geometry {
 	abstract protected void drawGeometryOutline();
 
 	/**
-	 * Colors the pixel(s) corresponding to coordinates ({@code x}, {@code y}).
-	 * Also updates the internal represenation accordingly.
+	 * Colours the pixel(s) corresponding to coordinates ({@code x}, {@code y}).
+	 * Also updates the internal representation accordingly.
 	 * 
 	 * @param x
-	 *            The horizontal positon of the mouse click relative to the
+	 *            The horizontal position of the mouse click relative to the
 	 *            top-left corner of the {@code canvas}
 	 * @param y
-	 *            The vertical positon of the mouse click relative to the
+	 *            The vertical position of the mouse click relative to the
+	 *            top-left corner of the {@code canvas}
+	 * @param colour
+	 *            The colour to fill the pixel with
+	 * 
+	 * @post The cell of the {@code internalRepresenationVector} corresponding
+	 *       to the coordinates ({@code x}, {@code y}) has been updated, and the
+	 *       corresponding pixels on the canvas have been coloured
+	 */
+	abstract protected void fillPixel(int x, int y, CssColor colour);
+
+	/**
+	 * Colours the pixel(s) corresponding to coordinates ({@code x}, {@code y}).
+	 * Also updates the internal representation accordingly.
+	 * 
+	 * @param x
+	 *            The horizontal position of the mouse click relative to the
+	 *            top-left corner of the {@code canvas}
+	 * @param y
+	 *            The vertical position of the mouse click relative to the
 	 *            top-left corner of the {@code canvas}
 	 * 
 	 * @post The cell of the {@code internalRepresenationVector} corresponding
 	 *       to the coordinates ({@code x}, {@code y}) has been updated, and the
-	 *       corresponding pixels on the canvas have colored
+	 *       corresponding pixels on the canvas have been coloured with
+	 *       {@code currentColor}
 	 */
-	abstract protected void fillPixel(int x, int y);
+	protected void fillPixel(int x, int y) {
+		fillPixel(x, y, currentColor);
+	}
 
 	/**
 	 * Returns whether the position ({@code x}, {@code y}) is inside the drawing
@@ -310,21 +351,21 @@ public abstract class Geometry {
 	 * standard 'drawLine()' method for this purpose, since this makes it
 	 * impossible to update internal representation.
 	 * 
-	 * Algorithm obtained from the internet. Source:
+	 * Algorithm obtained from the Internet. Source:
 	 * http://tech-algorithm.com/articles
 	 * /drawing-line-using-bresenham-algorithm/
 	 * 
 	 * @param x1
-	 *            x-coordinate, relative to the canvas element, of the
-	 *            startpoint of the line
+	 *            x-coordinate, relative to the canvas element, of the start
+	 *            point of the line
 	 * @param y1
-	 *            y-coordinate, relative to the canvas element, of the
-	 *            startpoint of the line
+	 *            y-coordinate, relative to the canvas element, of the start
+	 *            point of the line
 	 * @param x2
-	 *            x-coordinate, relative to the canvas element, of the endpoint
+	 *            x-coordinate, relative to the canvas element, of the end point
 	 *            of the line
 	 * @param y2
-	 *            y-coordinate, relative to the canvas element, of the endpoint
+	 *            y-coordinate, relative to the canvas element, of the end point
 	 *            of the line
 	 */
 	private void drawLine(int x1, int y1, int x2, int y2) {
@@ -397,4 +438,40 @@ public abstract class Geometry {
 	 *            y-coordinate of the mouseEvent.
 	 */
 	protected abstract void stopDefineMixingStep(int mouseX, int mouseY);
+	
+	/**
+	 * Returns a CssColor object with the gray scale colour corresponding to the
+	 * given value
+	 * 
+	 * @param value
+	 *            The value which determines the colour; 0 means black and 1
+	 *            means white
+	 * @return The CssColor object with the gray scale colour corresponding to
+	 *         {@code value}
+	 */
+	protected CssColor getColour(double value) {
+		int colourCode = (int) Math.round(value * 255);
+		return CssColor.make(colourCode, colourCode, colourCode);
+	}
+
+	// --Public methods for general use---------------------------------
+	/**
+	 * Sets the given distribution as the current distribution, and draws it on
+	 * the canvas
+	 * 
+	 * @param dist
+	 *            The distribution to be set and drawn
+	 */
+	public void drawDistribution(Distribution dist) {
+		drawDistribution(dist.getVector());
+	}
+
+	/**
+	 * Sets the given distribution as the current distribution, and draws it on
+	 * the canvas
+	 * 
+	 * @param dist
+	 *            The distribution to be set and drawn
+	 */
+	abstract public void drawDistribution(double[] dist);
 }
