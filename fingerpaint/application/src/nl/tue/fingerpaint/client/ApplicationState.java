@@ -12,6 +12,35 @@ public class ApplicationState {
 	private Mixer mixChoice = null;
 	
 	// TODO: hier komt Femke's code!
+	/*
+	 * The number of times (#steps) that the defined protocol will be applied.
+	 * Initially set to 0.0, to indicate that the value has not been set by
+	 * the user yet.
+	 */
+	private double nrSteps = 0.0; // #steps
+	
+	/**
+	 * Returns the current value of number of steps.
+	 * 
+	 * @return The current value of number of steps.
+	 */
+	public double getNrSteps() {
+		return nrSteps;
+	}
+
+	/**
+	 * Sets the value for the number of steps.
+	 * 
+	 * @param nrSteps
+	 *            The new value for number of steps.
+	 * 
+	 *            <pre>
+	 * {@param steps} is valid, according to the settings for the NumberSpinner in Fingerpaint.java.
+	 * @post The current number of steps is set to @param{nrSteps}.
+	 */
+	public void setNrSteps(double steps) {
+		nrSteps = steps;
+	}
 
 	/**
 	 * Sets {@code geoChoice} to the given geometry {@code g}
