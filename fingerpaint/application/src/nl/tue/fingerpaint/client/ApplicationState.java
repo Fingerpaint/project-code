@@ -6,7 +6,7 @@ package nl.tue.fingerpaint.client;
  * 
  * @author Group Fingerpaint
  */
-public class UserChoice {
+public class ApplicationState {
 
 	private GeometryNames geoChoice = null;
 	private Mixer mixChoice = null;
