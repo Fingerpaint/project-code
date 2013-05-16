@@ -37,3 +37,8 @@
 *.backup
 *~
 fingerpaint/application/war/WEB-INF/classes/
+fingerpaint/application/gwt-unitCache/
+fingerpaint/application/war/WEB-INF/deploy/
+fingerpaint/application/war/fingerpaint/
+*.o
+*.mod
