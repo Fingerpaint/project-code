@@ -1,5 +1,7 @@
 package nl.tue.fingerpaint.client;
 
+import nl.tue.fingerpaint.client.Movement.HorizontalMovement;
+import nl.tue.fingerpaint.client.Movement.VerticalMovement;
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.touch.client.Point;
 
@@ -19,7 +21,17 @@ public class RectangleGeometry extends Geometry {
 	private final int rectangleWidth = 400;
 	private int factor;
 
-	// ----Constructor-----------------------------------------------
+	/**
+	 * Threshold in pixels to decide when a large enough swipe has been carried
+	 * out.
+	 */
+	private final static int SWIPE_THRESHOLD = 20;
+
+	/**
+	 * The height of the wall in the same distance unit as the
+	 * {@code rectangleHeight}.
+	 */
+	private final static int HEIGHT_OF_WALL = 20;
 	/**
 	 * Uses constructor from super class (Geometry.java)
 	 * 
@@ -191,6 +203,40 @@ public class RectangleGeometry extends Geometry {
 		context.stroke();
 	}
 
+	/**
+	 * Checks whether a new {@code Step} should be added. If the MouseEvent's
+	 * coordinates are near the top of the rectangular geometry, a {@code TOP}
+	 * mixing step is generated; if it is near the bottom, a {@code BOTTOM} is
+	 * generated. The direction of movement decides whether the movement is to
+	 * the left or to the right.
+	 */
+	@Override
+	protected void stopDefineMixingStep(int mouseX, int mouseY) {
+		int diffX = mouseX - swipeStartX;
+
+		Movement movement = new Movement();
+
+		if (0 < mouseY && mouseY < HEIGHT_OF_WALL * factor) {
+			movement.setVertical(VerticalMovement.UP);
+		} else if ((rectangleHeight - HEIGHT_OF_WALL) * factor < mouseY
+				&& mouseY < rectangleHeight * factor) {
+			movement.setVertical(VerticalMovement.DOWN);
+		} else { // No movement of the geometry was specified
+			return;
+		}
+
+		if (diffX < -SWIPE_THRESHOLD) {
+			movement.setHorizontal(HorizontalMovement.LEFT);
+		} else if (diffX > SWIPE_THRESHOLD) {
+			movement.setHorizontal(HorizontalMovement.RIGHT);
+		}
+
+		Step mixingStep = new Step(1, movement); // TODO: Get value from spinner
+
+		// TODO: Actually add the step somewhere...
+		// protocol.addStep(mixingStep);
+	}
+		
 	/**
 	 * Sets the given distribution as the current distribution, and draws it on
 	 * the canvas

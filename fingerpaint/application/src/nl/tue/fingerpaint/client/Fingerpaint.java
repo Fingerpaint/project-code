@@ -1,5 +1,7 @@
 package nl.tue.fingerpaint.client;
 
+import nl.tue.fingerpaint.client.Movement.HorizontalMovement;
+import nl.tue.fingerpaint.client.Movement.VerticalMovement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +23,6 @@ import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
@@ -34,7 +35,7 @@ import com.google.gwt.view.client.TreeViewModel;
  */
 public class Fingerpaint implements EntryPoint {
 	// Class to remember which Geometry and Mixer the user has selected
-	private ApplicationState ac;
+	private ApplicationState as;
 
 	// Label that displays the userChoice values
 	private Label mixingDetails = new Label();
@@ -55,6 +56,7 @@ public class Fingerpaint implements EntryPoint {
 	// Vertical panel to contain all menu items
 	private VerticalPanel menuPanel = new VerticalPanel();
 	
+	private Label protocolLabel = new Label();
 	/*
 	 * The NumberSpinner to set the #steps parameter. Its settings are
 	 * described via the following parameters.
@@ -81,8 +83,13 @@ public class Fingerpaint implements EntryPoint {
 	 * This is the entry point method.
 	 */
 	public void onModuleLoad() {
+
+		// Initialise the label to show the protocol.
+		protocolLabel.setText("");
+		menuPanel.add(protocolLabel);
+		
 		// initialise the UC
-		ac = new ApplicationState();
+		as = new ApplicationState();
 
 		// Create a model for the cellbrowser.
 		TreeViewModel model = new CustomTreeModel();
@@ -127,8 +134,8 @@ public class Fingerpaint implements EntryPoint {
 				case Rectangle:
 					for (RectangleMixers rm : RectangleMixers.values()) {
 						if ((rm.toString()).equals(selected)) {
-							ac.setGeometry(gn);
-							ac.setMixer(rm);
+							as.setGeometry(gn);
+							as.setMixer(rm);
 						}
 					}
 					break;
@@ -136,8 +143,8 @@ public class Fingerpaint implements EntryPoint {
 					for (ExampleGeometryMixers egm : ExampleGeometryMixers
 							.values()) {
 						if ((egm.toString()).equals(selected)) {
-							ac.setGeometry(gn);
-							ac.setMixer(egm);
+							as.setGeometry(gn);
+							as.setMixer(egm);
 						}
 					}
 					break;
@@ -163,12 +170,12 @@ public class Fingerpaint implements EntryPoint {
 								// TODO: Make decent close-code
 								RootPanel.get().clear();
 
-								if (ac.getGeometryChoice() != null
-										&& ac.getMixerChoice() != null) {
+								if (as.getGeometryChoice() != null
+										&& as.getMixerChoice() != null) {
 									mixingDetails.setText("Geometry: "
-											+ ac.getGeometryChoice().toString()
+											+ as.getGeometryChoice().toString()
 											+ ", Mixer: "
-											+ ac.getMixerChoice().toString());
+											+ as.getMixerChoice().toString());
 								} else {// This should never happen. Just to be
 										// safe i made this msg so fails are visible
 									mixingDetails
@@ -323,21 +330,22 @@ public class Fingerpaint implements EntryPoint {
 	}
 	
 	/*
-	 * Initialises the 
+	 * Initialises the spinner for the nrSteps.
 	 */
 	private void createNrStepsSpinner(){
 		// Initialise the spinner with the required settings.
 		nrStepsSpinner = new NumberSpinner(NRSTEPS_DEFAULT, NRSTEPS_RATE, NRSTEPS_MIN, NRSTEPS_MAX, true);
+		// Also initialise the initial value in the ApplicationState class.
+		as.setNrSteps(NRSTEPS_DEFAULT);
 		
 		// The spinner for #steps should update the nrSteps variable whenever the value is changed.
-//		nrStepsSpinner.setSpinnerListener(new NumberSpinnerListener() {
-//			
-//			@Override
-//			public void onValueChange(double value) {
-//				// TODO Auto-generated method stub
-//				
-//			}
-//		});
+		nrStepsSpinner.setSpinnerListener(new NumberSpinnerListener() {
+			
+			@Override
+			public void onValueChange(double value) {
+				as.setNrSteps(value);
+			}
+		});
 	}
 
 	/*
@@ -370,6 +378,30 @@ public class Fingerpaint implements EntryPoint {
 			geom.setColor(CssColor.make("black"));
 		}
 	}
+	
+	/**
+	 * Updates the protocol label to show the textual representation of {@code step}.
+	 * @param step The new {@code Step} of which the textual representation should be added.
+	 */
+	public void updateProtocolLabel(Step step) {
+		String protocolText = protocolLabel.getText();
+		String stepString;
+		
+		HorizontalMovement horiz = step.getMovement().getHorizontal();
+		VerticalMovement vert = step.getMovement().getVertical();
+		
+		if (horiz == HorizontalMovement.LEFT && vert == VerticalMovement.UP) {
+			stepString = "-T";
+		} else if (horiz == HorizontalMovement.RIGHT && vert == VerticalMovement.UP) {
+			stepString = "T";
+		} else if (horiz == HorizontalMovement.LEFT && vert == VerticalMovement.DOWN) {
+			stepString = "B";
+		} else { // horiz == HorizontalMovement.RIGHT && vert == VerticalMovement.DOWN {
+			stepString = "-B";
+		}
+		
+		protocolLabel.setText(protocolText + stepString);
+	}
 
 	/*
 	 * Initialises the Load Distribution button. This button only exists for
@@ -394,5 +426,10 @@ public class Fingerpaint implements EntryPoint {
 				geom.drawDistribution(dist);
 			}
 		});
+	}
+	
+	public void addStep(Step step) {
+		as.addStep(step);
+		updateProtocolLabel(step);
 	}
 }
