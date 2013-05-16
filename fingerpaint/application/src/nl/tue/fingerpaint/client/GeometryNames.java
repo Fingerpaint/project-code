@@ -1,5 +1,9 @@
 package nl.tue.fingerpaint.client;
-
-public enum GeometryNames {// New Geometries can be added here
-	Rectangle, exampleGeometry1
+/** 
+ * Enum class that represents all Geometries that can be used.
+ * 
+ * @author Group Fingerpaint
+ */
+public enum GeometryNames {
+	Rectangle, exampleGeometry1// New Geometries can be added here
 };
