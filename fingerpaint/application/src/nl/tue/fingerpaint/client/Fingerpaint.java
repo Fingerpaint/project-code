@@ -1,11 +1,15 @@
 package nl.tue.fingerpaint.client;
 
+import nl.tue.fingerpaint.client.Movement.HorizontalMovement;
+import nl.tue.fingerpaint.client.Movement.VerticalMovement;
+
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -28,6 +32,8 @@ public class Fingerpaint implements EntryPoint {
 
 	// Vertical panel to contain all menu items
 	private VerticalPanel menuPanel = new VerticalPanel();
+	
+	private Label protocolLabel = new Label();
 
 	// Width of the menu in which buttons are displayed
 	// on the right side of the window in pixels
@@ -52,6 +58,10 @@ public class Fingerpaint implements EntryPoint {
 
 		// TODO: Initialise other menu items and add them to menuPanel
 
+		// Initialise the label to show the protocol.
+		protocolLabel.setText("");
+		menuPanel.add(protocolLabel);
+		
 		// Add canvas and menuPanel to the panel
 		// Make the canvas the entire width of the screen except for the
 		// menuWidth
@@ -93,5 +103,29 @@ public class Fingerpaint implements EntryPoint {
 		} else {
 			geom.setColor(CssColor.make("black"));
 		}
+	}
+	
+	/**
+	 * Updates the protocol label to show the textual representation of {@code step}.
+	 * @param step The new {@code Step} of which the textual representation should be added.
+	 */
+	public void addMixingProtocolStep(Step step) {
+		String protocolText = protocolLabel.getText();
+		String stepString;
+		
+		HorizontalMovement horiz = step.getMovement().getHorizontal();
+		VerticalMovement vert = step.getMovement().getVertical();
+		
+		if (horiz == HorizontalMovement.LEFT && vert == VerticalMovement.UP) {
+			stepString = "-T";
+		} else if (horiz == HorizontalMovement.RIGHT && vert == VerticalMovement.UP) {
+			stepString = "T";
+		} else if (horiz == HorizontalMovement.LEFT && vert == VerticalMovement.DOWN) {
+			stepString = "B";
+		} else { // horiz == HorizontalMovement.RIGHT && vert == VerticalMovement.DOWN {
+			stepString = "-B";
+		}
+		
+		protocolLabel.setText(protocolText + stepString);
 	}
 }
