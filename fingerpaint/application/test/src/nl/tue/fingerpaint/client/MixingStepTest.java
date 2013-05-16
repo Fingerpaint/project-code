@@ -11,20 +11,20 @@ public class MixingStepTest extends GWTTestCase{
 	MixingStep stepClass;
 	
 	private void init(){
-		stepClass = new MixingStep();
+		stepClass = new MixingStep(1, true, true);
 	}
 	
 	@Test
 	public void testGetStepSize(){
 		init();
-		assertEquals(stepClass.getStepSize(),0.25); //initialised on 0.25, convenient
+		assertEquals(0.25, stepClass.getStepSize()); //initialised on 0.25, convenient
 	}
 	
 	@Test
 	public void testSetStepSize(){
 		init();
 		stepClass.setStepSize(42.0);
-		assertEquals(stepClass.getStepSize(),42.0);
+		assertEquals(42.0, stepClass.getStepSize());
 	}
 
 	@Test
@@ -32,10 +32,10 @@ public class MixingStepTest extends GWTTestCase{
 		init();
 		//for rounding down
 		stepClass.setStepSize(1.1);
-		assertEquals(stepClass.getStepSize(),1.0);
+		assertEquals(1.0, stepClass.getStepSize());
 		//for rounding up
 		stepClass.setStepSize(0.9);
-		assertEquals(stepClass.getStepSize(),1.0);
+		assertEquals(1.0, stepClass.getStepSize());
 	}
 	
 	@Override
