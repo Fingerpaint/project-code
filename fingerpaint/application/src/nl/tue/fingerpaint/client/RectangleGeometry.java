@@ -1,6 +1,7 @@
 package nl.tue.fingerpaint.client;
 
 import com.google.gwt.canvas.dom.client.CssColor;
+import com.google.gwt.touch.client.Point;
 
 /**
  * Class that represents the rectangular geometry. Keeps the internal
@@ -18,7 +19,7 @@ public class RectangleGeometry extends Geometry {
 	private final int rectangleWidth = 400;
 	private int factor;
 
-	// ----Contructor-----------------------------------------------
+	// ----Constructor-----------------------------------------------
 	/**
 	 * Uses constructor from super class (Geometry.java)
 	 * 
@@ -80,29 +81,44 @@ public class RectangleGeometry extends Geometry {
 		return factor * rectangleWidth;
 	}
 
+	/**
+	 * Sets the distribution belonging to this geometry to the dist parameter
+	 * 
+	 * @param dist
+	 *            The distribution the set
+	 */
+	public void setDistribution(double[] dist) {
+		setDistribution(new RectangleDistribution(dist));
+	}
+
 	// ----Implemented abstract methods from superclass----------------
 
 	/**
-	 * Fills a single pixel of the canvas with the current color. Also updates
+	 * Fills a single pixel of the canvas with the current colour. Also updates
 	 * internal representation vector accordingly.
 	 * 
-	 * @pre 0 <= {@code x} < 400
-	 * @pre 0 <= {@code y} < 240
+	 * <pre>
+	 * 0 <=
+	 * {@code x} < 400
+	 * 
+	 * <pre>
+	 * 0 <= {@code y} < 240
 	 * 
 	 * @param x
 	 *            x-coordinate, relative to the canvas element, of the pixel to
 	 *            be filled
 	 * @param y
 	 *            y-coordinate, relative to the canvas element, of the pixel to
-	 *            be filled
+	 * be filled
+	 * @param colour The colour to fill the pixel with
 	 */
 	@Override
-	public void fillPixel(int x, int y) {
+	public void fillPixel(int x, int y, CssColor colour) {
 		if (isInside(x, y)) {
 
-			// Substract 1 from both x and y coordinates, because
+			// Subtract 1 from both x and y coordinates, because
 			// the drawing area starts at (1, 1) instead of (0, 0).
-			// Divide by multiplying factor (int division so result is
+			// Divide by multiplying factor (integer division so result is
 			// rounded down) to find base coordinates.
 			x = (x - 1) / factor;
 			y = (y - 1) / factor;
@@ -112,17 +128,17 @@ public class RectangleGeometry extends Geometry {
 			// of
 			// the 'pixel'.
 			// Make the 'pixel' the size of the multiplying factor.
-			context.setFillStyle(getColor());
+			context.setFillStyle(colour);
 			context.fillRect(x * factor + 1, y * factor + 1, factor, factor);
 
-			// Set internal represention of base coordinates to 1 for
+			// Set internal representation of base coordinates to 1 for
 			// black, and to 0 for white. 239 - y has to be used since
-			// withing the canvas, coordinate (0, 0) is upper left, and in
+			// within the canvas, coordinate (0, 0) is upper left, and in
 			// the internal representation (0, 0) is bottom left.
 			if (getColor().value().equals("black")) {
-				representationVector[x + 400 * (239 - y)] = 1;
+				distribution.setValue(x, y, 0);
 			} else {
-				representationVector[x + 400 * (239 - y)] = 0;
+				distribution.setValue(x, y, 1);
 			}
 		}
 	}
@@ -141,17 +157,14 @@ public class RectangleGeometry extends Geometry {
 	}
 
 	/**
-	 * Creates vector (array) of length 240 * 400. Initialises color to all
+	 * Creates vector (array) of length 240 * 400. Initialises colour to all
 	 * white (0)
 	 * 
 	 * @post {@code representationVector} is initialised
 	 */
 	@Override
-	protected void initialiseRepresentation() {
-		representationVector = new double[96000];
-		for (int i = 0; i < 96000; i++) {
-			representationVector[i] = 0;
-		}
+	protected void initialiseDistribution() {
+		distribution = new RectangleDistribution();
 	}
 
 	/**
@@ -176,6 +189,39 @@ public class RectangleGeometry extends Geometry {
 		context.lineTo(0, getHeight() + 2);
 		context.closePath();
 		context.stroke();
+	}
+
+	/**
+	 * Sets the given distribution as the current distribution, and draws it on
+	 * the canvas
+	 * 
+	 * <pre>
+	 * {@code dist.length} == 96000
+	 * 
+	 * @param dist
+	 * The distribution to be set and drawn
+	 */
+	@Override
+	public void drawDistribution(double[] dist) {
+		setDistribution(dist);
+		for (int i = 0; i < dist.length; i++) {
+			Point coords = distribution.getCoordinates(i);
+			fillPixel(changeToAbsoluteCoords((int) coords.getX()),
+					changeToAbsoluteCoords((int) coords.getY()),
+					getColour(dist[i]));
+		}
+	}
+
+	/**
+	 * Converts the input value to an absolute coordinate on the canvas
+	 * 
+	 * @param x
+	 *            The value to be converted
+	 * @return The location relative to the top-left corner of the canvas,
+	 *         corresponding to this value
+	 */
+	private int changeToAbsoluteCoords(int x) {
+		return x * factor + 1;
 	}
 
 }
