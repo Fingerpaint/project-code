@@ -1,6 +1,7 @@
 package nl.tue.fingerpaint.client;
 
 import com.google.gwt.canvas.dom.client.CssColor;
+
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -9,6 +10,7 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Label;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
@@ -28,6 +30,18 @@ public class Fingerpaint implements EntryPoint {
 
 	// Vertical panel to contain all menu items
 	private VerticalPanel menuPanel = new VerticalPanel();
+	
+	/*
+	 * The NumberSpinner to set the #steps parameter. Its settings are
+	 * described via the following parameters.
+	 */
+	private final double NRSTEPS_DEFAULT = 1.0;
+	private final double NRSTEPS_RATE = 1.0;
+	private final double NRSTEPS_MIN = 1.0;
+	private final double NRSTEPS_MAX = 50.0;
+
+	private NumberSpinner nrStepsSpinner;
+	private Label nrStepsLabel = new Label("#steps");
 
 	// Width of the menu in which buttons are displayed
 	// on the right side of the window in pixels
@@ -51,6 +65,10 @@ public class Fingerpaint implements EntryPoint {
 		menuPanel.add(toggleColor);
 
 		// TODO: Initialise other menu items and add them to menuPanel
+		// Initialise the numberspinner for #steps and add to menuPanel.
+		createNrStepsSpinner();
+		menuPanel.add(nrStepsLabel);
+		menuPanel.add(nrStepsSpinner);
 
 		// Add canvas and menuPanel to the panel
 		// Make the canvas the entire width of the screen except for the
@@ -62,6 +80,24 @@ public class Fingerpaint implements EntryPoint {
 
 		// Add panel to RootPanel
 		RootPanel.get().add(panel);
+	}
+	
+	/*
+	 * Initialises the 
+	 */
+	private void createNrStepsSpinner(){
+		// Initialise the spinner with the required settings.
+		nrStepsSpinner = new NumberSpinner(NRSTEPS_DEFAULT, NRSTEPS_RATE, NRSTEPS_MIN, NRSTEPS_MAX, true);
+		
+		// The spinner for #steps should update the nrSteps variable whenever the value is changed.
+//		nrStepsSpinner.setSpinnerListener(new NumberSpinnerListener() {
+//			
+//			@Override
+//			public void onValueChange(double value) {
+//				// TODO Auto-generated method stub
+//				
+//			}
+//		});
 	}
 
 	/*
