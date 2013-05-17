@@ -1,5 +1,7 @@
 package nl.tue.fingerpaint.client;
 
+import com.google.gwt.canvas.dom.client.CanvasPixelArray;
+import com.google.gwt.canvas.dom.client.ImageData;
 import com.google.gwt.touch.client.Point;
 
 public abstract class Distribution {
@@ -65,6 +67,28 @@ public abstract class Distribution {
 	 */
 	public double getValue(int x, int y) {
 		return this.representationVector[getIndex(x, y)];
+	}
+
+	/**
+	 * Puts the concentration distribution from the given ImageData in the
+	 * representation vector
+	 * 
+	 * @param img
+	 *            The ImageData belonging to the canvas;
+	 * @param width
+	 *            The width of the canvas;
+	 */
+	public void setDistribution(ImageData img, int width) {
+		CanvasPixelArray data = img.getData();
+		int x = 0;
+		int y = 0;
+		for (int i = 0; i < data.getLength(); i += 4) {
+			setValue(x, y, data.get(i));
+			x = (x + 1) % width;
+			if (x == 0) {
+				y++;
+			}
+		}
 	}
 
 	/**
