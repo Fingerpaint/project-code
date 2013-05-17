@@ -6,7 +6,7 @@ import com.google.gwt.junit.client.GWTTestCase;
 public class ApplicationStateTest extends GWTTestCase{ 
 	private ApplicationState as;
 	private NumberSpinner nrStepsSpinner;
-	private double DEFAULT = 1.0;
+	private int DEFAULT = 1;
 	
 	private void init(){
 		as = new ApplicationState();
@@ -49,8 +49,8 @@ public class ApplicationStateTest extends GWTTestCase{
 	public void testNrStepsInit(){
 		init();
 		
-		assertEquals("After initialisation from the ApplicationState class, the value of nrSteps should be 0.0.", 
-				0.0, as.getNrSteps());
+		assertEquals("After initialisation from the ApplicationState class, the value of nrSteps should be 0.", 
+				0, as.getNrSteps());
 	}
 	
 	/*
@@ -60,8 +60,8 @@ public class ApplicationStateTest extends GWTTestCase{
 	public void testNrStepsSet(){
 		init();
 		
-		double value = 5.0;
-		as.setNrSteps(value);		
+		int value = 5;
+		as.setNrSteps(value);	
 		assertEquals("After setNrSteps, nrSteps should be " + value + ".", 
 				value, as.getNrSteps());
 	}
@@ -88,7 +88,7 @@ public class ApplicationStateTest extends GWTTestCase{
 		init();
 		initSpinner();
 		
-		double value = 5.0;
+		int value = 5;
 		nrStepsSpinner.setValue(value);
 		assertEquals("After setValue, the value should be " + value + ".", value, as.getNrSteps());
 	}

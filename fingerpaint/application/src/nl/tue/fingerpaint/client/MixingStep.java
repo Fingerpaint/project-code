@@ -20,7 +20,7 @@ public class MixingStep {
 	
 	/**nr of times stepUnit time is applied in the mixing step*/
 	private int nrUnits;
-	/**direction the direction of the wall movement, true is clockwise, false counterclockwise*/
+	/**direction the direction of the wall movement, true is to the right, false if to the left*/
 	private boolean direction;
 	/**the wall that is moved, true for the top wall, false for the bottom wall*/
 	private boolean wall;
@@ -48,7 +48,7 @@ public class MixingStep {
 	
 	/**
 	 * 
-	 * @return true if the wall is moving clockwise, false otherwise
+	 * @return true if the wall is moving to the right, false otherwise
 	 */
 	boolean movesForward(){
 		return direction;
@@ -75,7 +75,7 @@ public class MixingStep {
 	
 	/**
 	 * 
-	 * @param direction the direction the wall moves in, true if clockwise, false otherwise
+	 * @param direction the direction the wall moves in, true if to the right, false otherwise
 	 */
 	void setDirection(boolean direction){
 		this.direction = direction;

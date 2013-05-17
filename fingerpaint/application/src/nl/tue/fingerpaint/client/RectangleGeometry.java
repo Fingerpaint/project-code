@@ -1,7 +1,5 @@
 package nl.tue.fingerpaint.client;
 
-import nl.tue.fingerpaint.client.Movement.HorizontalMovement;
-import nl.tue.fingerpaint.client.Movement.VerticalMovement;
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.touch.client.Point;
 
@@ -212,10 +210,13 @@ public class RectangleGeometry extends Geometry {
 	 */
 	@Override
 	protected void stopDefineMixingStep(int mouseX, int mouseY) {
-		Movement movement = determineSwipe(mouseX, mouseY);
+		MixingStep movement = determineSwipe(mouseX, mouseY);
 
-		Step mixingStep = new Step(1, movement); // TODO: Get value from spinner
+		int stepSize = 1; // TODO: Get value from spinner
 
+		for (StepAddedListener l : stepAddedListeners) {
+			l.onStepAdded(movement);
+		}
 		// TODO: Actually add the step somewhere...
 		// protocol.addStep(mixingStep);
 	}
@@ -230,27 +231,27 @@ public class RectangleGeometry extends Geometry {
 	 * @param mouseY The y-coordinate of the current mouse position.
 	 */
 	@Override
-	protected Movement determineSwipe(int mouseX, int mouseY) {
+	protected MixingStep determineSwipe(int mouseX, int mouseY) {
 		int diffX = mouseX - swipeStartX;
-
-		Movement movement = new Movement();
-
-		if (0 < mouseY && mouseY < HEIGHT_OF_WALL * factor) {
-			movement.setVertical(VerticalMovement.UP);
+		boolean topWall = false;
+		boolean toTheLeft = false;
+		
+		if (0 < mouseY && mouseY < HEIGHT_OF_WALL * factor) { // Top wall
+			topWall = true;
 		} else if ((rectangleHeight - HEIGHT_OF_WALL) * factor < mouseY
-				&& mouseY < rectangleHeight * factor) {
-			movement.setVertical(VerticalMovement.DOWN);
+				&& mouseY < rectangleHeight * factor) { // Bottom wall
+			topWall = false;
 		} else { // No movement of the geometry was specified
 			return null;
 		}
 
-		if (diffX < -SWIPE_THRESHOLD) {
-			movement.setHorizontal(HorizontalMovement.LEFT);
-		} else if (diffX > SWIPE_THRESHOLD) {
-			movement.setHorizontal(HorizontalMovement.RIGHT);
+		if (diffX < -SWIPE_THRESHOLD) { // To the left
+			toTheLeft = true;
+		} else if (diffX > SWIPE_THRESHOLD) { // To the right
+			toTheLeft = false;
 		}
+		
 		//draw an arrow corresponding to the swipe
-		System.out.println("Swiping");
 		if(diffX>0){
 			//the left side of the image should be at the starting location
 			int imageLeft = swipeStartX;
@@ -264,6 +265,7 @@ public class RectangleGeometry extends Geometry {
 			int imageTop = swipeStartY - 50;
 			drawImage("leftarrow", imageLeft, imageTop);
 		}
+		MixingStep movement = new MixingStep(1, !toTheLeft, topWall);
 		return movement;
 	}
 		

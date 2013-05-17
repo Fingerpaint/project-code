@@ -1,5 +1,6 @@
 package nl.tue.fingerpaint.client;
 
+import java.util.ArrayList;
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.CssColor;
@@ -450,7 +451,7 @@ public abstract class Geometry {
 	 * @param mouseX The x-coordinate of the current mouse position.
 	 * @param mouseY The y-coordinate of the current mouse position.
 	 */
-	protected abstract Movement determineSwipe(int mouseX, int mouseY);
+	protected abstract MixingStep determineSwipe(int mouseX, int mouseY);
 	
 	/**
 	 * Returns a CssColor object with the gray scale colour corresponding to the
@@ -515,4 +516,18 @@ public abstract class Geometry {
 	 *            The distribution to be set and drawn
 	 */
 	abstract public void drawDistribution(double[] dist);
+	
+	protected ArrayList<StepAddedListener> stepAddedListeners = new ArrayList<StepAddedListener>();
+	
+	public interface StepAddedListener {
+		public void onStepAdded(MixingStep step);
+	}
+	
+	public void addStepAddedListener(StepAddedListener l) {
+		stepAddedListeners.add(l);
+	}
+	
+	public void removeStepAddedListener(StepAddedListener l) {
+		stepAddedListeners.remove(l);
+	}
 }

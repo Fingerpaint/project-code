@@ -6,7 +6,6 @@ import com.google.gwt.junit.client.GWTTestCase;
 
 /**
  * A test class to test the NumberSpinner.
- * TODO: moeten er hier nog tests bij voor de numberspinner met als waarde false?
  * 
  * @author Group Fingerpaint
  */
@@ -82,7 +81,7 @@ public class NumberSpinnerTest extends GWTTestCase {
 	public void testInitialisation() {
 		init();
 
-		assertEquals("Incorrect initialisation.", defaultValue, numberSpinner.getValue());
+		assertEquals("Incorrect initialisation, the value should be " + defaultValue + ".", defaultValue, numberSpinner.getValue());
 	}
 
 	/*
@@ -126,7 +125,18 @@ public class NumberSpinnerTest extends GWTTestCase {
 	}
 	
 	/*
-	 * A test to check whether a NumberSpinnerListener can be attached to the
+	 * A test to check that values in the spinner can also not be rounded.
+	 */
+	@Test
+	public void testNotRound() {
+		init();
+
+		numberSpinner.setValue(5.4);
+		assertEquals("The value should not have been rounded.", 5.4, numberSpinner.getValue());
+	}
+	
+	/*
+	 * A test to check whether a numberspinnerlistener can be attached to the
 	 * numberspinner and fires correctly.
 	 */
 	@Test
@@ -142,7 +152,7 @@ public class NumberSpinnerTest extends GWTTestCase {
 				setFired(true);
 			}
 		});
-		numberSpinner.setValue(42);
+		numberSpinner.setValue(42.0);
 		assertTrue("The listener was not fired.", fired);
 	}
 	
