@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.CssColor;
+import com.google.gwt.canvas.dom.client.ImageData;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.ImageElement;
 import com.google.gwt.dom.client.Style.Unit;
@@ -23,7 +24,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 /**
  * Abstract class representing a geometry
  * 
- * @author Tessa Belder
+ * @author Project Fingerpaint
  */
 public abstract class Geometry {
 
@@ -37,6 +38,28 @@ public abstract class Geometry {
 	 */
 	protected Canvas canvas;
 	protected Context2d context;
+	protected int factor;
+
+	/*
+	 * dummy context to clip the painting tool when painting close to the
+	 * borders of the geometry
+	 */
+	protected Context2d dummycontext;
+
+	/*
+	 * The drawing tool;
+	 */
+	protected DrawingTool tool;
+
+	/*
+	 * The image to draw with
+	 */
+	protected ImageData toolImage;
+
+	/*
+	 * The extra width of the drawing tool. Equal to factor * tool.radius
+	 */
+	protected int displacement;
 
 	/**
 	 * Reference to the current MouseMoveHandler attached to the canvas
@@ -82,6 +105,9 @@ public abstract class Geometry {
 
 		// Initialise drawing colour to black
 		setColor(CssColor.make("black"));
+
+		// Initialise drawing tool to a square with radius 3
+		setDrawingTool(new SquareDrawingTool(3));
 	}
 
 	// ----Getters and Setters---------------------------------------
@@ -113,16 +139,26 @@ public abstract class Geometry {
 	 */
 	public void setColor(CssColor color) {
 		this.currentColor = color;
+		if (this.tool != null) {
+			setDrawingTool(this.tool);
+		}
 	}
 
+//	/**
+//	 * Returns the distribution
+//	 * 
+//	 * @return The distribution of this geometry
+//	 */
+//	public Distribution getDistribution() {
+//		return this.distribution;
+//	}
+	
 	/**
 	 * Returns the distribution
 	 * 
 	 * @return The distribution of this geometry
 	 */
-	public Distribution getDistribution() {
-		return this.distribution;
-	}
+	abstract public Distribution getDistribution();
 
 	/**
 	 * Sets the distribution to {@code dist}
@@ -157,11 +193,89 @@ public abstract class Geometry {
 	abstract public int getBaseWidth();
 
 	/**
+	 * Returns the total height of the drawing area
+	 * 
+	 * @return total height of the drawing area
+	 */
+	public int getHeight() {
+		return factor * getBaseHeight();
+	}
+
+	/**
+	 * Returns the total width of the drawing area
+	 * 
+	 * @return total width of the drawing area
+	 */
+	public int getWidth() {
+		return factor * getBaseWidth();
+	}
+
+	/**
 	 * Sets the factor to multiply the outline of the geometry with.
 	 * 
 	 * @post The multiply factor has been set to @param{factor}
 	 */
 	abstract public void setFactor(int factor);
+
+	/**
+	 * Sets the drawing tool
+	 * 
+	 * @param tool
+	 *            The tool to set as the drawing tool
+	 * 
+	 * @post {@code this.tool} has been set to {@code tool}
+	 */
+	public void setDrawingTool(DrawingTool tool) {
+		this.tool = tool;
+		int rad = tool.getRadius();
+		int size = (rad * 2 + 1) * factor;
+		this.displacement = rad * factor;
+		this.toolImage = tool.getTool(context.getImageData(1, 1, size, size),
+				currentColor);
+		this.dummycontext = getDummyContext(size, size, toolImage);
+	}
+
+	/**
+	 * 
+	 * Returns the ImageData to paint on this position on the canvas, meaning it
+	 * is clipped when the coordinates are close to the border of the geometry.
+	 * 
+	 * @param x
+	 *            A valid x-coordinate, meaning the top-left pixel of a
+	 *            'grid-pixel'
+	 * @param y
+	 *            A valid y-coordinate, meaning the top-left pixel of a
+	 *            'grid-pixel'
+	 * @return The imageData to paint on this position on the canvas
+	 */
+	protected ImageData getTool(int x, int y, ImageData img) {
+
+		if (x > displacement && y > displacement
+				&& x < getWidth() - displacement
+				&& y < getHeight() - displacement) {
+			return img;
+		} else {
+			int rad = tool.getRadius();
+			int left = 0;
+			int top = 0;
+			int right = (rad * 2 + 1) * factor - 1;
+			int bottom = (rad * 2 + 1) * factor - 1;
+			if (x <= displacement) {
+				left = displacement + 1 - x;
+			}
+			if (y <= displacement) {
+				top = displacement + 1 - y;
+			}
+			if (x >= getWidth() - displacement) {
+				right = displacement + getWidth() - x;
+			}
+			if (y >= getHeight() - displacement) {
+				bottom = displacement + getHeight() - y;
+			}
+			return dummycontext.getImageData(left, top, right - left + 1,
+					bottom - top + 1);
+		}
+	}
 
 	// ----Protected and private methods for initialisation and
 	// drawing------------
@@ -215,9 +329,14 @@ public abstract class Geometry {
 				int y = event.getRelativeY(elem);
 				if (isInside(x, y)) {
 					dragging = true;
+
 					previousX = x;
 					previousY = y;
-					fillPixel(previousX, previousY);
+					x = getValidCoord(x);
+					y = getValidCoord(y);
+					context.putImageData(getTool(x, y, toolImage),
+							Math.max(x - displacement, 1),
+							Math.max(y - displacement, 1));
 					mouseMove = canvas
 							.addMouseMoveHandler(new MouseMoveHandler() {
 								/*
@@ -235,8 +354,6 @@ public abstract class Geometry {
 										drawLine(previousX, previousY, x, y);
 										previousX = x;
 										previousY = y;
-									} else {
-										removeMouseMoveHandler();
 									}
 								}
 							});
@@ -273,7 +390,6 @@ public abstract class Geometry {
 				stopDefineMixingStep(event.getX(), event.getY());
 			}
 		});
-
 	}
 
 	/*
@@ -399,7 +515,11 @@ public abstract class Geometry {
 		}
 		int numerator = longest >> 1;
 		for (int i = 0; i <= longest; i++) {
-			fillPixel(x1, y1);
+			int x3 = getValidCoord(x1);
+			int y3 = getValidCoord(y1);
+			context.putImageData(getTool(x3, y3, toolImage),
+					Math.max(x3 - displacement, 1),
+					Math.max(y3 - displacement, 1));
 			numerator += shortest;
 			if (!(numerator < longest)) {
 				numerator -= longest;
@@ -494,6 +614,51 @@ public abstract class Geometry {
 	 */
 	protected void clear(int locationX, int locationY, int sizeX, int sizeY){
 		
+	}
+
+	/**
+	 * Creates a dummy canvas and returns it context to keep for clipping of the
+	 * drawing tool image.
+	 * 
+	 * @param width
+	 *            The width of the dummy canvas, equals to the width of the
+	 *            drawing tool
+	 * @param height
+	 *            The width of the dummy canvas, equals to the width of the
+	 *            drawing tool
+	 * @param img
+	 *            The ImageData belonging to the drawing tool
+	 * 
+	 * @return The context of this canvas, containing the drawing tool image
+	 */
+	private Context2d getDummyContext(int width, int height, ImageData img) {
+		Canvas dummycanvas = Canvas.createIfSupported();
+
+		// Initialise canvas
+		if (dummycanvas != null) {
+			dummycanvas.setWidth(width + "px");
+			dummycanvas.setCoordinateSpaceWidth(width);
+			dummycanvas.setHeight(height + "px");
+			dummycanvas.setCoordinateSpaceHeight(height);
+		}
+
+		Context2d dummyContext = dummycanvas.getContext2d();
+		dummyContext.putImageData(img, 0, 0);
+
+		return dummyContext;
+	}
+
+	/**
+	 * Converts a value to a valid coordinate, meaning the a value representing
+	 * the top left pixel of a 'grid-pixel'
+	 * 
+	 * @param c
+	 *            The coordinate to convert
+	 * 
+	 * @return The valid coordinate belonging to input c
+	 */
+	protected int getValidCoord(int c) {
+		return ((c - 1) / factor) * factor + 1;
 	}
 
 	// --Public methods for general use---------------------------------
