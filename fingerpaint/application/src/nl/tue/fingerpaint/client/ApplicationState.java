@@ -85,15 +85,39 @@ public class ApplicationState {
 		return protocol;
 	}
 	
+	/**
+	 * sets the current mixing protocol
+	 * 
+	 * @param mixingProtocol, the new mixing protocol
+	 * @throws NullPointerException if mixingProtocol == null
+	 */
 	public void setProtocol(MixingProtocol mixingProtocol){
 		if(mixingProtocol == null){
 			throw new NullPointerException();
 		}
 		protocol = mixingProtocol;
-		
 	}
 	
+	/**
+	 * 
+	 * @return the index of the currently selected mixing step
+	 */
+	public int getCurrentStepIndex(){
+		return currMixingStep;
+	}
+	
+	/**
+	 * 
+	 * @return the currently selected mixing step
+	 */
+	public MixingStep getCurrentStep(){
+		return protocol.getStep(currMixingStep);
+	}
+	
+	//the current mixing protocol
 	private MixingProtocol protocol = new MixingProtocol();
+	//the index of the current mixing step
+	private int currMixingStep;
 	
 	// TODO: Benjamin's code.
 	
