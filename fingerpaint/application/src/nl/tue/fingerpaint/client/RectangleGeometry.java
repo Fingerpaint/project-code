@@ -212,15 +212,11 @@ public class RectangleGeometry extends Geometry {
 	protected void stopDefineMixingStep(int mouseX, int mouseY) {
 		MixingStep movement = determineSwipe(mouseX, mouseY);
 
-		int stepSize = 1; // TODO: Get value from spinner
-
 		if(movement != null){
 			for (StepAddedListener l : stepAddedListeners) {
 				l.onStepAdded(movement);
 			}
 		}
-		// TODO: Actually add the step somewhere...
-		// protocol.addStep(mixingStep);
 	}
 	
 	/**
