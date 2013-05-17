@@ -37,3 +37,21 @@ h1 {
   margin-left: 20px;
   margin-top: 20px;
 }
+
+.center {
+	position: absolute;
+	top:50%;
+	left:50%;
+	/*margins from top, right, bottom, left. Margins are 50% of image size*/
+	margin: -27px 0 0 -27px; 
+}
+
+#loading-overlay {
+	position: absolute;
+	top: 0; /*Absolute margin from top of screen is 0*/ 
+	right: 0;
+	bottom: 0;
+	left: 0;
+	background#000;
+	background: rgba(0, 0, 0, 0.5);	
+}
