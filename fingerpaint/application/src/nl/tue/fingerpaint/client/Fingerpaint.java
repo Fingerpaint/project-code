@@ -54,11 +54,14 @@ public class Fingerpaint implements EntryPoint {
 
 	// Vertical panel to contain all menu items
 	private VerticalPanel menuPanel = new VerticalPanel();
-	
-	private TextArea protocolText = new TextArea();
+
+	/**
+	 * Shows the textual representation of the mixing protocol.
+	 */
+	private TextArea taProtocolRepresentation = new TextArea();
 	/*
-	 * The NumberSpinner to set the #steps parameter. Its settings are
-	 * described via the following parameters.
+	 * The NumberSpinner to set the #steps parameter. Its settings are described
+	 * via the following parameters.
 	 */
 	private final double NRSTEPS_DEFAULT = 1.0;
 	private final double NRSTEPS_RATE = 1.0;
@@ -83,12 +86,6 @@ public class Fingerpaint implements EntryPoint {
 	 * This is the entry point method.
 	 */
 	public void onModuleLoad() {
-
-		// Initialise the label to show the protocol.
-		protocolText.setText("");
-		protocolText.setWidth(String.valueOf(topBarHeight));
-		menuPanel.add(protocolText);
-		
 		// initialise the UC
 		as = new ApplicationState();
 
@@ -101,7 +98,7 @@ public class Fingerpaint implements EntryPoint {
 		CellBrowser tree = (new CellBrowser.Builder<Object>(model, null))
 				.build();
 
-	//	((CustomTreeModel) model).setCellBrowser(tree);
+		// ((CustomTreeModel) model).setCellBrowser(tree);
 
 		// Add the tree to the root layout panel.
 		RootLayoutPanel.get().add(tree);
@@ -114,7 +111,9 @@ public class Fingerpaint implements EntryPoint {
 		private final List<GeometryNames> geometries = new ArrayList<GeometryNames>();
 
 		private final SingleSelectionModel<String> selectionModel = new SingleSelectionModel<String>();
-	//	private CellBrowser cb; //Reference to self. Used in an attempt to use some kind of .close() method on itself.
+
+		// private CellBrowser cb; //Reference to self. Used in an attempt to
+		// use some kind of .close() method on itself.
 
 		private void setupGeometryValues() {
 			// add all instances of GeometryNames to geometries
@@ -167,7 +166,8 @@ public class Fingerpaint implements EntryPoint {
 							setUserChoiceValues(selected);
 
 							if (selected != null) {
-								// "closes" Cellbrowser widget (clears whole rootpanel)
+								// "closes" Cellbrowser widget (clears whole
+								// rootpanel)
 								// TODO: Make decent close-code
 								RootPanel.get().clear();
 
@@ -178,7 +178,8 @@ public class Fingerpaint implements EntryPoint {
 											+ ", Mixer: "
 											+ as.getMixerChoice().toString());
 								} else {// This should never happen. Just to be
-										// safe i made this msg so fails are visible
+										// safe i made this msg so fails are
+										// visible
 									mixingDetails
 											.setText("Geometry and/or Mixer was not selected succesfully");
 								}
@@ -192,26 +193,25 @@ public class Fingerpaint implements EntryPoint {
 						}
 					});
 		}
-		
+
 		/**
 		 * Helper method that initialises the widgets for the mixing interface
 		 */
-		void createMixingWidgets(){
+		void createMixingWidgets() {
 			// Initialise geometry
-			geom = new RectangleGeometry(Window
-					.getClientHeight() - topBarHeight,
-					Window.getClientWidth() - menuWidth);
+			geom = new RectangleGeometry(Window.getClientHeight()
+					- topBarHeight, Window.getClientWidth() - menuWidth);
 
 			stepAddedListener l = new stepAddedListener() {
-				
+
 				@Override
 				public void onStepAdded(MixingStep step) {
-					addStep(step);					
+					addStep(step);
 				}
 			};
-			
+
 			geom.addStepAddedListener(l);
-			
+
 			// Initialise toggleButton and add to
 			// menuPanel
 			createToggleButton();
@@ -224,18 +224,21 @@ public class Fingerpaint implements EntryPoint {
 
 			// TODO: Initialise other menu items and add
 			// them to menuPanel
-			// Initialise a spinner for changing the length of a mixing protocol step
+			// Initialise a spinner for changing the length of a mixing protocol
+			// step
 			// and add to menuPanel.
 			createStepSizeSpinner();
 			menuPanel.add(sizeLabel);
 			menuPanel.add(sizeSpinner);
-			
+
 			// Initialise a spinner for #steps and add to
 			// menuPanel.
 			createNrStepsSpinner();
 			menuPanel.add(nrStepsLabel);
 			menuPanel.add(nrStepsSpinner);
 			
+			createProtocolRepresentationTextArea();
+
 			// Add canvas and menuPanel to the panel
 			// Make the canvas the entire width of the
 			// screen except for the
@@ -243,8 +246,7 @@ public class Fingerpaint implements EntryPoint {
 			panel.setWidth("100%");
 			panel.add(geom.getCanvas());
 			panel.add(menuPanel);
-			panel.setCellWidth(menuPanel,
-					Integer.toString(menuWidth));
+			panel.setCellWidth(menuPanel, Integer.toString(menuWidth));
 
 			// Add panel to RootPanel
 			RootPanel.get().add(panel);
@@ -320,43 +322,47 @@ public class Fingerpaint implements EntryPoint {
 			return value instanceof String;
 		}
 
-/*		public void setCellBrowser(CellBrowser cellbrowser) {
-			this.cb = cellbrowser;
-		}*/
+		/*
+		 * public void setCellBrowser(CellBrowser cellbrowser) { this.cb =
+		 * cellbrowser; }
+		 */
 	}
-	
+
 	/*
 	 * initialises the spinner for the stepSize
 	 */
 	private void createStepSizeSpinner() {
-		//initial initialisation of the spinner
-		sizeSpinner = new NumberSpinner(MixingStep.STEP_DEFAULT, 
-				MixingStep.STEP_UNIT, MixingStep.STEP_MIN, MixingStep.STEP_MAX, true);
-		
-		//set a listener for the spinner
-		sizeSpinner.setSpinnerListener(new NumberSpinnerListener(){
+		// initial initialisation of the spinner
+		sizeSpinner = new NumberSpinner(MixingStep.STEP_DEFAULT,
+				MixingStep.STEP_UNIT, MixingStep.STEP_MIN, MixingStep.STEP_MAX,
+				true);
+
+		// set a listener for the spinner
+		sizeSpinner.setSpinnerListener(new NumberSpinnerListener() {
 
 			@Override
 			public void onValueChange(double value) {
 				// TODO pass the new value to the current mixing step
-				
+
 			}
-			
+
 		});
 	}
-	
+
 	/*
 	 * Initialises the spinner for the nrSteps.
 	 */
-	private void createNrStepsSpinner(){
+	private void createNrStepsSpinner() {
 		// Initialise the spinner with the required settings.
-		nrStepsSpinner = new NumberSpinner(NRSTEPS_DEFAULT, NRSTEPS_RATE, NRSTEPS_MIN, NRSTEPS_MAX, true);
+		nrStepsSpinner = new NumberSpinner(NRSTEPS_DEFAULT, NRSTEPS_RATE,
+				NRSTEPS_MIN, NRSTEPS_MAX, true);
 		// Also initialise the initial value in the ApplicationState class.
 		as.setNrSteps(NRSTEPS_DEFAULT);
-		
-		// The spinner for #steps should update the nrSteps variable whenever the value is changed.
+
+		// The spinner for #steps should update the nrSteps variable whenever
+		// the value is changed.
 		nrStepsSpinner.setSpinnerListener(new NumberSpinnerListener() {
-			
+
 			@Override
 			public void onValueChange(double value) {
 				as.setNrSteps(value);
@@ -382,6 +388,12 @@ public class Fingerpaint implements EntryPoint {
 			}
 		});
 	}
+	
+	private void createProtocolRepresentationTextArea() {
+		taProtocolRepresentation.setText("");
+		taProtocolRepresentation.setWidth(String.valueOf(menuWidth));
+		menuPanel.add(taProtocolRepresentation);
+	}
 
 	/*
 	 * Changes the current drawing colour from black to white, and from white to
@@ -394,15 +406,19 @@ public class Fingerpaint implements EntryPoint {
 			geom.setColor(CssColor.make("black"));
 		}
 	}
-	
+
 	/**
-	 * Updates the protocol label to show the textual representation of {@code step}.
-	 * @param step The new {@code Step} of which the textual representation should be added.
+	 * Updates the protocol label to show the textual representation of
+	 * {@code step}.
+	 * 
+	 * @param step
+	 *            The new {@code Step} of which the textual representation
+	 *            should be added.
 	 */
-	public void updateProtocolLabel(MixingStep step) {
-		String oldProtocol = protocolText.getText();
+	private void updateProtocolLabel(MixingStep step) {
+		String oldProtocol = taProtocolRepresentation.getText();
 		String stepString;
-		
+
 		if (step.isTopWall() && step.movesForward()) {
 			stepString = "T";
 		} else if (step.isTopWall() && !step.movesForward()) {
@@ -412,8 +428,8 @@ public class Fingerpaint implements EntryPoint {
 		} else { // (!step.isTopWall() && !step.movesForward()) {
 			stepString = "-B";
 		}
-		
-		protocolText.setText(oldProtocol + stepString + " ");
+
+		taProtocolRepresentation.setText(oldProtocol + stepString + " ");
 	}
 
 	/*
@@ -440,8 +456,15 @@ public class Fingerpaint implements EntryPoint {
 			}
 		});
 	}
-	
-	public void addStep(MixingStep step) {
+
+	/**
+	 * Adds a new {@code MixingStep} to the mixing protocol, and updates the
+	 * text area {@code taProtocolRepresentation} accordingly.
+	 * 
+	 * @param step
+	 *            The {@code MixingStep} to be added.
+	 */
+	private void addStep(MixingStep step) {
 		as.addMixingStep(step);
 		updateProtocolLabel(step);
 	}
