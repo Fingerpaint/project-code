@@ -68,6 +68,7 @@ public class Fingerpaint implements EntryPoint {
 	private NumberSpinner nrStepsSpinner;
 	private NumberSpinner sizeSpinner;
 	private Label nrStepsLabel = new Label("#steps");
+	private Label sizeLabel = new Label("Step size");
 
 	// Width of the menu in which buttons are displayed
 	// on the right side of the window in pixels
@@ -223,13 +224,18 @@ public class Fingerpaint implements EntryPoint {
 
 			// TODO: Initialise other menu items and add
 			// them to menuPanel
+			// Initialise a spinner for changing the length of a mixing protocol step
+			// and add to menuPanel.
+			createStepSizeSpinner();
+			menuPanel.add(sizeLabel);
+			menuPanel.add(sizeSpinner);
+			
+			// Initialise a spinner for #steps and add to
+			// menuPanel.
 			createNrStepsSpinner();
 			menuPanel.add(nrStepsLabel);
 			menuPanel.add(nrStepsSpinner);
 			
-			// Create a spinner for changing the length of a mixing protocol step
-			createStepSizeSpinner();
-
 			// Add canvas and menuPanel to the panel
 			// Make the canvas the entire width of the
 			// screen except for the
