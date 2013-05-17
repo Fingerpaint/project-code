@@ -74,12 +74,12 @@ public class RectangleGeometryTest extends GWTTestCase {
 		for (int i = 0; i < 4; i++) {
 			geom.fillPixel((int) borderTests[i].getX(),
 					(int) borderTests[i].getY());
-			assertEquals("BorderTest " + i, 1.0,
+			assertEquals("BorderTest " + i, 0.0,
 					geom.getDistribution().getVector()[borderResults[i]]);
 
 			geom.fillPixel((int) innerTests[i].getX(),
 					(int) innerTests[i].getY());
-			assertEquals("InnerTest " + i, 1.0,
+			assertEquals("InnerTest " + i, 0.0,
 					geom.getDistribution().getVector()[innerResults[i]]);
 		}
 
@@ -89,12 +89,12 @@ public class RectangleGeometryTest extends GWTTestCase {
 		for (int i = 0; i < 4; i++) {
 			geom.fillPixel((int) borderTests[i].getX(),
 					(int) borderTests[i].getY());
-			assertEquals("BorderTest " + i, 0.0,
+			assertEquals("BorderTest " + i, 1.0,
 					geom.getDistribution().getVector()[borderResults[i]]);
 
 			geom.fillPixel((int) innerTests[i].getX(),
 					(int) innerTests[i].getY());
-			assertEquals("InnerTest " + i, 0.0,
+			assertEquals("InnerTest " + i, 1.0,
 					geom.getDistribution().getVector()[innerResults[i]]);
 		}
 	}

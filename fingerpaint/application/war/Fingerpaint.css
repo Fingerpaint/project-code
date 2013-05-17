@@ -37,3 +37,7 @@ h1 {
   margin-left: 20px;
   margin-top: 20px;
 }
+
+.gwt-PopupPanel.popupContent {
+	border: 1px solid black;
+}
