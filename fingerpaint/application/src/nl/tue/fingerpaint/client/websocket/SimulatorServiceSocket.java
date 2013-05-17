@@ -41,11 +41,13 @@ import de.csenk.gwt.ws.client.js.JavaScriptWebSocket;
  */
 public class SimulatorServiceSocket {
 
+	// ---------- CONSTANTS ---------------------------------------------------
 	/**
 	 * The URL at which the simulator service can be reached.
 	 */
 	public static final String SERVICE_URL = "ws://localhost/websocket";
 
+	// ---------- GLOBAL VARIABLES --------------------------------------------
 	/**
 	 * This is a static object because this class cannot be instantiated. The
 	 * idea is that all communication to and from the simulator service goes
@@ -71,6 +73,7 @@ public class SimulatorServiceSocket {
 	 */
 	protected boolean isBusy;
 
+	// ---------- CONSTRUCTOR -------------------------------------------------
 	/**
 	 * Instantiate an instance of the {@code SimulatorServiceSocket}. This will
 	 * open a connection with the service and put a callback in place.
@@ -148,6 +151,18 @@ public class SimulatorServiceSocket {
 		};
 	}
 
+	// ---------- PUBLIC PART -------------------------------------------------
+	/**
+	 * Closes the connection with the simulation service.
+	 */
+	public void close() {
+		if (isOpen) {
+			isOpen = false;
+			connection.close();
+		}
+	}
+	
+	// ---------- GETTERS/SETTERS ---------------------------------------------
 	/**
 	 * Return a shared instance of the {@link SimulatorServiceSocket}. This
 	 * instance can be used for communication with the simulator service.
