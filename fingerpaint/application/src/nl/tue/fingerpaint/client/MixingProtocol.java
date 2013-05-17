@@ -3,15 +3,14 @@ package nl.tue.fingerpaint.client;
 import java.util.ArrayList;
 
 /**
+ * This class symbolises a mixing program consisting of a number of mixing steps
  * 
  * @author Roel van Happen
- * 
- * This class symbolises a mixing program consisting of a number of mixing steps
  *
  */
 public class MixingProtocol {
 
-	//the current mixing program
+	/**the current mixing program*/
 	private ArrayList<MixingStep> program = new ArrayList<MixingStep>();
 	
 	/**
