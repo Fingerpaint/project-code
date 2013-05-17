@@ -322,8 +322,8 @@ public class Fingerpaint implements EntryPoint {
 
 			@Override
 			public void onValueChange(double value) {
-				// TODO pass the new value to the current mixing step
-				
+				//change the current mixing step
+				as.getCurrentStep().setStepSize(value);
 			}
 			
 		});
