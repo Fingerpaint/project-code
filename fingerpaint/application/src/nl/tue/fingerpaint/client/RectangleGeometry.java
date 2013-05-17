@@ -210,6 +210,28 @@ public class RectangleGeometry extends Geometry {
 	 */
 	@Override
 	protected void stopDefineMixingStep(int mouseX, int mouseY) {
+		MixingStep movement = determineSwipe(mouseX, mouseY);
+
+		int stepSize = 1; // TODO: Get value from spinner
+
+		for (StepAddedListener l : stepAddedListeners) {
+			l.onStepAdded(movement);
+		}
+		// TODO: Actually add the step somewhere...
+		// protocol.addStep(mixingStep);
+	}
+	
+	/**
+	 * Returns the direction and wall of the current swiping movement, 
+	 * returns null if the swipe is not a valid swipe.
+	 * 
+	 * Additionally draws an arrow to indicate the direction of the current swipe
+	 * 
+	 * @param mouseX The x-coordinate of the current mouse position.
+	 * @param mouseY The y-coordinate of the current mouse position.
+	 */
+	@Override
+	protected MixingStep determineSwipe(int mouseX, int mouseY) {
 		int diffX = mouseX - swipeStartX;
 		boolean topWall = false;
 		boolean toTheLeft = false;
@@ -220,7 +242,7 @@ public class RectangleGeometry extends Geometry {
 				&& mouseY < rectangleHeight * factor) { // Bottom wall
 			topWall = false;
 		} else { // No movement of the geometry was specified
-			return;
+			return null;
 		}
 
 		if (diffX < -SWIPE_THRESHOLD) { // To the left
@@ -228,15 +250,23 @@ public class RectangleGeometry extends Geometry {
 		} else if (diffX > SWIPE_THRESHOLD) { // To the right
 			toTheLeft = false;
 		}
-
-		boolean clockwise = (topWall && !toTheLeft) || (!topWall && toTheLeft);
-		int stepSize = 1; // TODO: Get value from spinner
 		
-		MixingStep mixingStep = new MixingStep(stepSize, clockwise, topWall);
-
-		for (StepAddedListener l : stepAddedListeners) {
-			l.onStepAdded(mixingStep);
+		//draw an arrow corresponding to the swipe
+		if(diffX>0){
+			//the left side of the image should be at the starting location
+			int imageLeft = swipeStartX;
+			//the top is moved upward to center the picture around the starting location, picture size is 100
+			int imageTop = swipeStartY - 50;
+			drawImage("rightarrow", imageLeft, imageTop);
+		}else{
+			//the right side of the image should be at the starting location, picture size is 100
+			int imageLeft = swipeStartX- 100;
+			//the top is moved upward to center the picture around the starting location, picture size is 100
+			int imageTop = swipeStartY - 50;
+			drawImage("leftarrow", imageLeft, imageTop);
 		}
+		MixingStep movement = new MixingStep(1, !toTheLeft, topWall);
+		return movement;
 	}
 		
 	/**

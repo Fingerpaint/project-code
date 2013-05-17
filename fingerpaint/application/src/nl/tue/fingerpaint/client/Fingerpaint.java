@@ -16,9 +16,11 @@ import com.google.gwt.user.cellview.client.CellBrowser;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -55,6 +57,13 @@ public class Fingerpaint implements EntryPoint {
 	// Vertical panel to contain all menu items
 	private VerticalPanel menuPanel = new VerticalPanel();
 
+	// Panel that covers the entire application and blocks the user from
+	// accessing other features
+	private static SimplePanel loadPanel = new SimplePanel();
+
+	// The image that will be shown in the loadPanel
+	final Image loadImage = new Image();
+
 	/**
 	 * Shows the textual representation of the mixing protocol.
 	 */
@@ -86,6 +95,15 @@ public class Fingerpaint implements EntryPoint {
 	 * This is the entry point method.
 	 */
 	public void onModuleLoad() {
+		// Point the loadImage at a URL.
+		loadImage.setUrl("/img/loading_animation.gif");
+		// add the loading-image to the panel
+		loadPanel.add(loadImage);
+		// give the image the center css-style
+		loadImage.addStyleName("center");		
+		//set item ID for loadpanel
+		loadPanel.getElement().setId("loading-overlay");
+		
 		// initialise the UC
 		as = new ApplicationState();
 
@@ -176,7 +194,7 @@ public class Fingerpaint implements EntryPoint {
 									mixingDetails.setText("Geometry: "
 											+ as.getGeometryChoice().toString()
 											+ ", Mixer: "
-											+ as.getMixerChoice().toString());
+											+ as.getMixerChoice().toString());																	
 								} else {// This should never happen. Just to be
 										// safe i made this msg so fails are
 										// visible
@@ -234,7 +252,7 @@ public class Fingerpaint implements EntryPoint {
 			createNrStepsSpinner();
 			menuPanel.add(nrStepsLabel);
 			menuPanel.add(nrStepsSpinner);
-			
+
 			createProtocolRepresentationTextArea();
 
 			// Add canvas and menuPanel to the panel
@@ -247,7 +265,7 @@ public class Fingerpaint implements EntryPoint {
 			panel.setCellWidth(menuPanel, Integer.toString(menuWidth));
 
 			// Add panel to RootPanel
-			RootPanel.get().add(panel);
+			RootPanel.get().add(panel);			
 		}
 
 		/**
@@ -340,8 +358,8 @@ public class Fingerpaint implements EntryPoint {
 
 			@Override
 			public void onValueChange(double value) {
-				// TODO pass the new value to the current mixing step
-
+				//change the current mixing step
+				as.getCurrentStep().setStepSize(value);
 			}
 
 		});
@@ -386,7 +404,7 @@ public class Fingerpaint implements EntryPoint {
 			}
 		});
 	}
-	
+
 	private void createProtocolRepresentationTextArea() {
 		taProtocolRepresentation.setText("");
 		taProtocolRepresentation.setWidth(String.valueOf(menuWidth));
@@ -467,4 +485,24 @@ public class Fingerpaint implements EntryPoint {
 		as.addMixingStep(step);
 		updateProtocolLabel(step);
 	}
+
+	
+	/**
+	 * A semi-transparent windows that covers the entire application pops up
+	 * that blocks the user from accessing other features. A loading-icon
+	 * will be shown. {@code closeLoadingWindow()} removes this window.
+	 */
+	private void showLoadingWindow() {
+		RootPanel.get().add(loadPanel);
+	}
+
+	/**
+	 * Removes Removes the loading-window that {@code showLoadingWindow()} has created.
+	 * 
+	 * @pre showLoadingWindow() has been executed
+	 */
+	private void closeLoadingWindow() {
+		loadPanel.removeFromParent();
+	}
+
 }

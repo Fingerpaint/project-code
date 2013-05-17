@@ -5,6 +5,8 @@ import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.ImageElement;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.dom.client.MouseMoveEvent;
@@ -14,6 +16,7 @@ import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 
@@ -52,6 +55,10 @@ public abstract class Geometry {
 	 * Stores the x-coordinate of the mouse event that initiates swiping.
 	 */
 	protected int swipeStartX;
+	/**
+	 * Stores the y-coordinate of the mouse event that initiates swiping.
+	 */
+	protected int swipeStartY;
 
 	// ----Constructor-----------------------------------------------
 	/**
@@ -234,7 +241,7 @@ public abstract class Geometry {
 								}
 							});
 				}
-				startDefineMixingStep(event.getX());
+				startDefineMixingStep(event.getX(), event.getY());
 			}
 		});
 
@@ -406,7 +413,7 @@ public abstract class Geometry {
 	}
 
 	/**
-	 * Together with {@code stopDefineProtocol()}, this function checks whether
+	 * Together with {@code stopDefineMixingStep()}, this function checks whether
 	 * the protocol should be updated by adding a new {@code Step}. This
 	 * particular function only stores the coordinates of the press event, to
 	 * calculate the distance travelled when the mouse or the user's finger is
@@ -415,14 +422,15 @@ public abstract class Geometry {
 	 * @param mouseX
 	 *            x-coordinate of the mouseEvent.
 	 */
-	protected void startDefineMixingStep(int mouseX) {
+	protected void startDefineMixingStep(int mouseX, int mouseY) {
 		// TODO: Only execute if the user actually wants to define a protocol
 		// step (but when is that?)
 		swipeStartX = mouseX;
+		swipeStartY = mouseY;
 	}
 
 	/**
-	 * Together with {@code startDefineProtocol()}, this function checks whether
+	 * Together with {@code startDefineMixingStep()}, this function checks whether
 	 * the protocol should be updated by adding a new {@code Step}. This
 	 * particular function should be implemented by geometries to detail when and
 	 * how a new {@code Step} should be defined.
@@ -433,6 +441,17 @@ public abstract class Geometry {
 	 *            y-coordinate of the mouseEvent.
 	 */
 	protected abstract void stopDefineMixingStep(int mouseX, int mouseY);
+	
+	/**
+	 * Should return the direction and wall of the current swiping movement.
+	 * should return null if the swipe is not a valid swipe.
+	 * 
+	 * This method should additionally draw a graphic to display that a swiping motion is in progress
+	 * 
+	 * @param mouseX The x-coordinate of the current mouse position.
+	 * @param mouseY The y-coordinate of the current mouse position.
+	 */
+	protected abstract MixingStep determineSwipe(int mouseX, int mouseY);
 	
 	/**
 	 * Returns a CssColor object with the gray scale colour corresponding to the
@@ -447,6 +466,34 @@ public abstract class Geometry {
 	protected CssColor getColour(double value) {
 		int colourCode = (int) Math.round(value * 255);
 		return CssColor.make(colourCode, colourCode, colourCode);
+	}
+	
+	/**
+	 * Draws an image located in the map war/img.
+	 * 
+	 * @param name the name of the image file itself
+	 * @param locationX the desired left location of the image
+	 * @param locationY the desired top location of the image
+	 */
+	protected void drawImage(String name, int locationX, int locationY){
+		Image image = new Image("/img/" + name + ".png");
+		image.getElement().getStyle().setLeft(locationX, Unit.PX);
+		image.getElement().getStyle().setTop(locationY, Unit.PX);
+		ImageElement imgelem = ImageElement.as(image.getElement());
+		//context.drawImage(imgelem, locationX, locationY);
+	}
+	
+	/**
+	 * clears the canvas between locationX and locationX + sizeX, 
+	 * and locationY and locationY + sizeY
+	 * 
+	 * @param locationX the minimum x-value of the data that needs to be cleared
+	 * @param locationY the minimum y-value of the data that needs to be cleared
+	 * @param sizeX the width of the to be cleared section
+	 * @param sizeY the height of the to be cleared section
+	 */
+	protected void clear(int locationX, int locationY, int sizeX, int sizeY){
+		
 	}
 
 	// --Public methods for general use---------------------------------
