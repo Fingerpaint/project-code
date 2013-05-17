@@ -214,8 +214,10 @@ public class RectangleGeometry extends Geometry {
 
 		int stepSize = 1; // TODO: Get value from spinner
 
-		for (StepAddedListener l : stepAddedListeners) {
-			l.onStepAdded(movement);
+		if(movement != null){
+			for (StepAddedListener l : stepAddedListeners) {
+				l.onStepAdded(movement);
+			}
 		}
 		// TODO: Actually add the step somewhere...
 		// protocol.addStep(mixingStep);
