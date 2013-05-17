@@ -1,5 +1,6 @@
 package nl.tue.fingerpaint.client;
 
+import nl.tue.fingerpaint.client.Geometry.stepAddedListener;
 import nl.tue.fingerpaint.client.RectangleGeometry;
 
 import org.junit.Test;
@@ -97,5 +98,35 @@ public class RectangleGeometryTest extends GWTTestCase {
 			assertEquals("InnerTest " + i, 0.0,
 					geom.getDistribution().getVector()[innerResults[i]]);
 		}
+	}
+	
+	@Test
+	public void testStopDefineMixingStep() {
+		stepAddedListener stl = new stepAddedListener() {
+			
+			@Override
+			public void onStepAdded(MixingStep step) {
+				verifyMixingStep(step);
+			}
+		};
+		
+		geom.addStepAddedListener(stl);
+		
+		geom.startDefineMixingStep(60);
+		geom.stopDefineMixingStep(100, 10);
+	}
+	
+	private void verifyMixingStep(MixingStep step) {
+		
+	}
+
+	@Test
+	public void testStartDefineMixingStep() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testAddStepAddedListener() {
+		
 	}
 }
