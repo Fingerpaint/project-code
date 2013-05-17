@@ -16,6 +16,7 @@ import com.google.gwt.user.cellview.client.CellBrowser;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
@@ -32,7 +33,7 @@ import com.google.gwt.view.client.TreeViewModel;
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  * 
- * @author Tessa Belder
+ * @author Group Fingerpaint
  */
 public class Fingerpaint implements EntryPoint {
 	// Class to remember which Geometry and Mixer the user has selected
@@ -50,6 +51,28 @@ public class Fingerpaint implements EntryPoint {
 
 	// Rectangular geometry to draw on
 	private Geometry geom;
+
+	// Button to adapt the drawing tool
+	// TODO: Change this to a button on which the current tool is drawn
+	private Button toolSelectButton;
+
+	// PopupPanel which contains options for selecting a different drawing tool
+	private PopupPanel toolSelector;
+
+	// The panel in the popup panel to seperate the toolSelector from the
+	// toolSizer
+	private HorizontalPanel popupPanelPanel;
+
+	// The panel in the popup panel that contains the different drawing tools
+	private VerticalPanel popupPanelMenu;
+
+	// Button to select the square drawing tool
+	// TODO: Change this to a button on which a square is drawn
+	private ToggleButton squareDrawingTool;
+
+	// Button to select the circle drawing tool
+	// TODO: Change this to a button on which a circle is drawn
+	private ToggleButton circleDrawingTool;
 
 	// Horizontal panel to contain drawing canvas and menu bar
 	private HorizontalPanel panel = new HorizontalPanel();
@@ -95,6 +118,35 @@ public class Fingerpaint implements EntryPoint {
 	 * This is the entry point method.
 	 */
 	public void onModuleLoad() {
+//		// Initialise geometry
+//		geom = new RectangleGeometry(Window.getClientHeight() - topBarHeight,
+//				Window.getClientWidth() - menuWidth);
+//
+//		// Initialise toggleButton and add to menuPanel
+//		createToggleButton();
+//		menuPanel.add(toggleColor);
+//
+//		// Initialise the toolSelectButton and add to menuPanel
+//		createToolSelector();
+//		menuPanel.add(toolSelectButton);
+//
+//		// Initialise the loadDistButton and add to menuPanel
+//		createLoadDistButton();
+//		menuPanel.add(loadDistButton);
+//
+//		// TODO: Initialise other menu items and add them to menuPanel
+//
+//		// Add canvas and menuPanel to the panel
+//		// Make the canvas the entire width of the screen except for the
+//		// menuWidth
+//		panel.setWidth("100%");
+//		panel.add(geom.getCanvas());
+//		panel.add(menuPanel);
+//		panel.setCellWidth(menuPanel, Integer.toString(menuWidth));
+//
+//		// Add panel to RootPanel
+//		RootPanel.get().add(panel);
+
 		// Point the loadImage at a URL.
 		loadImage.setUrl("/img/loading_animation.gif");
 		// add the loading-image to the panel
@@ -227,7 +279,11 @@ public class Fingerpaint implements EntryPoint {
 			};
 
 			geom.addStepAddedListener(l);
-
+			
+			// Initialise the toolSelectButton and add to menuPanel
+			createToolSelector();
+			menuPanel.add(toolSelectButton);
+	
 			// Initialise toggleButton and add to
 			// menuPanel
 			createToggleButton();
@@ -238,8 +294,8 @@ public class Fingerpaint implements EntryPoint {
 			createLoadDistButton();
 			menuPanel.add(loadDistButton);
 
-			// TODO: Initialise other menu items and add
-			// them to menuPanel
+			// TODO: Initialise other menu items and add them to menuPanel
+			
 			// Initialise a spinner for changing the length of a mixing protocol
 			// step
 			// and add to menuPanel.
@@ -424,6 +480,93 @@ public class Fingerpaint implements EntryPoint {
 		}
 	}
 
+	private void createToolSelector() {
+		// --Initialise all elements--------------------------------
+		toolSelector = new PopupPanel(true);
+		popupPanelPanel = new HorizontalPanel();
+		popupPanelMenu = new VerticalPanel();
+		squareDrawingTool = new ToggleButton("not selected", "square");
+		circleDrawingTool = new ToggleButton("not selected", "circle");
+
+		squareDrawingTool.addClickHandler(new ClickHandler() {
+
+			/*
+			 * Select the square drawing tool when this button is clicked
+			 */
+			@Override
+			public void onClick(ClickEvent event) {
+				
+				if (!squareDrawingTool.isDown()) {
+					squareDrawingTool.setDown(true);
+				} else {
+					// TODO Change hard-coded 3 to 'size-slider.getValue()' or
+					// something
+					geom.setDrawingTool(new SquareDrawingTool(3));
+
+					// TODO Deselect all other tools
+					circleDrawingTool.setDown(false);
+				}
+			}
+		});
+		//Initial drawing tool is square
+		squareDrawingTool.setDown(true);
+
+		circleDrawingTool.addClickHandler(new ClickHandler() {
+
+			/*
+			 * Select the square drawing tool when this button is clicked
+			 */
+			@Override
+			public void onClick(ClickEvent event) {
+				
+				if (!circleDrawingTool.isDown()) {
+					circleDrawingTool.setDown(true);
+				} else {
+					// TODO Change hard-coded 3 to 'size-slider.getValue()' or
+					// something
+					geom.setDrawingTool(new CircleDrawingTool(3));
+
+					squareDrawingTool.setDown(false);
+				}
+			}
+		});
+
+		// -- Add all Drawings Tools below ---------------------
+		popupPanelMenu.add(squareDrawingTool);
+		popupPanelMenu.add(circleDrawingTool);
+
+		// --TODO: Add DrawingTool Size slider below ----------------
+		popupPanelPanel.add(popupPanelMenu);
+
+		// Add everything to the popup panel
+		toolSelector.add(popupPanelPanel);
+
+		// Create the button the triggers the popup panel
+		toolSelectButton = new Button("Select Tool");
+		toolSelectButton.addClickHandler(new ClickHandler() {
+
+			/*
+			 * Show the popupPanel when this button is clicked
+			 */
+			@Override
+			public void onClick(ClickEvent event) {
+				toolSelector
+						.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
+							public void setPosition(int offsetWidth,
+									int offsetHeight) {
+								int left = (Window.getClientWidth()
+										- offsetWidth - 75);
+								int top = 40;
+								toolSelector.setPopupPosition(left, top);
+							}
+						});
+			}
+
+		});
+
+	}
+
+	// --Methods for testing purposes only---------------------------------
 	/**
 	 * Updates the protocol label to show the textual representation of
 	 * {@code step}.
@@ -489,7 +632,6 @@ public class Fingerpaint implements EntryPoint {
 		updateProtocolLabel(step);
 	}
 
-	
 	/**
 	 * A semi-transparent windows that covers the entire application pops up
 	 * that blocks the user from accessing other features. A loading-icon

@@ -19,8 +19,6 @@
 
   <!-- gwt-jsonmaker                                             -->
   <inherits name="org.jsonmaker.gwt.Gwt_jsonmaker" />
-  <!-- gwt-ws                                                    -->
-  <inherits name='de.csenk.gwt.ws.WebSocket' />
 
   <!-- Specify the app entry point class.                         -->
   <entry-point class='nl.tue.fingerpaint.client.Fingerpaint'/>

@@ -8,7 +8,7 @@ import com.google.gwt.touch.client.Point;
  * representation in a vector. Also contains the canvas and methods to draw on
  * it.
  * 
- * @author Tessa Belder
+ * @author Project Fingerpaint
  */
 public class RectangleGeometry extends Geometry {
 
@@ -17,7 +17,6 @@ public class RectangleGeometry extends Geometry {
 	 */
 	private final int rectangleHeight = 240;
 	private final int rectangleWidth = 400;
-	private int factor;
 
 	/**
 	 * Threshold in pixels to decide when a large enough swipe has been carried
@@ -74,24 +73,6 @@ public class RectangleGeometry extends Geometry {
 	}
 
 	/**
-	 * Returns the total height of the drawing area
-	 * 
-	 * @return total height of the drawing area
-	 */
-	public int getHeight() {
-		return factor * rectangleHeight;
-	}
-
-	/**
-	 * Returns the total width of the drawing area
-	 * 
-	 * @return total width of the drawing area
-	 */
-	public int getWidth() {
-		return factor * rectangleWidth;
-	}
-
-	/**
 	 * Sets the distribution belonging to this geometry to the dist parameter
 	 * 
 	 * @param dist
@@ -99,6 +80,21 @@ public class RectangleGeometry extends Geometry {
 	 */
 	public void setDistribution(double[] dist) {
 		setDistribution(new RectangleDistribution(dist));
+	}
+
+	/**
+	 * Get the current distribution from the canvas, and puts it in the
+	 * distribution.
+	 * 
+	 * @return The current concentration distribution
+	 * 
+	 */
+	@Override
+	public Distribution getDistribution() {
+		this.distribution.setDistribution(
+				context.getImageData(1, 1, getWidth(), getHeight()),
+				getBaseWidth());
+		return this.distribution;
 	}
 
 	// ----Implemented abstract methods from superclass----------------
@@ -125,31 +121,11 @@ public class RectangleGeometry extends Geometry {
 	@Override
 	public void fillPixel(int x, int y, CssColor colour) {
 		if (isInside(x, y)) {
-
-			// Subtract 1 from both x and y coordinates, because
-			// the drawing area starts at (1, 1) instead of (0, 0).
-			// Divide by multiplying factor (integer division so result is
-			// rounded down) to find base coordinates.
-			x = (x - 1) / factor;
-			y = (y - 1) / factor;
-
-			// Fill a rectangle with the currentColor. Multiply base coordinates
-			// with the multiplying factor and add 1 to find upper left corner
-			// of
-			// the 'pixel'.
+			// Fill a rectangle with the currentColor. Change to valid
+			// coordinates to find upper left corner of the 'pixel'.
 			// Make the 'pixel' the size of the multiplying factor.
 			context.setFillStyle(colour);
-			context.fillRect(x * factor + 1, y * factor + 1, factor, factor);
-
-			// Set internal representation of base coordinates to 1 for
-			// black, and to 0 for white. 239 - y has to be used since
-			// within the canvas, coordinate (0, 0) is upper left, and in
-			// the internal representation (0, 0) is bottom left.
-			if (getColor().value().equals("black")) {
-				distribution.setValue(x, y, 0);
-			} else {
-				distribution.setValue(x, y, 1);
-			}
+			context.fillRect(getValidCoord(x), getValidCoord(y), factor, factor);
 		}
 	}
 
@@ -287,7 +263,6 @@ public class RectangleGeometry extends Geometry {
 	 */
 	@Override
 	public void drawDistribution(double[] dist) {
-		setDistribution(dist);
 		for (int i = 0; i < dist.length; i++) {
 			Point coords = distribution.getCoordinates(i);
 			fillPixel(changeToAbsoluteCoords((int) coords.getX()),
