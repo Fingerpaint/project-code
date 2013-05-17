@@ -79,8 +79,6 @@ public class ApplicationState {
 		return mixChoice;
 	}
 	
-	// TODO: Roel, hier komt jouw code!
-	
 	public MixingProtocol getProtocol(){
 		return protocol;
 	}
