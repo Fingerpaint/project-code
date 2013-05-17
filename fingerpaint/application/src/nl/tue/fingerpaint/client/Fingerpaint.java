@@ -1,12 +1,10 @@
 package nl.tue.fingerpaint.client;
 
-import nl.tue.fingerpaint.client.Movement.HorizontalMovement;
-import nl.tue.fingerpaint.client.Movement.VerticalMovement;
 import java.util.ArrayList;
 import java.util.List;
 
+import nl.tue.fingerpaint.client.Geometry.stepAddedListener;
 import com.google.gwt.canvas.dom.client.CssColor;
-
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.cell.client.Cell;
 import com.google.gwt.cell.client.TextCell;
@@ -21,6 +19,7 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.view.client.ListDataProvider;
@@ -56,7 +55,7 @@ public class Fingerpaint implements EntryPoint {
 	// Vertical panel to contain all menu items
 	private VerticalPanel menuPanel = new VerticalPanel();
 	
-	private Label protocolLabel = new Label();
+	private TextArea protocolText = new TextArea();
 	/*
 	 * The NumberSpinner to set the #steps parameter. Its settings are
 	 * described via the following parameters.
@@ -69,6 +68,7 @@ public class Fingerpaint implements EntryPoint {
 	private NumberSpinner nrStepsSpinner;
 	private NumberSpinner sizeSpinner;
 	private Label nrStepsLabel = new Label("#steps");
+	private Label sizeLabel = new Label("Step size");
 
 	// Width of the menu in which buttons are displayed
 	// on the right side of the window in pixels
@@ -85,8 +85,9 @@ public class Fingerpaint implements EntryPoint {
 	public void onModuleLoad() {
 
 		// Initialise the label to show the protocol.
-		protocolLabel.setText("");
-		menuPanel.add(protocolLabel);
+		protocolText.setText("");
+		protocolText.setWidth(String.valueOf(topBarHeight));
+		menuPanel.add(protocolText);
 		
 		// initialise the UC
 		as = new ApplicationState();
@@ -201,6 +202,16 @@ public class Fingerpaint implements EntryPoint {
 					.getClientHeight() - topBarHeight,
 					Window.getClientWidth() - menuWidth);
 
+			stepAddedListener l = new stepAddedListener() {
+				
+				@Override
+				public void onStepAdded(MixingStep step) {
+					addStep(step);					
+				}
+			};
+			
+			geom.addStepAddedListener(l);
+			
 			// Initialise toggleButton and add to
 			// menuPanel
 			createToggleButton();
@@ -213,13 +224,18 @@ public class Fingerpaint implements EntryPoint {
 
 			// TODO: Initialise other menu items and add
 			// them to menuPanel
+			// Initialise a spinner for changing the length of a mixing protocol step
+			// and add to menuPanel.
+			createStepSizeSpinner();
+			menuPanel.add(sizeLabel);
+			menuPanel.add(sizeSpinner);
+			
+			// Initialise a spinner for #steps and add to
+			// menuPanel.
 			createNrStepsSpinner();
 			menuPanel.add(nrStepsLabel);
 			menuPanel.add(nrStepsSpinner);
 			
-			// Create a spinner for changing the length of a mixing protocol step
-			createStepSizeSpinner();
-
 			// Add canvas and menuPanel to the panel
 			// Make the canvas the entire width of the
 			// screen except for the
@@ -383,24 +399,21 @@ public class Fingerpaint implements EntryPoint {
 	 * Updates the protocol label to show the textual representation of {@code step}.
 	 * @param step The new {@code Step} of which the textual representation should be added.
 	 */
-	public void updateProtocolLabel(Step step) {
-		String protocolText = protocolLabel.getText();
+	public void updateProtocolLabel(MixingStep step) {
+		String oldProtocol = protocolText.getText();
 		String stepString;
 		
-		HorizontalMovement horiz = step.getMovement().getHorizontal();
-		VerticalMovement vert = step.getMovement().getVertical();
-		
-		if (horiz == HorizontalMovement.LEFT && vert == VerticalMovement.UP) {
-			stepString = "-T";
-		} else if (horiz == HorizontalMovement.RIGHT && vert == VerticalMovement.UP) {
+		if (step.isTopWall() && step.movesForward()) {
 			stepString = "T";
-		} else if (horiz == HorizontalMovement.LEFT && vert == VerticalMovement.DOWN) {
+		} else if (step.isTopWall() && !step.movesForward()) {
+			stepString = "-T";
+		} else if (!step.isTopWall() && step.movesForward()) {
 			stepString = "B";
-		} else { // horiz == HorizontalMovement.RIGHT && vert == VerticalMovement.DOWN {
+		} else { // (!step.isTopWall() && !step.movesForward()) {
 			stepString = "-B";
 		}
 		
-		protocolLabel.setText(protocolText + stepString);
+		protocolText.setText(oldProtocol + stepString + " ");
 	}
 
 	/*
@@ -428,8 +441,8 @@ public class Fingerpaint implements EntryPoint {
 		});
 	}
 	
-	public void addStep(Step step) {
-		as.addStep(step);
+	public void addStep(MixingStep step) {
+		as.addMixingStep(step);
 		updateProtocolLabel(step);
 	}
 }

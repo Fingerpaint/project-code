@@ -1,5 +1,6 @@
 package nl.tue.fingerpaint.client;
 
+import java.util.ArrayList;
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.CssColor;
@@ -468,4 +469,14 @@ public abstract class Geometry {
 	 *            The distribution to be set and drawn
 	 */
 	abstract public void drawDistribution(double[] dist);
+	
+	protected ArrayList<stepAddedListener> stepAddedListeners = new ArrayList<stepAddedListener>();
+	
+	public interface stepAddedListener {
+		public void onStepAdded(MixingStep step);
+	}
+	
+	public void addStepAddedListener(stepAddedListener l) {
+		stepAddedListeners.add(l);
+	}
 }
