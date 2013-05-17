@@ -212,6 +212,25 @@ public class RectangleGeometry extends Geometry {
 	 */
 	@Override
 	protected void stopDefineMixingStep(int mouseX, int mouseY) {
+		Movement movement = determineSwipe(mouseX, mouseY);
+
+		Step mixingStep = new Step(1, movement); // TODO: Get value from spinner
+
+		// TODO: Actually add the step somewhere...
+		// protocol.addStep(mixingStep);
+	}
+	
+	/**
+	 * Returns the direction and wall of the current swiping movement, 
+	 * returns null if the swipe is not a valid swipe.
+	 * 
+	 * Additionally draws an arrow to indicate the direction of the current swipe
+	 * 
+	 * @param mouseX The x-coordinate of the current mouse position.
+	 * @param mouseY The y-coordinate of the current mouse position.
+	 */
+	@Override
+	protected Movement determineSwipe(int mouseX, int mouseY) {
 		int diffX = mouseX - swipeStartX;
 
 		Movement movement = new Movement();
@@ -222,7 +241,7 @@ public class RectangleGeometry extends Geometry {
 				&& mouseY < rectangleHeight * factor) {
 			movement.setVertical(VerticalMovement.DOWN);
 		} else { // No movement of the geometry was specified
-			return;
+			return null;
 		}
 
 		if (diffX < -SWIPE_THRESHOLD) {
@@ -230,11 +249,22 @@ public class RectangleGeometry extends Geometry {
 		} else if (diffX > SWIPE_THRESHOLD) {
 			movement.setHorizontal(HorizontalMovement.RIGHT);
 		}
-
-		Step mixingStep = new Step(1, movement); // TODO: Get value from spinner
-
-		// TODO: Actually add the step somewhere...
-		// protocol.addStep(mixingStep);
+		//draw an arrow corresponding to the swipe
+		System.out.println("Swiping");
+		if(diffX>0){
+			//the left side of the image should be at the starting location
+			int imageLeft = swipeStartX;
+			//the top is moved upward to center the picture around the starting location, picture size is 100
+			int imageTop = swipeStartY - 50;
+			drawImage("rightarrow", imageLeft, imageTop);
+		}else{
+			//the right side of the image should be at the starting location, picture size is 100
+			int imageLeft = swipeStartX- 100;
+			//the top is moved upward to center the picture around the starting location, picture size is 100
+			int imageTop = swipeStartY - 50;
+			drawImage("leftarrow", imageLeft, imageTop);
+		}
+		return movement;
 	}
 		
 	/**
