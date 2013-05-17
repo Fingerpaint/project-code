@@ -109,6 +109,17 @@ public class ApplicationState {
 	}
 	
 	/**
+	 * Updates the current mixing step with a new value
+	 * 
+	 * @param value the new StepSize for the current mixing step
+	 */
+	public void editStepSize(double value){
+		if(currMixingStep != null){
+			currMixingStep.setStepSize(value);
+		}
+	}
+	
+	/**
 	 * sets the current mixing step to the step newStep, can be null to indicate no step is edited now
 	 */
 	public void setCurrentStep(MixingStep newStep){

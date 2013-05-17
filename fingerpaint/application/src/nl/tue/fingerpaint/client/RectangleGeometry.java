@@ -243,7 +243,15 @@ public class RectangleGeometry extends Geometry {
 			int imageTop = swipeStartY - 50;
 			drawImage("leftarrow", imageLeft, imageTop);
 		}
-		MixingStep movement = new MixingStep(1, !toTheLeft, topWall);
+		
+		//converting the toTheLeft boolean to clockwise representation
+		boolean clockwise;
+		if(topWall){
+			clockwise = !toTheLeft;
+		}else{
+			clockwise = toTheLeft;
+		}
+		MixingStep movement = new MixingStep(1, clockwise, topWall);
 		return movement;
 	}
 		
