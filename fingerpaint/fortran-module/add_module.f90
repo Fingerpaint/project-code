@@ -263,14 +263,23 @@ end subroutine flip_ver
 
 !______________________________________________
 ! main function called to run an arbitrary simulation
-subroutine simulate (geometry, matrix, distribution, step, stepid, segregation)
+subroutine simulate (geometry, matrix, distribution, len_distribution, step, stepid, len_stepid, segregation)
     ! in\out parameters
     integer , intent(in) :: geometry ! Geometry selector
     integer , intent(in) :: matrix ! Matrix selector
-    real(8) , dimension(:), intent(inout) :: distribution ! concentration vector
+    integer , intent(in) :: len_distribution ! length of concentration vector
+    real(8) , dimension(len_distribution), intent(inout) :: distribution ! concentration vector
     real(8) , intent(in) :: step ! size of the step
-    character(24) , intent(in) :: stepid ! the id of the step-type that needs to be made
+    integer , intent(in) :: len_stepid ! the length of the stepid string
+    character(len_stepid) , intent(in) :: stepid ! the id of the step-type that needs to be made
     real(8) , intent(out) :: segregation ! the segregation
+    
+!     print*,"geometry=",geometry
+!     print*,"matrix=",matrix
+!     print*,"distribution=",distribution
+!     print*,"step=",step
+!     print*,"stepid=",stepid
+!     print*,"segregation=",segregation
     
     if (geometry==0) then
         if (stepid=="TR") then
@@ -283,6 +292,10 @@ subroutine simulate (geometry, matrix, distribution, step, stepid, segregation)
             call conc_final(step,-1,1,distribution)
         endif
     endif
+    
+    call intens_segr(distribution, segregation)
+    
+!     print*,"new segregation=",segregation
     
 end subroutine simulate
 

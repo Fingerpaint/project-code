@@ -18,7 +18,17 @@ public class RectangleGeometry extends Geometry {
 	private final int rectangleHeight = 240;
 	private final int rectangleWidth = 400;
 
-	// ----Constructor-----------------------------------------------
+	/**
+	 * Threshold in pixels to decide when a large enough swipe has been carried
+	 * out.
+	 */
+	private final static int SWIPE_THRESHOLD = 20;
+
+	/**
+	 * The height of the wall in the same distance unit as the
+	 * {@code rectangleHeight}.
+	 */
+	private final static int HEIGHT_OF_WALL = 20;
 	/**
 	 * Uses constructor from super class (Geometry.java)
 	 * 
@@ -167,6 +177,76 @@ public class RectangleGeometry extends Geometry {
 		context.stroke();
 	}
 
+	/**
+	 * Checks whether a new {@code Step} should be added. If the MouseEvent's
+	 * coordinates are near the top of the rectangular geometry, a {@code TOP}
+	 * mixing step is generated; if it is near the bottom, a {@code BOTTOM} is
+	 * generated. The direction of movement decides whether the movement is to
+	 * the left or to the right.
+	 */
+	@Override
+	protected void stopDefineMixingStep(int mouseX, int mouseY) {
+		MixingStep movement = determineSwipe(mouseX, mouseY);
+
+		int stepSize = 1; // TODO: Get value from spinner
+
+		if(movement != null){
+			for (StepAddedListener l : stepAddedListeners) {
+				l.onStepAdded(movement);
+			}
+		}
+		// TODO: Actually add the step somewhere...
+		// protocol.addStep(mixingStep);
+	}
+	
+	/**
+	 * Returns the direction and wall of the current swiping movement, 
+	 * returns null if the swipe is not a valid swipe.
+	 * 
+	 * Additionally draws an arrow to indicate the direction of the current swipe
+	 * 
+	 * @param mouseX The x-coordinate of the current mouse position.
+	 * @param mouseY The y-coordinate of the current mouse position.
+	 */
+	@Override
+	protected MixingStep determineSwipe(int mouseX, int mouseY) {
+		int diffX = mouseX - swipeStartX;
+		boolean topWall = false;
+		boolean toTheLeft = false;
+		
+		if (0 < mouseY && mouseY < HEIGHT_OF_WALL * factor) { // Top wall
+			topWall = true;
+		} else if ((rectangleHeight - HEIGHT_OF_WALL) * factor < mouseY
+				&& mouseY < rectangleHeight * factor) { // Bottom wall
+			topWall = false;
+		} else { // No movement of the geometry was specified
+			return null;
+		}
+
+		if (diffX < -SWIPE_THRESHOLD) { // To the left
+			toTheLeft = true;
+		} else if (diffX > SWIPE_THRESHOLD) { // To the right
+			toTheLeft = false;
+		}
+		
+		//draw an arrow corresponding to the swipe
+		if(diffX>0){
+			//the left side of the image should be at the starting location
+			int imageLeft = swipeStartX;
+			//the top is moved upward to center the picture around the starting location, picture size is 100
+			int imageTop = swipeStartY - 50;
+			drawImage("rightarrow", imageLeft, imageTop);
+		}else{
+			//the right side of the image should be at the starting location, picture size is 100
+			int imageLeft = swipeStartX- 100;
+			//the top is moved upward to center the picture around the starting location, picture size is 100
+			int imageTop = swipeStartY - 50;
+			drawImage("leftarrow", imageLeft, imageTop);
+		}
+		MixingStep movement = new MixingStep(1, !toTheLeft, topWall);
+		return movement;
+	}
+		
 	/**
 	 * Sets the given distribution as the current distribution, and draws it on
 	 * the canvas

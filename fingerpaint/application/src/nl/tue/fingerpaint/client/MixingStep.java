@@ -2,21 +2,27 @@ package nl.tue.fingerpaint.client;
 
 
 /**
+ * MixingStep is a class that stores information for an individual mixing step of a mixing protocol
  * 
  * @author Roel van Happen
- *
- * MixingStep is a class that stores information for an individual mixing step of a mixing protocol
  *
  */
 public class MixingStep {
 
-	//the minimum step size, all step sizes should be a multiple of this
-	static final double stepUnit = 0.25;
-	//nr of times stepUnit time is applied in the mixing step
+	/**the minimum step size, all step sizes should be a multiple of this*/
+	public static final double STEP_UNIT = 0.25;
+	/**lowest allowed step size*/
+	public static final double STEP_MIN = 0.25;
+	/**highest allowed step size*/
+	public static final double STEP_MAX = 100;
+	/**default step size*/
+	public static final double STEP_DEFAULT = 1;
+	
+	/**nr of times stepUnit time is applied in the mixing step*/
 	private int nrUnits;
-	//direction the direction of the wall movement, true is clockwise, false counterclockwise
+	/**direction the direction of the wall movement, true is to the right, false if to the left*/
 	private boolean direction;
-	//the wall that is moved, true for the top wall, false for the bottom wall
+	/**the wall that is moved, true for the top wall, false for the bottom wall*/
 	private boolean wall;
 	
 	/**
@@ -28,7 +34,8 @@ public class MixingStep {
 	 */
 	public MixingStep(double stepSize, boolean direction, boolean wall){
 		setStepSize(stepSize);
-		
+		setDirection(direction);
+		setWall(wall);
 	}
 	
 	/**
@@ -36,12 +43,12 @@ public class MixingStep {
 	 * @return result = 0.25*x with x an integer 
 	 */
 	double getStepSize(){
-		return nrUnits*stepUnit;
+		return nrUnits*STEP_UNIT;
 	}
 	
 	/**
 	 * 
-	 * @return true if the wall is moving clockwise, false otherwise
+	 * @return true if the wall is moving to the right, false otherwise
 	 */
 	boolean movesForward(){
 		return direction;
@@ -68,7 +75,7 @@ public class MixingStep {
 	
 	/**
 	 * 
-	 * @param direction the direction the wall moves in, true if clockwise, false otherwise
+	 * @param direction the direction the wall moves in, true if to the right, false otherwise
 	 */
 	void setDirection(boolean direction){
 		this.direction = direction;
