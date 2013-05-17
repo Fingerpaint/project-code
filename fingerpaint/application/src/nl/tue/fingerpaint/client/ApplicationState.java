@@ -13,32 +13,36 @@ public class ApplicationState {
 	
 	/*
 	 * The number of times (#steps) that the defined protocol will be applied.
-	 * Initially set to 0.0, to indicate that the spinner has not been loaded
+	 * Initially set to 0, to indicate that the spinner has not been loaded
 	 * yet.
 	 */
-	private double nrSteps = 0.0; // #steps
+	private int nrSteps = 0; // #steps
 	
 	/**
 	 * Returns the current value of number of steps.
 	 * 
 	 * @return The current value of number of steps.
 	 */
-	public double getNrSteps() {
+	public int getNrSteps() {
 		return nrSteps;
 	}
 
 	/**
 	 * Sets the value for the number of steps.
+	 * It accepts a double, as the (default)value of the numberspinner
+	 * is a double; it can immediately be converted to an integer, as
+	 * the numberspinner for this variable guarantees that correct rounding has been
+	 * performed, when this method is called.
 	 * 
 	 * @param nrSteps
 	 *            The new value for number of steps.
 	 * 
 	 *            <pre>
-	 * {@param steps} is valid, according to the settings for the NumberSpinner in class Fingerpaint.
+	 * {@param steps} is valid, according to the settings for the numberspinner in class Fingerpaint.
 	 * @post The current number of steps is set to @param{nrSteps}.
 	 */
 	public void setNrSteps(double steps) {
-		nrSteps = steps;
+		nrSteps = (int)steps;
 	}
 
 	/**
