@@ -201,9 +201,7 @@ public class Fingerpaint implements EntryPoint {
 			// Initialise geometry
 			geom = new RectangleGeometry(Window.getClientHeight()
 					- topBarHeight, Window.getClientWidth() - menuWidth);
-
 			StepAddedListener l = new StepAddedListener() {
-
 				@Override
 				public void onStepAdded(MixingStep step) {
 					addStep(step);
