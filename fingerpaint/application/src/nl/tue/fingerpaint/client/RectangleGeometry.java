@@ -234,7 +234,7 @@ public class RectangleGeometry extends Geometry {
 		
 		MixingStep mixingStep = new MixingStep(stepSize, clockwise, topWall);
 
-		for (stepAddedListener l : stepAddedListeners) {
+		for (StepAddedListener l : stepAddedListeners) {
 			l.onStepAdded(mixingStep);
 		}
 	}

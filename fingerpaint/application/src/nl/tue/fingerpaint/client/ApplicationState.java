@@ -106,4 +106,9 @@ public class ApplicationState {
 	public void addMixingStep(MixingStep step) {
 		protocol.addStep(step);
 	}
+
+	public double getStepSize() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }

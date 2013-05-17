@@ -3,7 +3,7 @@ package nl.tue.fingerpaint.client;
 import java.util.ArrayList;
 import java.util.List;
 
-import nl.tue.fingerpaint.client.Geometry.stepAddedListener;
+import nl.tue.fingerpaint.client.Geometry.StepAddedListener;
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.cell.client.Cell;
@@ -202,7 +202,7 @@ public class Fingerpaint implements EntryPoint {
 			geom = new RectangleGeometry(Window.getClientHeight()
 					- topBarHeight, Window.getClientWidth() - menuWidth);
 
-			stepAddedListener l = new stepAddedListener() {
+			StepAddedListener l = new StepAddedListener() {
 
 				@Override
 				public void onStepAdded(MixingStep step) {
@@ -465,6 +465,7 @@ public class Fingerpaint implements EntryPoint {
 	 *            The {@code MixingStep} to be added.
 	 */
 	private void addStep(MixingStep step) {
+		step.setStepSize(as.getStepSize());
 		as.addMixingStep(step);
 		updateProtocolLabel(step);
 	}

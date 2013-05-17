@@ -470,13 +470,17 @@ public abstract class Geometry {
 	 */
 	abstract public void drawDistribution(double[] dist);
 	
-	protected ArrayList<stepAddedListener> stepAddedListeners = new ArrayList<stepAddedListener>();
+	protected ArrayList<StepAddedListener> stepAddedListeners = new ArrayList<StepAddedListener>();
 	
-	public interface stepAddedListener {
+	public interface StepAddedListener {
 		public void onStepAdded(MixingStep step);
 	}
 	
-	public void addStepAddedListener(stepAddedListener l) {
+	public void addStepAddedListener(StepAddedListener l) {
 		stepAddedListeners.add(l);
+	}
+	
+	public void removeStepAddedListener(StepAddedListener l) {
+		stepAddedListeners.remove(l);
 	}
 }
