@@ -95,19 +95,11 @@ public class ApplicationState {
 	
 	private MixingProtocol protocol = new MixingProtocol();
 	
-	// TODO: Benjamin's code.
-	
 	/**
-	 * Stores the mixing protocol for the selected geometry.
+	 * Add a step to the mixing protocol.
+	 * @param step {@code Step} to be added.
 	 */
-	private Protocol bProtocol = new Protocol();
-	
-	/**
-	 * Add a step to the protocol.
-	 * @param step The {@code Step} to be added to the protocol.
-	 */
-	public void addStep(Step step) {
-		bProtocol.addStep(step);
-		
+	public void addMixingStep(MixingStep step) {
+		protocol.addStep(step);
 	}
 }
