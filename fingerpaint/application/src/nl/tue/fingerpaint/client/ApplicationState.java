@@ -102,24 +102,31 @@ public class ApplicationState {
 	
 	/**
 	 * 
-	 * @return the index of the currently selected mixing step
+	 * @return the currently selected mixing step, can be null if no step is being edited
 	 */
-	public int getCurrentStepIndex(){
+	public MixingStep getCurrentStep(){
 		return currMixingStep;
 	}
 	
 	/**
-	 * 
-	 * @return the currently selected mixing step
+	 * sets the current mixing step to the step newStep, can be null to indicate no step is edited now
 	 */
-	public MixingStep getCurrentStep(){
-		return protocol.getStep(currMixingStep);
+	public void setCurrentStep(MixingStep newStep){
+		currMixingStep = newStep;
+	}
+	
+	/**
+	 * adds the current mixing step to the end of the mixing protocol, then clears the current mixing step (makes it null)
+	 */
+	public void addCurrentStep(){
+		protocol.addStep(currMixingStep);
+		currMixingStep = null;
 	}
 	
 	//the current mixing protocol
 	private MixingProtocol protocol = new MixingProtocol();
-	//the index of the current mixing step
-	private int currMixingStep;
+	//the current mixing step
+	private MixingStep currMixingStep;
 	
 	/**
 	 * Add a step to the mixing protocol.
@@ -131,6 +138,6 @@ public class ApplicationState {
 
 	public double getStepSize() {
 		// TODO Auto-generated method stub
-		return 0;
+		return 1;
 	}
 }

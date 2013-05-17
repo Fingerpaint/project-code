@@ -143,7 +143,7 @@ public class RectangleGeometryTest extends GWTTestCase {
 		
 		StepAddedListener stl = setUpStepAddedListener(message, top, clockwise, stepSize);
 		geom.addStepAddedListener(stl);
-		geom.startDefineMixingStep(startX);
+		geom.startDefineMixingStep(startX, 50);//startY is constant
 		geom.stopDefineMixingStep(endX, endY);
 		
 		assertEquals(message + " should be called", shouldBeCalled, mixingStepAdded);
