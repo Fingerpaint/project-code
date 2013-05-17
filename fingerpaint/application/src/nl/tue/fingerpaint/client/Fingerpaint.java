@@ -352,7 +352,8 @@ public class Fingerpaint implements EntryPoint {
 		sizeSpinner = new NumberSpinner(MixingStep.STEP_DEFAULT,
 				MixingStep.STEP_UNIT, MixingStep.STEP_MIN, MixingStep.STEP_MAX,
 				true);
-
+		as.editStepSize(MixingStep.STEP_DEFAULT);
+		
 		// set a listener for the spinner
 		sizeSpinner.setSpinnerListener(new NumberSpinnerListener() {
 
@@ -444,6 +445,8 @@ public class Fingerpaint implements EntryPoint {
 		} else { // (!step.isTopWall() && !step.movesForward()) {
 			stepString = "-B";
 		}
+		
+		stepString += "[" + step.getStepSize() + "]";
 
 		taProtocolRepresentation.setText(oldProtocol + stepString + " ");
 	}
