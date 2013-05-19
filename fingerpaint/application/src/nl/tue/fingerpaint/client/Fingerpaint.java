@@ -3,22 +3,31 @@ package nl.tue.fingerpaint.client;
 import java.util.ArrayList;
 import java.util.List;
 
+import nl.tue.fingerpaint.client.Geometry;
 import nl.tue.fingerpaint.client.Geometry.StepAddedListener;
+import nl.tue.fingerpaint.client.websocket.Request;
+import nl.tue.fingerpaint.client.websocket.Response;
+import nl.tue.fingerpaint.client.websocket.ResponseCallback;
+import nl.tue.fingerpaint.client.websocket.SimulatorServiceSocket;
+import nl.tue.fingerpaint.client.websocket.Step;
+
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.cell.client.Cell;
 import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.cellview.client.CellBrowser;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -143,8 +152,38 @@ public class Fingerpaint implements EntryPoint {
 
 		// Add the tree to the root layout panel.
 		RootLayoutPanel.get().add(tree);
+		
+		testRequestSimulation();
 	}
 
+	/**
+	 * Test if we can call the service simulator.
+	 */
+	protected void testRequestSimulation() {
+		double[] dist = { 1, 0, .8, 0.5 };
+		Step[] protocol = { new Step("TL", 2.0), new Step("TR", 5.0) };
+		Request request = new Request(0, 0, dist, protocol, 5, true);
+		ResponseCallback callback = new ResponseCallback() {
+			@Override
+			public void onError(String message) {
+				GWT.log("onError: " + message);
+			}
+
+			@Override
+			public void onResponse(Response result) {
+				GWT.log("onResponse: " + result.toString());
+			}
+		};
+		SimulatorServiceSocket sss = SimulatorServiceSocket.getInstance();
+		sss.requestSimulation(request, callback);
+		Timer togglebuttonTimer = new Timer() {
+			public void run() {
+				GWT.log("FAIL: timer ran out");
+			}
+		};
+		togglebuttonTimer.schedule(10000);
+	}
+	
 	/**
 	 * The model that defines the nodes in the tree.
 	 */
@@ -242,9 +281,7 @@ public class Fingerpaint implements EntryPoint {
 			// Initialise geometry
 			geom = new RectangleGeometry(Window.getClientHeight()
 					- topBarHeight, Window.getClientWidth() - menuWidth);
-
 			StepAddedListener l = new StepAddedListener() {
-
 				@Override
 				public void onStepAdded(MixingStep step) {
 					addStep(step);
@@ -381,7 +418,8 @@ public class Fingerpaint implements EntryPoint {
 		sizeSpinner = new NumberSpinner(MixingStep.STEP_DEFAULT,
 				MixingStep.STEP_UNIT, MixingStep.STEP_MIN, MixingStep.STEP_MAX,
 				true);
-
+		as.editStepSize(MixingStep.STEP_DEFAULT);
+		
 		// set a listener for the spinner
 		sizeSpinner.setSpinnerListener(new NumberSpinnerListener() {
 
@@ -559,6 +597,8 @@ public class Fingerpaint implements EntryPoint {
 		} else { // (!step.isTopWall() && !step.movesForward()) {
 			stepString = "-B";
 		}
+		
+		stepString += "[" + step.getStepSize() + "]";
 
 		taProtocolRepresentation.setText(oldProtocol + stepString + " ");
 	}

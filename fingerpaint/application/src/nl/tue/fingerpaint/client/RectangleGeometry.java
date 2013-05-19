@@ -1,6 +1,5 @@
 package nl.tue.fingerpaint.client;
 
-import com.google.gwt.canvas.dom.client.CanvasPixelArray;
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.canvas.dom.client.ImageData;
 import com.google.gwt.touch.client.Point;
@@ -270,8 +269,6 @@ public class RectangleGeometry extends Geometry {
 				l.onStepAdded(movement);
 			}
 		}
-		// TODO: Actually add the step somewhere...
-		// protocol.addStep(mixingStep);
 	}
 
 	/**
@@ -292,10 +289,11 @@ public class RectangleGeometry extends Geometry {
 		boolean topWall = false;
 		boolean toTheLeft = false;
 
-		//used to be: 0 < mouseY && mouseY < HEIGHT_OF_WALL * factor
+		// used to be: 0 < mouseY && mouseY < HEIGHT_OF_WALL * factor
 		if (isInsideTopWall(mouseX, mouseY)) { // Top wall
 			topWall = true;
-		//used to be: (rectangleHeight - HEIGHT_OF_WALL) * factor < mouseY && mouseY < rectangleHeight * factor
+			// used to be: (rectangleHeight - HEIGHT_OF_WALL) * factor < mouseY
+			// && mouseY < rectangleHeight * factor
 		} else if (isInsideBottomWall(mouseX, mouseY)) { // Bottom wall
 			topWall = false;
 		} else { // No movement of the geometry was specified
