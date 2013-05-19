@@ -2,6 +2,12 @@ package nl.tue.fingerpaint.client;
 
 import com.google.gwt.touch.client.Point;
 
+/**
+ * An class representing a concentration distribution belonging to a rectangular
+ * geometry
+ * 
+ * @author Group Fingerpaint
+ */
 public class RectangleDistribution extends Distribution {
 
 	// --Constructors------------------------------------------------

@@ -34,15 +34,18 @@ public class SquareDrawingTool extends DrawingTool {
 	@Override
 	public ImageData getTool(ImageData img, CssColor colour) {
 		CanvasPixelArray data = img.getData();
+
 		int width = img.getWidth();
 		int height = img.getHeight();
 		int col = colour.value().equals("black") ? 0 : 255;
+
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
 				int index = (y * width + x) * 4;
 				fillPixel(data, index, col, 255);
 			}
 		}
+
 		return img;
 	}
 

@@ -28,35 +28,42 @@ import com.google.gwt.user.client.ui.RootPanel;
  */
 public abstract class Geometry {
 
-	/*
+	/**
 	 * Internal representation of the geometry
 	 */
 	protected Distribution distribution;
 
-	/*
+	/**
 	 * The canvas and its parameters
 	 */
 	protected Canvas canvas;
 	protected Context2d context;
 	protected int factor;
 
-	/*
-	 * dummy context to clip the painting tool when painting close to the
-	 * borders of the geometry
+	/**
+	 * Parameters for the offset of the drawing area on the canvas
 	 */
-	protected Context2d dummycontext;
+	protected static final int X_OFFSET = 5;
+	protected static final int TOP_OFFSET = 30;
+	protected static final int BOTTOM_OFFSET = 30;
 
-	/*
-	 * The drawing tool;
+	/**
+	 * The height of the wall in the same distance unit as the
+	 * {@code rectangleHeight}.
+	 */
+	protected final static int HEIGHT_OF_WALL = 20;
+
+	/**
+	 * The current drawing tool;
 	 */
 	protected DrawingTool tool;
 
-	/*
+	/**
 	 * The image to draw with
 	 */
-	protected ImageData toolImage;
+	protected ImageElement toolImage;
 
-	/*
+	/**
 	 * The extra width of the drawing tool. Equal to factor * tool.radius
 	 */
 	protected int displacement;
@@ -66,22 +73,31 @@ public abstract class Geometry {
 	 */
 	private HandlerRegistration mouseMove;
 
-	/*
+	/**
 	 * Parameters to handle the drawing
 	 */
 	private int previousX;
 	private int previousY;
-	private boolean dragging;
+	private boolean drawing;
 	protected CssColor currentColor;
 
 	/**
 	 * Stores the x-coordinate of the mouse event that initiates swiping.
 	 */
 	protected int swipeStartX;
+
 	/**
 	 * Stores the y-coordinate of the mouse event that initiates swiping.
 	 */
 	protected int swipeStartY;
+	
+	/**
+	 * Threshold in pixels to decide when a large enough swipe has been carried
+	 * out.
+	 */
+	protected final static int SWIPE_THRESHOLD = 20;
+
+	private boolean definingStep;
 
 	// ----Constructor-----------------------------------------------
 	/**
@@ -98,10 +114,19 @@ public abstract class Geometry {
 
 		setFactor(Math.max(
 				1,
-				(Math.min(clientHeight / getBaseHeight(), clientWidth
+				(Math.min((clientHeight - TOP_OFFSET - BOTTOM_OFFSET)
+						/ getBaseHeight(), (clientWidth - X_OFFSET)
 						/ getBaseWidth()))));
+		drawing = false;
+		definingStep = false;
+
 		createCanvas(clientHeight, clientWidth);
+
+		// Draw the outline of the walls and the drawing canvas. Then clip the
+		// drawing area.
+		drawWalls();
 		drawGeometryOutline();
+		clipGeometryOutline();
 
 		// Initialise drawing colour to black
 		setColor(CssColor.make("black"));
@@ -132,27 +157,18 @@ public abstract class Geometry {
 	/**
 	 * Sets the current drawing colour
 	 * 
-	 * @param color
+	 * @param colour
 	 *            The colour which becomes the current drawing colour
 	 * 
 	 * @post The current drawing colour is set to @param{color}
 	 */
-	public void setColor(CssColor color) {
-		this.currentColor = color;
+	public void setColor(CssColor colour) {
+		this.currentColor = colour;
 		if (this.tool != null) {
 			setDrawingTool(this.tool);
 		}
 	}
 
-//	/**
-//	 * Returns the distribution
-//	 * 
-//	 * @return The distribution of this geometry
-//	 */
-//	public Distribution getDistribution() {
-//		return this.distribution;
-//	}
-	
 	/**
 	 * Returns the distribution
 	 * 
@@ -215,7 +231,9 @@ public abstract class Geometry {
 	 * 
 	 * @post The multiply factor has been set to @param{factor}
 	 */
-	abstract public void setFactor(int factor);
+	public void setFactor(int factor) {
+		this.factor = factor;
+	}
 
 	/**
 	 * Sets the drawing tool
@@ -227,54 +245,15 @@ public abstract class Geometry {
 	 */
 	public void setDrawingTool(DrawingTool tool) {
 		this.tool = tool;
+
 		int rad = tool.getRadius();
 		int size = (rad * 2 + 1) * factor;
 		this.displacement = rad * factor;
-		this.toolImage = tool.getTool(context.getImageData(1, 1, size, size),
+
+		ImageData data = this.tool.getTool(context.createImageData(size, size),
 				currentColor);
-		this.dummycontext = getDummyContext(size, size, toolImage);
-	}
 
-	/**
-	 * 
-	 * Returns the ImageData to paint on this position on the canvas, meaning it
-	 * is clipped when the coordinates are close to the border of the geometry.
-	 * 
-	 * @param x
-	 *            A valid x-coordinate, meaning the top-left pixel of a
-	 *            'grid-pixel'
-	 * @param y
-	 *            A valid y-coordinate, meaning the top-left pixel of a
-	 *            'grid-pixel'
-	 * @return The imageData to paint on this position on the canvas
-	 */
-	protected ImageData getTool(int x, int y, ImageData img) {
-
-		if (x > displacement && y > displacement
-				&& x < getWidth() - displacement
-				&& y < getHeight() - displacement) {
-			return img;
-		} else {
-			int rad = tool.getRadius();
-			int left = 0;
-			int top = 0;
-			int right = (rad * 2 + 1) * factor - 1;
-			int bottom = (rad * 2 + 1) * factor - 1;
-			if (x <= displacement) {
-				left = displacement + 1 - x;
-			}
-			if (y <= displacement) {
-				top = displacement + 1 - y;
-			}
-			if (x >= getWidth() - displacement) {
-				right = displacement + getWidth() - x;
-			}
-			if (y >= getHeight() - displacement) {
-				bottom = displacement + getHeight() - y;
-			}
-			return dummycontext.getImageData(left, top, right - left + 1,
-					bottom - top + 1);
-		}
+		this.toolImage = getToolImage(size, data);
 	}
 
 	// ----Protected and private methods for initialisation and
@@ -327,16 +306,22 @@ public abstract class Geometry {
 				Element elem = event.getRelativeElement();
 				int x = event.getRelativeX(elem);
 				int y = event.getRelativeY(elem);
-				if (isInside(x, y)) {
-					dragging = true;
 
-					previousX = x;
-					previousY = y;
-					x = getValidCoord(x);
-					y = getValidCoord(y);
-					context.putImageData(getTool(x, y, toolImage),
-							Math.max(x - displacement, 1),
-							Math.max(y - displacement, 1));
+				if (isInsideDrawingArea(x - X_OFFSET, y - TOP_OFFSET)) {
+					// User started drawing the concentration distribution
+					drawing = true;
+
+					// Store starting coordinates
+					previousX = x - X_OFFSET;
+					previousY = y - TOP_OFFSET;
+
+					x = getValidCoord(x - X_OFFSET);
+					y = getValidCoord(y - TOP_OFFSET);
+
+					// Draw the first image of the drawing tool
+					context.drawImage(toolImage, Math.max(x - displacement, 0)
+							+ X_OFFSET, Math.max(y - displacement, 0)
+							+ TOP_OFFSET);
 					mouseMove = canvas
 							.addMouseMoveHandler(new MouseMoveHandler() {
 								/*
@@ -348,18 +333,22 @@ public abstract class Geometry {
 								@Override
 								public void onMouseMove(MouseMoveEvent e) {
 									Element elem = e.getRelativeElement();
-									int x = e.getRelativeX(elem);
-									int y = e.getRelativeY(elem);
-									if (isInside(x, y)) {
+									int x = e.getRelativeX(elem) - X_OFFSET;
+									int y = e.getRelativeY(elem) - TOP_OFFSET;
+									if (isInsideDrawingArea(x, y)) {
 										drawLine(previousX, previousY, x, y);
 										previousX = x;
 										previousY = y;
 									}
 								}
 							});
+				} else if (isInsideTopWall(x, y) || isInsideBottomWall(x, y)) {
+					// User started defining a step of the protocol
+					definingStep = true;
+					startDefineMixingStep(x, y);
 				}
-				startDefineMixingStep(event.getX(), event.getY());
 			}
+
 		});
 
 		canvas.addMouseUpHandler(new MouseUpHandler() {
@@ -370,8 +359,10 @@ public abstract class Geometry {
 			@Override
 			public void onMouseUp(MouseUpEvent event) {
 				removeMouseMoveHandler();
-				stopDefineMixingStep(event.getX(), event.getY());
-
+				if (definingStep) {
+					stopDefineMixingStep(event.getX(), event.getY());
+					definingStep = false;
+				}
 			}
 
 		});
@@ -383,21 +374,17 @@ public abstract class Geometry {
 			@Override
 			public void onMouseOut(MouseOutEvent event) {
 				removeMouseMoveHandler();
-				if (dragging) {
-					dragging = false;
-					mouseMove.removeHandler();
-				}
-				stopDefineMixingStep(event.getX(), event.getY());
+				definingStep = false;
 			}
 		});
 	}
 
-	/*
+	/**
 	 * Removes the mouseMoveHandler from the canvas, if it is present
 	 */
 	private void removeMouseMoveHandler() {
-		if (dragging) {
-			dragging = false;
+		if (drawing) {
+			drawing = false;
 			mouseMove.removeHandler();
 		}
 	}
@@ -410,11 +397,42 @@ public abstract class Geometry {
 	abstract protected void initialiseDistribution();
 
 	/**
+	 * Draws the outline around the walls
+	 * 
+	 * @post The outline of the walls has been drawn on the {@code canvas}
+	 */
+	abstract protected void drawWalls();
+
+	/**
 	 * Draws the border around the drawing area
 	 * 
 	 * @post The outline of the geometry has been drawn on the {@code canvas}
 	 */
 	abstract protected void drawGeometryOutline();
+
+	/**
+	 * Clips the drawing area, so that drawing outside of the drawing area is
+	 * not possible
+	 * 
+	 * @post The outline of the geometry has been clipped
+	 */
+	abstract protected void clipGeometryOutline();
+
+	/**
+	 * Clips the entire canvas
+	 * 
+	 * @post The entire canvas has been clipped
+	 */
+	protected void removeClippingArea() {
+		context.beginPath();
+		context.moveTo(0, 0);
+		context.lineTo(canvas.getCoordinateSpaceWidth() - 1, 0);
+		context.lineTo(canvas.getCoordinateSpaceWidth() - 1,
+				canvas.getCoordinateSpaceHeight() - 1);
+		context.lineTo(0, canvas.getCoordinateSpaceHeight() - 1);
+		context.closePath();
+		context.clip();
+	}
 
 	/**
 	 * Colours the pixel(s) corresponding to coordinates ({@code x}, {@code y}).
@@ -436,33 +454,52 @@ public abstract class Geometry {
 	abstract protected void fillPixel(int x, int y, CssColor colour);
 
 	/**
-	 * Colours the pixel(s) corresponding to coordinates ({@code x}, {@code y}).
-	 * Also updates the internal representation accordingly.
-	 * 
-	 * @param x
-	 *            The horizontal position of the mouse click relative to the
-	 *            top-left corner of the {@code canvas}
-	 * @param y
-	 *            The vertical position of the mouse click relative to the
-	 *            top-left corner of the {@code canvas}
-	 * 
-	 * @post The cell of the {@code internalRepresenationVector} corresponding
-	 *       to the coordinates ({@code x}, {@code y}) has been updated, and the
-	 *       corresponding pixels on the canvas have been coloured with
-	 *       {@code currentColor}
-	 */
-	protected void fillPixel(int x, int y) {
-		fillPixel(x, y, currentColor);
-	}
-
-	/**
 	 * Returns whether the position ({@code x}, {@code y}) is inside the drawing
 	 * area on the {@code canvas}.
+	 * 
+	 * @param x
+	 *            The x-coordinate relative to the top-left corner of the
+	 *            {@code canvas}
+	 * @param y
+	 *            The y-coordinate relative to the top-left corner of the
+	 *            {@code canvas}
 	 * 
 	 * @return {@code true} if coordinates (x, y) are inside the drawing area.
 	 *         {@code false} otherwise.
 	 */
-	abstract protected boolean isInside(int x, int y);
+	abstract protected boolean isInsideDrawingArea(int x, int y);
+
+	/**
+	 * Returns whether the position ({@code x}, {@code y}) is inside the top
+	 * wall on the {@code canvas}.
+	 * 
+	 * @param x
+	 *            The x-coordinate relative to the top-left corner of the
+	 *            {@code canvas}
+	 * @param y
+	 *            The y-coordinate relative to the top-left corner of the
+	 *            {@code canvas}
+	 * 
+	 * @return {@code true} if coordinates (x, y) are inside the top wall.
+	 *         {@code false} otherwise.
+	 */
+	abstract protected boolean isInsideTopWall(int x, int y);
+
+	/**
+	 * Returns whether the position ({@code x}, {@code y}) is inside the bottom
+	 * wall on the {@code canvas}.
+	 * 
+	 * @param x
+	 *            The x-coordinate relative to the top-left corner of the
+	 *            {@code canvas}
+	 * @param y
+	 *            The y-coordinate relative to the top-left corner of the
+	 *            {@code canvas}
+	 * 
+	 * @return {@code true} if coordinates (x, y) are inside the bottom wall.
+	 *         {@code false} otherwise.
+	 */
+	abstract protected boolean isInsideBottomWall(int x, int y);
 
 	/**
 	 * Draws a line manually, filling a single pixel at a time. Can't use the
@@ -517,9 +554,8 @@ public abstract class Geometry {
 		for (int i = 0; i <= longest; i++) {
 			int x3 = getValidCoord(x1);
 			int y3 = getValidCoord(y1);
-			context.putImageData(getTool(x3, y3, toolImage),
-					Math.max(x3 - displacement, 1),
-					Math.max(y3 - displacement, 1));
+			context.drawImage(toolImage, Math.max(x3 - displacement, 1)
+					+ X_OFFSET, Math.max(y3 - displacement, 1) + TOP_OFFSET);
 			numerator += shortest;
 			if (!(numerator < longest)) {
 				numerator -= longest;
@@ -533,8 +569,8 @@ public abstract class Geometry {
 	}
 
 	/**
-	 * Together with {@code stopDefineMixingStep()}, this function checks whether
-	 * the protocol should be updated by adding a new {@code Step}. This
+	 * Together with {@code stopDefineMixingStep()}, this function checks
+	 * whether the protocol should be updated by adding a new {@code Step}. This
 	 * particular function only stores the coordinates of the press event, to
 	 * calculate the distance travelled when the mouse or the user's finger is
 	 * lifted from the canvas.
@@ -543,17 +579,15 @@ public abstract class Geometry {
 	 *            x-coordinate of the mouseEvent.
 	 */
 	protected void startDefineMixingStep(int mouseX, int mouseY) {
-		// TODO: Only execute if the user actually wants to define a protocol
-		// step (but when is that?)
 		swipeStartX = mouseX;
 		swipeStartY = mouseY;
 	}
 
 	/**
-	 * Together with {@code startDefineMixingStep()}, this function checks whether
-	 * the protocol should be updated by adding a new {@code Step}. This
-	 * particular function should be implemented by geometries to detail when and
-	 * how a new {@code Step} should be defined.
+	 * Together with {@code startDefineMixingStep()}, this function checks
+	 * whether the protocol should be updated by adding a new {@code Step}. This
+	 * particular function should be implemented by geometries to detail when
+	 * and how a new {@code Step} should be defined.
 	 * 
 	 * @param mouseX
 	 *            x-coordinate of the mouseEvent.
@@ -561,18 +595,21 @@ public abstract class Geometry {
 	 *            y-coordinate of the mouseEvent.
 	 */
 	protected abstract void stopDefineMixingStep(int mouseX, int mouseY);
-	
+
 	/**
 	 * Should return the direction and wall of the current swiping movement.
 	 * should return null if the swipe is not a valid swipe.
 	 * 
-	 * This method should additionally draw a graphic to display that a swiping motion is in progress
+	 * This method should additionally draw a graphic to display that a swiping
+	 * motion is in progress
 	 * 
-	 * @param mouseX The x-coordinate of the current mouse position.
-	 * @param mouseY The y-coordinate of the current mouse position.
+	 * @param mouseX
+	 *            The x-coordinate of the current mouse position.
+	 * @param mouseY
+	 *            The y-coordinate of the current mouse position.
 	 */
 	protected abstract MixingStep determineSwipe(int mouseX, int mouseY);
-	
+
 	/**
 	 * Returns a CssColor object with the gray scale colour corresponding to the
 	 * given value
@@ -587,65 +624,69 @@ public abstract class Geometry {
 		int colourCode = (int) Math.round(value * 255);
 		return CssColor.make(colourCode, colourCode, colourCode);
 	}
-	
+
 	/**
 	 * Draws an image located in the map war/img.
 	 * 
-	 * @param name the name of the image file itself
-	 * @param locationX the desired left location of the image
-	 * @param locationY the desired top location of the image
+	 * @param name
+	 *            the name of the image file itself
+	 * @param locationX
+	 *            the desired left location of the image
+	 * @param locationY
+	 *            the desired top location of the image
 	 */
-	protected void drawImage(String name, int locationX, int locationY){
+	protected void drawImage(String name, int locationX, int locationY) {
 		Image image = new Image("/img/" + name + ".png");
 		image.getElement().getStyle().setLeft(locationX, Unit.PX);
 		image.getElement().getStyle().setTop(locationY, Unit.PX);
 		ImageElement imgelem = ImageElement.as(image.getElement());
-		//context.drawImage(imgelem, locationX, locationY);
-	}
-	
-	/**
-	 * clears the canvas between locationX and locationX + sizeX, 
-	 * and locationY and locationY + sizeY
-	 * 
-	 * @param locationX the minimum x-value of the data that needs to be cleared
-	 * @param locationY the minimum y-value of the data that needs to be cleared
-	 * @param sizeX the width of the to be cleared section
-	 * @param sizeY the height of the to be cleared section
-	 */
-	protected void clear(int locationX, int locationY, int sizeX, int sizeY){
-		
+		// context.drawImage(imgelem, locationX, locationY);
 	}
 
 	/**
-	 * Creates a dummy canvas and returns it context to keep for clipping of the
-	 * drawing tool image.
+	 * clears the canvas between locationX and locationX + sizeX, and locationY
+	 * and locationY + sizeY
 	 * 
-	 * @param width
-	 *            The width of the dummy canvas, equals to the width of the
-	 *            drawing tool
-	 * @param height
-	 *            The width of the dummy canvas, equals to the width of the
-	 *            drawing tool
+	 * @param locationX
+	 *            the minimum x-value of the data that needs to be cleared
+	 * @param locationY
+	 *            the minimum y-value of the data that needs to be cleared
+	 * @param sizeX
+	 *            the width of the to be cleared section
+	 * @param sizeY
+	 *            the height of the to be cleared section
+	 */
+	protected void clear(int locationX, int locationY, int sizeX, int sizeY) {
+
+	}
+
+	/**
+	 * Creates and returns an image element with the image data belonging to the
+	 * drawing tool.
+	 * 
+	 * @param size
+	 *            The width and height of the dummy canvas, equal to the width
+	 *            (and height) of the drawing tool
 	 * @param img
 	 *            The ImageData belonging to the drawing tool
 	 * 
-	 * @return The context of this canvas, containing the drawing tool image
+	 * @return The created image element
 	 */
-	private Context2d getDummyContext(int width, int height, ImageData img) {
+	private ImageElement getToolImage(int size, ImageData img) {
 		Canvas dummycanvas = Canvas.createIfSupported();
 
 		// Initialise canvas
 		if (dummycanvas != null) {
-			dummycanvas.setWidth(width + "px");
-			dummycanvas.setCoordinateSpaceWidth(width);
-			dummycanvas.setHeight(height + "px");
-			dummycanvas.setCoordinateSpaceHeight(height);
+			dummycanvas.setWidth(size + "px");
+			dummycanvas.setCoordinateSpaceWidth(size);
+			dummycanvas.setHeight(size + "px");
+			dummycanvas.setCoordinateSpaceHeight(size);
 		}
 
 		Context2d dummyContext = dummycanvas.getContext2d();
 		dummyContext.putImageData(img, 0, 0);
 
-		return dummyContext;
+		return ImageElement.as(new Image(dummycanvas.toDataUrl()).getElement());
 	}
 
 	/**
@@ -681,17 +722,19 @@ public abstract class Geometry {
 	 *            The distribution to be set and drawn
 	 */
 	abstract public void drawDistribution(double[] dist);
+
+	//TODO: Add javadoc to methods below
 	
 	protected ArrayList<StepAddedListener> stepAddedListeners = new ArrayList<StepAddedListener>();
-	
+
 	public interface StepAddedListener {
 		public void onStepAdded(MixingStep step);
 	}
-	
+
 	public void addStepAddedListener(StepAddedListener l) {
 		stepAddedListeners.add(l);
 	}
-	
+
 	public void removeStepAddedListener(StepAddedListener l) {
 		stepAddedListeners.remove(l);
 	}

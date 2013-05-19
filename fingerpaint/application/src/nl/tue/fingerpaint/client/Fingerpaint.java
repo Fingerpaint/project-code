@@ -118,35 +118,6 @@ public class Fingerpaint implements EntryPoint {
 	 * This is the entry point method.
 	 */
 	public void onModuleLoad() {
-//		// Initialise geometry
-//		geom = new RectangleGeometry(Window.getClientHeight() - topBarHeight,
-//				Window.getClientWidth() - menuWidth);
-//
-//		// Initialise toggleButton and add to menuPanel
-//		createToggleButton();
-//		menuPanel.add(toggleColor);
-//
-//		// Initialise the toolSelectButton and add to menuPanel
-//		createToolSelector();
-//		menuPanel.add(toolSelectButton);
-//
-//		// Initialise the loadDistButton and add to menuPanel
-//		createLoadDistButton();
-//		menuPanel.add(loadDistButton);
-//
-//		// TODO: Initialise other menu items and add them to menuPanel
-//
-//		// Add canvas and menuPanel to the panel
-//		// Make the canvas the entire width of the screen except for the
-//		// menuWidth
-//		panel.setWidth("100%");
-//		panel.add(geom.getCanvas());
-//		panel.add(menuPanel);
-//		panel.setCellWidth(menuPanel, Integer.toString(menuWidth));
-//
-//		// Add panel to RootPanel
-//		RootPanel.get().add(panel);
-
 		// Point the loadImage at a URL.
 		loadImage.setUrl("/img/loading_animation.gif");
 		// add the loading-image to the panel
@@ -486,8 +457,8 @@ public class Fingerpaint implements EntryPoint {
 		toolSelector = new PopupPanel(true);
 		popupPanelPanel = new HorizontalPanel();
 		popupPanelMenu = new VerticalPanel();
-		squareDrawingTool = new ToggleButton("not selected", "square");
-		circleDrawingTool = new ToggleButton("not selected", "circle");
+		squareDrawingTool = new ToggleButton("square", "square");
+		circleDrawingTool = new ToggleButton("circle", "circle");
 
 		squareDrawingTool.addClickHandler(new ClickHandler() {
 
@@ -504,7 +475,6 @@ public class Fingerpaint implements EntryPoint {
 					// something
 					geom.setDrawingTool(new SquareDrawingTool(3));
 
-					// TODO Deselect all other tools
 					circleDrawingTool.setDown(false);
 				}
 			}
@@ -606,13 +576,14 @@ public class Fingerpaint implements EntryPoint {
 
 			@Override
 			public void onClick(ClickEvent event) {
-				RectangleDistribution dist = new RectangleDistribution();
+			//	RectangleDistribution dist = new RectangleDistribution();
+				double[] dist = new double[96000];
 				for (int x = 0; x < 400; x++) {
 					for (int y = 0; y < 240; y++) {
-						dist.setValue(x, y, (double) x / 400);
+						//dist.setValue(x, y, (double) x / 400);
+						dist[x + 400 * (239 - y)] = (double) x / 400;
 					}
 				}
-
 				geom.drawDistribution(dist);
 			}
 		});
