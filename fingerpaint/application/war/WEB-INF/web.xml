@@ -11,5 +11,15 @@
   <welcome-file-list>
     <welcome-file>Fingerpaint.html</welcome-file>
   </welcome-file-list>
+  
+  <servlet>
+  <servlet-name>simulatorSeviceImpl</servlet-name>
+  <servlet-class>nl.tue.fingerpaint.server.simulator.SimulatorSeviceImpl</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>simulatorSeviceImpl</servlet-name>
+    <url-pattern>/fingerpaint/simulatorService</url-pattern>
+  </servlet-mapping>
+  
 
 </web-app>

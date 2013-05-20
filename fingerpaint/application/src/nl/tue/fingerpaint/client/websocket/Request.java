@@ -1,5 +1,7 @@
 package nl.tue.fingerpaint.client.websocket;
 
+import java.io.Serializable;
+
 import org.jsonmaker.gwt.client.Jsonizer;
 
 /**
@@ -9,8 +11,12 @@ import org.jsonmaker.gwt.client.Jsonizer;
  * 
  * @author Group Fingerpaint
  */
-public class Request {
+public class Request implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4095028829756424168L;
 	// ---------- GLOBAL VARIABLES --------------------------------------------
 	/**
 	 * The geometry is an ID indicating which geometry is used.

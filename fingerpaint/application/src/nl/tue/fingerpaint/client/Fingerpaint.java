@@ -5,6 +5,8 @@ import java.util.List;
 
 import nl.tue.fingerpaint.client.Geometry;
 import nl.tue.fingerpaint.client.Geometry.StepAddedListener;
+import nl.tue.fingerpaint.client.simulator.SimulatorService;
+import nl.tue.fingerpaint.client.simulator.SimulatorServiceAsync;
 import nl.tue.fingerpaint.client.websocket.Request;
 import nl.tue.fingerpaint.client.websocket.Response;
 import nl.tue.fingerpaint.client.websocket.ResponseCallback;
@@ -23,6 +25,7 @@ import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.cellview.client.CellBrowser;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
@@ -153,7 +156,23 @@ public class Fingerpaint implements EntryPoint {
 		// Add the tree to the root layout panel.
 		RootLayoutPanel.get().add(tree);
 		
-		testRequestSimulation();
+		SimulatorServiceAsync service = GWT.create(SimulatorService.class);
+		AsyncCallback<Response> callback = new AsyncCallback<Response>() {
+		    @Override
+			public void onSuccess(Response result) {
+		    	System.out.println(result);
+		    }
+		
+		    @Override
+			public void onFailure(Throwable caught) {
+		    	caught.printStackTrace();
+		    }
+		  };
+		  double[] dist = {1,0,.8,0.5};
+		  Step[] protocol = {new Step("TL", 2.0), new Step("TR", 5.0)};
+		  Request request = new Request(0, 0, dist, protocol, 5, true);
+		  
+		  service.simulate(request, callback);
 	}
 
 	/**
