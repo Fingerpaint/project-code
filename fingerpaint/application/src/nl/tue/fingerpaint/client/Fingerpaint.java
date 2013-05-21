@@ -100,6 +100,9 @@ public class Fingerpaint implements EntryPoint {
 	 * Shows the textual representation of the mixing protocol.
 	 */
 	private TextArea taProtocolRepresentation = new TextArea();
+
+	//
+	private Button resetProtocolButton;
 	/*
 	 * The NumberSpinner to set the #steps parameter. Its settings are described
 	 * via the following parameters.
@@ -116,7 +119,7 @@ public class Fingerpaint implements EntryPoint {
 
 	// Width of the menu in which buttons are displayed
 	// on the right side of the window in pixels
-	private final int menuWidth = 125;
+	private final int menuWidth = 200;
 
 	// Height of address-bar / tabs / menu-bar in the
 	// browser in pixels. If this is not taken into account,
@@ -132,10 +135,10 @@ public class Fingerpaint implements EntryPoint {
 		// add the loading-image to the panel
 		loadPanel.add(loadImage);
 		// give the image the center css-style
-		loadImage.addStyleName("center");		
-		//set item ID for loadpanel
+		loadImage.addStyleName("center");
+		// set item ID for loadpanel
 		loadPanel.getElement().setId("loading-overlay");
-		
+
 		// initialise the UC
 		as = new ApplicationState();
 
@@ -152,7 +155,7 @@ public class Fingerpaint implements EntryPoint {
 
 		// Add the tree to the root layout panel.
 		RootLayoutPanel.get().add(tree);
-		
+
 		testRequestSimulation();
 	}
 
@@ -183,7 +186,7 @@ public class Fingerpaint implements EntryPoint {
 		};
 		togglebuttonTimer.schedule(10000);
 	}
-	
+
 	/**
 	 * The model that defines the nodes in the tree.
 	 */
@@ -256,7 +259,7 @@ public class Fingerpaint implements EntryPoint {
 									mixingDetails.setText("Geometry: "
 											+ as.getGeometryChoice().toString()
 											+ ", Mixer: "
-											+ as.getMixerChoice().toString());																	
+											+ as.getMixerChoice().toString());
 								} else {// This should never happen. Just to be
 										// safe i made this msg so fails are
 										// visible
@@ -289,11 +292,11 @@ public class Fingerpaint implements EntryPoint {
 			};
 
 			geom.addStepAddedListener(l);
-			
+
 			// Initialise the toolSelectButton and add to menuPanel
 			createToolSelector();
 			menuPanel.add(toolSelectButton);
-	
+
 			// Initialise toggleButton and add to
 			// menuPanel
 			createToggleButton();
@@ -305,7 +308,7 @@ public class Fingerpaint implements EntryPoint {
 			menuPanel.add(loadDistButton);
 
 			// TODO: Initialise other menu items and add them to menuPanel
-			
+
 			// Initialise a spinner for changing the length of a mixing protocol
 			// step
 			// and add to menuPanel.
@@ -319,7 +322,13 @@ public class Fingerpaint implements EntryPoint {
 			menuPanel.add(nrStepsLabel);
 			menuPanel.add(nrStepsSpinner);
 
+			// Create the text area in which the current protocol is displayed
+			// and add to menuPanel.
 			createProtocolRepresentationTextArea();
+
+			// Initialise the resetProtocol button and add to menuPanel.
+			createResetProtocolButton();
+			menuPanel.add(resetProtocolButton);
 
 			// Add canvas and menuPanel to the panel
 			// Make the canvas the entire width of the
@@ -331,7 +340,7 @@ public class Fingerpaint implements EntryPoint {
 			panel.setCellWidth(menuPanel, Integer.toString(menuWidth));
 
 			// Add panel to RootPanel
-			RootPanel.get().add(panel);			
+			RootPanel.get().add(panel);
 		}
 
 		/**
@@ -419,13 +428,13 @@ public class Fingerpaint implements EntryPoint {
 				MixingStep.STEP_UNIT, MixingStep.STEP_MIN, MixingStep.STEP_MAX,
 				true);
 		as.editStepSize(MixingStep.STEP_DEFAULT);
-		
+
 		// set a listener for the spinner
 		sizeSpinner.setSpinnerListener(new NumberSpinnerListener() {
 
 			@Override
 			public void onValueChange(double value) {
-				//change the current mixing step
+				// change the current mixing step
 				as.editStepSize(value);
 			}
 
@@ -470,11 +479,15 @@ public class Fingerpaint implements EntryPoint {
 
 			}
 		});
+		toggleColor.setWidth("100px");
 	}
 
+	/*
+	 * Initialises the protocol representation text area.
+	 */
 	private void createProtocolRepresentationTextArea() {
 		taProtocolRepresentation.setText("");
-		taProtocolRepresentation.setWidth(String.valueOf(menuWidth));
+		taProtocolRepresentation.setWidth(String.valueOf(menuWidth - 60) +"px");
 		menuPanel.add(taProtocolRepresentation);
 	}
 
@@ -490,6 +503,10 @@ public class Fingerpaint implements EntryPoint {
 		}
 	}
 
+	/*
+	 * Initialises the tool selector, including buttons to select the shape of
+	 * the tool, and the slider to select the size of the tool
+	 */
 	private void createToolSelector() {
 		// --Initialise all elements--------------------------------
 		toolSelector = new PopupPanel(true);
@@ -505,7 +522,7 @@ public class Fingerpaint implements EntryPoint {
 			 */
 			@Override
 			public void onClick(ClickEvent event) {
-				
+
 				if (!squareDrawingTool.isDown()) {
 					squareDrawingTool.setDown(true);
 				} else {
@@ -517,7 +534,7 @@ public class Fingerpaint implements EntryPoint {
 				}
 			}
 		});
-		//Initial drawing tool is square
+		// Initial drawing tool is square
 		squareDrawingTool.setDown(true);
 
 		circleDrawingTool.addClickHandler(new ClickHandler() {
@@ -527,7 +544,7 @@ public class Fingerpaint implements EntryPoint {
 			 */
 			@Override
 			public void onClick(ClickEvent event) {
-				
+
 				if (!circleDrawingTool.isDown()) {
 					circleDrawingTool.setDown(true);
 				} else {
@@ -575,7 +592,24 @@ public class Fingerpaint implements EntryPoint {
 
 	}
 
-	// --Methods for testing purposes only---------------------------------
+	/*
+	 * Initialises the resetProtocol button. When pressed, this button sets a
+	 * new (and empty) protocol in the application state, and it clear the
+	 * protocol representation text area.
+	 */
+	private void createResetProtocolButton() {
+		resetProtocolButton = new Button("Reset Protocol");
+		resetProtocolButton.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				as.setProtocol(new MixingProtocol());
+				taProtocolRepresentation.setText("");
+			}
+
+		});
+	}
+
 	/**
 	 * Updates the protocol label to show the textual representation of
 	 * {@code step}.
@@ -597,36 +631,10 @@ public class Fingerpaint implements EntryPoint {
 		} else { // (!step.isTopWall() && !step.movesForward()) {
 			stepString = "-B";
 		}
-		
+
 		stepString += "[" + step.getStepSize() + "]";
 
 		taProtocolRepresentation.setText(oldProtocol + stepString + " ");
-	}
-
-	/*
-	 * Initialises the Load Distribution button. This button only exists for
-	 * testing purposes. When it is pressed, the distribution of the geometry is
-	 * set to a colour bar from black to white, from left to right. This
-	 * distribution is then drawn on the canvas, to demonstrate we can load an
-	 * arbitrary distribution, with 256 gray scale colours.
-	 */
-	private void createLoadDistButton() {
-		loadDistButton = new Button("Load Dist");
-		loadDistButton.addClickHandler(new ClickHandler() {
-
-			@Override
-			public void onClick(ClickEvent event) {
-			//	RectangleDistribution dist = new RectangleDistribution();
-				double[] dist = new double[96000];
-				for (int x = 0; x < 400; x++) {
-					for (int y = 0; y < 240; y++) {
-						//dist.setValue(x, y, (double) x / 400);
-						dist[x + 400 * (239 - y)] = (double) x / 400;
-					}
-				}
-				geom.drawDistribution(dist);
-			}
-		});
 	}
 
 	/**
@@ -644,20 +652,48 @@ public class Fingerpaint implements EntryPoint {
 
 	/**
 	 * A semi-transparent windows that covers the entire application pops up
-	 * that blocks the user from accessing other features. A loading-icon
-	 * will be shown. {@code closeLoadingWindow()} removes this window.
+	 * that blocks the user from accessing other features. A loading-icon will
+	 * be shown. {@code closeLoadingWindow()} removes this window.
 	 */
 	private void showLoadingWindow() {
 		RootPanel.get().add(loadPanel);
 	}
 
 	/**
-	 * Removes Removes the loading-window that {@code showLoadingWindow()} has created.
+	 * Removes Removes the loading-window that {@code showLoadingWindow()} has
+	 * created.
 	 * 
 	 * @pre showLoadingWindow() has been executed
 	 */
 	private void closeLoadingWindow() {
 		loadPanel.removeFromParent();
+	}
+
+	// --Methods for testing purposes only---------------------------------
+	/*
+	 * Initialises the Load Distribution button. This button only exists for
+	 * testing purposes. When it is pressed, the distribution of the geometry is
+	 * set to a colour bar from black to white, from left to right. This
+	 * distribution is then drawn on the canvas, to demonstrate we can load an
+	 * arbitrary distribution, with 256 gray scale colours.
+	 */
+	private void createLoadDistButton() {
+		loadDistButton = new Button("Load Dist");
+		loadDistButton.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				// RectangleDistribution dist = new RectangleDistribution();
+				double[] dist = new double[96000];
+				for (int x = 0; x < 400; x++) {
+					for (int y = 0; y < 240; y++) {
+						// dist.setValue(x, y, (double) x / 400);
+						dist[x + 400 * (239 - y)] = (double) x / 400;
+					}
+				}
+				geom.drawDistribution(dist);
+			}
+		});
 	}
 
 }
