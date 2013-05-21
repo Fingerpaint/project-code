@@ -1,5 +1,7 @@
 package nl.tue.fingerpaint.client.websocket;
 
+import java.io.Serializable;
+
 import org.jsonmaker.gwt.client.Jsonizer;
 
 /**
@@ -20,8 +22,12 @@ import org.jsonmaker.gwt.client.Jsonizer;
  * 
  * @author Group Fingerpaint
  */
-public class Step {
+public class Step implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5428353384007944346L;
 	// ---------- GLOBAL VARIABLES --------------------------------------------
 	/**
 	 * The ID of the step.
