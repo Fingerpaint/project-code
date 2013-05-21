@@ -23,7 +23,7 @@ public class RectangleGeometry extends Geometry {
 	 * Threshold in pixels to decide when a large enough swipe has been carried
 	 * out.
 	 */
-	private final static int SWIPE_THRESHOLD = 20;
+	final static int SWIPE_THRESHOLD = 20;
 
 	/**
 	 * The height of the wall in the same distance unit as the

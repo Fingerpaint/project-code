@@ -150,6 +150,21 @@ public class RectangleGeometryTest extends GWTTestCase {
 		mixingStepAdded = false;
 	}
 	
+	/**
+	 * 
+	 */
+	@Test
+	private void testDetermineSwipe(){
+		geom = new RectangleGeometry(clientHeight, clientWidth);
+		
+		//simulate a horizontal swipe to the right, just barely over the threshold
+		geom.swipeStartX = 50;
+		geom.swipeStartY = 50;
+		geom.stopDefineMixingStep(geom.swipeStartX + RectangleGeometry.SWIPE_THRESHOLD + 1, geom.swipeStartY);
+		
+		//TODO test the result
+	}
+	
 	private StepAddedListener setUpStepAddedListener(final String message, final boolean top, final boolean clockwise, final double stepSize) {
 		StepAddedListener stl = new StepAddedListener() {
 			

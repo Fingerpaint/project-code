@@ -93,6 +93,7 @@ public class ApplicationStateTest extends GWTTestCase{
 		assertEquals("After setValue, the value should be " + value + ".", value, as.getNrSteps());
 	}
 
+	
 	@Override
 	public String getModuleName() {
 		return "nl.tue.fingerpaint.Fingerpaint";
