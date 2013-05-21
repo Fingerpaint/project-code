@@ -17,6 +17,7 @@ public class ApplicationState {
 	 * yet.
 	 */
 	private int nrSteps = 0; // #steps
+	private double stepsize;
 	
 	/**
 	 * Returns the current value of number of steps.
@@ -114,9 +115,7 @@ public class ApplicationState {
 	 * @param value the new StepSize for the current mixing step
 	 */
 	public void editStepSize(double value){
-		if(currMixingStep != null){
-			currMixingStep.setStepSize(value);
-		}
+		stepsize = value;
 	}
 	
 	/**
@@ -148,7 +147,6 @@ public class ApplicationState {
 	}
 
 	public double getStepSize() {
-		// TODO Auto-generated method stub
-		return 1;
+		return stepsize;
 	}
 }

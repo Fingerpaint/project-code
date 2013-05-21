@@ -3,21 +3,31 @@ package nl.tue.fingerpaint.client;
 import java.util.ArrayList;
 import java.util.List;
 
+import nl.tue.fingerpaint.client.Geometry;
 import nl.tue.fingerpaint.client.Geometry.StepAddedListener;
+import nl.tue.fingerpaint.client.websocket.Request;
+import nl.tue.fingerpaint.client.websocket.Response;
+import nl.tue.fingerpaint.client.websocket.ResponseCallback;
+import nl.tue.fingerpaint.client.websocket.SimulatorServiceSocket;
+import nl.tue.fingerpaint.client.websocket.Step;
+
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.cell.client.Cell;
 import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.cellview.client.CellBrowser;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -32,7 +42,7 @@ import com.google.gwt.view.client.TreeViewModel;
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  * 
- * @author Tessa Belder
+ * @author Group Fingerpaint
  */
 public class Fingerpaint implements EntryPoint {
 	// Class to remember which Geometry and Mixer the user has selected
@@ -50,6 +60,28 @@ public class Fingerpaint implements EntryPoint {
 
 	// Rectangular geometry to draw on
 	private Geometry geom;
+
+	// Button to adapt the drawing tool
+	// TODO: Change this to a button on which the current tool is drawn
+	private Button toolSelectButton;
+
+	// PopupPanel which contains options for selecting a different drawing tool
+	private PopupPanel toolSelector;
+
+	// The panel in the popup panel to seperate the toolSelector from the
+	// toolSizer
+	private HorizontalPanel popupPanelPanel;
+
+	// The panel in the popup panel that contains the different drawing tools
+	private VerticalPanel popupPanelMenu;
+
+	// Button to select the square drawing tool
+	// TODO: Change this to a button on which a square is drawn
+	private ToggleButton squareDrawingTool;
+
+	// Button to select the circle drawing tool
+	// TODO: Change this to a button on which a circle is drawn
+	private ToggleButton circleDrawingTool;
 
 	// Horizontal panel to contain drawing canvas and menu bar
 	private HorizontalPanel panel = new HorizontalPanel();
@@ -120,8 +152,38 @@ public class Fingerpaint implements EntryPoint {
 
 		// Add the tree to the root layout panel.
 		RootLayoutPanel.get().add(tree);
+		
+		testRequestSimulation();
 	}
 
+	/**
+	 * Test if we can call the service simulator.
+	 */
+	protected void testRequestSimulation() {
+		double[] dist = { 1, 0, .8, 0.5 };
+		Step[] protocol = { new Step("TL", 2.0), new Step("TR", 5.0) };
+		Request request = new Request(0, 0, dist, protocol, 5, true);
+		ResponseCallback callback = new ResponseCallback() {
+			@Override
+			public void onError(String message) {
+				GWT.log("onError: " + message);
+			}
+
+			@Override
+			public void onResponse(Response result) {
+				GWT.log("onResponse: " + result.toString());
+			}
+		};
+		SimulatorServiceSocket sss = SimulatorServiceSocket.getInstance();
+		sss.requestSimulation(request, callback);
+		Timer togglebuttonTimer = new Timer() {
+			public void run() {
+				GWT.log("FAIL: timer ran out");
+			}
+		};
+		togglebuttonTimer.schedule(10000);
+	}
+	
 	/**
 	 * The model that defines the nodes in the tree.
 	 */
@@ -219,9 +281,7 @@ public class Fingerpaint implements EntryPoint {
 			// Initialise geometry
 			geom = new RectangleGeometry(Window.getClientHeight()
 					- topBarHeight, Window.getClientWidth() - menuWidth);
-
 			StepAddedListener l = new StepAddedListener() {
-
 				@Override
 				public void onStepAdded(MixingStep step) {
 					addStep(step);
@@ -229,7 +289,11 @@ public class Fingerpaint implements EntryPoint {
 			};
 
 			geom.addStepAddedListener(l);
-
+			
+			// Initialise the toolSelectButton and add to menuPanel
+			createToolSelector();
+			menuPanel.add(toolSelectButton);
+	
 			// Initialise toggleButton and add to
 			// menuPanel
 			createToggleButton();
@@ -240,8 +304,8 @@ public class Fingerpaint implements EntryPoint {
 			createLoadDistButton();
 			menuPanel.add(loadDistButton);
 
-			// TODO: Initialise other menu items and add
-			// them to menuPanel
+			// TODO: Initialise other menu items and add them to menuPanel
+			
 			// Initialise a spinner for changing the length of a mixing protocol
 			// step
 			// and add to menuPanel.
@@ -354,7 +418,8 @@ public class Fingerpaint implements EntryPoint {
 		sizeSpinner = new NumberSpinner(MixingStep.STEP_DEFAULT,
 				MixingStep.STEP_UNIT, MixingStep.STEP_MIN, MixingStep.STEP_MAX,
 				true);
-
+		as.editStepSize(MixingStep.STEP_DEFAULT);
+		
 		// set a listener for the spinner
 		sizeSpinner.setSpinnerListener(new NumberSpinnerListener() {
 
@@ -425,6 +490,92 @@ public class Fingerpaint implements EntryPoint {
 		}
 	}
 
+	private void createToolSelector() {
+		// --Initialise all elements--------------------------------
+		toolSelector = new PopupPanel(true);
+		popupPanelPanel = new HorizontalPanel();
+		popupPanelMenu = new VerticalPanel();
+		squareDrawingTool = new ToggleButton("square", "square");
+		circleDrawingTool = new ToggleButton("circle", "circle");
+
+		squareDrawingTool.addClickHandler(new ClickHandler() {
+
+			/*
+			 * Select the square drawing tool when this button is clicked
+			 */
+			@Override
+			public void onClick(ClickEvent event) {
+				
+				if (!squareDrawingTool.isDown()) {
+					squareDrawingTool.setDown(true);
+				} else {
+					// TODO Change hard-coded 3 to 'size-slider.getValue()' or
+					// something
+					geom.setDrawingTool(new SquareDrawingTool(3));
+
+					circleDrawingTool.setDown(false);
+				}
+			}
+		});
+		//Initial drawing tool is square
+		squareDrawingTool.setDown(true);
+
+		circleDrawingTool.addClickHandler(new ClickHandler() {
+
+			/*
+			 * Select the square drawing tool when this button is clicked
+			 */
+			@Override
+			public void onClick(ClickEvent event) {
+				
+				if (!circleDrawingTool.isDown()) {
+					circleDrawingTool.setDown(true);
+				} else {
+					// TODO Change hard-coded 3 to 'size-slider.getValue()' or
+					// something
+					geom.setDrawingTool(new CircleDrawingTool(3));
+
+					squareDrawingTool.setDown(false);
+				}
+			}
+		});
+
+		// -- Add all Drawings Tools below ---------------------
+		popupPanelMenu.add(squareDrawingTool);
+		popupPanelMenu.add(circleDrawingTool);
+
+		// --TODO: Add DrawingTool Size slider below ----------------
+		popupPanelPanel.add(popupPanelMenu);
+
+		// Add everything to the popup panel
+		toolSelector.add(popupPanelPanel);
+
+		// Create the button the triggers the popup panel
+		toolSelectButton = new Button("Select Tool");
+		toolSelectButton.addClickHandler(new ClickHandler() {
+
+			/*
+			 * Show the popupPanel when this button is clicked
+			 */
+			@Override
+			public void onClick(ClickEvent event) {
+				toolSelector
+						.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
+							public void setPosition(int offsetWidth,
+									int offsetHeight) {
+								int left = (Window.getClientWidth()
+										- offsetWidth - 75);
+								int top = 40;
+								toolSelector.setPopupPosition(left, top);
+							}
+						});
+			}
+
+		});
+
+	}
+
+	// --Methods for testing purposes only---------------------------------
 	/**
 	 * Updates the protocol label to show the textual representation of
 	 * {@code step}.
@@ -446,6 +597,8 @@ public class Fingerpaint implements EntryPoint {
 		} else { // (!step.isTopWall() && !step.movesForward()) {
 			stepString = "-B";
 		}
+		
+		stepString += "[" + step.getStepSize() + "]";
 
 		taProtocolRepresentation.setText(oldProtocol + stepString + " ");
 	}
@@ -463,13 +616,14 @@ public class Fingerpaint implements EntryPoint {
 
 			@Override
 			public void onClick(ClickEvent event) {
-				RectangleDistribution dist = new RectangleDistribution();
+			//	RectangleDistribution dist = new RectangleDistribution();
+				double[] dist = new double[96000];
 				for (int x = 0; x < 400; x++) {
 					for (int y = 0; y < 240; y++) {
-						dist.setValue(x, y, (double) x / 400);
+						//dist.setValue(x, y, (double) x / 400);
+						dist[x + 400 * (239 - y)] = (double) x / 400;
 					}
 				}
-
 				geom.drawDistribution(dist);
 			}
 		});
@@ -488,7 +642,6 @@ public class Fingerpaint implements EntryPoint {
 		updateProtocolLabel(step);
 	}
 
-	
 	/**
 	 * A semi-transparent windows that covers the entire application pops up
 	 * that blocks the user from accessing other features. A loading-icon

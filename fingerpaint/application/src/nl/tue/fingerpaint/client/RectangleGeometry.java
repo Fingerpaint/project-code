@@ -1,6 +1,8 @@
 package nl.tue.fingerpaint.client;
 
 import com.google.gwt.canvas.dom.client.CssColor;
+
+import com.google.gwt.canvas.dom.client.ImageData;
 import com.google.gwt.touch.client.Point;
 
 /**
@@ -8,28 +10,16 @@ import com.google.gwt.touch.client.Point;
  * representation in a vector. Also contains the canvas and methods to draw on
  * it.
  * 
- * @author Tessa Belder
+ * @author Project Fingerpaint
  */
 public class RectangleGeometry extends Geometry {
 
-	/*
+	/**
 	 * The parameters of the canvas
 	 */
 	private final int rectangleHeight = 240;
 	private final int rectangleWidth = 400;
-	private int factor;
 
-	/**
-	 * Threshold in pixels to decide when a large enough swipe has been carried
-	 * out.
-	 */
-	final static int SWIPE_THRESHOLD = 20;
-
-	/**
-	 * The height of the wall in the same distance unit as the
-	 * {@code rectangleHeight}.
-	 */
-	private final static int HEIGHT_OF_WALL = 20;
 	/**
 	 * Uses constructor from super class (Geometry.java)
 	 * 
@@ -64,34 +54,6 @@ public class RectangleGeometry extends Geometry {
 	}
 
 	/**
-	 * Sets the factor to multiply the outline of the geometry with.
-	 * 
-	 * @post The multiply factor has been set to @param{factor}
-	 */
-	@Override
-	public void setFactor(int factor) {
-		this.factor = factor;
-	}
-
-	/**
-	 * Returns the total height of the drawing area
-	 * 
-	 * @return total height of the drawing area
-	 */
-	public int getHeight() {
-		return factor * rectangleHeight;
-	}
-
-	/**
-	 * Returns the total width of the drawing area
-	 * 
-	 * @return total width of the drawing area
-	 */
-	public int getWidth() {
-		return factor * rectangleWidth;
-	}
-
-	/**
 	 * Sets the distribution belonging to this geometry to the dist parameter
 	 * 
 	 * @param dist
@@ -99,6 +61,22 @@ public class RectangleGeometry extends Geometry {
 	 */
 	public void setDistribution(double[] dist) {
 		setDistribution(new RectangleDistribution(dist));
+	}
+
+	/**
+	 * Get the current distribution from the canvas, and puts it in the
+	 * distribution.
+	 * 
+	 * @return The current concentration distribution
+	 * 
+	 */
+	@Override
+	public Distribution getDistribution() {
+		ImageData img = context.getImageData(X_OFFSET + 1, TOP_OFFSET + 1,
+				getWidth(), getHeight());
+		this.distribution.setDistribution(img, factor);
+
+		return this.distribution;
 	}
 
 	// ----Implemented abstract methods from superclass----------------
@@ -124,32 +102,13 @@ public class RectangleGeometry extends Geometry {
 	 */
 	@Override
 	public void fillPixel(int x, int y, CssColor colour) {
-		if (isInside(x, y)) {
-
-			// Subtract 1 from both x and y coordinates, because
-			// the drawing area starts at (1, 1) instead of (0, 0).
-			// Divide by multiplying factor (integer division so result is
-			// rounded down) to find base coordinates.
-			x = (x - 1) / factor;
-			y = (y - 1) / factor;
-
-			// Fill a rectangle with the currentColor. Multiply base coordinates
-			// with the multiplying factor and add 1 to find upper left corner
-			// of
-			// the 'pixel'.
+		if (isInsideDrawingArea(x, y)) {
+			// Fill a rectangle with the currentColor. Change to valid
+			// coordinates to find upper left corner of the 'pixel'.
 			// Make the 'pixel' the size of the multiplying factor.
 			context.setFillStyle(colour);
-			context.fillRect(x * factor + 1, y * factor + 1, factor, factor);
-
-			// Set internal representation of base coordinates to 1 for
-			// black, and to 0 for white. 239 - y has to be used since
-			// within the canvas, coordinate (0, 0) is upper left, and in
-			// the internal representation (0, 0) is bottom left.
-			if (getColor().value().equals("black")) {
-				distribution.setValue(x, y, 0);
-			} else {
-				distribution.setValue(x, y, 1);
-			}
+			context.fillRect(getValidCoord(x) + X_OFFSET, getValidCoord(y)
+					+ TOP_OFFSET, factor, factor);
 		}
 	}
 
@@ -162,8 +121,49 @@ public class RectangleGeometry extends Geometry {
 	 *         drawing area. False otherwise.
 	 */
 	@Override
-	public boolean isInside(int x, int y) {
+	public boolean isInsideDrawingArea(int x, int y) {
 		return x > 0 && y > 0 && x < getWidth() + 1 && y < getHeight() + 1;
+	}
+
+	/**
+	 * Returns whether the position ({@code x}, {@code y}) is inside the top
+	 * wall on the {@code canvas}.
+	 * 
+	 * @param x
+	 *            The x-coordinate relative to the top-left corner of the
+	 *            {@code canvas}
+	 * @param y
+	 *            The y-coordinate relative to the top-left corner of the
+	 *            {@code canvas}
+	 * 
+	 * @return {@code true} if coordinates (x, y) are inside the top wall.
+	 *         {@code false} otherwise.
+	 */
+	@Override
+	protected boolean isInsideTopWall(int x, int y) {
+		return (x > X_OFFSET && x < X_OFFSET + getWidth()
+				&& y > TOP_OFFSET - HEIGHT_OF_WALL && y < TOP_OFFSET);
+	}
+
+	/**
+	 * Returns whether the position ({@code x}, {@code y}) is inside the bottom
+	 * wall on the {@code canvas}.
+	 * 
+	 * @param x
+	 *            The x-coordinate relative to the top-left corner of the
+	 *            {@code canvas}
+	 * @param y
+	 *            The y-coordinate relative to the top-left corner of the
+	 *            {@code canvas}
+	 * 
+	 * @return {@code true} if coordinates (x, y) are inside the bottom wall.
+	 *         {@code false} otherwise.
+	 */
+	@Override
+	protected boolean isInsideBottomWall(int x, int y) {
+		return (x > X_OFFSET && x < X_OFFSET + getWidth()
+				&& y > TOP_OFFSET + getHeight() && y < TOP_OFFSET + getHeight()
+				+ HEIGHT_OF_WALL);
 	}
 
 	/**
@@ -178,12 +178,43 @@ public class RectangleGeometry extends Geometry {
 	}
 
 	/**
+	 * Draws the outline around the walls
+	 * 
+	 * @post The outline of the walls has been drawn on the {@code canvas}
+	 */
+	@Override
+	protected void drawWalls() {
+		context.setLineWidth(1);
+		context.setStrokeStyle(CssColor.make("black"));
+
+		context.beginPath();
+		context.moveTo(X_OFFSET + 0.5, TOP_OFFSET + 0.5 - HEIGHT_OF_WALL);
+		context.lineTo(X_OFFSET + getWidth() + 1.5, TOP_OFFSET + 0.5
+				- HEIGHT_OF_WALL);
+		context.lineTo(X_OFFSET + getWidth() + 1.5, TOP_OFFSET + 0.5);
+		context.lineTo(X_OFFSET + 0.5, TOP_OFFSET + 0.5);
+		context.closePath();
+		context.stroke();
+
+		context.beginPath();
+		context.moveTo(X_OFFSET + 0.5, TOP_OFFSET + getHeight() + 1.5);
+		context.lineTo(X_OFFSET + getWidth() + 1.5, TOP_OFFSET + getHeight()
+				+ 1.5);
+		context.lineTo(X_OFFSET + getWidth() + 1.5, TOP_OFFSET + getHeight()
+				+ 1.5 + HEIGHT_OF_WALL);
+		context.lineTo(X_OFFSET + 0.5, TOP_OFFSET + getHeight() + 1.5
+				+ HEIGHT_OF_WALL);
+		context.closePath();
+		context.stroke();
+	}
+
+	/**
 	 * Draws a rectangle on the canvas, starting at the upper left corner, with
 	 * the total height and width of the drawing area.
 	 * 
-	 * Note: getWidth() + 2 and getHeight() + 2 are used because for some reason
-	 * the right and bottom borders of the rectangle are drawn two pixels wide
-	 * instead of just one.
+	 * Note: The 0.5 and 1.5 coordinates are necessary to get solid black lines.
+	 * If you just use 0 and 1, the lines appear gray instead of black, and the
+	 * right and bottom lines are two pixels wide instead of 1.
 	 * 
 	 * @post The outline of the rectangle has been drawn on the {@code canvas}
 	 */
@@ -193,12 +224,32 @@ public class RectangleGeometry extends Geometry {
 		context.setStrokeStyle(CssColor.make("black"));
 
 		context.beginPath();
-		context.moveTo(0, 0);
-		context.lineTo(getWidth() + 2, 0);
-		context.lineTo(getWidth() + 2, getHeight() + 2);
-		context.lineTo(0, getHeight() + 2);
+		context.moveTo(X_OFFSET + 0.5, TOP_OFFSET + 0.5);
+		context.lineTo(X_OFFSET + getWidth() + 1.5, TOP_OFFSET + 0.5);
+		context.lineTo(X_OFFSET + getWidth() + 1.5, TOP_OFFSET + getHeight()
+				+ 1.5);
+		context.lineTo(X_OFFSET + 0.5, TOP_OFFSET + getHeight() + 1.5);
 		context.closePath();
 		context.stroke();
+
+		context.setFillStyle(CssColor.make("white"));
+		context.fillRect(X_OFFSET + 1, TOP_OFFSET + 1, getWidth(), getHeight());
+	}
+
+	/**
+	 * Clips the drawing area, so that drawing outside of the drawing area is
+	 * not possible
+	 * 
+	 * @post The outline of the geometry has been clipped
+	 */
+	protected void clipGeometryOutline() {
+		context.beginPath();
+		context.moveTo(X_OFFSET + 0, TOP_OFFSET + 0);
+		context.lineTo(X_OFFSET + getWidth() + 1, TOP_OFFSET + 0);
+		context.lineTo(X_OFFSET + getWidth() + 1, TOP_OFFSET + getHeight() + 1);
+		context.lineTo(X_OFFSET + 0, TOP_OFFSET + getHeight() + 1);
+		context.closePath();
+		context.clip();
 	}
 
 	/**
@@ -214,34 +265,37 @@ public class RectangleGeometry extends Geometry {
 
 		int stepSize = 1; // TODO: Get value from spinner
 
-		if(movement != null){
+		if (movement != null) {
 			for (StepAddedListener l : stepAddedListeners) {
 				l.onStepAdded(movement);
 			}
 		}
-		// TODO: Actually add the step somewhere...
-		// protocol.addStep(mixingStep);
 	}
-	
+
 	/**
-	 * Returns the direction and wall of the current swiping movement, 
-	 * returns null if the swipe is not a valid swipe.
+	 * Returns the direction and wall of the current swiping movement, returns
+	 * null if the swipe is not a valid swipe.
 	 * 
-	 * Additionally draws an arrow to indicate the direction of the current swipe
+	 * Additionally draws an arrow to indicate the direction of the current
+	 * swipe
 	 * 
-	 * @param mouseX The x-coordinate of the current mouse position.
-	 * @param mouseY The y-coordinate of the current mouse position.
+	 * @param mouseX
+	 *            The x-coordinate of the current mouse position.
+	 * @param mouseY
+	 *            The y-coordinate of the current mouse position.
 	 */
 	@Override
 	protected MixingStep determineSwipe(int mouseX, int mouseY) {
 		int diffX = mouseX - swipeStartX;
 		boolean topWall = false;
 		boolean toTheLeft = false;
-		
-		if (0 < mouseY && mouseY < HEIGHT_OF_WALL * factor) { // Top wall
+
+		// used to be: 0 < mouseY && mouseY < HEIGHT_OF_WALL * factor
+		if (isInsideTopWall(mouseX, mouseY)) { // Top wall
 			topWall = true;
-		} else if ((rectangleHeight - HEIGHT_OF_WALL) * factor < mouseY
-				&& mouseY < rectangleHeight * factor) { // Bottom wall
+			// used to be: (rectangleHeight - HEIGHT_OF_WALL) * factor < mouseY
+			// && mouseY < rectangleHeight * factor
+		} else if (isInsideBottomWall(mouseX, mouseY)) { // Bottom wall
 			topWall = false;
 		} else { // No movement of the geometry was specified
 			return null;
@@ -251,34 +305,39 @@ public class RectangleGeometry extends Geometry {
 			toTheLeft = true;
 		} else if (diffX > SWIPE_THRESHOLD) { // To the right
 			toTheLeft = false;
+		} else { // No movement of the geometry was specified
+			return null;
 		}
-		
-		//draw an arrow corresponding to the swipe
-		if(diffX>0){
-			//the left side of the image should be at the starting location
+
+		// draw an arrow corresponding to the swipe
+		if (diffX > 0) {
+			// the left side of the image should be at the starting location
 			int imageLeft = swipeStartX;
-			//the top is moved upward to center the picture around the starting location, picture size is 100
+			// the top is moved upward to center the picture around the starting
+			// location, picture size is 100
 			int imageTop = swipeStartY - 50;
 			drawImage("rightarrow", imageLeft, imageTop);
-		}else{
-			//the right side of the image should be at the starting location, picture size is 100
-			int imageLeft = swipeStartX- 100;
-			//the top is moved upward to center the picture around the starting location, picture size is 100
+		} else {
+			// the right side of the image should be at the starting location,
+			// picture size is 100
+			int imageLeft = swipeStartX - 100;
+			// the top is moved upward to center the picture around the starting
+			// location, picture size is 100
 			int imageTop = swipeStartY - 50;
 			drawImage("leftarrow", imageLeft, imageTop);
 		}
-		
-		//converting the toTheLeft boolean to clockwise representation
+
+		// converting the toTheLeft boolean to clockwise representation
 		boolean clockwise;
-		if(topWall){
+		if (topWall) {
 			clockwise = !toTheLeft;
-		}else{
+		} else {
 			clockwise = toTheLeft;
 		}
 		MixingStep movement = new MixingStep(1, clockwise, topWall);
 		return movement;
 	}
-		
+
 	/**
 	 * Sets the given distribution as the current distribution, and draws it on
 	 * the canvas
@@ -291,7 +350,6 @@ public class RectangleGeometry extends Geometry {
 	 */
 	@Override
 	public void drawDistribution(double[] dist) {
-		setDistribution(dist);
 		for (int i = 0; i < dist.length; i++) {
 			Point coords = distribution.getCoordinates(i);
 			fillPixel(changeToAbsoluteCoords((int) coords.getX()),

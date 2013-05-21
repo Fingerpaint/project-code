@@ -1,10 +1,17 @@
 package nl.tue.fingerpaint.client;
 
+import com.google.gwt.canvas.dom.client.CanvasPixelArray;
+import com.google.gwt.canvas.dom.client.ImageData;
 import com.google.gwt.touch.client.Point;
 
+/**
+ * An abstract class representing a concentration distribution
+ * 
+ * @author Group Fingerpaint
+ */
 public abstract class Distribution {
 
-	/*
+	/**
 	 * Internal representation of the geometry
 	 */
 	protected double[] representationVector;
@@ -53,18 +60,28 @@ public abstract class Distribution {
 	}
 
 	/**
-	 * Returns the colour-value, between 0 and 1, corresponding to the
-	 * coordinates ({@code x}, {@code y})
+	 * Puts the concentration distribution from the given ImageData in the
+	 * representation vector
 	 * 
-	 * @param x
-	 *            The x-coordinate relative to the top-left corner of the canvas
-	 * @param y
-	 *            The y-coordinate relative to the top-left corner of the canvas
-	 * @return The value of {@code representationVector} from the index
-	 *         responding to coordinates ({@code x}, {@code y})
+	 * @param img
+	 *            The ImageData belonging to the canvas;
+	 * @param width
+	 *            The width of the canvas;
 	 */
-	public double getValue(int x, int y) {
-		return this.representationVector[getIndex(x, y)];
+	public void setDistribution(ImageData img, int factor) {
+		CanvasPixelArray data = img.getData();
+		int width = img.getWidth();
+		int height = img.getHeight();
+		int index;
+		System.out.println(width +" " +height);
+		for (int y = height - factor; y >=0 ; y-=factor) {
+			for (int x = 0; x < width; x +=factor) {
+				index = (y * width + x) * 4;
+				System.out.println(x +" " +y +" " +index);
+				setValue(x / factor, y / factor, (double) data.get(index) / 255);
+				System.out.println(data.get(index));
+			}
+		}
 	}
 
 	/**

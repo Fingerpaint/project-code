@@ -34,6 +34,15 @@ public class Step {
 
 	// ---------- PUBLIC PART -------------------------------------------------
 	/**
+	 * Constructs a new {@link Step} that has default values filled in for all
+	 * parameters. Using this constructor is not encouraged, you should probably
+	 * use {@link #Step(String, double)}.
+	 */
+	public Step() {
+		this("", 0);
+	}
+
+	/**
 	 * A {@link Step} with given ID and duration will be created.
 	 * 
 	 * @param id

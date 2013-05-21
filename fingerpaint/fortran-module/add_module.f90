@@ -277,8 +277,10 @@ subroutine simulate (geometry, matrix, distribution, len_distribution, step, ste
 !     print*,"geometry=",geometry
 !     print*,"matrix=",matrix
 !     print*,"distribution=",distribution
+!     print*,"len_distribution=",len_distribution
 !     print*,"step=",step
 !     print*,"stepid=",stepid
+!     print*,"len_stepid=",len_stepid
 !     print*,"segregation=",segregation
     
     if (geometry==0) then

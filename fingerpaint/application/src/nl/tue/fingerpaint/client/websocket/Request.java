@@ -46,6 +46,15 @@ public class Request {
 
 	// ---------- PUBLIC PART -------------------------------------------------
 	/**
+	 * Constructs a new {@link Request} that has default values filled in for
+	 * all parameters. Using this constructor is not encouraged, you should
+	 * probably use {@link #Request(int, int, double[], Step[], int, boolean)}.
+	 */
+	public Request() {
+		this(0, 0, new double[] {}, new Step[] {}, 0, false);
+	}
+
+	/**
 	 * Constructs a new {@link Request} that is ready to be sent to the
 	 * simulator service. Of course, after creation parameters can be changed
 	 * before sending. Also, a request can be altered and resent.
