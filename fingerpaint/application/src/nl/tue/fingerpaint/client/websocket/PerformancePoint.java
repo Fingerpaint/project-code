@@ -1,19 +1,13 @@
 package nl.tue.fingerpaint.client.websocket;
 
-import java.io.Serializable;
-
 /**
  * Just one point in the set of performance data that is returned from the
  * simulation service.
  * 
  * @author Group Fingerpaint
  */
-public class PerformancePoint implements Serializable {
+public class PerformancePoint {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -6773527529652764917L;
 	// ---------- GLOBAL VARIABLES ----------------------------------------
 	/**
 	 * The step at which the performance was measured. This is the X-coordinate

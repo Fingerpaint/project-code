@@ -1,7 +1,5 @@
 package nl.tue.fingerpaint.client.websocket;
 
-import java.io.Serializable;
-
 import org.jsonmaker.gwt.client.Jsonizer;
 
 /**
@@ -9,12 +7,8 @@ import org.jsonmaker.gwt.client.Jsonizer;
  * 
  * @author Group Fingerpaint
  */
-public class Response implements Serializable {
+public class Response {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 9110096334273417225L;
 	// ---------- GLOBAL VARIABLES --------------------------------------------
 	/**
 	 * A set of measuring points that together form a plot of the performance of
