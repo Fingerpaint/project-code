@@ -3,7 +3,6 @@ package nl.tue.fingerpaint.client;
 import java.util.ArrayList;
 import java.util.List;
 
-import nl.tue.fingerpaint.client.Geometry;
 import nl.tue.fingerpaint.client.Geometry.StepAddedListener;
 import nl.tue.fingerpaint.client.websocket.Request;
 import nl.tue.fingerpaint.client.websocket.Response;
@@ -24,6 +23,7 @@ import com.google.gwt.user.cellview.client.CellBrowser;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
@@ -96,13 +96,32 @@ public class Fingerpaint implements EntryPoint {
 	// The image that will be shown in the loadPanel
 	final Image loadImage = new Image();
 
+	// The NumberSpinner and label to define the step size
+	// TODO: The text 'Step size' should be translated later on
+	private Label sizeLabel = new Label("Step size");
+	private NumberSpinner sizeSpinner;
+
+	// Checkbox that needs to be checked to define a protocol. If it isn't
+	// checked, steps are executed directly.
+	private CheckBox defineProtocolCheckBox;
+
+	// The NumberSpinner and label to define how many times the mixing protocol
+	// is executed
+	// TODO: The text '#steps' should be translated later on
+	private Label nrStepsLabel = new Label("#steps");
+	private NumberSpinner nrStepsSpinner;
+
 	/**
 	 * Shows the textual representation of the mixing protocol.
 	 */
 	private TextArea taProtocolRepresentation = new TextArea();
 
-	//
+	// Button that executes the current mixing run when it is pressed
+	private Button mixNowButton;
+
+	// Button that resets the protocol when it is pressed
 	private Button resetProtocolButton;
+
 	/*
 	 * The NumberSpinner to set the #steps parameter. Its settings are described
 	 * via the following parameters.
@@ -112,11 +131,6 @@ public class Fingerpaint implements EntryPoint {
 	private final double NRSTEPS_MIN = 1.0;
 	private final double NRSTEPS_MAX = 50.0;
 
-	private NumberSpinner nrStepsSpinner;
-	private NumberSpinner sizeSpinner;
-	private Label nrStepsLabel = new Label("#steps");
-	private Label sizeLabel = new Label("Step size");
-
 	// Width of the menu in which buttons are displayed
 	// on the right side of the window in pixels
 	private final int menuWidth = 200;
@@ -124,7 +138,7 @@ public class Fingerpaint implements EntryPoint {
 	// Height of address-bar / tabs / menu-bar in the
 	// browser in pixels. If this is not taken into account,
 	// a vertical scroll bar appears.
-	private final int topBarHeight = 50;
+	private final int topBarHeight = 65;
 
 	/**
 	 * This is the entry point method.
@@ -144,6 +158,7 @@ public class Fingerpaint implements EntryPoint {
 
 		// Create a model for the cellbrowser.
 		TreeViewModel model = new CustomTreeModel();
+
 		/*
 		 * Create the browser using the model. We specify the default value of
 		 * the hidden root node as "null".
@@ -268,9 +283,7 @@ public class Fingerpaint implements EntryPoint {
 								}
 
 								RootPanel.get().add(mixingDetails);
-								{
-									createMixingWidgets();
-								}
+								createMixingWidgets();
 
 							}
 						}
@@ -280,17 +293,19 @@ public class Fingerpaint implements EntryPoint {
 		/**
 		 * Helper method that initialises the widgets for the mixing interface
 		 */
-		void createMixingWidgets() {
+		private void createMixingWidgets() {
 			// Initialise geometry
 			geom = new RectangleGeometry(Window.getClientHeight()
-					- topBarHeight, Window.getClientWidth() - menuWidth);
+					- topBarHeight, Window.getClientWidth() - menuWidth - 50);
+
+			// Initialise a listener for when a new step is entered to the
+			// protocol
 			StepAddedListener l = new StepAddedListener() {
 				@Override
 				public void onStepAdded(MixingStep step) {
 					addStep(step);
 				}
 			};
-
 			geom.addStepAddedListener(l);
 
 			// Initialise the toolSelectButton and add to menuPanel
@@ -307,28 +322,31 @@ public class Fingerpaint implements EntryPoint {
 			createLoadDistButton();
 			menuPanel.add(loadDistButton);
 
-			// TODO: Initialise other menu items and add them to menuPanel
-
 			// Initialise a spinner for changing the length of a mixing protocol
-			// step
-			// and add to menuPanel.
+			// step and add to menuPanel.
 			createStepSizeSpinner();
 			menuPanel.add(sizeLabel);
 			menuPanel.add(sizeSpinner);
 
-			// Initialise a spinner for #steps and add to
-			// menuPanel.
+			// Initialise the checkbox that indicates whether a protocol is
+			// being defined, or single steps have to be executed and add to
+			// menu panel
+			createDefineProtocolCheckBox();
+			menuPanel.add(defineProtocolCheckBox);
+
+			// Initialise a spinner for #steps
 			createNrStepsSpinner();
-			menuPanel.add(nrStepsLabel);
-			menuPanel.add(nrStepsSpinner);
 
 			// Create the text area in which the current protocol is displayed
-			// and add to menuPanel.
 			createProtocolRepresentationTextArea();
 
-			// Initialise the resetProtocol button and add to menuPanel.
+			// Initialise the resetProtocol button
 			createResetProtocolButton();
-			menuPanel.add(resetProtocolButton);
+
+			// Initialise the mixNow button
+			createMixNowButton();
+
+			// TODO: Initialise other menu items and add them to menuPanel
 
 			// Add canvas and menuPanel to the panel
 			// Make the canvas the entire width of the
@@ -337,7 +355,7 @@ public class Fingerpaint implements EntryPoint {
 			panel.setWidth("100%");
 			panel.add(geom.getCanvas());
 			panel.add(menuPanel);
-			panel.setCellWidth(menuPanel, Integer.toString(menuWidth));
+			panel.setCellWidth(menuPanel, Integer.toString(menuWidth) + "px");
 
 			// Add panel to RootPanel
 			RootPanel.get().add(panel);
@@ -420,7 +438,7 @@ public class Fingerpaint implements EntryPoint {
 	}
 
 	/*
-	 * initialises the spinner for the stepSize
+	 * Initialises the spinner for the stepSize
 	 */
 	private void createStepSizeSpinner() {
 		// initial initialisation of the spinner
@@ -439,6 +457,63 @@ public class Fingerpaint implements EntryPoint {
 			}
 
 		});
+	}
+
+	/*
+	 * Initialises the define Protocol checkbox. When this button is pressed,
+	 * the current protocol is reset, and the protocol widgets are shown/hidden.
+	 */
+	private void createDefineProtocolCheckBox() {
+		// TODO: The text 'Define Protocol' should be translated later on
+		defineProtocolCheckBox = new CheckBox("Define Protocol");
+		defineProtocolCheckBox.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				if (defineProtocolCheckBox.getValue()) {
+					resetProtocol();
+					showProtocolWidgets();
+				} else {
+					resetProtocol();
+					hideProtocolWidgets();
+				}
+
+			}
+
+		});
+	}
+
+	/*
+	 * Adds all the protocol widgets to the menu bar
+	 */
+	private void showProtocolWidgets() {
+		menuPanel.add(nrStepsLabel);
+		menuPanel.add(nrStepsSpinner);
+		menuPanel.add(taProtocolRepresentation);
+		menuPanel.add(mixNowButton);
+		menuPanel.add(resetProtocolButton);
+	}
+
+	/*
+	 * removes all the protocol widgets from the menu bar
+	 */
+	private void hideProtocolWidgets() {
+		menuPanel.remove(nrStepsLabel);
+		menuPanel.remove(nrStepsSpinner);
+		menuPanel.remove(taProtocolRepresentation);
+		menuPanel.remove(mixNowButton);
+		menuPanel.remove(resetProtocolButton);
+	}
+
+	/*
+	 * resets the current protocol and the protocol widgets
+	 */
+	private void resetProtocol() {
+		as.setProtocol(new MixingProtocol());
+		taProtocolRepresentation.setText("");
+		as.setNrSteps(1);
+		nrStepsSpinner.setValue(1);
+		mixNowButton.setEnabled(false);
 	}
 
 	/*
@@ -487,8 +562,9 @@ public class Fingerpaint implements EntryPoint {
 	 */
 	private void createProtocolRepresentationTextArea() {
 		taProtocolRepresentation.setText("");
-		taProtocolRepresentation.setWidth(String.valueOf(menuWidth - 60) +"px");
-		menuPanel.add(taProtocolRepresentation);
+		taProtocolRepresentation
+				.setWidth(String.valueOf(menuWidth - 10) + "px");
+		taProtocolRepresentation.setEnabled(false);
 	}
 
 	/*
@@ -568,6 +644,7 @@ public class Fingerpaint implements EntryPoint {
 		toolSelector.add(popupPanelPanel);
 
 		// Create the button the triggers the popup panel
+		// TODO: The text 'Select Tool' should be translated later on
 		toolSelectButton = new Button("Select Tool");
 		toolSelectButton.addClickHandler(new ClickHandler() {
 
@@ -593,18 +670,37 @@ public class Fingerpaint implements EntryPoint {
 	}
 
 	/*
+	 * Initialises the mixNow button. When pressed, the current protocol is
+	 * executed. TODO: When this button is disabled, hovering it should not make
+	 * it appear 'active'
+	 */
+	private void createMixNowButton() {
+		// TODO: The text 'Mix Now' should be translated later on
+		mixNowButton = new Button("Mix Now");
+		mixNowButton.setEnabled(false);
+		mixNowButton.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				executeMixingRun();
+			}
+
+		});
+	}
+
+	/*
 	 * Initialises the resetProtocol button. When pressed, this button sets a
 	 * new (and empty) protocol in the application state, and it clear the
 	 * protocol representation text area.
 	 */
 	private void createResetProtocolButton() {
+		// TODO: The text 'Reset Protocol' should be translated later on
 		resetProtocolButton = new Button("Reset Protocol");
 		resetProtocolButton.addClickHandler(new ClickHandler() {
 
 			@Override
 			public void onClick(ClickEvent event) {
-				as.setProtocol(new MixingProtocol());
-				taProtocolRepresentation.setText("");
+				resetProtocol();
 			}
 
 		});
@@ -647,7 +743,13 @@ public class Fingerpaint implements EntryPoint {
 	private void addStep(MixingStep step) {
 		step.setStepSize(as.getStepSize());
 		as.addMixingStep(step);
-		updateProtocolLabel(step);
+
+		if (!defineProtocolCheckBox.getValue()) {
+			executeMixingRun();
+		} else {
+			updateProtocolLabel(step);
+			mixNowButton.setEnabled(true);
+		}
 	}
 
 	/**
@@ -663,10 +765,18 @@ public class Fingerpaint implements EntryPoint {
 	 * Removes Removes the loading-window that {@code showLoadingWindow()} has
 	 * created.
 	 * 
-	 * @pre showLoadingWindow() has been executed
+	 * <pre> showLoadingWindow() has been executed
 	 */
 	private void closeLoadingWindow() {
 		loadPanel.removeFromParent();
+	}
+
+	/**
+	 * Sends all current information about the protocol and the distribution to
+	 * the server. Displays the results on screen.
+	 */
+	private void executeMixingRun() {
+		// TODO: collect all necessary information and send it to server
 	}
 
 	// --Methods for testing purposes only---------------------------------
@@ -676,6 +786,7 @@ public class Fingerpaint implements EntryPoint {
 	 * set to a colour bar from black to white, from left to right. This
 	 * distribution is then drawn on the canvas, to demonstrate we can load an
 	 * arbitrary distribution, with 256 gray scale colours.
+	 * TODO: Can (and should) be removed when the communication is functional
 	 */
 	private void createLoadDistButton() {
 		loadDistButton = new Button("Load Dist");
