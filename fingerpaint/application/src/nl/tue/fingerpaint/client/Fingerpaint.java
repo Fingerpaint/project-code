@@ -1,5 +1,6 @@
 package nl.tue.fingerpaint.client;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -200,22 +201,7 @@ public class Fingerpaint implements EntryPoint {
 			// Handle this
 		}
 		
-		asKey = StorageKeyFactory.objectKey("asKey");
-		
-//		StorageKey<int[]> myFirstKey = StorageKeyFactory
-//				.intArrayKey("koekjesding");
-//		int[] myKoekjes = { 1, 4, 7, 10, 1073741824 };
-		try {
-			storage.put(asKey, as);
-			// storage.put(myFirstKey, myKoekjes);
-		} catch (SerializationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (StorageQuotaExceededException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		// ---------------------------------------------------------------------------------------------
+		//-------------------------------------------------------------
 
 		testRequestSimulation();
 	}
@@ -565,6 +551,41 @@ public class Fingerpaint implements EntryPoint {
 	private void createDefineProtocolCheckBox() {
 		// TODO: The text 'Define Protocol' should be translated later on
 		defineProtocolCheckBox = new CheckBox("Define Protocol");
+		
+		storage = StorageExt.getLocalStorage();
+//		asKey = StorageKeyFactory.objectKey("asKey");
+		
+		Koekje chocoladeKoekje = new Koekje();
+		StorageKey<Koekje> koekjeKey = StorageKeyFactory.objectKey("koekjeKey");
+//		try {
+//			storage.put(koekjeKey, chocoladeKoekje);
+//		} catch (SerializationException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (StorageQuotaExceededException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		
+		
+		StorageKey<Double> stepSizeKey = StorageKeyFactory.doubleKey("stepSizeKey");
+//		StorageKey<GeometryNames> geomKey = StorageKeyFactory.objectKey("geomKey");
+//		StorageKey<Mixer> mixerKey = StorageKeyFactory.objectKey("mixerKey");
+//		StorageKey<MixingProtocol> protKey = StorageKeyFactory.objectKey("protKey");
+		try {
+			storage.put(stepSizeKey, as.getStepSize());
+//			storage.put(geomKey, as.getGeometryChoice());
+//			storage.put(mixerKey, as.getMixerChoice());
+//			storage.put(protKey, as.getProtocol());
+		} catch (SerializationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (StorageQuotaExceededException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		// Einde toto
 		defineProtocolCheckBox.addClickHandler(new ClickHandler() {
 
 			@Override
@@ -715,6 +736,10 @@ public class Fingerpaint implements EntryPoint {
 		
 		try {
 			ApplicationState asVanStorage = storage.get(asKey);
+			
+			if (asVanStorage == null) {
+				System.out.println("s<okjuhliyta3owiybmuw;roivhmobmolrivh");
+			}
 			
 			String text = "nrSteps: " + asVanStorage.getNrSteps() + "\n" + 
 					"stepsize: " + asVanStorage.getStepSize() + "\n" +
@@ -1002,6 +1027,39 @@ public class Fingerpaint implements EntryPoint {
 	 */
 	private void executeMixingRun() {
 		// TODO: collect all necessary information and send it to server
+	}
+	
+	private class Koekje implements Serializable {
+		/**
+		 * Dit is een vrolijk serial nummer van dit koekje.
+		 */
+		private transient static final long serialVersionUID = 1986644721869750738L;
+		private transient boolean isAwesome = true;
+		private transient boolean hasChocolate = true;
+		private transient float price = 1.50f;
+		
+		public Koekje() {
+			super();
+		}
+		
+		public boolean isAwesome() {
+			return isAwesome;
+		}
+		public void setAwesome(boolean isAwesome) {
+			this.isAwesome = isAwesome;
+		}
+		public boolean isHasChocolate() {
+			return hasChocolate;
+		}
+		public void setHasChocolate(boolean hasChocolate) {
+			this.hasChocolate = hasChocolate;
+		}
+		public float getPrice() {
+			return price;
+		}
+		public void setPrice(float price) {
+			this.price = price;
+		}
 	}
 
 }

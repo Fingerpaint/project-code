@@ -37,6 +37,5 @@
 		considered as persistable in web storage. If it isn't what you want, add 
 		the following line to use a XML file (see next step, for format detail) to 
 		provide the persistable classe list. Available values are: rpc, xml, rpc_xml -->
-	<set-configuration-property name="storage.type.finder"
-		value="xml" />
+	<set-configuration-property name="storage.type.finder" value="rpc" />
 </module>

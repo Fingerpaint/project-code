@@ -30,10 +30,6 @@ public class ApplicationState implements Serializable {
 	
 	private double stepsize;
 	
-	public ApplicationState(){
-		
-	}
-	
 	/**
 	 * Returns the current value of number of steps.
 	 * 
