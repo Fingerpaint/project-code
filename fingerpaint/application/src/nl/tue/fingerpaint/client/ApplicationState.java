@@ -1,23 +1,38 @@
 package nl.tue.fingerpaint.client;
 
+import java.io.Serializable;
+
 /**
  * Class that keeps track of the Geometry and Mixer the user has selected. Used
  * by the cellBrowser widget in Fingerpaint.java to store chosen variables.
  * 
  * @author Group Fingerpaint
  */
-public class ApplicationState {
-
+public class ApplicationState implements Serializable {
+	
+	/**
+	 * Auto-generated UID for the serialisation.
+	 */
+	private static final long serialVersionUID = -3490165289933738235L;
 	private GeometryNames geoChoice = null;
 	private Mixer mixChoice = null;
+	//private Distribution distribution = null;
+	
+	//the current mixing protocol
+	private MixingProtocol protocol = new MixingProtocol();
 	
 	/*
 	 * The number of times (#steps) that the defined protocol will be applied.
 	 * Initially set to 0, to indicate that the spinner has not been loaded
 	 * yet.
 	 */
-	private int nrSteps = 0; // #steps
+	private int nrSteps = 0;
+	
 	private double stepsize;
+	
+	public ApplicationState(){
+		
+	}
 	
 	/**
 	 * Returns the current value of number of steps.
@@ -102,14 +117,6 @@ public class ApplicationState {
 	}
 	
 	/**
-	 * 
-	 * @return the currently selected mixing step, can be null if no step is being edited
-	 */
-	public MixingStep getCurrentStep(){
-		return currMixingStep;
-	}
-	
-	/**
 	 * Updates the current mixing step with a new value
 	 * 
 	 * @param value the new StepSize for the current mixing step
@@ -117,26 +124,6 @@ public class ApplicationState {
 	public void editStepSize(double value){
 		stepsize = value;
 	}
-	
-	/**
-	 * sets the current mixing step to the step newStep, can be null to indicate no step is edited now
-	 */
-	public void setCurrentStep(MixingStep newStep){
-		currMixingStep = newStep;
-	}
-	
-	/**
-	 * adds the current mixing step to the end of the mixing protocol, then clears the current mixing step (makes it null)
-	 */
-	public void addCurrentStep(){
-		protocol.addStep(currMixingStep);
-		currMixingStep = null;
-	}
-	
-	//the current mixing protocol
-	private MixingProtocol protocol = new MixingProtocol();
-	//the current mixing step
-	private MixingStep currMixingStep;
 	
 	/**
 	 * Add a step to the mixing protocol.

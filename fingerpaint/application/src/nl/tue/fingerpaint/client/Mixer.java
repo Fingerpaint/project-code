@@ -1,5 +1,7 @@
 package nl.tue.fingerpaint.client;
 
+import java.io.Serializable;
+
 /**
  * Abstract class to be implemented by mixers. 
  * 
@@ -9,6 +11,6 @@ package nl.tue.fingerpaint.client;
  * 
  * @author Group Fingerpaint
  */
-public interface Mixer {
+public interface Mixer extends Serializable {
 
 }

@@ -111,6 +111,8 @@ public class Fingerpaint implements EntryPoint {
 	final Image loadImage = new Image();
 
 	private StorageExt storage;
+	// TODO: Give some more descriptive name to this variable.
+	private StorageKey<ApplicationState> asKey;
 
 	// The NumberSpinner and label to define the step size
 	// TODO: The text 'Step size' should be translated later on
@@ -171,6 +173,11 @@ public class Fingerpaint implements EntryPoint {
 
 		// initialise the UC
 		as = new ApplicationState();
+		as.addMixingStep(new MixingStep(1.0, true, true));
+		as.setGeometry(GeometryNames.SQUARE);
+		as.setMixer(RectangleMixers.ExampleMixerName1);
+		as.setNrSteps(1.0);
+		
 
 		// Create a model for the cellbrowser.
 		TreeViewModel model = new CustomTreeModel();
@@ -187,16 +194,20 @@ public class Fingerpaint implements EntryPoint {
 		// Add the tree to the root layout panel.
 		RootLayoutPanel.get().add(tree);
 
+		// TODO: this code has to be adjusted properly for the storage & retrieval --------------
 		storage = StorageExt.getLocalStorage();
 		if (storage == null) {
 			// Handle this
 		}
-
-		StorageKey<int[]> myFirstKey = StorageKeyFactory
-				.intArrayKey("koekjesding");
-		int[] myKoekjes = { 1, 4, 7, 10, 1073741824 };
+		
+		asKey = StorageKeyFactory.objectKey("asKey");
+		
+//		StorageKey<int[]> myFirstKey = StorageKeyFactory
+//				.intArrayKey("koekjesding");
+//		int[] myKoekjes = { 1, 4, 7, 10, 1073741824 };
 		try {
-			storage.put(myFirstKey, myKoekjes);
+			storage.put(asKey, as);
+			// storage.put(myFirstKey, myKoekjes);
 		} catch (SerializationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -204,6 +215,7 @@ public class Fingerpaint implements EntryPoint {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		// ---------------------------------------------------------------------------------------------
 
 		testRequestSimulation();
 	}
@@ -559,6 +571,8 @@ public class Fingerpaint implements EntryPoint {
 			public void onClick(ClickEvent event) {
 				if (defineProtocolCheckBox.getValue()) {
 					resetProtocol();
+					// TODO: MOET WEG!
+					createApplicationRepresentationTextArea();
 					showProtocolWidgets();
 				} else {
 					resetProtocol();
@@ -662,12 +676,14 @@ public class Fingerpaint implements EntryPoint {
 
 	/*
 	 * Initialises the protocol representation text area.
+	 * TODO: this code has to be removed!
 	 */
 	private void createProtocolRepresentationTextArea() {
 		taProtocolRepresentation.setText("");
 		taProtocolRepresentation.setWidth(String.valueOf(menuWidth));
 		menuPanel.add(taProtocolRepresentation);
 		
+		// TODO: MOET WEG ------------------------------------------------------------------
 		try {
 			StorageKey<int[]> myFirstKey = StorageKeyFactory.intArrayKey("koekjesding");
 			int[] koekjesVanStorage = storage.get(myFirstKey);
@@ -682,10 +698,36 @@ public class Fingerpaint implements EntryPoint {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		// ----------------------------------------------------------------------------------
 		taProtocolRepresentation
-
 				.setWidth(String.valueOf(menuWidth - 10) + "px");
 		taProtocolRepresentation.setEnabled(false);
+	}
+	
+	/*
+	 * Initialises the protocol representation text area.
+	 * TODO: this code has to be removed!
+	 */
+	private void createApplicationRepresentationTextArea(){
+		taProtocolRepresentation.setText("");
+		taProtocolRepresentation.setWidth(String.valueOf(menuWidth));
+		menuPanel.add(taProtocolRepresentation);
+		
+		try {
+			ApplicationState asVanStorage = storage.get(asKey);
+			
+			String text = "nrSteps: " + asVanStorage.getNrSteps() + "\n" + 
+					"stepsize: " + asVanStorage.getStepSize() + "\n" +
+					"geometry: " + asVanStorage.getGeometryChoice() + "\n";
+			taProtocolRepresentation.setText(text);
+			
+		} catch (SerializationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		taProtocolRepresentation
+				.setWidth(String.valueOf(menuWidth - 10) + "px");
+		taProtocolRepresentation.setEnabled(false);		
 	}
 
 	/*

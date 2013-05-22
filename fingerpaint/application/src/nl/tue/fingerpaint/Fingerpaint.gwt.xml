@@ -39,9 +39,4 @@
 		provide the persistable classe list. Available values are: rpc, xml, rpc_xml -->
 	<set-configuration-property name="storage.type.finder"
 		value="xml" />
-
-	<!-- However, if you want to use both RPC and XML to define persistable 
-		classes, Use the following line. -->
-	<set-configuration-property name="storage.type.finder"
-		value="rpc_xml" />
 </module>
