@@ -357,6 +357,16 @@ public class RectangleGeometry extends Geometry {
 					getColour(dist[i]));
 		}
 	}
+	
+	/**
+	 * Resets the current distribution to all white.
+	 * Equivalent to calling drawDistribution with
+	 * a dist parameter containing '1' at all indices (but faster)
+	 */
+	public void resetDistribution(){
+		context.setFillStyle(CssColor.make("white"));
+		context.fillRect(X_OFFSET + 1, TOP_OFFSET + 1, getWidth(), getHeight());
+	}
 
 	/**
 	 * Converts the input value to an absolute coordinate on the canvas

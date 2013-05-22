@@ -57,6 +57,9 @@ public class Fingerpaint implements EntryPoint {
 	// Button to load predefined distribution half black, half white
 	// Needed for testing purposes for story 32
 	private Button loadDistButton;
+	
+	// Button to reset the distribution to all white
+	private Button resetDistButton;
 
 	// Rectangular geometry to draw on
 	private Geometry geom;
@@ -351,6 +354,10 @@ public class Fingerpaint implements EntryPoint {
 			// menuPanel
 			createLoadDistButton();
 			menuPanel.add(loadDistButton);
+			
+			// Initialise the resetDistButton and add to menuPanel
+			createResetDistButton();
+			menuPanel.add(resetDistButton);
 
 			// Initialise a spinner for changing the length of a mixing protocol
 			// step and add to menuPanel.
@@ -519,6 +526,22 @@ public class Fingerpaint implements EntryPoint {
 
 			}
 
+		});
+	}
+	
+	/*
+	 * Initialises the reset Distribution Button. 
+	 * When this button is pressed, the current canvas is reset to all white
+	 */
+	private void createResetDistButton(){
+		resetDistButton = new Button("Reset Dist");
+		resetDistButton.addClickHandler(new ClickHandler(){
+
+			@Override
+			public void onClick(ClickEvent event) {
+				geom.resetDistribution();
+			}
+			
 		});
 	}
 

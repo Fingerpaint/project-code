@@ -73,7 +73,6 @@ public abstract class Distribution {
 		int width = img.getWidth();
 		int height = img.getHeight();
 		int index;
-		System.out.println(width +" " +height);
 		for (int y = height - factor; y >=0 ; y-=factor) {
 			for (int x = 0; x < width; x +=factor) {
 				index = (y * width + x) * 4;
