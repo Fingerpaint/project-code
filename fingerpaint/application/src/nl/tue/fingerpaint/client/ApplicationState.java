@@ -103,14 +103,6 @@ public class ApplicationState {
 	}
 	
 	/**
-	 * 
-	 * @return the currently selected mixing step, can be null if no step is being edited
-	 */
-	public MixingStep getCurrentStep(){
-		return currMixingStep;
-	}
-	
-	/**
 	 * Updates the current mixing step with a new value
 	 * 
 	 * @param value the new StepSize for the current mixing step
@@ -119,25 +111,8 @@ public class ApplicationState {
 		stepsize = value;
 	}
 	
-	/**
-	 * sets the current mixing step to the step newStep, can be null to indicate no step is edited now
-	 */
-	public void setCurrentStep(MixingStep newStep){
-		currMixingStep = newStep;
-	}
-	
-	/**
-	 * adds the current mixing step to the end of the mixing protocol, then clears the current mixing step (makes it null)
-	 */
-	public void addCurrentStep(){
-		protocol.addStep(currMixingStep);
-		currMixingStep = null;
-	}
-	
 	//the current mixing protocol
 	private MixingProtocol protocol = new MixingProtocol();
-	//the current mixing step
-	private MixingStep currMixingStep;
 	
 	/**
 	 * Add a step to the mixing protocol.
