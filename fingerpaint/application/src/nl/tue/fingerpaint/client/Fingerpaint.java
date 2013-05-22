@@ -3,7 +3,6 @@ package nl.tue.fingerpaint.client;
 import java.util.ArrayList;
 import java.util.List;
 
-import nl.tue.fingerpaint.client.Geometry;
 import nl.tue.fingerpaint.client.Geometry.StepAddedListener;
 import nl.tue.fingerpaint.client.websocket.Request;
 import nl.tue.fingerpaint.client.websocket.Response;
@@ -23,6 +22,7 @@ import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.cellview.client.CellBrowser;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.SerializationException;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
@@ -38,6 +38,10 @@ import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
 import com.google.gwt.view.client.TreeViewModel;
+import com.seanchenxi.gwt.storage.client.StorageExt;
+import com.seanchenxi.gwt.storage.client.StorageKey;
+import com.seanchenxi.gwt.storage.client.StorageKeyFactory;
+import com.seanchenxi.gwt.storage.client.StorageQuotaExceededException;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
@@ -95,6 +99,8 @@ public class Fingerpaint implements EntryPoint {
 
 	// The image that will be shown in the loadPanel
 	final Image loadImage = new Image();
+	
+	private StorageExt storage;
 
 	/**
 	 * Shows the textual representation of the mixing protocol.
@@ -153,6 +159,19 @@ public class Fingerpaint implements EntryPoint {
 		// Add the tree to the root layout panel.
 		RootLayoutPanel.get().add(tree);
 		
+		 storage = StorageExt.getLocalStorage();
+		 if (storage == null) {
+			 // Handle this
+		 }
+		 
+		 StorageKey<int[]> myFirstKey = StorageKeyFactory.intArrayKey("koekjesding");
+		 int[] myKoekjes = { 1, 4, 7, 10, 1073741824 };
+		 try {
+			storage.put(myFirstKey, myKoekjes);
+		} catch (SerializationException | StorageQuotaExceededException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		testRequestSimulation();
 	}
 
