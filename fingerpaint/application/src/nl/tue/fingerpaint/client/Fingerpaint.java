@@ -214,23 +214,56 @@ public class Fingerpaint implements EntryPoint {
 
 			for (GeometryNames gn : GeometryNames.values()) {
 				switch (gn) {
-				case Rectangle:
+				case RECTANGLE:
 					for (RectangleMixers rm : RectangleMixers.values()) {
 						if ((rm.toString()).equals(selected)) {
 							as.setGeometry(gn);
 							as.setMixer(rm);
+							geom = new RectangleGeometry(
+									Window.getClientHeight() - topBarHeight,
+									Window.getClientWidth() - menuWidth);
 						}
 					}
 					break;
-				case exampleGeometry1:
-					for (ExampleGeometryMixers egm : ExampleGeometryMixers
-							.values()) {
+				case CIRCLE:
+					for (CircleMixers egm : CircleMixers.values()) {
 						if ((egm.toString()).equals(selected)) {
 							as.setGeometry(gn);
 							as.setMixer(egm);
+							// TODO: Change to appropiate Geometry
+							geom = new RectangleGeometry(
+									Window.getClientHeight() - topBarHeight,
+									Window.getClientWidth() - menuWidth);
 						}
 					}
 					break;
+
+				case SQUARE:
+					for (SquareMixers sm : SquareMixers.values()) {
+						if ((sm.toString()).equals(selected)) {
+							as.setGeometry(gn);
+							as.setMixer(sm);
+							// TODO: Change to appropiate Geometry
+							geom = new RectangleGeometry(
+									Window.getClientHeight() - topBarHeight,
+									Window.getClientWidth() - menuWidth);
+						}
+					}
+					break;
+				case JOURNALBEARING:
+					for (JournalBearingMixers jbm : JournalBearingMixers
+							.values()) {
+						if ((jbm.toString()).equals(selected)) {
+							as.setGeometry(gn);
+							as.setMixer(jbm);
+							// TODO: Change to appropiate Geometry
+							geom = new RectangleGeometry(
+									Window.getClientHeight() - topBarHeight,
+									Window.getClientWidth() - menuWidth);
+						}
+					}
+					break;
+
 				}
 			}
 		}
@@ -268,10 +301,8 @@ public class Fingerpaint implements EntryPoint {
 								}
 
 								RootPanel.get().add(mixingDetails);
-								{
-									createMixingWidgets();
-								}
 
+								createMixingWidgets();
 							}
 						}
 					});
@@ -282,8 +313,7 @@ public class Fingerpaint implements EntryPoint {
 		 */
 		void createMixingWidgets() {
 			// Initialise geometry
-			geom = new RectangleGeometry(Window.getClientHeight()
-					- topBarHeight, Window.getClientWidth() - menuWidth);
+
 			StepAddedListener l = new StepAddedListener() {
 				@Override
 				public void onStepAdded(MixingStep step) {
@@ -377,15 +407,24 @@ public class Fingerpaint implements EntryPoint {
 				List<String> mixerlist = new ArrayList<String>();
 
 				switch ((GeometryNames) value) {
-				case Rectangle:
+				case RECTANGLE:
 					for (RectangleMixers rm : RectangleMixers.values()) {
 						mixerlist.add(rm.toString());
 					}
 					break;
-				case exampleGeometry1:
-					for (ExampleGeometryMixers egm : ExampleGeometryMixers
-							.values()) {
+				case CIRCLE:
+					for (CircleMixers egm : CircleMixers.values()) {
 						mixerlist.add(egm.toString());
+					}
+					break;
+				case SQUARE:
+					for (SquareMixers sm : SquareMixers.values()) {
+						mixerlist.add(sm.toString());
+					}
+					break;
+				case JOURNALBEARING:
+					for (JournalBearingMixers jbm : JournalBearingMixers.values()) {
+						mixerlist.add(jbm.toString());
 					}
 					break;
 				}
@@ -487,7 +526,8 @@ public class Fingerpaint implements EntryPoint {
 	 */
 	private void createProtocolRepresentationTextArea() {
 		taProtocolRepresentation.setText("");
-		taProtocolRepresentation.setWidth(String.valueOf(menuWidth - 60) +"px");
+		taProtocolRepresentation
+				.setWidth(String.valueOf(menuWidth - 60) + "px");
 		menuPanel.add(taProtocolRepresentation);
 	}
 

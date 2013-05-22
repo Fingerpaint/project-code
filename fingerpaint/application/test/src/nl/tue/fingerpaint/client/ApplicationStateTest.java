@@ -28,7 +28,7 @@ public class ApplicationStateTest extends GWTTestCase{
 	@Test
 	public void testSetGeometry() {
 		init();
-		GeometryNames testValue = GeometryNames.Rectangle;
+		GeometryNames testValue = GeometryNames.RECTANGLE;
 		as.setGeometry(testValue);
 		assertEquals(as.getGeometryChoice(), testValue); 
 	}
