@@ -176,20 +176,6 @@ public class Fingerpaint implements EntryPoint {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		try {
-			int[] koekjesVanStorage = storage.get(myFirstKey);
-			
-			for (int i : koekjesVanStorage) {
-				String text = String.valueOf(i) + ", " + taProtocolRepresentation.getText();
-				taProtocolRepresentation.setText(text);
-				System.out.println(String.valueOf(i));
-			}
-			
-		} catch (SerializationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 
 		testRequestSimulation();
 	}
@@ -514,6 +500,21 @@ public class Fingerpaint implements EntryPoint {
 		taProtocolRepresentation.setText("");
 		taProtocolRepresentation.setWidth(String.valueOf(menuWidth));
 		menuPanel.add(taProtocolRepresentation);
+		
+		try {
+			StorageKey<int[]> myFirstKey = StorageKeyFactory.intArrayKey("koekjesding");
+			int[] koekjesVanStorage = storage.get(myFirstKey);
+			
+			for (int i : koekjesVanStorage) {
+				String text = String.valueOf(i) + ", " + taProtocolRepresentation.getText();
+				taProtocolRepresentation.setText(text);
+				System.out.println(String.valueOf(i));
+			}
+			
+		} catch (SerializationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	/*
