@@ -10,6 +10,7 @@ public class ApplicationState {
 
 	private GeometryNames geoChoice = null;
 	private Mixer mixChoice = null;
+	private Distribution initialDistribution = null;
 	
 	/*
 	 * The number of times (#steps) that the defined protocol will be applied.
@@ -148,5 +149,13 @@ public class ApplicationState {
 
 	public double getStepSize() {
 		return stepsize;
+	}
+
+	public void setInitialDistribution(Distribution distribution) {
+		initialDistribution = distribution;
+	}
+
+	public Distribution getInitialDistribution() {
+		return initialDistribution;
 	}
 }

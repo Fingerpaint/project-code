@@ -57,13 +57,13 @@ public class Fingerpaint implements EntryPoint {
 	// Button to load predefined distribution half black, half white
 	// Needed for testing purposes for story 32
 	private Button loadDistButton;
-	
+
 	// Button to reset the distribution to all white
 	private Button resetDistButton;
-	
+
 	// Button to save the current results
 	private Button saveResultsButton;
-	
+
 	// Button to remove previously saved results
 	private Button removeSavedResultsButton;
 
@@ -360,16 +360,17 @@ public class Fingerpaint implements EntryPoint {
 			// menuPanel
 			createLoadDistButton();
 			menuPanel.add(loadDistButton);
-			
+
 			// Initialise the resetDistButton and add to menuPanel
 			createResetDistButton();
 			menuPanel.add(resetDistButton);
-			
+
 			// Initialise the saveResultsButton and add it to the menuPanel
 			createSaveResultsButton();
 			menuPanel.add(saveResultsButton);
-			
-			// Initialise the removeSavedResultsButton and add it to the menuPanel
+
+			// Initialise the removeSavedResultsButton and add it to the
+			// menuPanel
 			createRemoveSavedResultsButton();
 			menuPanel.add(removeSavedResultsButton);
 
@@ -462,7 +463,8 @@ public class Fingerpaint implements EntryPoint {
 					}
 					break;
 				case JOURNALBEARING:
-					for (JournalBearingMixers jbm : JournalBearingMixers.values()) {
+					for (JournalBearingMixers jbm : JournalBearingMixers
+							.values()) {
 						mixerlist.add(jbm.toString());
 					}
 					break;
@@ -542,20 +544,20 @@ public class Fingerpaint implements EntryPoint {
 
 		});
 	}
-	
+
 	/*
-	 * Initialises the reset Distribution Button. 
-	 * When this button is pressed, the current canvas is reset to all white
+	 * Initialises the reset Distribution Button. When this button is pressed,
+	 * the current canvas is reset to all white
 	 */
-	private void createResetDistButton(){
+	private void createResetDistButton() {
 		resetDistButton = new Button("Reset Dist");
-		resetDistButton.addClickHandler(new ClickHandler(){
+		resetDistButton.addClickHandler(new ClickHandler() {
 
 			@Override
 			public void onClick(ClickEvent event) {
 				geom.resetDistribution();
 			}
-			
+
 		});
 	}
 
@@ -640,7 +642,7 @@ public class Fingerpaint implements EntryPoint {
 		taProtocolRepresentation.setText("");
 		taProtocolRepresentation
 
-				.setWidth(String.valueOf(menuWidth - 10) + "px");
+		.setWidth(String.valueOf(menuWidth - 10) + "px");
 		taProtocolRepresentation.setEnabled(false);
 
 	}
@@ -783,15 +785,15 @@ public class Fingerpaint implements EntryPoint {
 
 		});
 	}
-	
+
 	/*
-	 * Initialises the createSaveResultsButton.
-	 * When pressed, this button allows a user to save a mixing run
+	 * Initialises the createSaveResultsButton. When pressed, this button allows
+	 * a user to save a mixing run
 	 */
-	private void createSaveResultsButton(){
+	private void createSaveResultsButton() {
 		// TODO: The text 'Save Results' should be translated later on
 		saveResultsButton = new Button("Save Results");
-		
+
 		saveResultsButton.addClickHandler(new ClickHandler() {
 
 			@Override
@@ -801,15 +803,15 @@ public class Fingerpaint implements EntryPoint {
 
 		});
 	}
-	
+
 	/*
-	 * Initialises the removeSavedResultsButton.
-	 * When pressed, this button allows a user to remove a previously saved mixing run
+	 * Initialises the removeSavedResultsButton. When pressed, this button
+	 * allows a user to remove a previously saved mixing run
 	 */
-	private void createRemoveSavedResultsButton(){
+	private void createRemoveSavedResultsButton() {
 		// TODO: The text 'Remove Saved Results' should be translated later on
 		removeSavedResultsButton = new Button("Remove Saved Results");
-		
+
 		removeSavedResultsButton.addClickHandler(new ClickHandler() {
 
 			@Override
@@ -822,7 +824,7 @@ public class Fingerpaint implements EntryPoint {
 
 	/**
 	 * Updates the protocol label to show the textual representation of
-	 * {@code step}.
+	 * {@code step} and adds this to the existing steps in the protocol.
 	 * 
 	 * @param step
 	 *            The new {@code Step} of which the textual representation
@@ -848,19 +850,18 @@ public class Fingerpaint implements EntryPoint {
 	}
 
 	/**
-	 * Adds a new {@code MixingStep} to the mixing protocol, and updates the
-	 * text area {@code taProtocolRepresentation} accordingly.
+	 * If the {@code Define Protocol} checkbox is ticked, this method adds a new
+	 * {@code MixingStep} to the mixing protocol, and updates the text area
+	 * {@code taProtocolRepresentation} accordingly.
 	 * 
 	 * @param step
 	 *            The {@code MixingStep} to be added.
 	 */
 	private void addStep(MixingStep step) {
-		step.setStepSize(as.getStepSize());
-		as.addMixingStep(step);
+		if (defineProtocolCheckBox.getValue()) {
+			step.setStepSize(as.getStepSize());
+			as.addMixingStep(step);
 
-		if (!defineProtocolCheckBox.getValue()) {
-			executeMixingRun();
-		} else {
 			updateProtocolLabel(step);
 			mixNowButton.setEnabled(true);
 		}
@@ -886,10 +887,12 @@ public class Fingerpaint implements EntryPoint {
 	}
 
 	/**
-	 * Sends all current information about the protocol and the distribution to
-	 * the server. Displays the results on screen.
+	 * Saves the initial distribution. Sends all current information about the
+	 * protocol and the distribution to the server. Displays the results on
+	 * screen.
 	 */
 	private void executeMixingRun() {
+		as.setInitialDistribution(geom.getDistribution());
 		// TODO: collect all necessary information and send it to server
 	}
 
@@ -899,8 +902,8 @@ public class Fingerpaint implements EntryPoint {
 	 * testing purposes. When it is pressed, the distribution of the geometry is
 	 * set to a colour bar from black to white, from left to right. This
 	 * distribution is then drawn on the canvas, to demonstrate we can load an
-	 * arbitrary distribution, with 256 gray scale colours.
-	 * TODO: Can (and should) be removed when the communication is functional
+	 * arbitrary distribution, with 256 gray scale colours. TODO: Can (and
+	 * should) be removed when the communication is functional
 	 */
 	private void createLoadDistButton() {
 		loadDistButton = new Button("Load Dist");
