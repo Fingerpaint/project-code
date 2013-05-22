@@ -158,6 +158,43 @@ public class RectangleGeometryTest extends GWTTestCase {
 		mixingStepAdded = false;
 	}
 
+	/**
+	 * 
+	 */
+	@Test
+	private void testDetermineSwipe() {
+		geom = new RectangleGeometry(clientHeight, clientWidth);
+
+		// simulate a horizontal swipe to the right, just barely over the
+		// threshold
+		geom.swipeStartX = 50;
+		geom.swipeStartY = 50;
+		geom.stopDefineMixingStep(geom.swipeStartX
+				+ RectangleGeometry.SWIPE_THRESHOLD + 1, geom.swipeStartY);
+
+		// TODO test the result
+	}
+	
+	/**
+	 * Tests if the resetButton creates
+	 * a completely white canvas (internal representation)
+	 */
+	@Test
+	private void testResetDist(){
+		geom = new RectangleGeometry(clientHeight, clientWidth);
+		//make the canvas black
+		geom.setDistribution(new double[96000]);// using the initialisation value of 0
+		//reset the canvas to white
+		geom.resetDistribution();
+		//verify the result
+		Distribution distribution = geom.getDistribution();
+		double[] dist = distribution.getVector();
+		//check all indices
+		for(int i = 0; i<dist.length; i++){
+			assertEquals(1,dist[i]);
+		}
+	}
+	
 	private StepAddedListener setUpStepAddedListener(final String message,
 			final boolean top, final boolean clockwise, final double stepSize) {
 		StepAddedListener stl = new StepAddedListener() {

@@ -23,6 +23,12 @@ public class MixingProtocolTest extends GWTTestCase {
 		program.addStep(step1);
 		program.addStep(step2);
 	}
+	
+	@Test
+	public void testConstructor() {
+		program = new MixingProtocol();
+		assertEquals("Size of new program", 0, program.getProgramSize());
+	}
 
 	/*
 	 * Tests if the addStep function correctly appends a given step

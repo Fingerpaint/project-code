@@ -1,11 +1,12 @@
 package nl.tue.fingerpaint.client;
+
 /** 
- * Enum class that represents all mixers that belong to Geometry RECTANGLE
+ * Enum class that represents all mixers that belong to Geometry SQUARE
  * 
  * @author Group Fingerpaint
  */
-public enum RectangleMixers implements Mixer {// new Mixers can be added here
-	ExampleMixerName1, ExampleMixerName2, ExampleMixerName3;
+public enum SquareMixers implements Mixer{// new Mixers can be added here
+	EXAMPLEMIXERNAME7, EXAMPLEMIXERNAME8, EXAMPLEMIXERNAME9;
 	
 	/** 
 	 * Overrides the default toString method. Result starts with capital letter, and the remainder of the string is lowerCase.
