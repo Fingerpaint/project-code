@@ -60,6 +60,12 @@ public class Fingerpaint implements EntryPoint {
 	
 	// Button to reset the distribution to all white
 	private Button resetDistButton;
+	
+	// Button to save the current results
+	private Button saveResultsButton;
+	
+	// Button to remove previously saved results
+	private Button removeSavedResultsButton;
 
 	// Rectangular geometry to draw on
 	private Geometry geom;
@@ -328,6 +334,14 @@ public class Fingerpaint implements EntryPoint {
 			// Initialise the resetDistButton and add to menuPanel
 			createResetDistButton();
 			menuPanel.add(resetDistButton);
+			
+			// Initialise the saveResultsButton and add it to the menuPanel
+			createSaveResultsButton();
+			menuPanel.add(saveResultsButton);
+			
+			// Initialise the removeSavedResultsButton and add it to the menuPanel
+			createRemoveSavedResultsButton();
+			menuPanel.add(removeSavedResultsButton);
 
 			// Initialise a spinner for changing the length of a mixing protocol
 			// step and add to menuPanel.
@@ -724,6 +738,42 @@ public class Fingerpaint implements EntryPoint {
 			@Override
 			public void onClick(ClickEvent event) {
 				resetProtocol();
+			}
+
+		});
+	}
+	
+	/*
+	 * Initialises the createSaveResultsButton.
+	 * When pressed, this button allows a user to save a mixing run
+	 */
+	private void createSaveResultsButton(){
+		// TODO: The text 'Save Results' should be translated later on
+		saveResultsButton = new Button("Save Results");
+		
+		saveResultsButton.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				// TODO: handle click by opening save options
+			}
+
+		});
+	}
+	
+	/*
+	 * Initialises the removeSavedResultsButton.
+	 * When pressed, this button allows a user to remove a previously saved mixing run
+	 */
+	private void createRemoveSavedResultsButton(){
+		// TODO: The text 'Remove Saved Results' should be translated later on
+		removeSavedResultsButton = new Button("Remove Saved Results");
+		
+		removeSavedResultsButton.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				// TODO: handle click by opening remove saves options
 			}
 
 		});
