@@ -888,38 +888,4 @@ public class Fingerpaint implements EntryPoint {
 	private void executeMixingRun() {
 		// TODO: collect all necessary information and send it to server
 	}
-	
-	private class Koekje implements Serializable {
-		/**
-		 * Dit is een vrolijk serial nummer van dit koekje.
-		 */
-		private transient static final long serialVersionUID = 1986644721869750738L;
-		private transient boolean isAwesome = true;
-		private transient boolean hasChocolate = true;
-		private transient float price = 1.50f;
-		
-		public Koekje() {
-			super();
-		}
-		
-		public boolean isAwesome() {
-			return isAwesome;
-		}
-		public void setAwesome(boolean isAwesome) {
-			this.isAwesome = isAwesome;
-		}
-		public boolean isHasChocolate() {
-			return hasChocolate;
-		}
-		public void setHasChocolate(boolean hasChocolate) {
-			this.hasChocolate = hasChocolate;
-		}
-		public float getPrice() {
-			return price;
-		}
-		public void setPrice(float price) {
-			this.price = price;
-		}
-	}
-
 }
