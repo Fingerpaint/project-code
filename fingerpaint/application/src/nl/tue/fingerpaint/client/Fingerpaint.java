@@ -3,13 +3,15 @@ package nl.tue.fingerpaint.client;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import nl.tue.fingerpaint.client.ApplicationState.ApplicationStateJsonizer;
+import nl.tue.fingerpaint.client.Distribution.DistributionJsonizer;
 import nl.tue.fingerpaint.client.Geometry.StepAddedListener;
 import nl.tue.fingerpaint.client.MixingStep.MixingStepJsonizer;
 import nl.tue.fingerpaint.client.serverdata.ServerDataCache;
 
 import org.jsonmaker.gwt.client.JsonizerParser;
+import org.jsonmaker.gwt.client.base.ArrayJsonizer;
 import org.jsonmaker.gwt.client.base.ArrayListJsonizer;
+import org.jsonmaker.gwt.client.base.Defaults;
 
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.cell.client.ClickableTextCell;
@@ -224,25 +226,15 @@ public class Fingerpaint implements EntryPoint {
 		ArrayListJsonizer aj = new ArrayListJsonizer((MixingStepJsonizer) GWT.create(MixingStepJsonizer.class));		
 		String ajString = aj.asString(as.getProtocol().getProgram());
 		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
+		// Does not work yet
+//		ArrayJsonizer dj_sonizer = new ArrayJsonizer(Defaults.DOUBLE_JSONIZER) {
+//			@Override
+//			protected Object[] createArray(int size) {
+//				return new Double[size];
+//			}
+//		};
+//		String dj_string = dj_sonizer.asString(as.getInitialDistribution().getDistribution());
+//		System.out.println(dj_string);
 		
 		storage.setItem("save1", ajString);
 	}

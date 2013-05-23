@@ -131,6 +131,10 @@ public abstract class Distribution {
 	 */
 	abstract protected int getIndex(int x, int y);
 	
+	public double[] getDistribution() {
+		return getVector();
+	}
+	
 	public interface DistributionJsonizer extends Jsonizer{}
 
 }
