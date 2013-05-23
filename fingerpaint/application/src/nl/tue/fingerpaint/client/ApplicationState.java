@@ -16,7 +16,10 @@ public class ApplicationState implements Serializable {
 	private static final long serialVersionUID = -3490165289933738235L;
 	private GeometryNames geoChoice = null;
 	private Mixer mixChoice = null;
-	//private Distribution distribution = null;
+	/**
+	 * Stores the initial distribution, once set.
+	 */
+	private Distribution initialDistribution = null;
 	
 	//the current mixing protocol
 	private MixingProtocol protocol = new MixingProtocol();
@@ -131,5 +134,13 @@ public class ApplicationState implements Serializable {
 
 	public double getStepSize() {
 		return stepsize;
+	}
+
+	public void setInitialDistribution(Distribution distribution) {
+		this.initialDistribution = distribution;	
+	}
+	
+	public Distribution getInitialDistribution() {
+		return initialDistribution;
 	}
 }
