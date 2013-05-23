@@ -1,48 +1,41 @@
 package nl.tue.fingerpaint.client;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 
 import nl.tue.fingerpaint.client.Geometry.StepAddedListener;
-import nl.tue.fingerpaint.client.websocket.Request;
-import nl.tue.fingerpaint.client.websocket.Response;
-import nl.tue.fingerpaint.client.websocket.ResponseCallback;
-import nl.tue.fingerpaint.client.websocket.SimulatorServiceSocket;
-import nl.tue.fingerpaint.client.websocket.Step;
+import nl.tue.fingerpaint.client.serverdata.ServerDataCache;
 
 import com.google.gwt.canvas.dom.client.CssColor;
-import com.google.gwt.cell.client.AbstractCell;
-import com.google.gwt.cell.client.Cell;
-import com.google.gwt.cell.client.TextCell;
+import com.google.gwt.cell.client.ClickableTextCell;
+import com.google.gwt.cell.client.ValueUpdater;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.cellview.client.CellBrowser;
-import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.SerializationException;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
 import com.google.gwt.view.client.TreeViewModel;
 import com.seanchenxi.gwt.storage.client.StorageExt;
 import com.seanchenxi.gwt.storage.client.StorageKey;
-import com.seanchenxi.gwt.storage.client.StorageKeyFactory;
-import com.seanchenxi.gwt.storage.client.StorageQuotaExceededException;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
@@ -50,8 +43,8 @@ import com.seanchenxi.gwt.storage.client.StorageQuotaExceededException;
  * @author Group Fingerpaint
  */
 public class Fingerpaint implements EntryPoint {
-	// Class to remember which Geometry and Mixer the user has selected
-	private ApplicationState as;
+	// Class to keep track of everything the user has selected
+	protected ApplicationState as;
 
 	// Label that displays the userChoice values
 	private Label mixingDetails = new Label();
@@ -62,13 +55,13 @@ public class Fingerpaint implements EntryPoint {
 	// Button to load predefined distribution half black, half white
 	// Needed for testing purposes for story 32
 	private Button loadDistButton;
-	
+
 	// Button to reset the distribution to all white
 	private Button resetDistButton;
-	
+
 	// Button to save the current results
 	private Button saveResultsButton;
-	
+
 	// Button to remove previously saved results
 	private Button removeSavedResultsButton;
 
@@ -105,10 +98,8 @@ public class Fingerpaint implements EntryPoint {
 
 	// Panel that covers the entire application and blocks the user from
 	// accessing other features
-	private static SimplePanel loadPanel = new SimplePanel();
-
-	// The image that will be shown in the loadPanel
-	final Image loadImage = new Image();
+	private static FlowPanel loadPanel = new FlowPanel();
+	private Label loadPanelMessage;
 
 	private StorageExt storage;
 	// TODO: Give some more descriptive name to this variable.
@@ -149,6 +140,9 @@ public class Fingerpaint implements EntryPoint {
 	private final double NRSTEPS_MIN = 1.0;
 	private final double NRSTEPS_MAX = 50.0;
 
+	private static final String LOADPANEL_ID = "loading-overlay";
+	private static final String LOADPANEL_MESSAGE_ID = "loading-overlay-message";
+
 	// Width of the menu in which buttons are displayed
 	// on the right side of the window in pixels
 	private final int menuWidth = 200;
@@ -162,23 +156,39 @@ public class Fingerpaint implements EntryPoint {
 	 * This is the entry point method.
 	 */
 	public void onModuleLoad() {
-		// Point the loadImage at a URL.
-		loadImage.setUrl("/img/loading_animation.gif");
-		// add the loading-image to the panel
+		// Initialise the loading panel
+		// Add animation image
+		Image loadImage = new Image("/img/loading_animation.gif");
 		loadPanel.add(loadImage);
-		// give the image the center css-style
-		loadImage.addStyleName("center");
-		// set item ID for loadpanel
-		loadPanel.getElement().setId("loading-overlay");
+		// Add label that may contain explanatory text
+		loadPanelMessage = new Label("Loading geometries and mixers...", false);
+		loadPanelMessage.getElement().setId(LOADPANEL_MESSAGE_ID);
+		loadPanel.add(loadPanelMessage);
+		loadPanel.getElement().setId(LOADPANEL_ID);
 
-		// initialise the UC
+		// initialise the underlying model of the application
 		as = new ApplicationState();
-		as.addMixingStep(new MixingStep(1.0, true, true));
-		as.setGeometry(GeometryNames.SQUARE);
-		as.setMixer(RectangleMixers.ExampleMixerName1);
 		as.setNrSteps(1.0);
-		
+		setLoadPanelVisible(true);
+		ServerDataCache.initialise(new AsyncCallback<String>() {
+			@Override
+			public void onSuccess(String result) {
+				setLoadPanelVisible(false);
+				loadMenu();
+			}
 
+			@Override
+			public void onFailure(Throwable caught) {
+				setLoadPanelVisible(false);
+				showError(caught.getMessage());
+			}
+		});
+	}
+
+	/**
+	 * Build and show the main menu.
+	 */
+	protected void loadMenu() {
 		// Create a model for the cellbrowser.
 		TreeViewModel model = new CustomTreeModel();
 
@@ -189,149 +199,120 @@ public class Fingerpaint implements EntryPoint {
 		CellBrowser tree = (new CellBrowser.Builder<Object>(model, null))
 				.build();
 
-		// ((CustomTreeModel) model).setCellBrowser(tree);
-
 		// Add the tree to the root layout panel.
 		RootLayoutPanel.get().add(tree);
-
-		// TODO: this code has to be adjusted properly for the storage & retrieval --------------
-		storage = StorageExt.getLocalStorage();
-		if (storage == null) {
-			// Handle this
-		}
-		
-		asKey = StorageKeyFactory.objectKey("asKey");
-		
-//		StorageKey<int[]> myFirstKey = StorageKeyFactory
-//				.intArrayKey("koekjesding");
-//		int[] myKoekjes = { 1, 4, 7, 10, 1073741824 };
-		try {
-			storage.put(asKey, as);
-			// storage.put(myFirstKey, myKoekjes);
-		} catch (SerializationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (StorageQuotaExceededException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		// ---------------------------------------------------------------------------------------------
-
-		testRequestSimulation();
 	}
 
 	/**
-	 * Test if we can call the service simulator.
+	 * Show a pop-up with given message that indicates an error has occurred.
+	 * 
+	 * @param message
+	 *            A message that explains the error.
 	 */
-	protected void testRequestSimulation() {
-		double[] dist = { 1, 0, .8, 0.5 };
-		Step[] protocol = { new Step("TL", 2.0), new Step("TR", 5.0) };
-		Request request = new Request(0, 0, dist, protocol, 5, true);
-		ResponseCallback callback = new ResponseCallback() {
+	protected void showError(String message) {
+		final PopupPanel errorPopup = new PopupPanel(false, true);
+		errorPopup.setAnimationEnabled(true);
+		VerticalPanel verPanel = new VerticalPanel();
+		verPanel.add(new Label("An error occurred!"));
+		if (message != null) {
+			verPanel.add(new Label(message));
+		}
+		verPanel.add(new Button("Close", new ClickHandler() {
 			@Override
-			public void onError(String message) {
-				GWT.log("onError: " + message);
+			public void onClick(ClickEvent event) {
+				errorPopup.hide();
 			}
+		}));
+		errorPopup.add(verPanel);
+		errorPopup.center();
+	}
 
-			@Override
-			public void onResponse(Response result) {
-				GWT.log("onResponse: " + result.toString());
+	/**
+	 * Change the message that is displayed in the load panel below the loading
+	 * animation.
+	 * 
+	 * @param message
+	 *            The message to show below the animation. When {@code null},
+	 *            the message will be deleted.
+	 */
+	protected void setLoadPanelMessage(String message) {
+		if (message == null) {
+			message = "";
+		}
+
+		loadPanelMessage.setText(message);
+	}
+
+	/**
+	 * <p>
+	 * Show or hide an overlay with a loading animation in the centre. Making
+	 * this panel visible will make it impossible for the user to give input.
+	 * </p>
+	 * 
+	 * <p>
+	 * When hiding the panel, the message will also be reset. Change it with
+	 * {@link #setLoadPanelMessage}.
+	 * </p>
+	 * 
+	 * @param visible
+	 *            If the panel should be hidden or shown.
+	 */
+	protected void setLoadPanelVisible(boolean visible) {
+		if (visible) {
+			RootPanel.get().add(loadPanel);
+		} else {
+			if (RootPanel.get(LOADPANEL_ID) != null) {
+				loadPanel.removeFromParent();
+				setLoadPanelMessage(null);
 			}
-		};
-		SimulatorServiceSocket sss = SimulatorServiceSocket.getInstance();
-		sss.requestSimulation(request, callback);
-		Timer togglebuttonTimer = new Timer() {
-			public void run() {
-				GWT.log("FAIL: timer ran out");
-			}
-		};
-		togglebuttonTimer.schedule(10000);
+		}
 	}
 
 	/**
 	 * The model that defines the nodes in the tree.
 	 */
 	private class CustomTreeModel implements TreeViewModel {
-		private final List<GeometryNames> geometries = new ArrayList<GeometryNames>();
 
+		/**
+		 * Number of levels in the tree. Is used to determine when the browser
+		 * should be closed.
+		 */
+		private final static int NUM_LEVELS = 2;
+
+		/** A selection model that is shared along all levels. */
 		private final SingleSelectionModel<String> selectionModel = new SingleSelectionModel<String>();
 
-		// private CellBrowser cb; //Reference to self. Used in an attempt to
-		// use some kind of .close() method on itself.
-
-		private void setupGeometryValues() {
-			// add all instances of GeometryNames to geometries
-			for (GeometryNames gm : GeometryNames.values()) {
-				geometries.add(gm);
+		/** Updater on the highest level. */
+		private final ValueUpdater<String> valueGeometryUpdater = new ValueUpdater<String>() {
+			@Override
+			public void update(String value) {
+				as.setGeometry(value);
+				lastClickedLevel = 0;
+				GWT.log("Update geometry = \"" + as.getGeometryChoice() + "\"!");
 			}
-		}
+		};
 
-		private void setUserChoiceValues(String selected) {
-			// TODO: This structure will change when GeometryNames and
-			// MixerNames are stored on the server.
-			// The switch sort of simulates that MixerNames are linked to a
-			// Geometry, but currently they
-			// are enum classes and are not connected.
-
-			for (GeometryNames gn : GeometryNames.values()) {
-				switch (gn) {
-				case RECTANGLE:
-					for (RectangleMixers rm : RectangleMixers.values()) {
-						if ((rm.toString()).equals(selected)) {
-							as.setGeometry(gn);
-							as.setMixer(rm);
-							geom = new RectangleGeometry(
-									Window.getClientHeight() - topBarHeight,
-									Window.getClientWidth() - menuWidth);
-						}
-					}
-					break;
-				case CIRCLE:
-					for (CircleMixers egm : CircleMixers.values()) {
-						if ((egm.toString()).equals(selected)) {
-							as.setGeometry(gn);
-							as.setMixer(egm);
-							// TODO: Change to appropiate Geometry
-							geom = new RectangleGeometry(
-									Window.getClientHeight() - topBarHeight,
-									Window.getClientWidth() - menuWidth);
-						}
-					}
-					break;
-
-				case SQUARE:
-					for (SquareMixers sm : SquareMixers.values()) {
-						if ((sm.toString()).equals(selected)) {
-							as.setGeometry(gn);
-							as.setMixer(sm);
-							// TODO: Change to appropiate Geometry
-							geom = new RectangleGeometry(
-									Window.getClientHeight() - topBarHeight,
-									Window.getClientWidth() - menuWidth);
-						}
-					}
-					break;
-				case JOURNALBEARING:
-					for (JournalBearingMixers jbm : JournalBearingMixers
-							.values()) {
-						if ((jbm.toString()).equals(selected)) {
-							as.setGeometry(gn);
-							as.setMixer(jbm);
-							// TODO: Change to appropiate Geometry
-							geom = new RectangleGeometry(
-									Window.getClientHeight() - topBarHeight,
-									Window.getClientWidth() - menuWidth);
-						}
-					}
-					break;
-
-				}
+		/** Updater on level 1. */
+		private final ValueUpdater<String> valueMixerUpdater = new ValueUpdater<String>() {
+			@Override
+			public void update(String value) {
+				as.setMixer(value);
+				lastClickedLevel = 1;
+				GWT.log("Update mixer = \"" + as.getMixerChoice() + "\"!");
 			}
+		};
+
+		/** Indicate which level was clicked the last. */
+		private int lastClickedLevel = -1;
+
+		private void setUserChoiceValues(String selectedMixer) {
+			// TODO: Actually create a different geometry depending on the
+			// chosen geometry...
+			geom = new RectangleGeometry(Window.getClientHeight()
+					- topBarHeight, Window.getClientWidth() - menuWidth);
 		}
 
 		public CustomTreeModel() {
-
-			setupGeometryValues();
 
 			selectionModel
 					.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
@@ -340,9 +321,10 @@ public class Fingerpaint implements EntryPoint {
 							String selected = selectionModel
 									.getSelectedObject();
 
-							setUserChoiceValues(selected);
+							if (selected != null
+									&& lastClickedLevel == NUM_LEVELS - 1) {
+								setUserChoiceValues(selected);
 
-							if (selected != null) {
 								// "closes" Cellbrowser widget (clears whole
 								// rootpanel)
 								// TODO: Make decent close-code
@@ -399,16 +381,17 @@ public class Fingerpaint implements EntryPoint {
 			menuPanel.add(loadDistButton);
 
 			// TODO: Initialise other menu items and add them to menuPanel
-			
+
 			// Initialise the resetDistButton and add to menuPanel
 			createResetDistButton();
 			menuPanel.add(resetDistButton);
-			
+
 			// Initialise the saveResultsButton and add it to the menuPanel
 			createSaveResultsButton();
 			menuPanel.add(saveResultsButton);
-			
-			// Initialise the removeSavedResultsButton and add it to the menuPanel
+
+			// Initialise the removeSavedResultsButton and add it to the
+			// menuPanel
 			createRemoveSavedResultsButton();
 			menuPanel.add(removeSavedResultsButton);
 
@@ -456,64 +439,38 @@ public class Fingerpaint implements EntryPoint {
 		 * value.
 		 */
 		public <T> NodeInfo<?> getNodeInfo(T value) {
-			if (value == null) {
+			// When the Tree is being initialised, the last clicked level will
+			// be -1,
+			// in other cases, we need to load the level after the currently
+			// clicked one.
+			if (lastClickedLevel < 0) {
 				// LEVEL 0. - Geometry
 				// We passed null as the root value. Return the Geometries.
 
 				// Create a data provider that contains the list of Geometries.
-				ListDataProvider<GeometryNames> dataProvider = new ListDataProvider<GeometryNames>(
-						geometries);
+				ListDataProvider<String> dataProvider = new ListDataProvider<String>(
+						Arrays.asList(ServerDataCache.getGeometries()));
 
-				// Create a cell to display a Geometry.
-				Cell<GeometryNames> cell = new AbstractCell<GeometryNames>() {
-					@Override
-					public void render(Context context, GeometryNames value,
-							SafeHtmlBuilder sb) {
-						if (value != null) {
-							sb.appendEscaped(value.toString());
-						}
-					}
-				};
 				// Return a node info that pairs the data provider and the cell.
-				return new DefaultNodeInfo<GeometryNames>(dataProvider, cell);
-			} else if (value instanceof GeometryNames) {
+				return new DefaultNodeInfo<String>(dataProvider,
+						new ClickableTextCell(), selectionModel,
+						valueGeometryUpdater);
+			} else if (lastClickedLevel == 0) {
 				// LEVEL 1 - Mixer (leaf)
 
 				// Construct a List<String> of MixerNames. This is needed for
 				// the DefaultNodeInfo to use TextCell()
 				// (it only works for strings)
-				List<String> mixerlist = new ArrayList<String>();
-
-				switch ((GeometryNames) value) {
-				case RECTANGLE:
-					for (RectangleMixers rm : RectangleMixers.values()) {
-						mixerlist.add(rm.toString());
-					}
-					break;
-				case CIRCLE:
-					for (CircleMixers egm : CircleMixers.values()) {
-						mixerlist.add(egm.toString());
-					}
-					break;
-				case SQUARE:
-					for (SquareMixers sm : SquareMixers.values()) {
-						mixerlist.add(sm.toString());
-					}
-					break;
-				case JOURNALBEARING:
-					for (JournalBearingMixers jbm : JournalBearingMixers.values()) {
-						mixerlist.add(jbm.toString());
-					}
-					break;
-				}
 
 				// We want the children of the Geometry. Return the mixers.
 				ListDataProvider<String> dataProvider = new ListDataProvider<String>(
-						mixerlist);
+						Arrays.asList(ServerDataCache
+								.getMixersForGeometry((String) value)));
 
 				// Use the shared selection model.
 				return new DefaultNodeInfo<String>(dataProvider,
-						new TextCell(), selectionModel, null);
+						new ClickableTextCell(), selectionModel,
+						valueMixerUpdater);
 
 			}
 			return null;
@@ -525,15 +482,8 @@ public class Fingerpaint implements EntryPoint {
 		 */
 		// You can define your own definition of leaf-node here.
 		public boolean isLeaf(Object value) {
-			// works because all non-leaf nodes are enums, only
-			// leaf nodes are String.
-			return value instanceof String;
+			return lastClickedLevel == NUM_LEVELS - 1;
 		}
-
-		/*
-		 * public void setCellBrowser(CellBrowser cellbrowser) { this.cb =
-		 * cellbrowser; }
-		 */
 	}
 
 	/*
@@ -583,20 +533,20 @@ public class Fingerpaint implements EntryPoint {
 
 		});
 	}
-	
+
 	/*
-	 * Initialises the reset Distribution Button. 
-	 * When this button is pressed, the current canvas is reset to all white
+	 * Initialises the reset Distribution Button. When this button is pressed,
+	 * the current canvas is reset to all white
 	 */
-	private void createResetDistButton(){
+	private void createResetDistButton() {
 		resetDistButton = new Button("Reset Dist");
-		resetDistButton.addClickHandler(new ClickHandler(){
+		resetDistButton.addClickHandler(new ClickHandler() {
 
 			@Override
 			public void onClick(ClickEvent event) {
 				geom.resetDistribution();
 			}
-			
+
 		});
 	}
 
@@ -675,59 +625,29 @@ public class Fingerpaint implements EntryPoint {
 	}
 
 	/*
-	 * Initialises the protocol representation text area.
-	 * TODO: this code has to be removed!
+	 * Initialises the protocol representation text area. TODO: this code has to
+	 * be removed!
 	 */
 	private void createProtocolRepresentationTextArea() {
 		taProtocolRepresentation.setText("");
 		taProtocolRepresentation.setWidth(String.valueOf(menuWidth));
 		menuPanel.add(taProtocolRepresentation);
-		
-		// TODO: MOET WEG ------------------------------------------------------------------
-		try {
-			StorageKey<int[]> myFirstKey = StorageKeyFactory.intArrayKey("koekjesding");
-			int[] koekjesVanStorage = storage.get(myFirstKey);
-			
-			for (int i : koekjesVanStorage) {
-				String text = String.valueOf(i) + ", " + taProtocolRepresentation.getText();
-				taProtocolRepresentation.setText(text);
-				System.out.println(String.valueOf(i));
-			}
-			
-		} catch (SerializationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		// ----------------------------------------------------------------------------------
+
 		taProtocolRepresentation
 				.setWidth(String.valueOf(menuWidth - 10) + "px");
 		taProtocolRepresentation.setEnabled(false);
 	}
-	
+
 	/*
 	 * Initialises the protocol representation text area.
-	 * TODO: this code has to be removed!
 	 */
-	private void createApplicationRepresentationTextArea(){
+	private void createApplicationRepresentationTextArea() {
 		taProtocolRepresentation.setText("");
 		taProtocolRepresentation.setWidth(String.valueOf(menuWidth));
-		menuPanel.add(taProtocolRepresentation);
-		
-		try {
-			ApplicationState asVanStorage = storage.get(asKey);
-			
-			String text = "nrSteps: " + asVanStorage.getNrSteps() + "\n" + 
-					"stepsize: " + asVanStorage.getStepSize() + "\n" +
-					"geometry: " + asVanStorage.getGeometryChoice() + "\n";
-			taProtocolRepresentation.setText(text);
-			
-		} catch (SerializationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		taProtocolRepresentation
 				.setWidth(String.valueOf(menuWidth - 10) + "px");
-		taProtocolRepresentation.setEnabled(false);		
+		taProtocolRepresentation.setEnabled(false);
+		menuPanel.add(taProtocolRepresentation);
 	}
 
 	/*
@@ -868,15 +788,15 @@ public class Fingerpaint implements EntryPoint {
 
 		});
 	}
-	
+
 	/*
-	 * Initialises the createSaveResultsButton.
-	 * When pressed, this button allows a user to save a mixing run
+	 * Initialises the createSaveResultsButton. When pressed, this button allows
+	 * a user to save a mixing run
 	 */
-	private void createSaveResultsButton(){
+	private void createSaveResultsButton() {
 		// TODO: The text 'Save Results' should be translated later on
 		saveResultsButton = new Button("Save Results");
-		
+
 		saveResultsButton.addClickHandler(new ClickHandler() {
 
 			@Override
@@ -886,15 +806,15 @@ public class Fingerpaint implements EntryPoint {
 
 		});
 	}
-	
+
 	/*
-	 * Initialises the removeSavedResultsButton.
-	 * When pressed, this button allows a user to remove a previously saved mixing run
+	 * Initialises the removeSavedResultsButton. When pressed, this button
+	 * allows a user to remove a previously saved mixing run
 	 */
-	private void createRemoveSavedResultsButton(){
+	private void createRemoveSavedResultsButton() {
 		// TODO: The text 'Remove Saved Results' should be translated later on
 		removeSavedResultsButton = new Button("Remove Saved Results");
-		
+
 		removeSavedResultsButton.addClickHandler(new ClickHandler() {
 
 			@Override
@@ -975,25 +895,6 @@ public class Fingerpaint implements EntryPoint {
 			updateProtocolLabel(step);
 			mixNowButton.setEnabled(true);
 		}
-	}
-
-	/**
-	 * A semi-transparent windows that covers the entire application pops up
-	 * that blocks the user from accessing other features. A loading-icon will
-	 * be shown. {@code closeLoadingWindow()} removes this window.
-	 */
-	private void showLoadingWindow() {
-		RootPanel.get().add(loadPanel);
-	}
-
-	/**
-	 * Removes Removes the loading-window that {@code showLoadingWindow()} has
-	 * created.
-	 * 
-	 * <pre> showLoadingWindow() has been executed
-	 */
-	private void closeLoadingWindow() {
-		loadPanel.removeFromParent();
 	}
 
 	/**

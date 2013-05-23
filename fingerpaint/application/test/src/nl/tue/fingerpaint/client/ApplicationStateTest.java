@@ -28,7 +28,7 @@ public class ApplicationStateTest extends GWTTestCase{
 	@Test
 	public void testSetGeometry() {
 		init();
-		GeometryNames testValue = GeometryNames.RECTANGLE;
+		String testValue = "Rectangle";
 		as.setGeometry(testValue);
 		assertEquals(as.getGeometryChoice(), testValue); 
 	}
@@ -36,7 +36,7 @@ public class ApplicationStateTest extends GWTTestCase{
 	@Test
 	public void testSetMixer() {
 		init();
-		RectangleMixers testValue = RectangleMixers.ExampleMixerName1;
+		String testValue = "Just some mixer";
 		as.setMixer(testValue);
 		assertEquals(as.getMixerChoice(), testValue);
 	}	
