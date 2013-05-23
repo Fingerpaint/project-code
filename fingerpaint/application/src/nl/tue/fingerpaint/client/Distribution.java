@@ -1,5 +1,7 @@
 package nl.tue.fingerpaint.client;
 
+import org.jsonmaker.gwt.client.Jsonizer;
+
 import com.google.gwt.canvas.dom.client.CanvasPixelArray;
 import com.google.gwt.canvas.dom.client.ImageData;
 import com.google.gwt.touch.client.Point;
@@ -128,5 +130,7 @@ public abstract class Distribution {
 	 *         coordinates ({@code x}, {@code y})
 	 */
 	abstract protected int getIndex(int x, int y);
+	
+	public interface DistributionJsonizer extends Jsonizer{}
 
 }
