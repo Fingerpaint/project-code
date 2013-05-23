@@ -1,5 +1,6 @@
 package nl.tue.fingerpaint.client;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
 import nl.tue.fingerpaint.client.Geometry.StepAddedListener;
@@ -10,13 +11,12 @@ import com.google.gwt.cell.client.ClickableTextCell;
 import com.google.gwt.cell.client.ValueUpdater;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.cellview.client.CellBrowser;
-import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.rpc.SerializationException;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -29,13 +29,14 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
 import com.google.gwt.view.client.TreeViewModel;
 import com.seanchenxi.gwt.storage.client.StorageExt;
 import com.seanchenxi.gwt.storage.client.StorageKey;
+import com.seanchenxi.gwt.storage.client.StorageKeyFactory;
+import com.seanchenxi.gwt.storage.client.StorageQuotaExceededException;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
@@ -515,23 +516,6 @@ public class Fingerpaint implements EntryPoint {
 	private void createDefineProtocolCheckBox() {
 		// TODO: The text 'Define Protocol' should be translated later on
 		defineProtocolCheckBox = new CheckBox("Define Protocol");
-		defineProtocolCheckBox.addClickHandler(new ClickHandler() {
-
-			@Override
-			public void onClick(ClickEvent event) {
-				if (defineProtocolCheckBox.getValue()) {
-					resetProtocol();
-					// TODO: MOET WEG!
-					createApplicationRepresentationTextArea();
-					showProtocolWidgets();
-				} else {
-					resetProtocol();
-					hideProtocolWidgets();
-				}
-
-			}
-
-		});
 	}
 
 	/*
@@ -903,6 +887,39 @@ public class Fingerpaint implements EntryPoint {
 	 */
 	private void executeMixingRun() {
 		// TODO: collect all necessary information and send it to server
+	}
+	
+	private class Koekje implements Serializable {
+		/**
+		 * Dit is een vrolijk serial nummer van dit koekje.
+		 */
+		private transient static final long serialVersionUID = 1986644721869750738L;
+		private transient boolean isAwesome = true;
+		private transient boolean hasChocolate = true;
+		private transient float price = 1.50f;
+		
+		public Koekje() {
+			super();
+		}
+		
+		public boolean isAwesome() {
+			return isAwesome;
+		}
+		public void setAwesome(boolean isAwesome) {
+			this.isAwesome = isAwesome;
+		}
+		public boolean isHasChocolate() {
+			return hasChocolate;
+		}
+		public void setHasChocolate(boolean hasChocolate) {
+			this.hasChocolate = hasChocolate;
+		}
+		public float getPrice() {
+			return price;
+		}
+		public void setPrice(float price) {
+			this.price = price;
+		}
 	}
 
 }
