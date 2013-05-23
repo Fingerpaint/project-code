@@ -381,8 +381,6 @@ public class Fingerpaint implements EntryPoint {
 			createLoadDistButton();
 			menuPanel.add(loadDistButton);
 
-			// TODO: Initialise other menu items and add them to menuPanel
-
 			// Initialise the resetDistButton and add to menuPanel
 			createResetDistButton();
 			menuPanel.add(resetDistButton);
@@ -458,10 +456,6 @@ public class Fingerpaint implements EntryPoint {
 						valueGeometryUpdater);
 			} else if (lastClickedLevel == 0) {
 				// LEVEL 1 - Mixer (leaf)
-
-				// Construct a List<String> of MixerNames. This is needed for
-				// the DefaultNodeInfo to use TextCell()
-				// (it only works for strings)
 
 				// We want the children of the Geometry. Return the mixers.
 				ListDataProvider<String> dataProvider = new ListDataProvider<String>(
@@ -616,7 +610,6 @@ public class Fingerpaint implements EntryPoint {
 		taProtocolRepresentation.setText("");
 		taProtocolRepresentation.setWidth(String.valueOf(menuWidth));
 		menuPanel.add(taProtocolRepresentation);
-
 		taProtocolRepresentation
 				.setWidth(String.valueOf(menuWidth - 10) + "px");
 		taProtocolRepresentation.setEnabled(false);
@@ -811,7 +804,7 @@ public class Fingerpaint implements EntryPoint {
 
 	/**
 	 * Updates the protocol label to show the textual representation of
-	 * {@code step}.
+	 * {@code step} and adds this to the existing steps in the protocol.
 	 * 
 	 * @param step
 	 *            The new {@code Step} of which the textual representation
@@ -836,12 +829,61 @@ public class Fingerpaint implements EntryPoint {
 		taProtocolRepresentation.setText(oldProtocol + stepString + " ");
 	}
 
+	/**
+	 * If the {@code Define Protocol} checkbox is ticked, this method adds a new
+	 * {@code MixingStep} to the mixing protocol, and updates the text area
+	 * {@code taProtocolRepresentation} accordingly.
+	 * 
+	 * @param step
+	 *            The {@code MixingStep} to be added.
+	 */
+	private void addStep(MixingStep step) {
+		if (defineProtocolCheckBox.getValue()) {
+			step.setStepSize(as.getStepSize());
+			as.addMixingStep(step);
+
+			updateProtocolLabel(step);
+			mixNowButton.setEnabled(true);
+		}
+	}
+
+	/**
+	 * A semi-transparent windows that covers the entire application pops up
+	 * that blocks the user from accessing other features. A loading-icon will
+	 * be shown. {@code closeLoadingWindow()} removes this window.
+	 */
+	private void showLoadingWindow() {
+		RootPanel.get().add(loadPanel);
+	}
+
+	/**
+	 * Removes Removes the loading-window that {@code showLoadingWindow()} has
+	 * created.
+	 * 
+	 * <pre> showLoadingWindow() has been executed
+	 */
+	private void closeLoadingWindow() {
+		loadPanel.removeFromParent();
+	}
+
+	/**
+	 * Saves the initial distribution. Sends all current information about the
+	 * protocol and the distribution to the server. Displays the results on
+	 * screen.
+	 */
+	private void executeMixingRun() {
+		as.setInitialDistribution(geom.getDistribution());
+		// TODO: collect all necessary information and send it to server
+	}
+
+	// --Methods for testing purposes only---------------------------------
 	/*
 	 * Initialises the Load Distribution button. This button only exists for
 	 * testing purposes. When it is pressed, the distribution of the geometry is
 	 * set to a colour bar from black to white, from left to right. This
 	 * distribution is then drawn on the canvas, to demonstrate we can load an
-	 * arbitrary distribution, with 256 gray scale colours.
+	 * arbitrary distribution, with 256 gray scale colours. TODO: Can (and
+	 * should) be removed when the communication is functional
 	 */
 	private void createLoadDistButton() {
 		loadDistButton = new Button("Load Dist");
@@ -860,32 +902,5 @@ public class Fingerpaint implements EntryPoint {
 				geom.drawDistribution(dist);
 			}
 		});
-	}
-
-	/**
-	 * Adds a new {@code MixingStep} to the mixing protocol, and updates the
-	 * text area {@code taProtocolRepresentation} accordingly.
-	 * 
-	 * @param step
-	 *            The {@code MixingStep} to be added.
-	 */
-	private void addStep(MixingStep step) {
-		step.setStepSize(as.getStepSize());
-		as.addMixingStep(step);
-
-		if (!defineProtocolCheckBox.getValue()) {
-			executeMixingRun();
-		} else {
-			updateProtocolLabel(step);
-			mixNowButton.setEnabled(true);
-		}
-	}
-
-	/**
-	 * Sends all current information about the protocol and the distribution to
-	 * the server. Displays the results on screen.
-	 */
-	private void executeMixingRun() {
-		// TODO: collect all necessary information and send it to server
 	}
 }

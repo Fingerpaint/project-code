@@ -14,9 +14,20 @@ public class ApplicationState implements Serializable {
 	 * Auto-generated UID for the serialisation.
 	 */
 	private static final long serialVersionUID = -3490165289933738235L;
+
+	/**
+	 * Stores the initial distribution, once set.
+	 */
+	private Distribution initialDistribution = null;
+
+	/**
+	 * The chosen geometry.
+	 */
 	private String geoChoice = null;
+	/**
+	 * The chosen matrix.
+	 */
 	private String mixChoice = null;
-	//private Distribution distribution = null;
 	
 	//the current mixing protocol
 	private MixingProtocol protocol = new MixingProtocol();
@@ -28,7 +39,7 @@ public class ApplicationState implements Serializable {
 	 */
 	private int nrSteps = 0;
 	
-	private double stepsize;
+	private double stepsize; 
 	
 	/**
 	 * Returns the current value of number of steps.
@@ -131,5 +142,13 @@ public class ApplicationState implements Serializable {
 
 	public double getStepSize() {
 		return stepsize;
+	}
+
+	public void setInitialDistribution(Distribution distribution) {
+		this.initialDistribution = distribution;	
+	}
+	
+	public Distribution getInitialDistribution() {
+		return initialDistribution;
 	}
 }
