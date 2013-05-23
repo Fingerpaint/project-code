@@ -10,10 +10,10 @@ extern "C" {
 /*
  * Class:     nl_tue_fingerpaint_server_simulator_NativeCommunicator
  * Method:    simulate
- * Signature: (II[DDLjava/lang/String;)D
+ * Signature: (Ljava/lang/String;Ljava/lang/String;[DDLjava/lang/String;)D
  */
 JNIEXPORT jdouble JNICALL Java_nl_tue_fingerpaint_server_simulator_NativeCommunicator_simulate
-  (JNIEnv *, jobject, jint, jint, jdoubleArray, jdouble, jstring);
+  (JNIEnv *, jobject, jstring, jstring, jdoubleArray, jdouble, jstring);
 
 #ifdef __cplusplus
 }

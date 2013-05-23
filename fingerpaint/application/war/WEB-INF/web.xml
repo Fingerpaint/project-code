@@ -21,17 +21,12 @@
     <welcome-file>Fingerpaint.html</welcome-file>
   </welcome-file-list>
 
-	<!-- Default page to serve -->
-	<welcome-file-list>
-		<welcome-file>Fingerpaint.html</welcome-file>
-	</welcome-file-list>
-
 	<servlet>
 		<servlet-name>simulatorSevice</servlet-name>
 		<servlet-class>nl.tue.fingerpaint.server.simulator.SimulatorServiceImpl</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>simulatorSevice</servlet-name>
-		<url-pattern>/simulatorService</url-pattern>
+		<url-pattern>/fingerpaint/simulatorService</url-pattern>
 	</servlet-mapping>
 </web-app>

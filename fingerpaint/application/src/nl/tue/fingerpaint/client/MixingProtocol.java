@@ -113,4 +113,13 @@ public class MixingProtocol implements Serializable {
 		return program.size();
 	}
 	
+	/**
+	 * TODO: Currently hardcoded, needs to be made dynamic
+	 * 
+	 * @return The name of the geometry this protocol is defined for.
+	 */
+	public String getGeometry() {
+		return "Rectangle400x240";
+	}
+	
 }

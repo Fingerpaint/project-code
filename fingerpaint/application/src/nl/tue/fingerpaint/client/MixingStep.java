@@ -2,6 +2,8 @@ package nl.tue.fingerpaint.client;
 
 import java.io.Serializable;
 
+import org.hamcrest.collection.IsMapContaining;
+
 
 /**
  * MixingStep is a class that stores information for an individual mixing step of a mixing protocol
@@ -53,7 +55,7 @@ public class MixingStep implements Serializable {
 	 * 
 	 * @return result = 0.25*x with x an integer 
 	 */
-	double getStepSize(){
+	public double getStepSize(){
 		return nrUnits*STEP_UNIT;
 	}
 	
@@ -61,7 +63,7 @@ public class MixingStep implements Serializable {
 	 * 
 	 * @return true if the wall is moving clockwise, false otherwise
 	 */
-	boolean movesForward(){
+	public boolean movesForward(){
 		return direction;
 	}
 	
@@ -69,7 +71,7 @@ public class MixingStep implements Serializable {
 	 * 
 	 * @return true if the top wall moves, false otherwise
 	 */
-	boolean isTopWall(){
+	public boolean isTopWall(){
 		return wall;
 	}
 	
@@ -80,7 +82,7 @@ public class MixingStep implements Serializable {
 	 * 
 	 * If the precondition does not not hold, stepSize will be rounded to produce an integer x
 	 */
-	void setStepSize(double stepSize){
+	public void setStepSize(double stepSize){
 		nrUnits = (int)Math.round(stepSize/0.25);
 	}
 	
@@ -88,7 +90,7 @@ public class MixingStep implements Serializable {
 	 * 
 	 * @param direction the direction the wall moves in, true if clockwise, false otherwise
 	 */
-	void setDirection(boolean direction){
+	public void setDirection(boolean direction){
 		this.direction = direction;
 	}
 	
@@ -96,8 +98,28 @@ public class MixingStep implements Serializable {
 	 * 
 	 * @param wall The wall that moves this mixing step, true for the top wall, false for the bottom wall
 	 */
-	void setWall(boolean wall){
+	public void setWall(boolean wall){
 		this.wall = wall;
+	}
+	
+	/**
+	 * TODO: Currently hardcoded needs to be dynamic
+	 * 
+	 * @return The name of the mixing step
+	 */
+	public String getName() {
+		StringBuilder builder = new StringBuilder();
+		if (isTopWall()) {
+			builder.append('T');
+		} else {
+			builder.append('B');
+		}
+		if (movesForward()) {
+			builder.append('R');
+		} else {
+			builder.append('L');
+		}
+		return builder.toString();
 	}
 	
 }
