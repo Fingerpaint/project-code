@@ -1,24 +1,34 @@
 package nl.tue.fingerpaint.client;
 
+import java.io.Serializable;
+
 /**
  * Class that keeps track of the Geometry and Mixer the user has selected. Used
  * by the cellBrowser widget in Fingerpaint.java to store chosen variables.
  * 
  * @author Group Fingerpaint
  */
-public class ApplicationState {
-
+public class ApplicationState implements Serializable {
+	
+	/**
+	 * Auto-generated UID for the serialisation.
+	 */
+	private static final long serialVersionUID = -3490165289933738235L;
 	private GeometryNames geoChoice = null;
 	private Mixer mixChoice = null;
-	private Distribution initialDistribution = null;
+	//private Distribution distribution = null;
+	
+	//the current mixing protocol
+	private MixingProtocol protocol = new MixingProtocol();
 	
 	/*
 	 * The number of times (#steps) that the defined protocol will be applied.
 	 * Initially set to 0, to indicate that the spinner has not been loaded
 	 * yet.
 	 */
-	private int nrSteps = 0; // #steps
-	private double stepsize;
+	private int nrSteps = 0;
+	
+	private double stepsize; 
 	
 	/**
 	 * Returns the current value of number of steps.
@@ -111,9 +121,6 @@ public class ApplicationState {
 		stepsize = value;
 	}
 	
-	//the current mixing protocol
-	private MixingProtocol protocol = new MixingProtocol();
-	
 	/**
 	 * Add a step to the mixing protocol.
 	 * @param step {@code Step} to be added.
@@ -124,13 +131,5 @@ public class ApplicationState {
 
 	public double getStepSize() {
 		return stepsize;
-	}
-
-	public void setInitialDistribution(Distribution distribution) {
-		initialDistribution = distribution;
-	}
-
-	public Distribution getInitialDistribution() {
-		return initialDistribution;
 	}
 }
