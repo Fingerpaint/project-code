@@ -3,6 +3,7 @@ package nl.tue.fingerpaint.client;
 import java.util.Arrays;
 
 import nl.tue.fingerpaint.client.Geometry.StepAddedListener;
+import nl.tue.fingerpaint.client.resources.FingerpaintConstants;
 import nl.tue.fingerpaint.client.resources.FingerpaintResources;
 import nl.tue.fingerpaint.client.serverdata.ServerDataCache;
 
@@ -156,7 +157,7 @@ public class Fingerpaint implements EntryPoint {
 		Image loadImage = new Image(FingerpaintResources.INSTANCE.loadImage().getSafeUri());
 		loadPanel.add(loadImage);
 		// Add label that may contain explanatory text
-		loadPanelMessage = new Label("Loading geometries and mixers...", false);
+		loadPanelMessage = new Label(FingerpaintConstants.INSTANCE.loadingGeometries(), false);
 		loadPanelMessage.getElement().setId(LOADPANEL_MESSAGE_ID);
 		loadPanel.add(loadPanelMessage);
 		loadPanel.getElement().setId(LOADPANEL_ID);
