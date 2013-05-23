@@ -722,6 +722,11 @@ public abstract class Geometry {
 	 *            The distribution to be set and drawn
 	 */
 	abstract public void drawDistribution(double[] dist);
+	
+	/**
+	 * Resets the current distribution to all white
+	 */
+	abstract public void resetDistribution();
 
 	//TODO: Add javadoc to methods below
 	

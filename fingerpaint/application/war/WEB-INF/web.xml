@@ -3,8 +3,23 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
               http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	version="2.5" xmlns="http://java.sun.com/xml/ns/javaee">
-
-	<!-- Servlets -->
+	
+  <!-- Servlets -->
+  <servlet>
+    <servlet-name>serverDataService</servlet-name>
+    <servlet-class>
+      nl.tue.fingerpaint.server.ServerDataServiceImpl
+    </servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>serverDataService</servlet-name>
+    <url-pattern>/fingerpaint/serverDataService</url-pattern>
+  </servlet-mapping>
+  
+  <!-- Default page to serve -->
+  <welcome-file-list>
+    <welcome-file>Fingerpaint.html</welcome-file>
+  </welcome-file-list>
 
 	<!-- Default page to serve -->
 	<welcome-file-list>

@@ -1,5 +1,7 @@
 package nl.tue.fingerpaint.client;
 
+import java.io.Serializable;
+
 
 /**
  * MixingStep is a class that stores information for an individual mixing step of a mixing protocol
@@ -7,8 +9,12 @@ package nl.tue.fingerpaint.client;
  * @author Roel van Happen
  *
  */
-public class MixingStep {
+public class MixingStep implements Serializable {
 
+	/**
+	 * Auto-generated UID for the serialisation.
+	 */
+	private static final long serialVersionUID = -2790744362852192908L;
 	/**the minimum step size, all step sizes should be a multiple of this*/
 	public static final double STEP_UNIT = 0.25;
 	/**lowest allowed step size*/
@@ -37,6 +43,11 @@ public class MixingStep {
 		setDirection(direction);
 		setWall(wall);
 	}
+	
+	/**
+	 * Empty constructor, for serialisation purposes.
+	 */
+	private MixingStep(){}
 	
 	/**
 	 * 

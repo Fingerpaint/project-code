@@ -1,6 +1,7 @@
 package nl.tue.fingerpaint.client;
 
 import com.google.gwt.canvas.dom.client.CssColor;
+
 import com.google.gwt.canvas.dom.client.ImageData;
 import com.google.gwt.touch.client.Point;
 
@@ -355,6 +356,16 @@ public class RectangleGeometry extends Geometry {
 					changeToAbsoluteCoords((int) coords.getY()),
 					getColour(dist[i]));
 		}
+	}
+	
+	/**
+	 * Resets the current distribution to all white.
+	 * Equivalent to calling drawDistribution with
+	 * a dist parameter containing '1' at all indices (but faster)
+	 */
+	public void resetDistribution(){
+		context.setFillStyle(CssColor.make("white"));
+		context.fillRect(X_OFFSET + 1, TOP_OFFSET + 1, getWidth(), getHeight());
 	}
 
 	/**
