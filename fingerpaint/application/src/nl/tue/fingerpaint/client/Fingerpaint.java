@@ -227,16 +227,23 @@ public class Fingerpaint implements EntryPoint {
 		String ajString = aj.asString(as.getProtocol().getProgram());
 		
 		// Does not work yet
-//		ArrayJsonizer dj_sonizer = new ArrayJsonizer(Defaults.DOUBLE_JSONIZER) {
-//			@Override
-//			protected Object[] createArray(int size) {
-//				return new Double[size];
-//			}
-//		};
-//		String dj_string = dj_sonizer.asString(as.getInitialDistribution().getDistribution());
-//		System.out.println(dj_string);
-		
-		storage.setItem("save1", ajString);
+		ArrayJsonizer dj_sonizer = new ArrayJsonizer(Defaults.DOUBLE_JSONIZER) {
+			@Override
+			protected Object[] createArray(int size) { 
+				return new Double[size];
+			}
+		};
+		Distribution distr = as.getInitialDistribution();
+		String dj_string = "";
+		if (distr != null) {
+			Double[] temp = new Double[distr.getDistribution().length];
+			for (int i = 0; i < distr.getDistribution().length; i++) {
+				temp[i] = distr.getDistribution()[i];
+			}
+			dj_string = dj_sonizer.asString(temp);
+			System.out.println(dj_string);
+		}
+		storage.setItem("save1", ajString + dj_string);
 	}
 	
 	private void loadState() {
