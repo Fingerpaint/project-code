@@ -20,7 +20,7 @@ public class Response implements Serializable {
 	 * A set of measuring points that together form a plot of the performance of
 	 * the mixer/protocol.
 	 */
-	protected PerformancePoint[] performance;
+	protected double[] segregation;
 	/**
 	 * Either just the distribution after performing the entire protocol, or all
 	 * intermediate results plus the end result when asked for.
@@ -31,41 +31,41 @@ public class Response implements Serializable {
 	/**
 	 * Constructs a new {@link Response} that has default values filled in for
 	 * all parameters. Using this constructor is not encouraged, you should
-	 * probably use {@link #Response(PerformancePoint[], double[][])}.
+	 * probably use {@link #Response(double[], double[][])}.
 	 */
 	public Response() {
-		this(new PerformancePoint[] {}, new double[][] {});
+		this(new double[] {}, new double[][] {});
 	}
 
 	/**
 	 * Construct a new {@link Response} with given performance data and
 	 * result(s).
 	 * 
-	 * @param performance
-	 *            The performance of the mixer/protocol.
+	 * @param segregation
+	 *            The segregation of the mixer/protocol.
 	 * @param results
 	 *            Either just the distribution after performing the entire
 	 *            protocol, or all intermediate results plus the end result when
 	 *            asked for in the request to the simulation service.
 	 */
-	public Response(PerformancePoint[] performance, double[][] results) {
-		setPerformance(performance);
+	public Response(double[] segregation, double[][] results) {
+		setSegregation(segregation);
 		setResults(results);
 	}
 
 	/**
 	 * @return the performance
 	 */
-	public PerformancePoint[] getPerformance() {
-		return performance;
+	public double[] getSegregation() {
+		return segregation;
 	}
 
 	/**
-	 * @param performance
-	 *            the performance to set
+	 * @param segregation
+	 *            the segregation to set
 	 */
-	public void setPerformance(PerformancePoint[] performance) {
-		this.performance = performance;
+	public void setSegregation(double[] segregation) {
+		this.segregation = segregation;
 	}
 
 	/**

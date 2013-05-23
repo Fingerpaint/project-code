@@ -21,9 +21,11 @@ public class SimulatorServiceImpl extends RemoteServiceServlet implements Simula
 
 	public Response simulate(Request request) {
 		double[][] dists = {request.getDistribution()};
-		PerformancePoint[] perf = {new PerformancePoint(0, 0.75)};
+		double[] perf = {2.21};
 		
 		return new Response(perf, dists);
+		
+		
 	}
 
 }

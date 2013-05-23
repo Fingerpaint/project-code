@@ -38,10 +38,8 @@ public class SimulatorServiceSocketTest extends GWTTestCase {
 						+ "{\"stepId\":\"BR\",\"stepDuration\":0.5}]}", reqJson);
 
 		// --- RESPONSE -------------------------------------------------------
-		PerformancePoint[] performance = new PerformancePoint[] {
-				new PerformancePoint(1, 12.0), new PerformancePoint(2, 3.3),
-				new PerformancePoint(3, 1.4), new PerformancePoint(4, 1.05),
-				new PerformancePoint(5, 0.8) };
+		double[] performance = new double[] {
+				12.0, 3.3, 1.4, 1.05, 0.8 };
 		double[][] results = new double[][] { new double[] { 0.5, 0.5, 0.25,
 				0.12, 0.7, 0.4, 0.3, 0.2 } };
 		Response response = new Response(performance, results);
