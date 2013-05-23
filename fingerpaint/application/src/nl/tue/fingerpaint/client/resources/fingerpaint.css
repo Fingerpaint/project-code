@@ -1,5 +1,5 @@
-#closeButton {
-	margin: 15px 6px 6px;
+body {
+	margin: 0;
 }
 
 .paintCanvas {
@@ -16,7 +16,8 @@
 	top: 0; /*Absolute margin from top of screen is 0*/
 	right: 0;
 	bottom: 0;
-	left: 0; background #000;
+	left: 0;
+	background: #000;
 	background: rgba(0, 0, 0, 0.5);
 }
 

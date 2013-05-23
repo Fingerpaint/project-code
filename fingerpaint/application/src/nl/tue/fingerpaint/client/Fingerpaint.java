@@ -1,9 +1,9 @@
 package nl.tue.fingerpaint.client;
 
-import java.io.Serializable;
 import java.util.Arrays;
 
 import nl.tue.fingerpaint.client.Geometry.StepAddedListener;
+import nl.tue.fingerpaint.client.resources.FingerpaintResources;
 import nl.tue.fingerpaint.client.serverdata.ServerDataCache;
 
 import com.google.gwt.canvas.dom.client.CssColor;
@@ -16,7 +16,6 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.cellview.client.CellBrowser;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.rpc.SerializationException;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -33,10 +32,6 @@ import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
 import com.google.gwt.view.client.TreeViewModel;
-import com.seanchenxi.gwt.storage.client.StorageExt;
-import com.seanchenxi.gwt.storage.client.StorageKey;
-import com.seanchenxi.gwt.storage.client.StorageKeyFactory;
-import com.seanchenxi.gwt.storage.client.StorageQuotaExceededException;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
@@ -102,10 +97,6 @@ public class Fingerpaint implements EntryPoint {
 	private static FlowPanel loadPanel = new FlowPanel();
 	private Label loadPanelMessage;
 
-	private StorageExt storage;
-	// TODO: Give some more descriptive name to this variable.
-	private StorageKey<ApplicationState> asKey;
-
 	// The NumberSpinner and label to define the step size
 	// TODO: The text 'Step size' should be translated later on
 	private Label sizeLabel = new Label("Step size");
@@ -157,9 +148,12 @@ public class Fingerpaint implements EntryPoint {
 	 * This is the entry point method.
 	 */
 	public void onModuleLoad() {
+		// Load CSS
+		FingerpaintResources.INSTANCE.css().ensureInjected();
+		
 		// Initialise the loading panel
 		// Add animation image
-		Image loadImage = new Image("/img/loading_animation.gif");
+		Image loadImage = new Image(FingerpaintResources.INSTANCE.loadImage().getSafeUri());
 		loadPanel.add(loadImage);
 		// Add label that may contain explanatory text
 		loadPanelMessage = new Label("Loading geometries and mixers...", false);
