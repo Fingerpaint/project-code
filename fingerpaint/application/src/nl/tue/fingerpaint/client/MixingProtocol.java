@@ -2,6 +2,8 @@ package nl.tue.fingerpaint.client;
 
 import java.util.ArrayList;
 
+import org.jsonmaker.gwt.client.Jsonizer;
+
 /**
  * This class symbolises a mixing program consisting of a number of mixing steps
  * 
@@ -107,5 +109,11 @@ public class MixingProtocol {
 	public int getProgramSize(){
 		return program.size();
 	}
+	
+	public ArrayList<MixingStep> getProgram() {
+		return program;
+	}
+	
+	public interface MixingProtocolJsonizer extends Jsonizer { }
 	
 }
