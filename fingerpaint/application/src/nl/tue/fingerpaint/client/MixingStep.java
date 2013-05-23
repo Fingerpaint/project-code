@@ -1,20 +1,13 @@
 package nl.tue.fingerpaint.client;
 
-import java.io.Serializable;
-
-
 /**
  * MixingStep is a class that stores information for an individual mixing step of a mixing protocol
  * 
  * @author Roel van Happen
  *
  */
-public class MixingStep implements Serializable {
-
-	/**
-	 * Auto-generated UID for the serialisation.
-	 */
-	private static final long serialVersionUID = -2790744362852192908L;
+public class MixingStep {
+	
 	/**the minimum step size, all step sizes should be a multiple of this*/
 	public static final double STEP_UNIT = 0.25;
 	/**lowest allowed step size*/
@@ -53,7 +46,7 @@ public class MixingStep implements Serializable {
 	 * 
 	 * @return result = 0.25*x with x an integer 
 	 */
-	double getStepSize(){
+	public double getStepSize(){
 		return nrUnits*STEP_UNIT;
 	}
 	
@@ -61,7 +54,7 @@ public class MixingStep implements Serializable {
 	 * 
 	 * @return true if the wall is moving clockwise, false otherwise
 	 */
-	boolean movesForward(){
+	public boolean movesForward(){
 		return direction;
 	}
 	
@@ -69,7 +62,7 @@ public class MixingStep implements Serializable {
 	 * 
 	 * @return true if the top wall moves, false otherwise
 	 */
-	boolean isTopWall(){
+	public boolean isTopWall(){
 		return wall;
 	}
 	
@@ -80,7 +73,7 @@ public class MixingStep implements Serializable {
 	 * 
 	 * If the precondition does not not hold, stepSize will be rounded to produce an integer x
 	 */
-	void setStepSize(double stepSize){
+	public void setStepSize(double stepSize){
 		nrUnits = (int)Math.round(stepSize/0.25);
 	}
 	
@@ -88,7 +81,7 @@ public class MixingStep implements Serializable {
 	 * 
 	 * @param direction the direction the wall moves in, true if clockwise, false otherwise
 	 */
-	void setDirection(boolean direction){
+	public void setDirection(boolean direction){
 		this.direction = direction;
 	}
 	
@@ -96,7 +89,7 @@ public class MixingStep implements Serializable {
 	 * 
 	 * @param wall The wall that moves this mixing step, true for the top wall, false for the bottom wall
 	 */
-	void setWall(boolean wall){
+	public void setWall(boolean wall){
 		this.wall = wall;
 	}
 	

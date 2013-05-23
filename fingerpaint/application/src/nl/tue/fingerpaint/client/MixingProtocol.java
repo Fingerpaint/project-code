@@ -1,6 +1,5 @@
 package nl.tue.fingerpaint.client;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -9,12 +8,8 @@ import java.util.ArrayList;
  * @author Roel van Happen
  *
  */
-public class MixingProtocol implements Serializable {
+public class MixingProtocol {
 
-	/**
-	 * Auto-generated UID for the serialisation.
-	 */
-	private static final long serialVersionUID = 7441045169355767680L;
 	/**the current mixing program*/
 	private ArrayList<MixingStep> program = new ArrayList<MixingStep>();
 	

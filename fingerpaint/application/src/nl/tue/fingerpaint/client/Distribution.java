@@ -1,7 +1,5 @@
 package nl.tue.fingerpaint.client;
 
-import java.io.Serializable;
-
 import com.google.gwt.canvas.dom.client.CanvasPixelArray;
 import com.google.gwt.canvas.dom.client.ImageData;
 import com.google.gwt.touch.client.Point;
@@ -11,12 +9,8 @@ import com.google.gwt.touch.client.Point;
  * 
  * @author Group Fingerpaint
  */
-public abstract class Distribution implements Serializable {
+public abstract class Distribution {
 
-	/**
-	 * Auto-generated UID for the serialisation.
-	 */
-	private static final long serialVersionUID = -2090726524128904891L;
 	/**
 	 * Internal representation of the geometry
 	 */
