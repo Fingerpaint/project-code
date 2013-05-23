@@ -14,12 +14,20 @@ public class ApplicationState implements Serializable {
 	 * Auto-generated UID for the serialisation.
 	 */
 	private static final long serialVersionUID = -3490165289933738235L;
-	private GeometryNames geoChoice = null;
-	private Mixer mixChoice = null;
+
 	/**
 	 * Stores the initial distribution, once set.
 	 */
 	private Distribution initialDistribution = null;
+
+	/**
+	 * The chosen geometry.
+	 */
+	private String geoChoice = null;
+	/**
+	 * The chosen matrix.
+	 */
+	private String mixChoice = null;
 	
 	//the current mixing protocol
 	private MixingProtocol protocol = new MixingProtocol();
@@ -61,40 +69,40 @@ public class ApplicationState implements Serializable {
 	}
 
 	/**
-	 * Sets {@code geoChoice} to the given geometry {@code g}
+	 * Change the chosen geometry. Note that it should be compatible with the chosen mixer!
 	 * 
 	 * @param g
 	 *            The value to be set
 	 */
-	public void setGeometry(GeometryNames g) {
+	public void setGeometry(String g) {
 		geoChoice = g;
 	}
 
 	/**
-	 * Sets {@code mixChoice} to the given Mixer {@code m}
+	 * Change the chosen mixer. Note that it should be compatible with the chosen geometry!
 	 * 
 	 * @param m
 	 *            The value to be set
 	 */
-	public void setMixer(Mixer m) {
+	public void setMixer(String m) {
 		mixChoice = m;
 	}
 
 	/**
-	 * Returns the value of the chosen Geometry
+	 * Returns the name of the chosen geometry.
 	 * 
-	 * @return The value of {@code geoChoice} 
+	 * @return the name of the chosen geometry
 	 */
-	public GeometryNames getGeometryChoice() {
+	public String getGeometryChoice() {
 		return geoChoice;
 	}
 
 	/**
-	 * Returns the value of the chosen Mixer
+	 * Returns the name of the chosen mixer.
 	 * 
-	 * @return The value of {@code mixChoice} 
+	 * @return the name of the chosen mixer
 	 */
-	public Mixer getMixerChoice() {
+	public String getMixerChoice() {
 		return mixChoice;
 	}
 	
