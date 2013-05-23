@@ -1,10 +1,15 @@
 package nl.tue.fingerpaint.client;
 
-import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
 
+import nl.tue.fingerpaint.client.ApplicationState.ApplicationStateJsonizer;
 import nl.tue.fingerpaint.client.Geometry.StepAddedListener;
+import nl.tue.fingerpaint.client.MixingStep.MixingStepJsonizer;
 import nl.tue.fingerpaint.client.serverdata.ServerDataCache;
+
+import org.jsonmaker.gwt.client.JsonizerParser;
+import org.jsonmaker.gwt.client.base.ArrayListJsonizer;
 
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.cell.client.ClickableTextCell;
@@ -13,10 +18,10 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.storage.client.Storage;
 import com.google.gwt.user.cellview.client.CellBrowser;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.rpc.SerializationException;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -33,10 +38,6 @@ import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
 import com.google.gwt.view.client.TreeViewModel;
-import com.seanchenxi.gwt.storage.client.StorageExt;
-import com.seanchenxi.gwt.storage.client.StorageKey;
-import com.seanchenxi.gwt.storage.client.StorageKeyFactory;
-import com.seanchenxi.gwt.storage.client.StorageQuotaExceededException;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
@@ -102,10 +103,6 @@ public class Fingerpaint implements EntryPoint {
 	private static FlowPanel loadPanel = new FlowPanel();
 	private Label loadPanelMessage;
 
-	private StorageExt storage;
-	// TODO: Give some more descriptive name to this variable.
-	private StorageKey<ApplicationState> asKey;
-
 	// The NumberSpinner and label to define the step size
 	// TODO: The text 'Step size' should be translated later on
 	private Label sizeLabel = new Label("Step size");
@@ -152,6 +149,8 @@ public class Fingerpaint implements EntryPoint {
 	// browser in pixels. If this is not taken into account,
 	// a vertical scroll bar appears.
 	private final int topBarHeight = 65;
+	
+	private Storage storage;
 
 	/**
 	 * This is the entry point method.
@@ -170,7 +169,6 @@ public class Fingerpaint implements EntryPoint {
 		// initialise the underlying model of the application
 		as = new ApplicationState();
 		as.setNrSteps(1.0);
-		setLoadPanelVisible(true);
 		ServerDataCache.initialise(new AsyncCallback<String>() {
 			@Override
 			public void onSuccess(String result) {
@@ -184,6 +182,12 @@ public class Fingerpaint implements EntryPoint {
 				showError(caught.getMessage());
 			}
 		});
+		
+		try {
+			initLocalStorage();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -202,6 +206,57 @@ public class Fingerpaint implements EntryPoint {
 
 		// Add the tree to the root layout panel.
 		RootLayoutPanel.get().add(tree);
+	}
+	
+	/**
+	 * Tries to initialise local storage.
+	 * @throws Exception If HTML5 Local Storage is not supported in this browser.
+	 */
+	private void initLocalStorage() throws Exception {
+		storage = Storage.getLocalStorageIfSupported();
+	
+		if (storage == null) {
+			throw new Exception("HTML5 Local Storage is not supported in this browser.");
+		}
+	}
+	
+	private void saveState() {
+		ArrayListJsonizer aj = new ArrayListJsonizer((MixingStepJsonizer) GWT.create(MixingStepJsonizer.class));		
+		String ajString = aj.asString(as.getProtocol().getProgram());
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		storage.setItem("save1", ajString);
+	}
+	
+	private void loadState() {
+		String protocol = storage.getItem("protocol");
+
+		MixingStepJsonizer stepJ = (MixingStepJsonizer) GWT.create(MixingStepJsonizer.class);
+		ArrayListJsonizer aj = new ArrayListJsonizer(stepJ);
+		ArrayList<MixingStep> stepList = (ArrayList<MixingStep>) JsonizerParser.parse(aj, protocol);
+		
+		for (MixingStep m : stepList) {
+			updateProtocolLabel(m);
+		}
 	}
 
 	/**
@@ -408,12 +463,11 @@ public class Fingerpaint implements EntryPoint {
 
 			// Initialise a spinner for #steps
 			createNrStepsSpinner();
-
-			// Create the text area in which the current protocol is displayed
-			createProtocolRepresentationTextArea();
-
+			
 			// Initialise the resetProtocol button
 			createResetProtocolButton();
+			
+			createProtocolRepresentationTextArea();
 
 			// Initialise the mixNow button
 			createMixNowButton();
@@ -510,6 +564,17 @@ public class Fingerpaint implements EntryPoint {
 	private void createDefineProtocolCheckBox() {
 		// TODO: The text 'Define Protocol' should be translated later on
 		defineProtocolCheckBox = new CheckBox("Define Protocol");
+		defineProtocolCheckBox.addClickHandler(new ClickHandler() {
+			
+			@Override
+			public void onClick(ClickEvent event) {
+				if (defineProtocolCheckBox.isChecked()) {
+					showProtocolWidgets();
+				} else {
+					hideProtocolWidgets();
+				}
+			}
+		});
 	}
 
 	/*
@@ -608,23 +673,10 @@ public class Fingerpaint implements EntryPoint {
 	 */
 	private void createProtocolRepresentationTextArea() {
 		taProtocolRepresentation.setText("");
-		taProtocolRepresentation.setWidth(String.valueOf(menuWidth));
-		menuPanel.add(taProtocolRepresentation);
+		taProtocolRepresentation.setWidth(String.valueOf(menuWidth) + "px");
 		taProtocolRepresentation
 				.setWidth(String.valueOf(menuWidth - 10) + "px");
 		taProtocolRepresentation.setEnabled(false);
-	}
-
-	/*
-	 * Initialises the protocol representation text area.
-	 */
-	private void createApplicationRepresentationTextArea() {
-		taProtocolRepresentation.setText("");
-		taProtocolRepresentation.setWidth(String.valueOf(menuWidth));
-		taProtocolRepresentation
-				.setWidth(String.valueOf(menuWidth - 10) + "px");
-		taProtocolRepresentation.setEnabled(false);
-		menuPanel.add(taProtocolRepresentation);
 	}
 
 	/*
@@ -632,6 +684,7 @@ public class Fingerpaint implements EntryPoint {
 	 * black.
 	 */
 	private void toggleColor() {
+		loadState();
 		if (toggleColor.isDown()) {
 			geom.setColor(CssColor.make("white"));
 		} else {
@@ -778,7 +831,7 @@ public class Fingerpaint implements EntryPoint {
 
 			@Override
 			public void onClick(ClickEvent event) {
-				// TODO: handle click by opening save options
+				saveState();
 			}
 
 		});

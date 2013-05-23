@@ -1,9 +1,6 @@
 package nl.tue.fingerpaint.client;
 
-import java.io.Serializable;
-
-import org.hamcrest.collection.IsMapContaining;
-
+import org.jsonmaker.gwt.client.Jsonizer;
 
 /**
  * MixingStep is a class that stores information for an individual mixing step of a mixing protocol
@@ -11,12 +8,8 @@ import org.hamcrest.collection.IsMapContaining;
  * @author Roel van Happen
  *
  */
-public class MixingStep implements Serializable {
-
-	/**
-	 * Auto-generated UID for the serialisation.
-	 */
-	private static final long serialVersionUID = -2790744362852192908L;
+public class MixingStep {
+	
 	/**the minimum step size, all step sizes should be a multiple of this*/
 	public static final double STEP_UNIT = 0.25;
 	/**lowest allowed step size*/
@@ -46,11 +39,9 @@ public class MixingStep implements Serializable {
 		setWall(wall);
 	}
 	
-	/**
-	 * Empty constructor, for serialisation purposes.
-	 */
-	private MixingStep(){}
-	
+	public MixingStep() {
+		this(1.0, true, true);
+	}
 	/**
 	 * 
 	 * @return result = 0.25*x with x an integer 
@@ -102,6 +93,36 @@ public class MixingStep implements Serializable {
 		this.wall = wall;
 	}
 	
+	
+	
+	public static double getStepUnit() {
+		return STEP_UNIT;
+	}
+
+	public static double getStepMin() {
+		return STEP_MIN;
+	}
+
+	public static double getStepMax() {
+		return STEP_MAX;
+	}
+
+	public static double getStepDefault() {
+		return STEP_DEFAULT;
+	}
+
+	public int getNrUnits() {
+		return nrUnits;
+	}
+
+	public boolean getDirection() {
+		return direction;
+	}
+
+	public boolean getWall() {
+		return wall;
+	}
+	
 	/**
 	 * TODO: Currently hardcoded needs to be dynamic
 	 * 
@@ -121,5 +142,7 @@ public class MixingStep implements Serializable {
 		}
 		return builder.toString();
 	}
+
+	public interface MixingStepJsonizer extends Jsonizer { }
 	
 }

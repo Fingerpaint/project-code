@@ -1,6 +1,6 @@
 package nl.tue.fingerpaint.client;
 
-import java.io.Serializable;
+import org.jsonmaker.gwt.client.Jsonizer;
 
 /**
  * Class that keeps track of the Geometry and Mixer the user has selected. Used
@@ -8,13 +8,7 @@ import java.io.Serializable;
  * 
  * @author Group Fingerpaint
  */
-public class ApplicationState implements Serializable {
-	
-	/**
-	 * Auto-generated UID for the serialisation.
-	 */
-	private static final long serialVersionUID = -3490165289933738235L;
-
+public class ApplicationState {
 	/**
 	 * Stores the initial distribution, once set.
 	 */
@@ -151,4 +145,22 @@ public class ApplicationState implements Serializable {
 	public Distribution getInitialDistribution() {
 		return initialDistribution;
 	}
+	
+	
+	
+	public String getGeoChoice() {
+		return geoChoice;
+	}
+
+	public String getMixChoice() {
+		return mixChoice;
+	}
+
+	public double getStepsize() {
+		return stepsize;
+	}
+
+
+
+	public interface ApplicationStateJsonizer extends Jsonizer {}
 }
