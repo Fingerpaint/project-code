@@ -78,9 +78,9 @@ public abstract class Distribution {
 		for (int y = height - factor; y >=0 ; y-=factor) {
 			for (int x = 0; x < width; x +=factor) {
 				index = (y * width + x) * 4;
-				System.out.println(x +" " +y +" " +index);
+//				System.out.println(x +" " +y +" " +index);
 				setValue(x / factor, y / factor, (double) data.get(index) / 255);
-				System.out.println(data.get(index));
+//				System.out.println(data.get(index));
 			}
 		}
 	}

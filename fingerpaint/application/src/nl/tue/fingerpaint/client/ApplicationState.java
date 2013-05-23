@@ -1,5 +1,7 @@
 package nl.tue.fingerpaint.client;
 
+import org.jsonmaker.gwt.client.Jsonizer;
+
 /**
  * Class that keeps track of the Geometry and Mixer the user has selected. Used
  * by the cellBrowser widget in Fingerpaint.java to store chosen variables.
@@ -7,7 +9,6 @@ package nl.tue.fingerpaint.client;
  * @author Group Fingerpaint
  */
 public class ApplicationState {
-
 	/**
 	 * Stores the initial distribution, once set.
 	 */
@@ -144,4 +145,22 @@ public class ApplicationState {
 	public Distribution getInitialDistribution() {
 		return initialDistribution;
 	}
+	
+	
+	
+	public String getGeoChoice() {
+		return geoChoice;
+	}
+
+	public String getMixChoice() {
+		return mixChoice;
+	}
+
+	public double getStepsize() {
+		return stepsize;
+	}
+
+
+
+	public interface ApplicationStateJsonizer extends Jsonizer {}
 }

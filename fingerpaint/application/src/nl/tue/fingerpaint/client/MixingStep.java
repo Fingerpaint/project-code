@@ -1,5 +1,7 @@
 package nl.tue.fingerpaint.client;
 
+import org.jsonmaker.gwt.client.Jsonizer;
+
 /**
  * MixingStep is a class that stores information for an individual mixing step of a mixing protocol
  * 
@@ -37,11 +39,9 @@ public class MixingStep {
 		setWall(wall);
 	}
 	
-	/**
-	 * Empty constructor, for serialisation purposes.
-	 */
-	private MixingStep(){}
-	
+	public MixingStep() {
+		this(1.0, true, true);
+	}
 	/**
 	 * 
 	 * @return result = 0.25*x with x an integer 
@@ -92,5 +92,39 @@ public class MixingStep {
 	public void setWall(boolean wall){
 		this.wall = wall;
 	}
+	
+	
+	
+	public static double getStepUnit() {
+		return STEP_UNIT;
+	}
+
+	public static double getStepMin() {
+		return STEP_MIN;
+	}
+
+	public static double getStepMax() {
+		return STEP_MAX;
+	}
+
+	public static double getStepDefault() {
+		return STEP_DEFAULT;
+	}
+
+	public int getNrUnits() {
+		return nrUnits;
+	}
+
+	public boolean getDirection() {
+		return direction;
+	}
+
+	public boolean getWall() {
+		return wall;
+	}
+
+
+
+	public interface MixingStepJsonizer extends Jsonizer { }
 	
 }
