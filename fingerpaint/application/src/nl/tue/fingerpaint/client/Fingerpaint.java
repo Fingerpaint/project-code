@@ -1023,6 +1023,7 @@ public class Fingerpaint implements EntryPoint {
 			public void onClick(ClickEvent event) {
 				saveResultsPanel.hide();
 				saveNameTextBox.setText("");
+				saveResultsPanelButton.setEnabled(false);
 			}
 		});
 
@@ -1066,6 +1067,7 @@ public class Fingerpaint implements EntryPoint {
 					saveNameTextBox.setFocus(true);
 				} else {
 					saveNameTextBox.setText("");
+					saveResultsPanelButton.setEnabled(false);
 				}
 			}
 		});
