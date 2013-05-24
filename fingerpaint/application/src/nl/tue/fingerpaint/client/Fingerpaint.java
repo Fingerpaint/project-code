@@ -1148,20 +1148,6 @@ public class Fingerpaint implements EntryPoint {
 		});
 	}
 
-	private void removeStoredItem(String name) {
-		// TODO: Replace with actual code
-	}
-
-	private ArrayList<String> getStoredNames() {
-		// TODO: Replace with actual code
-		ArrayList<String> result = new ArrayList<String>();
-		result.add("Koekje");
-		result.add("Melk");
-		result.add("Thee");
-		result.add("Chocolade");
-		return result;
-	}
-
 	/**
 	 * Updates the protocol label to show the textual representation of
 	 * {@code step} and adds this to the existing steps in the protocol.
