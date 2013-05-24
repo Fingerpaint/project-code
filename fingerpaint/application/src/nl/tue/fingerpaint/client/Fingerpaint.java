@@ -799,7 +799,7 @@ public class Fingerpaint implements EntryPoint {
 
 			@Override
 			public void onClick(ClickEvent event) {
-				executeMixingRun();
+				executeMixingRun(as.getProtocol());
 			}
 
 		});
@@ -901,6 +901,10 @@ public class Fingerpaint implements EntryPoint {
 
 			updateProtocolLabel(step);
 			mixNowButton.setEnabled(true);
+		} else {
+			MixingProtocol protocol = new MixingProtocol();
+			protocol.addStep(step);
+			executeMixingRun(protocol);
 		}
 	}
 
@@ -928,11 +932,12 @@ public class Fingerpaint implements EntryPoint {
 	 * protocol and the distribution to the server. Displays the results on
 	 * screen.
 	 */
-	private void executeMixingRun() {
+	private void executeMixingRun(MixingProtocol protocol) {
+		
 		as.setInitialDistribution(geom.getDistribution());
 		
 		Simulation simulation = new Simulation(
-				as.getMixChoice(), as.getProtocol(), 
+				as.getMixChoice(), protocol, 
 				as.getInitialDistribution(), as.getNrSteps(), false);
 		
 		SimulatorServiceAsync service = GWT.create(SimulatorService.class);
