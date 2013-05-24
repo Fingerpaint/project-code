@@ -938,6 +938,7 @@ public class Fingerpaint implements EntryPoint {
 			@Override
 			public void onSuccess(SimulationResult result) {
 				geom.drawDistribution(result.getConcentrationVectors()[0]);
+				setLoadPanelVisible(false);
 			}
 
 			@Override
@@ -947,6 +948,8 @@ public class Fingerpaint implements EntryPoint {
 		};
 
 		service.simulate(simulation, callback);
+		setLoadPanelMessage("Running the simulation. Please wait...");
+		setLoadPanelVisible(true);
 	}
 
 	// --Methods for testing purposes only---------------------------------
