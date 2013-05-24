@@ -2,7 +2,6 @@ package nl.tue.fingerpaint.client;
 
 import java.util.ArrayList;
 
-import nl.tue.fingerpaint.client.MixingProtocol.MixingProtocolJsonizer;
 import nl.tue.fingerpaint.client.MixingStep.MixingStepJsonizer;
 
 import org.jsonmaker.gwt.client.Jsonizer;
@@ -228,9 +227,6 @@ public class ApplicationState {
 			// Save the number of steps
 			jsonObject += nrSteps;
 		}
-
-		// TODO: Remove output
-		System.out.println(jsonObject);
 
 		return jsonObject;
 	}
