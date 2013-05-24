@@ -3,15 +3,12 @@ package nl.tue.fingerpaint.client;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import nl.tue.fingerpaint.client.Distribution.DistributionJsonizer;
 import nl.tue.fingerpaint.client.Geometry.StepAddedListener;
 import nl.tue.fingerpaint.client.MixingStep.MixingStepJsonizer;
 import nl.tue.fingerpaint.client.serverdata.ServerDataCache;
 
 import org.jsonmaker.gwt.client.JsonizerParser;
-import org.jsonmaker.gwt.client.base.ArrayJsonizer;
 import org.jsonmaker.gwt.client.base.ArrayListJsonizer;
-import org.jsonmaker.gwt.client.base.Defaults;
 
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.cell.client.ClickableTextCell;

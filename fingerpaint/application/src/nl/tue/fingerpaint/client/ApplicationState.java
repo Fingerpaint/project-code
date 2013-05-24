@@ -16,11 +16,6 @@ import com.google.gwt.core.client.GWT;
  * @author Group Fingerpaint
  */
 public class ApplicationState {
-	/**
-	 * Stores the initial distribution, once set.
-	 * @Transient
-	 */
-	private Distribution initialDistribution = null;
 
 	/**
 	 * The chosen geometry.
@@ -32,10 +27,12 @@ public class ApplicationState {
 	private String mixChoice = null;
 
 	// the current mixing protocol
-	/**
-	 * @Transient
-	 */
 	private MixingProtocol protocol = new MixingProtocol();
+	
+	/**
+	 * Stores the initial distribution, once set.
+	 */
+	private Distribution initialDistribution = null;
 
 	/*
 	 * The number of times (#steps) that the defined protocol will be applied.
@@ -43,6 +40,9 @@ public class ApplicationState {
 	 */
 	private int nrSteps = 0;
 
+	/**
+	 * Stores the current value for the Step size spinner.
+	 */
 	private double stepsize;
 
 	/**
