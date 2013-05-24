@@ -1,5 +1,6 @@
 package nl.tue.fingerpaint.client;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import nl.tue.fingerpaint.client.Geometry.StepAddedListener;
@@ -22,6 +23,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
+import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
@@ -104,15 +106,24 @@ public class Fingerpaint implements EntryPoint {
 	// chosen
 	private Button confirmSaveButton;
 
-	//--------------------------------------------------------------------------------------
-	
+	// --------------------------------------------------------------------------------------
+
 	// Button to remove previously saved results
 	private Button removeSavedResultsButton;
-	
-	
-	
-	
-	//--------------------------------------------------------------------------------------
+
+	// Popup Panel to handle the removing of results
+	private PopupPanel removeResultsPanel;
+
+	// Vertical panel to hold the flex panel and close button
+	private VerticalPanel removeResultsVerticalPanel;
+
+	// FlexTable to hold all the result entries
+	private FlexTable resultsFlexTable;
+
+	// Button to close the remove results popup panel
+	private Button closeResultsButton;
+
+	// --------------------------------------------------------------------------------------
 
 	// Button to adapt the drawing tool
 	// TODO: Change this to a button on which the current tool is drawn
@@ -475,7 +486,7 @@ public class Fingerpaint implements EntryPoint {
 
 			// Initialise the loadPanel
 			createLoadPanel();
-			
+
 			// Initialise the toolSelectButton and add to menuPanel
 			createToolSelector();
 			menuPanel.add(toolSelectButton);
@@ -911,7 +922,7 @@ public class Fingerpaint implements EntryPoint {
 		saveResultsButton = new Button("Save Results");
 		saveResultsPanel = new PopupPanel();
 		saveResultsPanel.setModal(true);
-		
+
 		saveResultsVerticalPanel = new VerticalPanel();
 		saveButtonsPanel = new HorizontalPanel();
 		saveNameTextBox = new TextBox();
@@ -922,7 +933,7 @@ public class Fingerpaint implements EntryPoint {
 		cancelSaveResultsButton = new Button("Cancel");
 		confirmSavePanel = new PopupPanel();
 		confirmSavePanel.setModal(true);
-		
+
 		confirmSaveVerticalPanel = new VerticalPanel();
 		saveMessageLabel = new Label();
 		confirmButtonsPanel = new HorizontalPanel();
@@ -1068,12 +1079,77 @@ public class Fingerpaint implements EntryPoint {
 	private void createRemoveSavedResultsButton() {
 		// TODO: The text 'Remove Saved Results' should be translated later on
 		removeSavedResultsButton = new Button("Remove Saved Results");
+		removeResultsVerticalPanel = new VerticalPanel();
+		removeResultsPanel = new PopupPanel();
+		removeResultsPanel.setModal(true);
+		removeResultsPanel.add(removeResultsVerticalPanel);
+
+		closeResultsButton = new Button("Close");
+		resultsFlexTable = new FlexTable();
+
 		removeSavedResultsButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				// TODO: handle click by opening remove saves options
+				resultsFlexTable.removeFromParent();
+				closeResultsButton.removeFromParent();
+				resultsFlexTable = new FlexTable();
+				removeResultsVerticalPanel.add(resultsFlexTable);
+				removeResultsVerticalPanel.add(closeResultsButton);
+
+				resultsFlexTable.setText(0, 0, "File name");
+				resultsFlexTable.setText(0, 1, "Remove");
+
+				resultsFlexTable.getRowFormatter().addStyleName(0,
+						"removeListHeader");
+				resultsFlexTable.addStyleName("removeList");
+
+				ArrayList<String> names = getStoredNames();
+				for (int i = 0; i < names.size(); i++) {
+					final int row = i + 1;
+					final String name = names.get(i);
+					resultsFlexTable.setText(row, 0, name);
+					Button removeStockButton = new Button("x");
+					removeStockButton.addClickHandler(new ClickHandler() {
+						public void onClick(ClickEvent event) {
+							removeStoredItem(name);
+							resultsFlexTable.removeRow(row);
+						}
+					});
+					resultsFlexTable.setWidget(row, 1, removeStockButton);
+				}
+
+				removeResultsPanel
+						.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
+							public void setPosition(int offsetWidth,
+									int offsetHeight) {
+								int left = (Window.getClientWidth() - offsetWidth) / 2;
+								int top = (Window.getClientHeight() - offsetHeight) / 2;
+								removeResultsPanel.setPopupPosition(left, top);
+							}
+						});
 			}
 		});
+
+		closeResultsButton.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				removeResultsPanel.hide();
+			}
+		});
+	}
+
+	private void removeStoredItem(String name) {
+		// TODO: Replace with actual code
+	}
+
+	private ArrayList<String> getStoredNames() {
+		// TODO: Replace with actual code
+		ArrayList<String> result = new ArrayList<String>();
+		result.add("Koekje");
+		result.add("Melk");
+		result.add("Thee");
+		result.add("Chocolade");
+		return result;
 	}
 
 	/**
