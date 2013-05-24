@@ -43,3 +43,6 @@ fingerpaint/application/war/WEB-INF/deploy/
 fingerpaint/application/war/fingerpaint/
 *.o
 *.mod
+fingerpaint/application/war/WEB-INF/classes/META-INF/jdoconfig.xml
+fingerpaint/application/war/WEB-INF/classes/META-INF/persistence.xml
+fingerpaint/application/war/WEB-INF/classes/log4j.properties
