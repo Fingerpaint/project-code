@@ -297,8 +297,9 @@ public class Fingerpaint implements EntryPoint {
 
 		if (jsonObject != null && jsonObject != "") {
 			as.unJsonize(jsonObject);
+			as.drawDistribution();
 		}
-
+		
 		refreshWidgets();
 	}
 

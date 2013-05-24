@@ -32,9 +32,10 @@ public class ApplicationState {
 
 	// the current mixing protocol
 	private MixingProtocol protocol = new MixingProtocol();
-	
+
 	/**
-	 * Stores the initial distribution, once set.
+	 * Stores the initial distribution, and not the current distribution as
+	 * shown on the canvas, once set.
 	 */
 	private Distribution initialDistribution = null;
 
@@ -177,64 +178,66 @@ public class ApplicationState {
 	public double getStepsize() {
 		return stepsize;
 	}
-	
+
 	public Geometry getGeometry() {
 		return geom;
 	}
-	
+
 	public void setGegeom(Geometry geometry) {
 		geom = geometry;
 	}
 
 	/**
 	 * Encapsulates the entire ApplicationState into a JSON object, i.e. a
-	 * string representing all its variables.
-	 * The returned String has the following format:
-	 * geoChoice|mixChoice|protocol|distribution|nrSteps.
-	 * If either one of these objects have not been set yet (null or 0), the
-	 * empty String is returned.
+	 * string representing all its variables. The returned String has the
+	 * following format: geoChoice|mixChoice|protocol|distribution|nrSteps. If
+	 * either one of these objects have not been set yet (null or 0), the empty
+	 * String is returned.
 	 * 
 	 * @return JSON representation of {@code this} or the empty String, if
-	 * either of the components of {@code this} have not been set yet.
+	 *         either of the components of {@code this} have not been set yet.
 	 */
 	public String jsonize() {
 		String jsonObject = ""; // The resulting object
-		
-		if(geoChoice != null && mixChoice != null && protocol.getProgram() != null && 
-				initialDistribution != null && nrSteps != 0){
+
+		if (geoChoice != null && mixChoice != null
+				&& protocol.getProgram() != null && initialDistribution != null
+				&& nrSteps != 0) {
 			// Save the chosen geometry
 			jsonObject += geoChoice + "@";
-			
+
 			// Save the chosen matrix/mixer
 			jsonObject += mixChoice + "@";
-			
+
 			// Save the protocol
 			ArrayListJsonizer aj = new ArrayListJsonizer(
 					(MixingStepJsonizer) GWT.create(MixingStepJsonizer.class));
 			jsonObject += aj.asString(protocol.getProgram()) + "@";
 
 			// Save the distribution
-			ArrayListJsonizer doubleAJ = new ArrayListJsonizer(Defaults.DOUBLE_JSONIZER);
+			ArrayListJsonizer doubleAJ = new ArrayListJsonizer(
+					Defaults.DOUBLE_JSONIZER);
 			ArrayList<Double> initList = new ArrayList<Double>();
 			double[] initArray = initialDistribution.getVector();
-			
-			for(int i = 0; i < initArray.length; i++){
+
+			for (int i = 0; i < initArray.length; i++) {
 				initList.add(initArray[i]);
 			}
 			jsonObject += doubleAJ.asString(initList) + "@";
-			
+
 			// Save the number of steps
 			jsonObject += nrSteps;
 		}
-		
+
 		// TODO: Remove output
 		System.out.println(jsonObject);
 
 		return jsonObject;
 	}
-	
+
 	/**
-	 * Unjsonizes a JSON object and sets variables 
+	 * Unjsonizes a JSON object and sets variables
+	 * 
 	 * @param jsonObject
 	 */
 	public void unJsonize(String jsonObject) {
@@ -247,18 +250,21 @@ public class ApplicationState {
 		ArrayList<MixingStep> mixingList = (ArrayList<MixingStep>) JsonizerParser.parse(aj, objects[2]);
 		protocol.setProgram(mixingList);
 		
-//		ArrayListJsonizer dj_sonizer = new ArrayListJsonizer(Defaults.DOUBLE_JSONIZER);
-//		ArrayList<Double> djList = (ArrayList<Double>) JsonizerParser.parse(dj_sonizer, objects[3]);
-//		
-//		double[] initDistribution = new double[djList.size()];
-//		for (int i = 0; i < djList.size(); i++) {
-//			initDistribution[i] = djList.get(i);
-//		}
-//		geom.drawDistribution(initDistribution);
+		ArrayListJsonizer dj_sonizer = new ArrayListJsonizer(Defaults.DOUBLE_JSONIZER);
+		ArrayList<Double> djList = (ArrayList<Double>) JsonizerParser.parse(dj_sonizer, objects[3]);
 		
+		double[] initDistribution = new double[djList.size()];
+		for (int i = 0; i < djList.size(); i++) {
+			initDistribution[i] = djList.get(i);
+		}
+		initialDistribution = new RectangleDistribution(initDistribution);
 		nrSteps = Integer.parseInt(objects[4]);
 	}
-	
+
+	public void drawDistribution() {
+		geom.drawDistribution(initialDistribution);
+	}
+
 	private ArrayJsonizer getDoubleJsonizer() {
 		return new ArrayJsonizer(Defaults.DOUBLE_JSONIZER) {
 			@Override
@@ -268,5 +274,6 @@ public class ApplicationState {
 		};
 	}
 
-	public interface ApplicationStateJsonizer extends Jsonizer {}
+	public interface ApplicationStateJsonizer extends Jsonizer {
+	}
 }

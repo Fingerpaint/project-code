@@ -2,6 +2,7 @@ package nl.tue.fingerpaint.client;
 
 import org.junit.Test;
 import com.google.gwt.junit.client.GWTTestCase;
+import com.google.gwt.storage.client.Storage;
 
 public class ApplicationStateTest extends GWTTestCase{ 
 	private ApplicationState as;
@@ -129,10 +130,14 @@ public class ApplicationStateTest extends GWTTestCase{
 		as.setProtocol(protocol);
 		as.setInitialDistribution(distr);
 		as.setNrSteps(nrSteps);
+		RectangleGeometry geom = null;
+		geom = new RectangleGeometry(240, 400);
+		as.setGegeom(geom);
 		
 		final String jsonString = as.jsonize();
 		
 		init();
+		as.setGegeom(geom);
 		as.unJsonize(jsonString);
 		
 		assertEquals("Geometry", geometry, as.getGeometryChoice());
@@ -168,5 +173,28 @@ public class ApplicationStateTest extends GWTTestCase{
 		assertEquals("Step value", value, step.getStepSize(), 0.00000000001);
 		assertEquals("Direction", clockwise, step.getDirection());
 		assertEquals("Wall", top, step.getWall());
+	}
+	
+	@Test
+	public void testStoreState() {
+		Storage storage = Storage.getLocalStorageIfSupported();
+		if (storage == null) {
+//			fail("Local storage is not supported.");
+		}
+		
+		final String firstKey = "My First Key";
+		final String secondKey = "My Second Key";
+		final String firstData = "This first data is so awesome that I like it.";
+		final String secondData = "I wish I was somewhere else...";
+		
+		storage.setItem(firstKey, firstData);
+		storage.setItem(secondKey, secondData);
+		
+		storage = null;
+		
+		storage = Storage.getLocalStorageIfSupported();
+		
+		assertEquals("First item", firstData, storage.getItem(firstKey));
+		assertEquals("Second item", secondData, storage.getItem(secondKey));
 	}
 }

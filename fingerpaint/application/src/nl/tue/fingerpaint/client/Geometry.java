@@ -90,7 +90,7 @@ public abstract class Geometry {
 	 * Stores the y-coordinate of the mouse event that initiates swiping.
 	 */
 	protected int swipeStartY;
-	
+
 	/**
 	 * Threshold in pixels to decide when a large enough swipe has been carried
 	 * out.
@@ -131,8 +131,13 @@ public abstract class Geometry {
 		// Initialise drawing colour to black
 		setColor(CssColor.make("black"));
 
-		// Initialise drawing tool to a square with radius 3
-		setDrawingTool(new SquareDrawingTool(3));
+		// Surrounded with try-catch for testing purposes
+		try {
+			// Initialise drawing tool to a square with radius 3
+			setDrawingTool(new SquareDrawingTool(3));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	// ----Getters and Setters---------------------------------------
@@ -234,7 +239,7 @@ public abstract class Geometry {
 	public void setFactor(int factor) {
 		this.factor = factor;
 	}
-	
+
 	public int getFactor() {
 		return factor;
 	}
@@ -726,14 +731,14 @@ public abstract class Geometry {
 	 *            The distribution to be set and drawn
 	 */
 	abstract public void drawDistribution(double[] dist);
-	
+
 	/**
 	 * Resets the current distribution to all white
 	 */
 	abstract public void resetDistribution();
 
-	//TODO: Add javadoc to methods below
-	
+	// TODO: Add javadoc to methods below
+
 	protected ArrayList<StepAddedListener> stepAddedListeners = new ArrayList<StepAddedListener>();
 
 	public interface StepAddedListener {
