@@ -38,6 +38,9 @@ public class ApplicationState {
 	 */
 	private Distribution initialDistribution = null;
 
+	/** Rectangular geometry to draw on */
+	private Geometry geom;
+
 	/*
 	 * The number of times (#steps) that the defined protocol will be applied.
 	 * Initially set to 0, to indicate that the spinner has not been loaded yet.
@@ -167,16 +170,20 @@ public class ApplicationState {
 		return initialDistribution;
 	}
 
-	public String getGeoChoice() {
-		return geoChoice;
-	}
-
 	public String getMixChoice() {
 		return mixChoice;
 	}
 
 	public double getStepsize() {
 		return stepsize;
+	}
+	
+	public Geometry getGeometry() {
+		return geom;
+	}
+	
+	public void setGegeom(Geometry geometry) {
+		geom = geometry;
 	}
 
 	/**
@@ -226,14 +233,39 @@ public class ApplicationState {
 		return jsonObject;
 	}
 	
-	public void unJSONize(String jsonObject) {
-		String[] objects = jsonObject.split("|");
+	/**
+	 * Unjsonizes a JSON object and sets variables 
+	 * @param jsonObject
+	 */
+	public void unJsonize(String jsonObject) {
+		String[] objects = jsonObject.split("@");
 		
 		geoChoice = objects[0];
 		mixChoice = objects[1];
+		
 		ArrayListJsonizer aj = new ArrayListJsonizer((MixingStepJsonizer) GWT.create(MixingStepJsonizer.class));
 		ArrayList<MixingStep> mixingList = (ArrayList<MixingStep>) JsonizerParser.parse(aj, objects[2]);
-		protocol.setProgram(mixingList); 
+		protocol.setProgram(mixingList);
+		
+		ArrayListJsonizer dj_sonizer = new ArrayListJsonizer(Defaults.DOUBLE_JSONIZER);
+		ArrayList<Double> djList = (ArrayList<Double>) JsonizerParser.parse(dj_sonizer, objects[3]);
+		
+		double[] initDistribution = new double[djList.size()];
+		for (int i = 0; i < djList.size(); i++) {
+			initDistribution[i] = djList.get(i);
+		}
+		geom.drawDistribution(initDistribution);
+		
+		nrSteps = Integer.parseInt(objects[4]);
+	}
+	
+	private ArrayJsonizer getDoubleJsonizer() {
+		return new ArrayJsonizer(Defaults.DOUBLE_JSONIZER) {
+			@Override
+			protected Object[] createArray(int size) {
+				return new Double[size];
+			}
+		};
 	}
 
 	public interface ApplicationStateJsonizer extends Jsonizer {}
