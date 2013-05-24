@@ -31,7 +31,7 @@ public abstract class Geometry {
 	/**
 	 * Internal representation of the geometry
 	 */
-	protected Distribution distribution;
+	protected double[] distribution;
 
 	/**
 	 * The canvas and its parameters
@@ -39,7 +39,7 @@ public abstract class Geometry {
 	protected Canvas canvas;
 	protected Context2d context;
 	protected int factor;
-
+	
 	/**
 	 * Parameters for the offset of the drawing area on the canvas
 	 */
@@ -112,11 +112,10 @@ public abstract class Geometry {
 	public Geometry(int clientHeight, int clientWidth) {
 		initialiseDistribution();
 
-		setFactor(Math.max(
-				1,
-				(Math.min((clientHeight - TOP_OFFSET - BOTTOM_OFFSET)
-						/ getBaseHeight(), (clientWidth - X_OFFSET)
-						/ getBaseWidth()))));
+		setFactor(Math.max(1, (Math.min(
+				(clientHeight - TOP_OFFSET - BOTTOM_OFFSET)
+				/ getBaseHeight(), (clientWidth - X_OFFSET)
+				/ getBaseWidth()))));
 		drawing = false;
 		definingStep = false;
 
@@ -174,7 +173,7 @@ public abstract class Geometry {
 	 * 
 	 * @return The distribution of this geometry
 	 */
-	abstract public Distribution getDistribution();
+	abstract public double[] getDistribution();
 
 	/**
 	 * Sets the distribution to {@code dist}
@@ -182,17 +181,9 @@ public abstract class Geometry {
 	 * @param dist
 	 *            The distribution to set
 	 */
-	public void setDistribution(Distribution dist) {
+	public void setDistribution(double[] dist) {
 		this.distribution = dist;
 	}
-
-	/**
-	 * Sets the distribution to {@code dist}
-	 * 
-	 * @param dist
-	 *            The distribution to set
-	 */
-	abstract public void setDistribution(double[] dist);
 
 	/**
 	 * Returns the base height of the geometry
@@ -703,17 +694,6 @@ public abstract class Geometry {
 	}
 
 	// --Public methods for general use---------------------------------
-	/**
-	 * Sets the given distribution as the current distribution, and draws it on
-	 * the canvas
-	 * 
-	 * @param dist
-	 *            The distribution to be set and drawn
-	 */
-	public void drawDistribution(Distribution dist) {
-		drawDistribution(dist.getVector());
-	}
-
 	/**
 	 * Sets the given distribution as the current distribution, and draws it on
 	 * the canvas

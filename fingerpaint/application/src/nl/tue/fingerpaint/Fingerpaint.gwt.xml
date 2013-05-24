@@ -26,16 +26,4 @@
 	<!-- Specify the paths for translatable code -->
 	<source path='client' />
 	<source path='shared' />
-	<inherits name="com.seanchenxi.gwt.storage.Storage" />
-
-	<!-- By default, a simple memory cache is enabled for avoiding long time 
-		serialization/deserialization, you can disable it, by adding the following 
-		line -->
-	<set-property name="storage.cache" value="false" />
-
-	<!-- By default, all types that referenced in your RPC interface, will be 
-		considered as persistable in web storage. If it isn't what you want, add 
-		the following line to use a XML file (see next step, for format detail) to 
-		provide the persistable classe list. Available values are: rpc, xml, rpc_xml -->
-	<set-configuration-property name="storage.type.finder" value="rpc" />
 </module>
