@@ -1,16 +1,46 @@
-CC=gcc
-FC=gfortran
-CFLAGS=-I.
-FLAGS = -O2
+ifdef SystemRoot # if on Windows
+	OS=Windows
 
-all: link
+	CC=gcc
+	FC=gfortran
+	LINKFLAGS=-Wall -D_JNI_IMPLEMENTATION_ -Wl,--kill-at -L"C:/MinGW2/lib/gcc/mingw32/4.7.2/"
+	LINKFFLAGS=-c
+	LINKCFLAGS=-Wall -D_JNI_IMPLEMENTATION_ -Wl,--kill-at -I "C:/Program Files/Java/jdk1.7.0_09/include/" -I "C:/Program Files/Java/jdk1.7.0_09/include/win32/"
+	LINKOBJS=nl_tue_fingerpaint_server_simulator_NativeCommunicator.o ../fortran-module/add_module.o
+	LINKOUTPUTNAME=NativeCommunicator.dll
+	LINKLIBFLAGS=-lgfortran -lgfortranbegin
+else
+	ifeq ($(shell uname), Linux) # Linux
+		OS=Linux
 
-link: nl_tue_fingerpaint_server_simulator_NativeCommunicator.o ../fortran-module/add_module.o
-	$(CC) -Wall -D_JNI_IMPLEMENTATION_ -Wl,--kill-at -L"C:/MinGW2/lib/gcc/mingw32/4.7.2/" -shared nl_tue_fingerpaint_server_simulator_NativeCommunicator.o ../fortran-module/add_module.o -o NativeCommunicator.dll -lgfortran -lgfortranbegin
+		CC=gcc
+		FC=gfortran
+		LINKFLAGS=-Wall -D_JNI_IMPLEMENTATION_
+		LINKFFLAGS=-fPIC -shared -c
+		LINKCFLAGS=-fPIC -Wall -D_JNI_IMPLEMENTATION_ -Wl,-soname,NativeCommunicator.so -I "/usr/lib/jvm/java-7-openjdk-amd64/include/" -I "/usr/lib/jvm/java-7-openjdk-amd64/include/linux/"
+		LINKOBJS=../fortran-module/add_module.o nl_tue_fingerpaint_server_simulator_NativeCommunicator.o
+		LINKOUTPUTNAME=libNativeCommunicator.so
+		LINKLIBFLAGS=-lgfortran
+	else # unknown, error
+		$(error Unknown OS. This Makefile works on Windows and Linux only.)
+	endif
+endif
+
+all: pre-build main-build
+
+pre-build:
+	$(info Detected a $(OS) system...)
+
+main-build: link
+
+link: $(LINKOBJS)
+	$(CC) $(LINKFLAGS) -shared $(LINKOBJS) -o $(LINKOUTPUTNAME) $(LINKLIBFLAGS)
 
 ../fortran-module/add_module.o: ../fortran-module/add_module.f90
-	$(FC) -c ../fortran-module/add_module.f90 -o ../fortran-module/add_module.o
+	$(FC) $(LINKFFLAGS) ../fortran-module/add_module.f90 -o $@
 	
 nl_tue_fingerpaint_server_simulator_NativeCommunicator.o: nl_tue_fingerpaint_server_simulator_NativeCommunicator.c
-	#$(CC) -L /lib/mingw -Wl,--kill-at -shared -I "C:/Program Files/Java/jdk1.7.0_09/include/" -I "C:/Program Files/Java/jdk1.7.0_09/include/win32/" nl_tue_fingerpaint_server_simulator_NativeCommunicator.c -c -o nl_tue_fingerpaint_server_simulator_NativeCommunicator.o
-	$(CC) -Wall -D_JNI_IMPLEMENTATION_ -Wl,--kill-at -I "C:/Program Files/Java/jdk1.7.0_09/include/" -I "C:/Program Files/Java/jdk1.7.0_09/include/win32/" -shared nl_tue_fingerpaint_server_simulator_NativeCommunicator.c -c -o nl_tue_fingerpaint_server_simulator_NativeCommunicator.o
+	$(CC) $(LINKCFLAGS) -shared nl_tue_fingerpaint_server_simulator_NativeCommunicator.c -c -o $@
+	
+clean:
+	rm *.o *.mod $(LINKOUTPUTNAME) $(LINKOBJS)
