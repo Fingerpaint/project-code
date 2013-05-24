@@ -267,10 +267,8 @@ public abstract class Geometry {
 		// If canvas wan't created, add a label to the root panel stating this
 		// and return.
 		if (canvas == null) {
-			RootPanel
-					.get()
-					.add(new Label(
-							"Sorry, your browser doesn't support the HTML5 Canvas element"));
+			RootPanel.get().add(new Label(
+					"Sorry, your browser doesn't support the HTML5 Canvas element"));
 			return;
 		}
 

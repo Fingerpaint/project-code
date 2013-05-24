@@ -687,7 +687,8 @@ public class Fingerpaint implements EntryPoint {
 	 * black.
 	 */
 	private void toggleColor() {
-		loadState();
+		// TODO: Outcommented because it was buggy
+		//loadState();
 		if (toggleColor.isDown()) {
 			geom.setColor(CssColor.make("white"));
 		} else {
