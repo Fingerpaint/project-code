@@ -1,6 +1,5 @@
-ifdef SystemRoot # if on Windows
+ifeq ($(OS), Windows_NT) # if on Windows
 	OS=Windows
-
 	CC=gcc
 	FC=gfortran
 	LINKFLAGS=-Wall -D_JNI_IMPLEMENTATION_ -Wl,--kill-at -L"C:/MinGW2/lib/gcc/mingw32/4.7.2/"
@@ -21,8 +20,6 @@ else
 		LINKOBJS=../fortran-module/add_module.o nl_tue_fingerpaint_server_simulator_NativeCommunicator.o
 		LINKOUTPUTNAME=libNativeCommunicator.so
 		LINKLIBFLAGS=-lgfortran
-	else # unknown, error
-		$(error Unknown OS. This Makefile works on Windows and Linux only.)
 	endif
 endif
 
