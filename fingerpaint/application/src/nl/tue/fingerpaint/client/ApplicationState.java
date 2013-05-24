@@ -18,6 +18,7 @@ import com.google.gwt.core.client.GWT;
 public class ApplicationState {
 	/**
 	 * Stores the initial distribution, once set.
+	 * @Transient
 	 */
 	private Distribution initialDistribution = null;
 
@@ -31,6 +32,9 @@ public class ApplicationState {
 	private String mixChoice = null;
 
 	// the current mixing protocol
+	/**
+	 * @Transient
+	 */
 	private MixingProtocol protocol = new MixingProtocol();
 
 	/*
@@ -196,9 +200,14 @@ public class ApplicationState {
 			};
 			double[] distribution = initialDistribution.getDistribution();
 			Double[] temp = new Double[distribution.length];
-			System.arraycopy(distribution, 0, temp, 0, distribution.length);
+			for (int i = 0; i < distribution.length; i++) {
+				temp[i] = distribution[i];
+			}
 			jsonObject += dj_sonizer.asString(temp);
 		}
+		
+		// TODO: Remove output
+		System.out.println(jsonObject);
 
 		return jsonObject;
 	}
