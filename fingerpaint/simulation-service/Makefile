@@ -5,7 +5,7 @@ ifeq ($(OS), Windows_NT) # if on Windows
 	LINKFLAGS=-Wall -D_JNI_IMPLEMENTATION_ -Wl,--kill-at -L"C:/MinGW2/lib/gcc/mingw32/4.7.2/"
 	LINKFFLAGS=-c
 	LINKCFLAGS=-Wall -D_JNI_IMPLEMENTATION_ -Wl,--kill-at -I "C:/Program Files/Java/jdk1.7.0_09/include/" -I "C:/Program Files/Java/jdk1.7.0_09/include/win32/"
-	LINKOBJS=nl_tue_fingerpaint_server_simulator_NativeCommunicator.o ../fortran-module/add_module.o
+	LINKOBJS=nl_tue_fingerpaint_server_simulator_NativeCommunicator.o add_module.o
 	LINKOUTPUTNAME=NativeCommunicator.dll
 	LINKLIBFLAGS=-lgfortran -lgfortranbegin
 else
@@ -17,7 +17,7 @@ else
 		LINKFLAGS=-Wall -D_JNI_IMPLEMENTATION_
 		LINKFFLAGS=-fPIC -shared -c
 		LINKCFLAGS=-fPIC -Wall -D_JNI_IMPLEMENTATION_ -Wl,-soname,NativeCommunicator.so -I "/usr/lib/jvm/java-7-openjdk-amd64/include/" -I "/usr/lib/jvm/java-7-openjdk-amd64/include/linux/"
-		LINKOBJS=../fortran-module/add_module.o nl_tue_fingerpaint_server_simulator_NativeCommunicator.o
+		LINKOBJS=add_module.o nl_tue_fingerpaint_server_simulator_NativeCommunicator.o
 		LINKOUTPUTNAME=libNativeCommunicator.so
 		LINKLIBFLAGS=-lgfortran
 	endif
@@ -33,11 +33,11 @@ main-build: link
 link: $(LINKOBJS)
 	$(CC) $(LINKFLAGS) -shared $(LINKOBJS) -o $(LINKOUTPUTNAME) $(LINKLIBFLAGS)
 
-../fortran-module/add_module.o: ../fortran-module/add_module.f90
-	$(FC) $(LINKFFLAGS) ../fortran-module/add_module.f90 -o $@
+add_module.o: add_module.f90
+	$(FC) $(LINKFFLAGS) add_module.f90 -o $@
 	
 nl_tue_fingerpaint_server_simulator_NativeCommunicator.o: nl_tue_fingerpaint_server_simulator_NativeCommunicator.c
 	$(CC) $(LINKCFLAGS) -shared nl_tue_fingerpaint_server_simulator_NativeCommunicator.c -c -o $@
 	
 clean:
-	rm *.o *.mod $(LINKOUTPUTNAME) $(LINKOBJS)
+	rm *.mod $(LINKOUTPUTNAME) $(LINKOBJS)
