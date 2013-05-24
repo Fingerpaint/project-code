@@ -1,5 +1,6 @@
 package nl.tue.fingerpaint.client;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import nl.tue.fingerpaint.client.Geometry.StepAddedListener;
@@ -743,6 +744,14 @@ public class Fingerpaint implements EntryPoint {
 			}
 		});
 		toggleColor.setWidth("100px");
+	}
+	
+	public ArrayList<String> getStoredNames() {
+		ArrayList<String> names = new ArrayList<String>();
+		for (int i = 0; i < storage.getLength(); i++) {
+			names.add(storage.key(i));
+		}
+		return names;
 	}
 
 	/*
