@@ -755,6 +755,22 @@ public class Fingerpaint implements EntryPoint {
 		});
 		toggleColor.setWidth("100px");
 	}
+	
+	public ArrayList<String> getStoredNames() {
+		ArrayList<String> names = new ArrayList<String>();
+		for (int i = 0; i < storage.getLength(); i++) {
+			names.add(storage.key(i));
+		}
+		return names;
+	}
+	
+	/**
+	 * Removes an item from local storage.
+	 * @param key Item to remove.
+	 */
+	public void removeStoredItem(String key) {
+		storage.removeItem(key);
+	}
 
 	/*
 	 * Initialises the protocol representation text area. TODO: this code has to
@@ -773,17 +789,11 @@ public class Fingerpaint implements EntryPoint {
 	 * black.
 	 */
 	private void toggleColor() {
-		loadState("save1");
-		removeSavedState("koekjesSuperLama!");
 		if (toggleColor.isDown()) {
 			as.getGeometry().setColor(CssColor.make("white"));
 		} else {
 			as.getGeometry().setColor(CssColor.make("black"));
 		}
-	}
-
-	private void removeSavedState(String name) {
-		storage.removeItem(name);
 	}
 
 	/*
