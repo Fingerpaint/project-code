@@ -52,7 +52,7 @@ public class SimulatorServiceImpl extends RemoteServiceServlet implements Simula
 			vectorResults[0] = vector.clone();
 		}
 		
-		return new SimulationResult(request, vectorResults, segregationPoints);
+		return new SimulationResult(vectorResults, segregationPoints);
 	}
 
 }

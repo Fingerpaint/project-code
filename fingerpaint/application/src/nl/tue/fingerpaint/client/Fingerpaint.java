@@ -21,10 +21,12 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.http.client.RequestTimeoutException;
 import com.google.gwt.storage.client.Storage;
 import com.google.gwt.user.cellview.client.CellBrowser;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.rpc.ServiceDefTarget;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -186,7 +188,13 @@ public class Fingerpaint implements EntryPoint {
 			@Override
 			public void onFailure(Throwable caught) {
 				setLoadPanelVisible(false);
-				showError(caught.getMessage());
+				if (caught instanceof RequestTimeoutException) {
+					showError(
+							"The simulation server did not respond in" +
+							" time. Try again later");
+				} else {
+					showError(caught.getMessage());
+				}
 			}
 		});
 	}
@@ -940,7 +948,9 @@ public class Fingerpaint implements EntryPoint {
 				as.getMixChoice(), protocol, 
 				as.getInitialDistribution(), as.getNrSteps(), false);
 		
+		TimeoutRpcRequestBuilder timeoutRpcRequestBuilder = new TimeoutRpcRequestBuilder(10000);
 		SimulatorServiceAsync service = GWT.create(SimulatorService.class);
+    	((ServiceDefTarget) service).setRpcRequestBuilder(timeoutRpcRequestBuilder);
 		AsyncCallback<SimulationResult> callback = new AsyncCallback<SimulationResult>() {
 			@Override
 			public void onSuccess(SimulationResult result) {
@@ -950,7 +960,14 @@ public class Fingerpaint implements EntryPoint {
 
 			@Override
 			public void onFailure(Throwable caught) {
-				caught.printStackTrace();
+				setLoadPanelVisible(false);
+				if (caught instanceof RequestTimeoutException) {
+					showError(
+							"The simulation server did not respond in" +
+							" time. Try again later");
+				} else {
+					showError(caught.getMessage());
+				}
 			}
 		};
 
