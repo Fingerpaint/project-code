@@ -40,11 +40,16 @@
 	color: #FFF;
 }
 
-#saving-overlay {
-	position: absolute;
-	top: 0; /*Absolute margin from top of screen is 0*/
-	right: 0;
-	bottom: 0;
-	left: 0; background #000;
-	background: rgba(0, 0, 0, 0.5);
+/* remove list header row */
+.removeListHeader {
+  background-color: #2062B8;
+  color: white;
+  font-style: italic;
+}
+
+/* remove list flex table */
+.removeList {
+  border: 1px solid silver;
+  padding: 2px;
+  margin-bottom:6px;
 }
