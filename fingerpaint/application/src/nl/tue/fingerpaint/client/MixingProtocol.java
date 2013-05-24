@@ -1,5 +1,6 @@
 package nl.tue.fingerpaint.client;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import org.jsonmaker.gwt.client.Jsonizer;
@@ -10,8 +11,13 @@ import org.jsonmaker.gwt.client.Jsonizer;
  * @author Roel van Happen
  *
  */
-public class MixingProtocol {
+public class MixingProtocol implements Serializable {
 
+	/**
+	 * Random serival version uid
+	 */
+	private static final long serialVersionUID = 4124497679451697792L;
+	
 	/**the current mixing program*/
 	private ArrayList<MixingStep> program = new ArrayList<MixingStep>();
 	

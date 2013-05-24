@@ -1,5 +1,6 @@
 package nl.tue.fingerpaint.client;
 
+import com.google.gwt.canvas.dom.client.CanvasPixelArray;
 import com.google.gwt.canvas.dom.client.CssColor;
 
 import com.google.gwt.canvas.dom.client.ImageData;
@@ -17,8 +18,8 @@ public class RectangleGeometry extends Geometry {
 	/**
 	 * The parameters of the canvas
 	 */
-	private final int rectangleHeight = 240;
-	private final int rectangleWidth = 400;
+	private static final int VERTICAL_CELLS = 240;
+	private static final int HORIZONTAL_CELLS = 400;
 
 	/**
 	 * Uses constructor from super class (Geometry.java)
@@ -40,7 +41,7 @@ public class RectangleGeometry extends Geometry {
 	 */
 	@Override
 	public int getBaseHeight() {
-		return this.rectangleHeight;
+		return this.VERTICAL_CELLS;
 	}
 
 	/**
@@ -50,17 +51,7 @@ public class RectangleGeometry extends Geometry {
 	 */
 	@Override
 	public int getBaseWidth() {
-		return this.rectangleWidth;
-	}
-
-	/**
-	 * Sets the distribution belonging to this geometry to the dist parameter
-	 * 
-	 * @param dist
-	 *            The distribution the set
-	 */
-	public void setDistribution(double[] dist) {
-		setDistribution(new RectangleDistribution(dist));
+		return this.HORIZONTAL_CELLS;
 	}
 
 	/**
@@ -71,12 +62,21 @@ public class RectangleGeometry extends Geometry {
 	 * 
 	 */
 	@Override
-	public Distribution getDistribution() {
+	public double[] getDistribution() {
+		double[] dist = new double[HORIZONTAL_CELLS * VERTICAL_CELLS];
 		ImageData img = context.getImageData(X_OFFSET + 1, TOP_OFFSET + 1,
 				getWidth(), getHeight());
-		this.distribution.setDistribution(img, factor);
-
-		return this.distribution;
+		CanvasPixelArray data = img.getData();
+		int width = img.getWidth();
+		int height = img.getHeight();
+		int index;
+		for (int y = height - factor; y >=0 ; y-=factor) {
+			for (int x = 0; x < width; x +=factor) {
+				index = (y * width + x) * 4;
+				dist[x / factor + HORIZONTAL_CELLS * (VERTICAL_CELLS - 1 - y / factor)] = (double) data.get(index) / 255;
+			}
+		}
+		return dist;
 	}
 
 	// ----Implemented abstract methods from superclass----------------
@@ -174,7 +174,7 @@ public class RectangleGeometry extends Geometry {
 	 */
 	@Override
 	protected void initialiseDistribution() {
-		distribution = new RectangleDistribution();
+		distribution = new double[HORIZONTAL_CELLS * VERTICAL_CELLS];
 	}
 
 	/**
@@ -351,7 +351,7 @@ public class RectangleGeometry extends Geometry {
 	@Override
 	public void drawDistribution(double[] dist) {
 		for (int i = 0; i < dist.length; i++) {
-			Point coords = distribution.getCoordinates(i);
+			Point coords = new Point(i % 400, 239 - i / 400);
 			fillPixel(changeToAbsoluteCoords((int) coords.getX()),
 					changeToAbsoluteCoords((int) coords.getY()),
 					getColour(dist[i]));

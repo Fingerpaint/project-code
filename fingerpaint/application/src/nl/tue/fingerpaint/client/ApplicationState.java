@@ -12,7 +12,7 @@ public class ApplicationState {
 	/**
 	 * Stores the initial distribution, once set.
 	 */
-	private Distribution initialDistribution = null;
+	private double[] initialDistribution = null;
 
 	/**
 	 * The chosen geometry.
@@ -138,11 +138,11 @@ public class ApplicationState {
 		return stepsize;
 	}
 
-	public void setInitialDistribution(Distribution distribution) {
+	public void setInitialDistribution(double[] distribution) {
 		this.initialDistribution = distribution;	
 	}
 	
-	public Distribution getInitialDistribution() {
+	public double[] getInitialDistribution() {
 		return initialDistribution;
 	}
 	

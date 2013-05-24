@@ -7,6 +7,8 @@ import nl.tue.fingerpaint.client.ApplicationState.ApplicationStateJsonizer;
 import nl.tue.fingerpaint.client.Geometry.StepAddedListener;
 import nl.tue.fingerpaint.client.MixingStep.MixingStepJsonizer;
 import nl.tue.fingerpaint.client.serverdata.ServerDataCache;
+import nl.tue.fingerpaint.client.simulator.SimulatorService;
+import nl.tue.fingerpaint.client.simulator.SimulatorServiceAsync;
 
 import org.jsonmaker.gwt.client.JsonizerParser;
 import org.jsonmaker.gwt.client.base.ArrayListJsonizer;
@@ -926,7 +928,25 @@ public class Fingerpaint implements EntryPoint {
 	 */
 	private void executeMixingRun() {
 		as.setInitialDistribution(geom.getDistribution());
-		// TODO: collect all necessary information and send it to server
+		
+		Simulation simulation = new Simulation(
+				as.getMixChoice(), as.getProtocol(), 
+				as.getInitialDistribution(), as.getNrSteps(), false);
+		
+		SimulatorServiceAsync service = GWT.create(SimulatorService.class);
+		AsyncCallback<SimulationResult> callback = new AsyncCallback<SimulationResult>() {
+			@Override
+			public void onSuccess(SimulationResult result) {
+				geom.drawDistribution(result.getConcentrationVectors()[0]);
+			}
+
+			@Override
+			public void onFailure(Throwable caught) {
+				caught.printStackTrace();
+			}
+		};
+
+		service.simulate(simulation, callback);
 	}
 
 	// --Methods for testing purposes only---------------------------------

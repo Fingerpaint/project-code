@@ -1,5 +1,7 @@
 package nl.tue.fingerpaint.client;
 
+import java.io.Serializable;
+
 import org.jsonmaker.gwt.client.Jsonizer;
 
 /**
@@ -8,7 +10,12 @@ import org.jsonmaker.gwt.client.Jsonizer;
  * @author Roel van Happen
  *
  */
-public class MixingStep {
+public class MixingStep implements Serializable {
+	
+	/**
+	 * Randomly generated serial version uid
+	 */
+	private static final long serialVersionUID = -8587281937586037724L;
 	
 	/**the minimum step size, all step sizes should be a multiple of this*/
 	public static final double STEP_UNIT = 0.25;
