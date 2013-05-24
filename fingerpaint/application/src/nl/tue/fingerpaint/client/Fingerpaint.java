@@ -753,6 +753,14 @@ public class Fingerpaint implements EntryPoint {
 		}
 		return names;
 	}
+	
+	/**
+	 * Removes an item from local storage.
+	 * @param key Item to remove.
+	 */
+	public void removeStoredItem(String key) {
+		storage.removeItem(key);
+	}
 
 	/*
 	 * Initialises the protocol representation text area. TODO: this code has to
@@ -778,10 +786,6 @@ public class Fingerpaint implements EntryPoint {
 		} else {
 			as.getGeometry().setColor(CssColor.make("black"));
 		}
-	}
-
-	private void removeSavedState(String name) {
-		storage.removeItem(name);
 	}
 
 	/*
