@@ -68,11 +68,10 @@ public class RectangleGeometryTest extends GWTTestCase {
 	public void testRectangleGeometry() {
 		geom = new RectangleGeometry(400, 600);
 
-		assertEquals("Length of representation vector", 240 * 400, geom
-				.getDistribution().getVector().length);
-		for (int i = 0; i < geom.getDistribution().getVector().length; i++) {
-			assertEquals("Initial distribution", 1.0, geom.getDistribution()
-					.getVector()[i]);
+		assertEquals("Length of representation vector", 240 * 400,
+				geom.getDistribution().length);
+		for (int i = 0; i < geom.getDistribution().length; i++) {
+			assertEquals("Initial distribution", 1.0, geom.getDistribution()[i]);
 		}
 		assertNotNull(geom.getCanvas());
 		assertEquals("Initial drawing color",
@@ -174,27 +173,27 @@ public class RectangleGeometryTest extends GWTTestCase {
 
 		// TODO test the result
 	}
-	
+
 	/**
-	 * Tests if the resetButton creates
-	 * a completely white canvas (internal representation)
+	 * Tests if the resetButton creates a completely white canvas (internal
+	 * representation)
 	 */
 	@Test
-	private void testResetDist(){
+	private void testResetDist() {
 		geom = new RectangleGeometry(clientHeight, clientWidth);
-		//make the canvas black
-		geom.setDistribution(new double[96000]);// using the initialisation value of 0
-		//reset the canvas to white
+		// make the canvas black
+		geom.setDistribution(new double[96000]);// using the initialisation
+												// value of 0
+		// reset the canvas to white
 		geom.resetDistribution();
-		//verify the result
-		Distribution distribution = geom.getDistribution();
-		double[] dist = distribution.getVector();
-		//check all indices
-		for(int i = 0; i<dist.length; i++){
-			assertEquals(1,dist[i]);
+		// verify the result
+		double[] dist = geom.getDistribution();
+		// check all indices
+		for (int i = 0; i < dist.length; i++) {
+			assertEquals(1, dist[i]);
 		}
 	}
-	
+
 	private StepAddedListener setUpStepAddedListener(final String message,
 			final boolean top, final boolean clockwise, final double stepSize) {
 		StepAddedListener stl = new StepAddedListener() {

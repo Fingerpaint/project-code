@@ -2,6 +2,7 @@ package nl.tue.fingerpaint.client;
 
 import java.io.Serializable;
 
+import org.jsonmaker.gwt.client.Jsonizer;
 
 /**
  * MixingStep is a class that stores information for an individual mixing step of a mixing protocol
@@ -10,11 +11,12 @@ import java.io.Serializable;
  *
  */
 public class MixingStep implements Serializable {
-
+	
 	/**
-	 * Auto-generated UID for the serialisation.
+	 * Randomly generated serial version uid
 	 */
-	private static final long serialVersionUID = -2790744362852192908L;
+	private static final long serialVersionUID = -8587281937586037724L;
+	
 	/**the minimum step size, all step sizes should be a multiple of this*/
 	public static final double STEP_UNIT = 0.25;
 	/**lowest allowed step size*/
@@ -44,16 +46,14 @@ public class MixingStep implements Serializable {
 		setWall(wall);
 	}
 	
-	/**
-	 * Empty constructor, for serialisation purposes.
-	 */
-	private MixingStep(){}
-	
+	public MixingStep() {
+		this(1.0, true, true);
+	}
 	/**
 	 * 
 	 * @return result = 0.25*x with x an integer 
 	 */
-	double getStepSize(){
+	public double getStepSize(){
 		return nrUnits*STEP_UNIT;
 	}
 	
@@ -61,7 +61,7 @@ public class MixingStep implements Serializable {
 	 * 
 	 * @return true if the wall is moving clockwise, false otherwise
 	 */
-	boolean movesForward(){
+	public boolean movesForward(){
 		return direction;
 	}
 	
@@ -69,7 +69,7 @@ public class MixingStep implements Serializable {
 	 * 
 	 * @return true if the top wall moves, false otherwise
 	 */
-	boolean isTopWall(){
+	public boolean isTopWall(){
 		return wall;
 	}
 	
@@ -80,7 +80,7 @@ public class MixingStep implements Serializable {
 	 * 
 	 * If the precondition does not not hold, stepSize will be rounded to produce an integer x
 	 */
-	void setStepSize(double stepSize){
+	public void setStepSize(double stepSize){
 		nrUnits = (int)Math.round(stepSize/0.25);
 	}
 	
@@ -88,7 +88,7 @@ public class MixingStep implements Serializable {
 	 * 
 	 * @param direction the direction the wall moves in, true if clockwise, false otherwise
 	 */
-	void setDirection(boolean direction){
+	public void setDirection(boolean direction){
 		this.direction = direction;
 	}
 	
@@ -96,8 +96,60 @@ public class MixingStep implements Serializable {
 	 * 
 	 * @param wall The wall that moves this mixing step, true for the top wall, false for the bottom wall
 	 */
-	void setWall(boolean wall){
+	public void setWall(boolean wall){
 		this.wall = wall;
 	}
+	
+	
+	
+	public static double getStepUnit() {
+		return STEP_UNIT;
+	}
+
+	public static double getStepMin() {
+		return STEP_MIN;
+	}
+
+	public static double getStepMax() {
+		return STEP_MAX;
+	}
+
+	public static double getStepDefault() {
+		return STEP_DEFAULT;
+	}
+
+	public int getNrUnits() {
+		return nrUnits;
+	}
+
+	public boolean getDirection() {
+		return direction;
+	}
+
+	public boolean getWall() {
+		return wall;
+	}
+	
+	/**
+	 * TODO: Currently hardcoded needs to be dynamic
+	 * 
+	 * @return The name of the mixing step
+	 */
+	public String getName() {
+		StringBuilder builder = new StringBuilder();
+		if (isTopWall()) {
+			builder.append('T');
+		} else {
+			builder.append('B');
+		}
+		if (movesForward()) {
+			builder.append('R');
+		} else {
+			builder.append('L');
+		}
+		return builder.toString();
+	}
+
+	public interface MixingStepJsonizer extends Jsonizer { }
 	
 }

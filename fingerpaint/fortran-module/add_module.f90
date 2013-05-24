@@ -263,39 +263,36 @@ end subroutine flip_ver
 
 !______________________________________________
 ! main function called to run an arbitrary simulation
-subroutine simulate (geometry, matrix, distribution, len_distribution, step, stepid, len_stepid, segregation)
+subroutine simulate (geometry, len_geometry, mixer, len_mixer, &
+                     concentration_vector, len_concentration_vector, &
+                     step_size, step_name, len_step_name, segregation)
     ! in\out parameters
-    integer , intent(in) :: geometry ! Geometry selector
-    integer , intent(in) :: matrix ! Matrix selector
-    integer , intent(in) :: len_distribution ! length of concentration vector
-    real(8) , dimension(len_distribution), intent(inout) :: distribution ! concentration vector
-    real(8) , intent(in) :: step ! size of the step
-    integer , intent(in) :: len_stepid ! the length of the stepid string
-    character(len_stepid) , intent(in) :: stepid ! the id of the step-type that needs to be made
+    character(len_geometry) , intent(in) :: geometry ! Geometry name
+    integer , intent(in) :: len_geometry ! the length of the geometry string
+    character(len_mixer) , intent(in) :: mixer ! Matrix selector
+    integer , intent(in) :: len_mixer ! the length of the mixer string
+    integer , intent(in) :: len_concentration_vector ! length of concentration vector
+    real(8) , dimension(len_concentration_vector), intent(inout) :: concentration_vector ! concentration vector
+    real(8) , intent(in) :: step_size ! size of the step
+    integer , intent(in) :: len_step_name ! the length of the stepid string
+    character(len_step_name) , intent(in) :: step_name ! the id of the step-type that needs to be made
     real(8) , intent(out) :: segregation ! the segregation
     
-!     print*,"geometry=",geometry
-!     print*,"matrix=",matrix
-!     print*,"distribution=",distribution
-!     print*,"len_distribution=",len_distribution
-!     print*,"step=",step
-!     print*,"stepid=",stepid
-!     print*,"len_stepid=",len_stepid
-!     print*,"segregation=",segregation
-    
-    if (geometry==0) then
-        if (stepid=="TR") then
-            call conc_final(step,1,1,distribution)
-        elseif (stepid=="BR") then
-            call conc_final(step,1,-1,distribution)
-        elseif (stepid=="BL") then
-            call conc_final(step,-1,-1,distribution)
-        elseif (stepid=="TL") then
-            call conc_final(step,-1,1,distribution)
+    if (geometry=="Rectangle400x240") then
+        if (mixer == "Default") then
+            if (step_name=="TR") then
+                call conc_final(step_size,1,1,concentration_vector)
+            elseif (step_name=="BR") then
+                call conc_final(step_size,1,-1,concentration_vector)
+            elseif (step_name=="BL") then
+                call conc_final(step_size,-1,-1,concentration_vector)
+            elseif (step_name=="TL") then
+                call conc_final(step_size,-1,1,concentration_vector)
+            endif
         endif
     endif
     
-    call intens_segr(distribution, segregation)
+    call intens_segr(concentration_vector, segregation)
     
 !     print*,"new segregation=",segregation
     

@@ -1,11 +1,18 @@
 package nl.tue.fingerpaint.client;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import nl.tue.fingerpaint.client.Geometry.StepAddedListener;
+import nl.tue.fingerpaint.client.MixingStep.MixingStepJsonizer;
 import nl.tue.fingerpaint.client.resources.FingerpaintConstants;
 import nl.tue.fingerpaint.client.resources.FingerpaintResources;
 import nl.tue.fingerpaint.client.serverdata.ServerDataCache;
+import nl.tue.fingerpaint.client.simulator.SimulatorService;
+import nl.tue.fingerpaint.client.simulator.SimulatorServiceAsync;
+
+import org.jsonmaker.gwt.client.JsonizerParser;
+import org.jsonmaker.gwt.client.base.ArrayListJsonizer;
 
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.cell.client.ClickableTextCell;
@@ -14,6 +21,7 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.storage.client.Storage;
 import com.google.gwt.user.cellview.client.CellBrowser;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -144,6 +152,8 @@ public class Fingerpaint implements EntryPoint {
 	// browser in pixels. If this is not taken into account,
 	// a vertical scroll bar appears.
 	private final int topBarHeight = 65;
+	
+	private Storage storage;
 
 	/**
 	 * This is the entry point method.
@@ -197,6 +207,57 @@ public class Fingerpaint implements EntryPoint {
 
 		// Add the tree to the root layout panel.
 		RootLayoutPanel.get().add(tree);
+	}
+	
+	/**
+	 * Tries to initialise local storage.
+	 * @throws Exception If HTML5 Local Storage is not supported in this browser.
+	 */
+	private void initLocalStorage() throws Exception {
+		storage = Storage.getLocalStorageIfSupported();
+	
+		if (storage == null) {
+			throw new Exception("HTML5 Local Storage is not supported in this browser.");
+		}
+	}
+	
+	private void saveState() {
+		ArrayListJsonizer aj = new ArrayListJsonizer((MixingStepJsonizer) GWT.create(MixingStepJsonizer.class));		
+		String ajString = aj.asString(as.getProtocol().getProgram());
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		storage.setItem("save1", ajString);
+	}
+	
+	private void loadState() {
+		String protocol = storage.getItem("protocol");
+
+		MixingStepJsonizer stepJ = (MixingStepJsonizer) GWT.create(MixingStepJsonizer.class);
+		ArrayListJsonizer aj = new ArrayListJsonizer(stepJ);
+		ArrayList<MixingStep> stepList = (ArrayList<MixingStep>) JsonizerParser.parse(aj, protocol);
+		
+		for (MixingStep m : stepList) {
+			updateProtocolLabel(m);
+		}
 	}
 
 	/**
@@ -255,7 +316,9 @@ public class Fingerpaint implements EntryPoint {
 	 */
 	protected void setLoadPanelVisible(boolean visible) {
 		if (visible) {
-			RootPanel.get().add(loadPanel);
+			if (RootPanel.get(LOADPANEL_ID) == null) {
+				RootPanel.get().add(loadPanel);
+			}
 		} else {
 			if (RootPanel.get(LOADPANEL_ID) != null) {
 				loadPanel.removeFromParent();
@@ -403,12 +466,11 @@ public class Fingerpaint implements EntryPoint {
 
 			// Initialise a spinner for #steps
 			createNrStepsSpinner();
-
-			// Create the text area in which the current protocol is displayed
-			createProtocolRepresentationTextArea();
-
+			
 			// Initialise the resetProtocol button
 			createResetProtocolButton();
+			
+			createProtocolRepresentationTextArea();
 
 			// Initialise the mixNow button
 			createMixNowButton();
@@ -505,6 +567,17 @@ public class Fingerpaint implements EntryPoint {
 	private void createDefineProtocolCheckBox() {
 		// TODO: The text 'Define Protocol' should be translated later on
 		defineProtocolCheckBox = new CheckBox("Define Protocol");
+		defineProtocolCheckBox.addClickHandler(new ClickHandler() {
+			
+			@Override
+			public void onClick(ClickEvent event) {
+				if (defineProtocolCheckBox.isChecked()) {
+					showProtocolWidgets();
+				} else {
+					hideProtocolWidgets();
+				}
+			}
+		});
 	}
 
 	/*
@@ -603,23 +676,10 @@ public class Fingerpaint implements EntryPoint {
 	 */
 	private void createProtocolRepresentationTextArea() {
 		taProtocolRepresentation.setText("");
-		taProtocolRepresentation.setWidth(String.valueOf(menuWidth));
-		menuPanel.add(taProtocolRepresentation);
+		taProtocolRepresentation.setWidth(String.valueOf(menuWidth) + "px");
 		taProtocolRepresentation
 				.setWidth(String.valueOf(menuWidth - 10) + "px");
 		taProtocolRepresentation.setEnabled(false);
-	}
-
-	/*
-	 * Initialises the protocol representation text area.
-	 */
-	private void createApplicationRepresentationTextArea() {
-		taProtocolRepresentation.setText("");
-		taProtocolRepresentation.setWidth(String.valueOf(menuWidth));
-		taProtocolRepresentation
-				.setWidth(String.valueOf(menuWidth - 10) + "px");
-		taProtocolRepresentation.setEnabled(false);
-		menuPanel.add(taProtocolRepresentation);
 	}
 
 	/*
@@ -627,6 +687,7 @@ public class Fingerpaint implements EntryPoint {
 	 * black.
 	 */
 	private void toggleColor() {
+		loadState();
 		if (toggleColor.isDown()) {
 			geom.setColor(CssColor.make("white"));
 		} else {
@@ -773,7 +834,7 @@ public class Fingerpaint implements EntryPoint {
 
 			@Override
 			public void onClick(ClickEvent event) {
-				// TODO: handle click by opening save options
+				saveState();
 			}
 
 		});
@@ -868,7 +929,28 @@ public class Fingerpaint implements EntryPoint {
 	 */
 	private void executeMixingRun() {
 		as.setInitialDistribution(geom.getDistribution());
-		// TODO: collect all necessary information and send it to server
+		
+		Simulation simulation = new Simulation(
+				as.getMixChoice(), as.getProtocol(), 
+				as.getInitialDistribution(), as.getNrSteps(), false);
+		
+		SimulatorServiceAsync service = GWT.create(SimulatorService.class);
+		AsyncCallback<SimulationResult> callback = new AsyncCallback<SimulationResult>() {
+			@Override
+			public void onSuccess(SimulationResult result) {
+				geom.drawDistribution(result.getConcentrationVectors()[0]);
+				setLoadPanelVisible(false);
+			}
+
+			@Override
+			public void onFailure(Throwable caught) {
+				caught.printStackTrace();
+			}
+		};
+
+		service.simulate(simulation, callback);
+		setLoadPanelMessage("Running the simulation. Please wait...");
+		setLoadPanelVisible(true);
 	}
 
 	// --Methods for testing purposes only---------------------------------

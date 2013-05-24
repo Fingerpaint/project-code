@@ -1,6 +1,7 @@
+
 package nl.tue.fingerpaint.client;
 
-import java.io.Serializable;
+import org.jsonmaker.gwt.client.Jsonizer;
 
 import com.google.gwt.canvas.dom.client.CanvasPixelArray;
 import com.google.gwt.canvas.dom.client.ImageData;
@@ -11,12 +12,8 @@ import com.google.gwt.touch.client.Point;
  * 
  * @author Group Fingerpaint
  */
-public abstract class Distribution implements Serializable {
+public abstract class Distribution {
 
-	/**
-	 * Auto-generated UID for the serialisation.
-	 */
-	private static final long serialVersionUID = -2090726524128904891L;
 	/**
 	 * Internal representation of the geometry
 	 */
@@ -82,9 +79,9 @@ public abstract class Distribution implements Serializable {
 		for (int y = height - factor; y >=0 ; y-=factor) {
 			for (int x = 0; x < width; x +=factor) {
 				index = (y * width + x) * 4;
-				System.out.println(x +" " +y +" " +index);
+//				System.out.println(x +" " +y +" " +index);
 				setValue(x / factor, y / factor, (double) data.get(index) / 255);
-				System.out.println(data.get(index));
+//				System.out.println(data.get(index));
 			}
 		}
 	}
@@ -134,5 +131,7 @@ public abstract class Distribution implements Serializable {
 	 *         coordinates ({@code x}, {@code y})
 	 */
 	abstract protected int getIndex(int x, int y);
+	
+	public interface DistributionJsonizer extends Jsonizer{}
 
 }
