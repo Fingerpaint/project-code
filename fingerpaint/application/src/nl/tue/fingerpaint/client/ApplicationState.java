@@ -178,32 +178,47 @@ public class ApplicationState {
 	/**
 	 * Encapsulates the entire ApplicationState into a JSON object, i.e. a
 	 * string representing all its variables.
+	 * The returned String has the following format:
+	 * geoChoice|mixChoice|protocol|distribution|nrSteps.
+	 * If either one of these objects have not been set yet (null or 0), the
+	 * empty String is returned.
 	 * 
-	 * @return JSON representation of {@code this}.
+	 * @return JSON representation of {@code this} or the empty String, if
+	 * either of the components of {@code this} have not been set yet.
 	 */
 	public String jsonize() {
-		String jsonObject; // The resulting object
+		String jsonObject = ""; // The resulting object
+		
+		if(geoChoice != null && mixChoice != null && protocol.getProgram() != null && 
+				initialDistribution != null && nrSteps != 0){
+			// Save the chosen geometry
+			jsonObject += geoChoice + "|";
+			
+			// Save the chosen matrix/mixer
+			jsonObject += mixChoice + "|";
+			
+			// Save the protocol
+			ArrayListJsonizer aj = new ArrayListJsonizer(
+					(MixingStepJsonizer) GWT.create(MixingStepJsonizer.class));
+			jsonObject += aj.asString(protocol.getProgram()) + "|";
 
-		// Save the protocol
-		ArrayListJsonizer aj = new ArrayListJsonizer(
-				(MixingStepJsonizer) GWT.create(MixingStepJsonizer.class));
-		jsonObject = aj.asString(protocol.getProgram());
-
-		// Save the distribution
-		if (initialDistribution != null) {
-			ArrayJsonizer dj_sonizer = new ArrayJsonizer(
-					Defaults.DOUBLE_JSONIZER) {
-				@Override
-				protected Object[] createArray(int size) {
-					return new Double[size];
+			// Save the distribution
+				ArrayJsonizer dj_sonizer = new ArrayJsonizer(
+						Defaults.DOUBLE_JSONIZER) {
+					@Override
+					protected Object[] createArray(int size) {
+						return new Double[size];
+					}
+				};
+				double[] distribution = initialDistribution.getDistribution();
+				Double[] temp = new Double[distribution.length];
+				for (int i = 0; i < distribution.length; i++) {
+					temp[i] = distribution[i];
 				}
-			};
-			double[] distribution = initialDistribution.getDistribution();
-			Double[] temp = new Double[distribution.length];
-			for (int i = 0; i < distribution.length; i++) {
-				temp[i] = distribution[i];
-			}
-			jsonObject += dj_sonizer.asString(temp);
+				jsonObject += dj_sonizer.asString(temp) + "|";
+			
+			// Save the number of steps
+			jsonObject += nrSteps;
 		}
 		
 		// TODO: Remove output
