@@ -66,9 +66,6 @@ public class Fingerpaint implements EntryPoint {
 	// Button to remove previously saved results
 	private Button removeSavedResultsButton;
 
-	// Rectangular geometry to draw on
-	private Geometry geom;
-
 	// Button to adapt the drawing tool
 	// TODO: Change this to a button on which the current tool is drawn
 	private Button toolSelectButton;
@@ -237,7 +234,7 @@ public class Fingerpaint implements EntryPoint {
 		String jsonObject = storage.getItem(saveName);
 		
 		if (jsonObject != null && jsonObject != "") {
-			as.unJSONize(jsonObject);
+			as.unJsonize(jsonObject);
 		}
 	}
 
@@ -346,8 +343,8 @@ public class Fingerpaint implements EntryPoint {
 		private void setUserChoiceValues(String selectedMixer) {
 			// TODO: Actually create a different geometry depending on the
 			// chosen geometry...
-			geom = new RectangleGeometry(Window.getClientHeight()
-					- topBarHeight, Window.getClientWidth() - menuWidth);
+			as.setGegeom(new RectangleGeometry(Window.getClientHeight()
+					- topBarHeight, Window.getClientWidth() - menuWidth));
 		}
 
 		public CustomTreeModel() {
@@ -402,7 +399,7 @@ public class Fingerpaint implements EntryPoint {
 					addStep(step);
 				}
 			};
-			geom.addStepAddedListener(l);
+			as.getGeometry().addStepAddedListener(l);
 
 			// Initialise the toolSelectButton and add to menuPanel
 			createToolSelector();
@@ -468,7 +465,7 @@ public class Fingerpaint implements EntryPoint {
 			// screen except for the
 			// menuWidth
 			panel.setWidth("100%");
-			panel.add(geom.getCanvas());
+			panel.add(as.getGeometry().getCanvas());
 			panel.add(menuPanel);
 			panel.setCellWidth(menuPanel, Integer.toString(menuWidth) + "px");
 
@@ -576,7 +573,7 @@ public class Fingerpaint implements EntryPoint {
 
 			@Override
 			public void onClick(ClickEvent event) {
-				geom.resetDistribution();
+				as.getGeometry().resetDistribution();
 			}
 
 		});
@@ -673,10 +670,11 @@ public class Fingerpaint implements EntryPoint {
 	 * black.
 	 */
 	private void toggleColor() {
+		as.unJsonize(storage.getItem("save1"));
 		if (toggleColor.isDown()) {
-			geom.setColor(CssColor.make("white"));
+			as.getGeometry().setColor(CssColor.make("white"));
 		} else {
-			geom.setColor(CssColor.make("black"));
+			as.getGeometry().setColor(CssColor.make("black"));
 		}
 	}
 
@@ -705,7 +703,7 @@ public class Fingerpaint implements EntryPoint {
 				} else {
 					// TODO Change hard-coded 3 to 'size-slider.getValue()' or
 					// something
-					geom.setDrawingTool(new SquareDrawingTool(3));
+					as.getGeometry().setDrawingTool(new SquareDrawingTool(3));
 
 					circleDrawingTool.setDown(false);
 				}
@@ -727,7 +725,7 @@ public class Fingerpaint implements EntryPoint {
 				} else {
 					// TODO Change hard-coded 3 to 'size-slider.getValue()' or
 					// something
-					geom.setDrawingTool(new CircleDrawingTool(3));
+					as.getGeometry().setDrawingTool(new CircleDrawingTool(3));
 
 					squareDrawingTool.setDown(false);
 				}
@@ -914,7 +912,7 @@ public class Fingerpaint implements EntryPoint {
 	 * screen.
 	 */
 	private void executeMixingRun() {
-		as.setInitialDistribution(geom.getDistribution());
+		as.setInitialDistribution(as.getGeometry().getDistribution());
 		// TODO: collect all necessary information and send it to server
 	}
 
@@ -941,7 +939,7 @@ public class Fingerpaint implements EntryPoint {
 						dist[x + 400 * (239 - y)] = (double) x / 400;
 					}
 				}
-				geom.drawDistribution(dist);
+				as.getGeometry().drawDistribution(dist);
 			}
 		});
 	}
