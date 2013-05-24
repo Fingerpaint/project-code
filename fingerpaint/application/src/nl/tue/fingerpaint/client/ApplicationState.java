@@ -247,14 +247,14 @@ public class ApplicationState {
 		ArrayList<MixingStep> mixingList = (ArrayList<MixingStep>) JsonizerParser.parse(aj, objects[2]);
 		protocol.setProgram(mixingList);
 		
-		ArrayListJsonizer dj_sonizer = new ArrayListJsonizer(Defaults.DOUBLE_JSONIZER);
-		ArrayList<Double> djList = (ArrayList<Double>) JsonizerParser.parse(dj_sonizer, objects[3]);
-		
-		double[] initDistribution = new double[djList.size()];
-		for (int i = 0; i < djList.size(); i++) {
-			initDistribution[i] = djList.get(i);
-		}
-		geom.drawDistribution(initDistribution);
+//		ArrayListJsonizer dj_sonizer = new ArrayListJsonizer(Defaults.DOUBLE_JSONIZER);
+//		ArrayList<Double> djList = (ArrayList<Double>) JsonizerParser.parse(dj_sonizer, objects[3]);
+//		
+//		double[] initDistribution = new double[djList.size()];
+//		for (int i = 0; i < djList.size(); i++) {
+//			initDistribution[i] = djList.get(i);
+//		}
+//		geom.drawDistribution(initDistribution);
 		
 		nrSteps = Integer.parseInt(objects[4]);
 	}

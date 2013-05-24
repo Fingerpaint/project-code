@@ -1,14 +1,9 @@
 package nl.tue.fingerpaint.client;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 
 import nl.tue.fingerpaint.client.Geometry.StepAddedListener;
-import nl.tue.fingerpaint.client.MixingStep.MixingStepJsonizer;
 import nl.tue.fingerpaint.client.serverdata.ServerDataCache;
-
-import org.jsonmaker.gwt.client.JsonizerParser;
-import org.jsonmaker.gwt.client.base.ArrayListJsonizer;
 
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.cell.client.ClickableTextCell;
@@ -18,6 +13,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.storage.client.Storage;
+import com.google.gwt.storage.client.StorageMap;
 import com.google.gwt.user.cellview.client.CellBrowser;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -227,6 +223,16 @@ public class Fingerpaint implements EntryPoint {
 	}
 	
 	/**
+	 * Returns whether a saved state with key {@code name} exists in local storage. 
+	 * @param name The key to check.
+	 * @return whether a saved state with key {@code name} exists in local storage.
+	 */
+	private boolean isNameInUse(String name) {
+		StorageMap storageMap = new StorageMap(storage);
+		return storageMap.containsKey(name);
+	}
+	
+	/**
 	 * Loads the JSON object from HTML storage. Has no effect if no information is stored under {@code saveName}.
 	 * @param saveName
 	 */
@@ -235,6 +241,17 @@ public class Fingerpaint implements EntryPoint {
 		
 		if (jsonObject != null && jsonObject != "") {
 			as.unJsonize(jsonObject);
+		}
+		
+		refreshWidgets();
+	}
+
+	private void refreshWidgets() {
+		nrStepsSpinner.setValue(as.getNrSteps());
+		sizeSpinner.setValue(as.getStepSize());
+
+		for (MixingStep step : as.getProtocol().getProgram()) {
+			updateProtocolLabel(step);
 		}
 	}
 
@@ -670,12 +687,17 @@ public class Fingerpaint implements EntryPoint {
 	 * black.
 	 */
 	private void toggleColor() {
-		as.unJsonize(storage.getItem("save1"));
+		loadState("save1");
+		removeSavedState("koekjesSuperLama!");
 		if (toggleColor.isDown()) {
 			as.getGeometry().setColor(CssColor.make("white"));
 		} else {
 			as.getGeometry().setColor(CssColor.make("black"));
 		}
+	}
+	
+	private void removeSavedState(String name) {
+		storage.removeItem(name);
 	}
 
 	/*
