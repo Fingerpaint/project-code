@@ -15,8 +15,6 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
-import com.google.gwt.event.dom.client.KeyUpEvent;
-import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.storage.client.Storage;
 import com.google.gwt.storage.client.StorageMap;
 import com.google.gwt.user.cellview.client.CellBrowser;
@@ -62,8 +60,6 @@ public class Fingerpaint implements EntryPoint {
 	// Button to reset the distribution to all white
 	private Button resetDistButton;
 
-	// -----------------------------------------------------------------------------------------------------------------------
-
 	// Button to save the current results
 	private Button saveResultsButton;
 
@@ -108,10 +104,15 @@ public class Fingerpaint implements EntryPoint {
 	// chosen
 	private Button confirmSaveButton;
 
-	// -----------------------------------------------------------------------------------------------------------------------
-
+	//--------------------------------------------------------------------------------------
+	
 	// Button to remove previously saved results
 	private Button removeSavedResultsButton;
+	
+	
+	
+	
+	//--------------------------------------------------------------------------------------
 
 	// Button to adapt the drawing tool
 	// TODO: Change this to a button on which the current tool is drawn
@@ -145,8 +146,6 @@ public class Fingerpaint implements EntryPoint {
 	// accessing other features
 	private static FlowPanel loadPanel;
 	private Label loadPanelMessage;
-
-	private static FlowPanel savePanel;
 
 	// The NumberSpinner and label to define the step size
 	// TODO: The text 'Step size' should be translated later on
@@ -185,8 +184,6 @@ public class Fingerpaint implements EntryPoint {
 
 	private static final String LOADPANEL_ID = "loading-overlay";
 	private static final String LOADPANEL_MESSAGE_ID = "loading-overlay-message";
-
-	private static final String SAVEPANEL_ID = "saving-overlay";
 
 	// Width of the menu in which buttons are displayed
 	// on the right side of the window in pixels
@@ -379,25 +376,6 @@ public class Fingerpaint implements EntryPoint {
 	}
 
 	/**
-	 * <p>
-	 * Show or hide an overlay. Making this panel visible will make it
-	 * impossible for the user to give input.
-	 * </p>
-	 * 
-	 * @param visible
-	 *            If the panel should be hidden or shown.
-	 */
-	protected void setSavePanelVisible(boolean visible) {
-		if (visible) {
-			RootPanel.get().add(savePanel);
-		} else {
-			if (RootPanel.get(SAVEPANEL_ID) != null) {
-				savePanel.removeFromParent();
-			}
-		}
-	}
-
-	/**
 	 * The model that defines the nodes in the tree.
 	 */
 	private class CustomTreeModel implements TreeViewModel {
@@ -495,10 +473,9 @@ public class Fingerpaint implements EntryPoint {
 			};
 			as.getGeometry().addStepAddedListener(l);
 
+			// Initialise the loadPanel
 			createLoadPanel();
-
-			createSavePanel();
-
+			
 			// Initialise the toolSelectButton and add to menuPanel
 			createToolSelector();
 			menuPanel.add(toolSelectButton);
@@ -653,7 +630,7 @@ public class Fingerpaint implements EntryPoint {
 
 			@Override
 			public void onClick(ClickEvent event) {
-				if (defineProtocolCheckBox.isChecked()) {
+				if (defineProtocolCheckBox.getValue()) {
 					showProtocolWidgets();
 				} else {
 					hideProtocolWidgets();
@@ -676,14 +653,6 @@ public class Fingerpaint implements EntryPoint {
 		loadPanelMessage.getElement().setId(LOADPANEL_MESSAGE_ID);
 		loadPanel.add(loadPanelMessage);
 		loadPanel.getElement().setId(LOADPANEL_ID);
-	}
-
-	/*
-	 * Initialises the savePanel
-	 */
-	private void createSavePanel() {
-		savePanel = new FlowPanel();
-		loadPanel.getElement().setId(SAVEPANEL_ID);
 	}
 
 	/*
@@ -941,6 +910,8 @@ public class Fingerpaint implements EntryPoint {
 		// TODO: The text 'Save Results' should be translated later on
 		saveResultsButton = new Button("Save Results");
 		saveResultsPanel = new PopupPanel();
+		saveResultsPanel.setModal(true);
+		
 		saveResultsVerticalPanel = new VerticalPanel();
 		saveButtonsPanel = new HorizontalPanel();
 		saveNameTextBox = new TextBox();
@@ -950,6 +921,8 @@ public class Fingerpaint implements EntryPoint {
 		saveResultsPanelButton.setEnabled(false);
 		cancelSaveResultsButton = new Button("Cancel");
 		confirmSavePanel = new PopupPanel();
+		confirmSavePanel.setModal(true);
+		
 		confirmSaveVerticalPanel = new VerticalPanel();
 		saveMessageLabel = new Label();
 		confirmButtonsPanel = new HorizontalPanel();
@@ -971,8 +944,6 @@ public class Fingerpaint implements EntryPoint {
 							}
 						});
 				saveNameTextBox.setFocus(true);
-				// TODO: make this work:
-				setSavePanelVisible(true);
 			}
 
 		});
@@ -1028,9 +999,6 @@ public class Fingerpaint implements EntryPoint {
 			public void onClick(ClickEvent event) {
 				saveResultsPanel.hide();
 				saveNameTextBox.setText("");
-				// TODO: make this work:
-				setSavePanelVisible(false);
-
 			}
 		});
 
@@ -1073,8 +1041,6 @@ public class Fingerpaint implements EntryPoint {
 							.getText().length());
 					saveNameTextBox.setFocus(true);
 				} else {
-					// TODO: make this work:
-					setSavePanelVisible(false);
 					saveNameTextBox.setText("");
 				}
 			}
