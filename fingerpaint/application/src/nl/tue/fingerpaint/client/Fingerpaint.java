@@ -1,16 +1,9 @@
 package nl.tue.fingerpaint.client;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 
 import nl.tue.fingerpaint.client.Geometry.StepAddedListener;
-import nl.tue.fingerpaint.client.MixingStep.MixingStepJsonizer;
 import nl.tue.fingerpaint.client.serverdata.ServerDataCache;
-
-import org.jsonmaker.gwt.client.JsonizerParser;
-import org.jsonmaker.gwt.client.base.ArrayJsonizer;
-import org.jsonmaker.gwt.client.base.ArrayListJsonizer;
-import org.jsonmaker.gwt.client.base.Defaults;
 
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.cell.client.ClickableTextCell;
@@ -25,6 +18,7 @@ import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.storage.client.Storage;
+import com.google.gwt.storage.client.StorageMap;
 import com.google.gwt.user.cellview.client.CellBrowser;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -118,9 +112,6 @@ public class Fingerpaint implements EntryPoint {
 
 	// Button to remove previously saved results
 	private Button removeSavedResultsButton;
-
-	// Rectangular geometry to draw on
-	private Geometry geom;
 
 	// Button to adapt the drawing tool
 	// TODO: Change this to a button on which the current tool is drawn
@@ -270,43 +261,55 @@ public class Fingerpaint implements EntryPoint {
 		}
 	}
 
+	/**
+	 * Saves the state of the application to the HTML5 local storage under key
+	 * {@code name}.
+	 * 
+	 * @param name
+	 *            The name to save the state under.
+	 */
 	private void saveState(String name) {
-		ArrayListJsonizer aj = new ArrayListJsonizer(
-				(MixingStepJsonizer) GWT.create(MixingStepJsonizer.class));
-		String ajString = aj.asString(as.getProtocol().getProgram());
+		String asJson = as.jsonize();
 
-		// Does not work yet
-		ArrayJsonizer dj_sonizer = new ArrayJsonizer(Defaults.DOUBLE_JSONIZER) {
-			@Override
-			protected Object[] createArray(int size) {
-				return new Double[size];
-			}
-		};
-		Distribution distr = as.getInitialDistribution();
-		String dj_string = "";
-		if (distr != null) {
-			Double[] temp = new Double[distr.getDistribution().length];
-			for (int i = 0; i < distr.getDistribution().length; i++) {
-				temp[i] = distr.getDistribution()[i];
-			}
-			dj_string = dj_sonizer.asString(temp);
-			System.out.println(dj_string);
-		}
-		// TODO: change "save1" to name
-		storage.setItem(name, ajString + dj_string);
+		storage.setItem(name, asJson);
 	}
 
-	private void loadState() {
-		String protocol = storage.getItem("protocol");
+	/**
+	 * Returns whether a saved state with key {@code name} exists in local
+	 * storage.
+	 * 
+	 * @param name
+	 *            The key to check.
+	 * @return whether a saved state with key {@code name} exists in local
+	 *         storage.
+	 */
+	private boolean isNameInUse(String name) {
+		StorageMap storageMap = new StorageMap(storage);
+		return storageMap.containsKey(name);
+	}
 
-		MixingStepJsonizer stepJ = (MixingStepJsonizer) GWT
-				.create(MixingStepJsonizer.class);
-		ArrayListJsonizer aj = new ArrayListJsonizer(stepJ);
-		ArrayList<MixingStep> stepList = (ArrayList<MixingStep>) JsonizerParser
-				.parse(aj, protocol);
+	/**
+	 * Loads the JSON object from HTML storage. Has no effect if no information
+	 * is stored under {@code saveName}.
+	 * 
+	 * @param saveName
+	 */
+	private void loadState(String saveName) {
+		String jsonObject = storage.getItem(saveName);
 
-		for (MixingStep m : stepList) {
-			updateProtocolLabel(m);
+		if (jsonObject != null && jsonObject != "") {
+			as.unJsonize(jsonObject);
+		}
+
+		refreshWidgets();
+	}
+
+	private void refreshWidgets() {
+		nrStepsSpinner.setValue(as.getNrSteps());
+		sizeSpinner.setValue(as.getStepSize());
+
+		for (MixingStep step : as.getProtocol().getProgram()) {
+			updateProtocolLabel(step);
 		}
 	}
 
@@ -434,8 +437,8 @@ public class Fingerpaint implements EntryPoint {
 		private void setUserChoiceValues(String selectedMixer) {
 			// TODO: Actually create a different geometry depending on the
 			// chosen geometry...
-			geom = new RectangleGeometry(Window.getClientHeight()
-					- topBarHeight, Window.getClientWidth() - menuWidth);
+			as.setGegeom(new RectangleGeometry(Window.getClientHeight()
+					- topBarHeight, Window.getClientWidth() - menuWidth));
 		}
 
 		public CustomTreeModel() {
@@ -490,10 +493,10 @@ public class Fingerpaint implements EntryPoint {
 					addStep(step);
 				}
 			};
-			geom.addStepAddedListener(l);
+			as.getGeometry().addStepAddedListener(l);
 
 			createLoadPanel();
-			
+
 			createSavePanel();
 
 			// Initialise the toolSelectButton and add to menuPanel
@@ -547,13 +550,21 @@ public class Fingerpaint implements EntryPoint {
 			createMixNowButton();
 
 			// TODO: Initialise other menu items and add them to menuPanel
+			// Add all the protocolwidgets to the menuPanel and hide them
+			// initially.
+			menuPanel.add(nrStepsLabel);
+			menuPanel.add(nrStepsSpinner);
+			menuPanel.add(taProtocolRepresentation);
+			menuPanel.add(mixNowButton);
+			menuPanel.add(resetProtocolButton);
+			hideProtocolWidgets();
 
 			// Add canvas and menuPanel to the panel
 			// Make the canvas the entire width of the
 			// screen except for the
 			// menuWidth
 			panel.setWidth("100%");
-			panel.add(geom.getCanvas());
+			panel.add(as.getGeometry().getCanvas());
 			panel.add(menuPanel);
 			panel.setCellWidth(menuPanel, Integer.toString(menuWidth) + "px");
 
@@ -685,32 +696,32 @@ public class Fingerpaint implements EntryPoint {
 
 			@Override
 			public void onClick(ClickEvent event) {
-				geom.resetDistribution();
+				as.getGeometry().resetDistribution();
 			}
 
 		});
 	}
 
 	/*
-	 * Adds all the protocol widgets to the menu bar
+	 * Shows all the protocol widgets on the menu bar.
 	 */
 	private void showProtocolWidgets() {
-		menuPanel.add(nrStepsLabel);
-		menuPanel.add(nrStepsSpinner);
-		menuPanel.add(taProtocolRepresentation);
-		menuPanel.add(mixNowButton);
-		menuPanel.add(resetProtocolButton);
+		nrStepsLabel.setVisible(true);
+		nrStepsSpinner.setVisible(true);
+		taProtocolRepresentation.setVisible(true);
+		mixNowButton.setVisible(true);
+		resetProtocolButton.setVisible(true);
 	}
 
 	/*
-	 * removes all the protocol widgets from the menu bar
+	 * Hides all the protocol widgets on the menu bar.
 	 */
 	private void hideProtocolWidgets() {
-		menuPanel.remove(nrStepsLabel);
-		menuPanel.remove(nrStepsSpinner);
-		menuPanel.remove(taProtocolRepresentation);
-		menuPanel.remove(mixNowButton);
-		menuPanel.remove(resetProtocolButton);
+		nrStepsLabel.setVisible(false);
+		nrStepsSpinner.setVisible(false);
+		taProtocolRepresentation.setVisible(false);
+		mixNowButton.setVisible(false);
+		resetProtocolButton.setVisible(false);
 	}
 
 	/*
@@ -782,12 +793,17 @@ public class Fingerpaint implements EntryPoint {
 	 * black.
 	 */
 	private void toggleColor() {
-		loadState();
+		loadState("save1");
+		removeSavedState("koekjesSuperLama!");
 		if (toggleColor.isDown()) {
-			geom.setColor(CssColor.make("white"));
+			as.getGeometry().setColor(CssColor.make("white"));
 		} else {
-			geom.setColor(CssColor.make("black"));
+			as.getGeometry().setColor(CssColor.make("black"));
 		}
+	}
+
+	private void removeSavedState(String name) {
+		storage.removeItem(name);
 	}
 
 	/*
@@ -815,7 +831,7 @@ public class Fingerpaint implements EntryPoint {
 				} else {
 					// TODO Change hard-coded 3 to 'size-slider.getValue()' or
 					// something
-					geom.setDrawingTool(new SquareDrawingTool(3));
+					as.getGeometry().setDrawingTool(new SquareDrawingTool(3));
 
 					circleDrawingTool.setDown(false);
 				}
@@ -837,7 +853,7 @@ public class Fingerpaint implements EntryPoint {
 				} else {
 					// TODO Change hard-coded 3 to 'size-slider.getValue()' or
 					// something
-					geom.setDrawingTool(new CircleDrawingTool(3));
+					as.getGeometry().setDrawingTool(new CircleDrawingTool(3));
 
 					squareDrawingTool.setDown(false);
 				}
@@ -949,14 +965,13 @@ public class Fingerpaint implements EntryPoint {
 						.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
 							public void setPosition(int offsetWidth,
 									int offsetHeight) {
-								// TODO: set correct position of the panel
 								int left = (Window.getClientWidth() - offsetWidth) / 2;
 								int top = (Window.getClientHeight() - offsetHeight) / 2;
 								saveResultsPanel.setPopupPosition(left, top);
 							}
 						});
 				saveNameTextBox.setFocus(true);
-				//TODO: make this work:
+				// TODO: make this work:
 				setSavePanelVisible(true);
 			}
 
@@ -990,7 +1005,7 @@ public class Fingerpaint implements EntryPoint {
 					confirmButtonsPanel.add(confirmSaveButton);
 					confirmButtonsPanel.add(closeSaveResultsButton);
 				} else {
-					// saveState(name);
+					saveState(name);
 					saveMessageLabel.setText("Save has been succesful");
 					closeSaveResultsButton.setText("OK");
 				}
@@ -1013,9 +1028,9 @@ public class Fingerpaint implements EntryPoint {
 			public void onClick(ClickEvent event) {
 				saveResultsPanel.hide();
 				saveNameTextBox.setText("");
-				//TODO: make this work:
+				// TODO: make this work:
 				setSavePanelVisible(false);
-				
+
 			}
 		});
 
@@ -1058,7 +1073,7 @@ public class Fingerpaint implements EntryPoint {
 							.getText().length());
 					saveNameTextBox.setFocus(true);
 				} else {
-					//TODO: make this work:
+					// TODO: make this work:
 					setSavePanelVisible(false);
 					saveNameTextBox.setText("");
 				}
@@ -1071,7 +1086,7 @@ public class Fingerpaint implements EntryPoint {
 			@Override
 			public void onClick(ClickEvent event) {
 				String name = saveNameTextBox.getText();
-				// saveState(name);
+				saveState(name);
 				saveMessageLabel.setText("Save has been succesful");
 				closeSaveResultsButton.setText("OK");
 				confirmSaveButton.removeFromParent();
@@ -1093,14 +1108,6 @@ public class Fingerpaint implements EntryPoint {
 				// TODO: handle click by opening remove saves options
 			}
 		});
-	}
-
-	/**
-	 * Returns whether a file with name {@code name} already exists. TODO:
-	 * Implement this
-	 */
-	private boolean isNameInUse(String name) {
-		return true;
 	}
 
 	/**
@@ -1154,7 +1161,7 @@ public class Fingerpaint implements EntryPoint {
 	 * screen.
 	 */
 	private void executeMixingRun() {
-		as.setInitialDistribution(geom.getDistribution());
+		as.setInitialDistribution(as.getGeometry().getDistribution());
 		// TODO: collect all necessary information and send it to server
 	}
 
@@ -1181,7 +1188,7 @@ public class Fingerpaint implements EntryPoint {
 						dist[x + 400 * (239 - y)] = (double) x / 400;
 					}
 				}
-				geom.drawDistribution(dist);
+				as.getGeometry().drawDistribution(dist);
 			}
 		});
 	}
