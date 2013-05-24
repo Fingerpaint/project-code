@@ -901,6 +901,7 @@ public class Fingerpaint implements EntryPoint {
 			@Override
 			public void onClick(ClickEvent event) {
 				executeMixingRun();
+				saveResultsButton.setEnabled(true);
 			}
 
 		});
@@ -919,6 +920,8 @@ public class Fingerpaint implements EntryPoint {
 			@Override
 			public void onClick(ClickEvent event) {
 				resetProtocol();
+				// When reset protocol is pressed, the save results button is also disabled.
+				saveResultsButton.setEnabled(false);
 			}
 
 		});
@@ -933,6 +936,10 @@ public class Fingerpaint implements EntryPoint {
 		saveResultsButton = new Button("Save Results");
 		saveResultsPanel = new PopupPanel();
 		saveResultsPanel.setModal(true);
+		
+		// Initially, the save button is disabled; it will become available if
+		// "Mix Now" is pressed.
+		saveResultsButton.setEnabled(false);
 
 		saveResultsVerticalPanel = new VerticalPanel();
 		saveButtonsPanel = new HorizontalPanel();
