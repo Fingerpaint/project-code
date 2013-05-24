@@ -39,3 +39,12 @@
 	font-weight: bold;
 	color: #FFF;
 }
+
+#saving-overlay {
+	position: absolute;
+	top: 0; /*Absolute margin from top of screen is 0*/
+	right: 0;
+	bottom: 0;
+	left: 0; background #000;
+	background: rgba(0, 0, 0, 0.5);
+}
