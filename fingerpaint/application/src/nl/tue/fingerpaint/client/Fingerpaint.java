@@ -472,6 +472,13 @@ public class Fingerpaint implements EntryPoint {
 			createMixNowButton();
 
 			// TODO: Initialise other menu items and add them to menuPanel
+			// Add all the protocolwidgets to the menuPanel and hide them initially.
+			menuPanel.add(nrStepsLabel);
+			menuPanel.add(nrStepsSpinner);
+			menuPanel.add(taProtocolRepresentation);
+			menuPanel.add(mixNowButton);
+			menuPanel.add(resetProtocolButton);
+			hideProtocolWidgets();
 
 			// Add canvas and menuPanel to the panel
 			// Make the canvas the entire width of the
@@ -593,25 +600,25 @@ public class Fingerpaint implements EntryPoint {
 	}
 
 	/*
-	 * Adds all the protocol widgets to the menu bar
+	 * Shows all the protocol widgets on the menu bar.
 	 */
 	private void showProtocolWidgets() {
-		menuPanel.add(nrStepsLabel);
-		menuPanel.add(nrStepsSpinner);
-		menuPanel.add(taProtocolRepresentation);
-		menuPanel.add(mixNowButton);
-		menuPanel.add(resetProtocolButton);
+		nrStepsLabel.setVisible(true);
+		nrStepsSpinner.setVisible(true);
+		taProtocolRepresentation.setVisible(true);
+		mixNowButton.setVisible(true);
+		resetProtocolButton.setVisible(true);
 	}
 
 	/*
-	 * removes all the protocol widgets from the menu bar
+	 * Hides all the protocol widgets on the menu bar.
 	 */
 	private void hideProtocolWidgets() {
-		menuPanel.remove(nrStepsLabel);
-		menuPanel.remove(nrStepsSpinner);
-		menuPanel.remove(taProtocolRepresentation);
-		menuPanel.remove(mixNowButton);
-		menuPanel.remove(resetProtocolButton);
+		nrStepsLabel.setVisible(false);
+		nrStepsSpinner.setVisible(false);
+		taProtocolRepresentation.setVisible(false);
+		mixNowButton.setVisible(false);
+		resetProtocolButton.setVisible(false);
 	}
 
 	/*
