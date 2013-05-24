@@ -206,8 +206,6 @@ public class Fingerpaint implements EntryPoint {
 	private final int topBarHeight = 65;
 
 	private Storage storage;
-	
-	private ArrayList<String> currentFileList;
 
 	/**
 	 * This is the entry point method.
