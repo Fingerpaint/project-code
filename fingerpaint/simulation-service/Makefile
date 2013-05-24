@@ -1,13 +1,14 @@
 ifeq ($(OS), Windows_NT) # if on Windows
 	OS=Windows
+	
 	CC=gcc
 	FC=gfortran
 	LINKFLAGS=-Wall -D_JNI_IMPLEMENTATION_ -Wl,--kill-at -L"C:/MinGW2/lib/gcc/mingw32/4.7.2/"
 	LINKFFLAGS=-c
-	LINKCFLAGS=-Wall -D_JNI_IMPLEMENTATION_ -Wl,--kill-at -I "C:/Program Files/Java/jdk1.7.0_09/include/" -I "C:/Program Files/Java/jdk1.7.0_09/include/win32/"
+	LINKCFLAGS= -Wall -D_JNI_IMPLEMENTATION_ -Wl,--kill-at -I "C:/Program Files/Java/jdk1.7.0_09/include/" -I "C:/Program Files/Java/jdk1.7.0_09/include/win32/"
 	LINKOBJS=nl_tue_fingerpaint_server_simulator_NativeCommunicator.o add_module.o
 	LINKOUTPUTNAME=NativeCommunicator.dll
-	LINKLIBFLAGS=-lgfortran -lgfortranbegin
+	LINKLIBFLAGS= -static -lgfortranbegin -static -lgfortran
 else
 	ifeq ($(shell uname), Linux) # Linux
 		OS=Linux
