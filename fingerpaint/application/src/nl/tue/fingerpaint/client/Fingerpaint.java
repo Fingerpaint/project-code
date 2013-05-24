@@ -779,8 +779,6 @@ public class Fingerpaint implements EntryPoint {
 	 * black.
 	 */
 	private void toggleColor() {
-		loadState("save1");
-		removeSavedState("koekjesSuperLama!");
 		if (toggleColor.isDown()) {
 			as.getGeometry().setColor(CssColor.make("white"));
 		} else {
