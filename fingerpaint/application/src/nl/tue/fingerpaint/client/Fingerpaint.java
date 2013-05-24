@@ -222,28 +222,14 @@ public class Fingerpaint implements EntryPoint {
 		}
 	}
 	
-	private void saveState() {
-		ArrayListJsonizer aj = new ArrayListJsonizer((MixingStepJsonizer) GWT.create(MixingStepJsonizer.class));		
-		String ajString = aj.asString(as.getProtocol().getProgram());
+	/**
+	 * Saves the state of the application to the HTML5 local storage under key {@code name}.
+	 * @param name The name to save the state under.
+	 */
+	private void saveState(String name) {
+		String asJson = as.jsonize();
 		
-		// Does not work yet
-		ArrayJsonizer dj_sonizer = new ArrayJsonizer(Defaults.DOUBLE_JSONIZER) {
-			@Override
-			protected Object[] createArray(int size) { 
-				return new Double[size];
-			}
-		};
-		Distribution distr = as.getInitialDistribution();
-		String dj_string = "";
-		if (distr != null) {
-			Double[] temp = new Double[distr.getDistribution().length];
-			for (int i = 0; i < distr.getDistribution().length; i++) {
-				temp[i] = distr.getDistribution()[i];
-			}
-			dj_string = dj_sonizer.asString(temp);
-			System.out.println(dj_string);
-		}
-		storage.setItem("save1", ajString + dj_string);
+		storage.setItem(name, asJson);
 	}
 	
 	private void loadState() {
@@ -830,7 +816,8 @@ public class Fingerpaint implements EntryPoint {
 
 			@Override
 			public void onClick(ClickEvent event) {
-				saveState();
+				// TODO: name is hardcoded, should be entered in the GUI.
+				saveState("save1");
 			}
 
 		});

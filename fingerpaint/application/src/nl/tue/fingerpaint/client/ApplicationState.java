@@ -1,6 +1,13 @@
 package nl.tue.fingerpaint.client;
 
+import nl.tue.fingerpaint.client.MixingStep.MixingStepJsonizer;
+
 import org.jsonmaker.gwt.client.Jsonizer;
+import org.jsonmaker.gwt.client.base.ArrayJsonizer;
+import org.jsonmaker.gwt.client.base.ArrayListJsonizer;
+import org.jsonmaker.gwt.client.base.Defaults;
+
+import com.google.gwt.core.client.GWT;
 
 /**
  * Class that keeps track of the Geometry and Mixer the user has selected. Used
@@ -22,19 +29,18 @@ public class ApplicationState {
 	 * The chosen matrix.
 	 */
 	private String mixChoice = null;
-	
-	//the current mixing protocol
+
+	// the current mixing protocol
 	private MixingProtocol protocol = new MixingProtocol();
-	
+
 	/*
 	 * The number of times (#steps) that the defined protocol will be applied.
-	 * Initially set to 0, to indicate that the spinner has not been loaded
-	 * yet.
+	 * Initially set to 0, to indicate that the spinner has not been loaded yet.
 	 */
 	private int nrSteps = 0;
-	
-	private double stepsize; 
-	
+
+	private double stepsize;
+
 	/**
 	 * Returns the current value of number of steps.
 	 * 
@@ -45,11 +51,11 @@ public class ApplicationState {
 	}
 
 	/**
-	 * Sets the value for the number of steps.
-	 * It accepts a double, as the (default)value of the numberspinner
-	 * is a double; it can immediately be converted to an integer, as
-	 * the numberspinner for this variable guarantees that correct rounding has been
-	 * performed, when this method is called.
+	 * Sets the value for the number of steps. It accepts a double, as the
+	 * (default)value of the numberspinner is a double; it can immediately be
+	 * converted to an integer, as the numberspinner for this variable
+	 * guarantees that correct rounding has been performed, when this method is
+	 * called.
 	 * 
 	 * @param nrSteps
 	 *            The new value for number of steps.
@@ -59,11 +65,12 @@ public class ApplicationState {
 	 * @post The current number of steps is set to @param{nrSteps}.
 	 */
 	public void setNrSteps(double steps) {
-		nrSteps = (int)steps;
+		nrSteps = (int) steps;
 	}
 
 	/**
-	 * Change the chosen geometry. Note that it should be compatible with the chosen mixer!
+	 * Change the chosen geometry. Note that it should be compatible with the
+	 * chosen mixer!
 	 * 
 	 * @param g
 	 *            The value to be set
@@ -73,7 +80,8 @@ public class ApplicationState {
 	}
 
 	/**
-	 * Change the chosen mixer. Note that it should be compatible with the chosen geometry!
+	 * Change the chosen mixer. Note that it should be compatible with the
+	 * chosen geometry!
 	 * 
 	 * @param m
 	 *            The value to be set
@@ -99,36 +107,41 @@ public class ApplicationState {
 	public String getMixerChoice() {
 		return mixChoice;
 	}
-	
-	public MixingProtocol getProtocol(){
+
+	public MixingProtocol getProtocol() {
 		return protocol;
 	}
-	
+
 	/**
 	 * sets the current mixing protocol
 	 * 
-	 * @param mixingProtocol, the new mixing protocol
-	 * @throws NullPointerException if mixingProtocol == null
+	 * @param mixingProtocol
+	 *            , the new mixing protocol
+	 * @throws NullPointerException
+	 *             if mixingProtocol == null
 	 */
-	public void setProtocol(MixingProtocol mixingProtocol){
-		if(mixingProtocol == null){
+	public void setProtocol(MixingProtocol mixingProtocol) {
+		if (mixingProtocol == null) {
 			throw new NullPointerException();
 		}
 		protocol = mixingProtocol;
 	}
-	
+
 	/**
 	 * Updates the current mixing step with a new value
 	 * 
-	 * @param value the new StepSize for the current mixing step
+	 * @param value
+	 *            the new StepSize for the current mixing step
 	 */
-	public void editStepSize(double value){
+	public void editStepSize(double value) {
 		stepsize = value;
 	}
-	
+
 	/**
 	 * Add a step to the mixing protocol.
-	 * @param step {@code Step} to be added.
+	 * 
+	 * @param step
+	 *            {@code Step} to be added.
 	 */
 	public void addMixingStep(MixingStep step) {
 		protocol.addStep(step);
@@ -139,15 +152,13 @@ public class ApplicationState {
 	}
 
 	public void setInitialDistribution(Distribution distribution) {
-		this.initialDistribution = distribution;	
+		this.initialDistribution = distribution;
 	}
-	
+
 	public Distribution getInitialDistribution() {
 		return initialDistribution;
 	}
-	
-	
-	
+
 	public String getGeoChoice() {
 		return geoChoice;
 	}
@@ -160,7 +171,38 @@ public class ApplicationState {
 		return stepsize;
 	}
 
+	/**
+	 * Encapsulates the entire ApplicationState into a JSON object, i.e. a
+	 * string representing all its variables.
+	 * 
+	 * @return JSON representation of {@code this}.
+	 */
+	public String jsonize() {
+		String jsonObject; // The resulting object
 
+		// Save the protocol
+		ArrayListJsonizer aj = new ArrayListJsonizer(
+				(MixingStepJsonizer) GWT.create(MixingStepJsonizer.class));
+		jsonObject = aj.asString(protocol.getProgram());
 
-	public interface ApplicationStateJsonizer extends Jsonizer {}
+		// Save the distribution
+		if (initialDistribution != null) {
+			ArrayJsonizer dj_sonizer = new ArrayJsonizer(
+					Defaults.DOUBLE_JSONIZER) {
+				@Override
+				protected Object[] createArray(int size) {
+					return new Double[size];
+				}
+			};
+			double[] distribution = initialDistribution.getDistribution();
+			Double[] temp = new Double[distribution.length];
+			System.arraycopy(distribution, 0, temp, 0, distribution.length);
+			jsonObject += dj_sonizer.asString(temp);
+		}
+
+		return jsonObject;
+	}
+
+	public interface ApplicationStateJsonizer extends Jsonizer {
+	}
 }
