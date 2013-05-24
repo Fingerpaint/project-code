@@ -1,8 +1,12 @@
 package nl.tue.fingerpaint.client;
 
+import java.util.ArrayList;
+
+import nl.tue.fingerpaint.client.MixingProtocol.MixingProtocolJsonizer;
 import nl.tue.fingerpaint.client.MixingStep.MixingStepJsonizer;
 
 import org.jsonmaker.gwt.client.Jsonizer;
+import org.jsonmaker.gwt.client.JsonizerParser;
 import org.jsonmaker.gwt.client.base.ArrayJsonizer;
 import org.jsonmaker.gwt.client.base.ArrayListJsonizer;
 import org.jsonmaker.gwt.client.base.Defaults;
@@ -210,6 +214,16 @@ public class ApplicationState {
 		System.out.println(jsonObject);
 
 		return jsonObject;
+	}
+	
+	public void unJSONize(String jsonObject) {
+		String[] objects = jsonObject.split("|");
+		
+		geoChoice = objects[0];
+		mixChoice = objects[1];
+		ArrayListJsonizer aj = new ArrayListJsonizer((MixingStepJsonizer) GWT.create(MixingStepJsonizer.class));
+		ArrayList<MixingStep> mixingList = (ArrayList<MixingStep>) JsonizerParser.parse(aj, objects[2]);
+		protocol.setProgram(mixingList); 
 	}
 
 	public interface ApplicationStateJsonizer extends Jsonizer {

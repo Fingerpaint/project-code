@@ -114,6 +114,10 @@ public class MixingProtocol {
 		return program;
 	}
 	
+	public void setProgram(ArrayList<MixingStep> program) {
+		this.program = program;
+	}
+
 	public interface MixingProtocolJsonizer extends Jsonizer { }
 	
 }

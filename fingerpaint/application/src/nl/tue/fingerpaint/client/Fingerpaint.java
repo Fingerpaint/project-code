@@ -229,15 +229,15 @@ public class Fingerpaint implements EntryPoint {
 		storage.setItem(name, asJson);
 	}
 	
-	private void loadState() {
-		String protocol = storage.getItem("protocol");
-
-		MixingStepJsonizer stepJ = (MixingStepJsonizer) GWT.create(MixingStepJsonizer.class);
-		ArrayListJsonizer aj = new ArrayListJsonizer(stepJ);
-		ArrayList<MixingStep> stepList = (ArrayList<MixingStep>) JsonizerParser.parse(aj, protocol);
+	/**
+	 * Loads the JSON object from HTML storage. Has no effect if no information is stored under {@code saveName}.
+	 * @param saveName
+	 */
+	private void loadState(String saveName) {
+		String jsonObject = storage.getItem(saveName);
 		
-		for (MixingStep m : stepList) {
-			updateProtocolLabel(m);
+		if (jsonObject != null && jsonObject != "") {
+			as.unJSONize(jsonObject);
 		}
 	}
 
@@ -673,7 +673,6 @@ public class Fingerpaint implements EntryPoint {
 	 * black.
 	 */
 	private void toggleColor() {
-		loadState();
 		if (toggleColor.isDown()) {
 			geom.setColor(CssColor.make("white"));
 		} else {
