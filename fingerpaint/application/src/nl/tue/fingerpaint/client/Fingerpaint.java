@@ -206,6 +206,8 @@ public class Fingerpaint implements EntryPoint {
 	private final int topBarHeight = 65;
 
 	private Storage storage;
+	
+	private ArrayList<String> currentFileList;
 
 	/**
 	 * This is the entry point method.
@@ -1113,7 +1115,7 @@ public class Fingerpaint implements EntryPoint {
 						"removeListHeader");
 				resultsFlexTable.addStyleName("removeList");
 
-				ArrayList<String> names = getStoredNames();
+				final ArrayList<String> names = getStoredNames();
 				for (int i = 0; i < names.size(); i++) {
 					final int row = i + 1;
 					final String name = names.get(i);
@@ -1121,8 +1123,10 @@ public class Fingerpaint implements EntryPoint {
 					Button removeStockButton = new Button("x");
 					removeStockButton.addClickHandler(new ClickHandler() {
 						public void onClick(ClickEvent event) {
+							int removedIndex = names.indexOf(name);
+							names.remove(removedIndex);
 							removeStoredItem(name);
-							resultsFlexTable.removeRow(row);
+							resultsFlexTable.removeRow(removedIndex + 1);
 						}
 					});
 					resultsFlexTable.setWidget(row, 1, removeStockButton);
