@@ -196,30 +196,25 @@ public class ApplicationState {
 		if(geoChoice != null && mixChoice != null && protocol.getProgram() != null && 
 				initialDistribution != null && nrSteps != 0){
 			// Save the chosen geometry
-			jsonObject += geoChoice + "|";
+			jsonObject += geoChoice + "@";
 			
 			// Save the chosen matrix/mixer
-			jsonObject += mixChoice + "|";
+			jsonObject += mixChoice + "@";
 			
 			// Save the protocol
 			ArrayListJsonizer aj = new ArrayListJsonizer(
 					(MixingStepJsonizer) GWT.create(MixingStepJsonizer.class));
-			jsonObject += aj.asString(protocol.getProgram()) + "|";
+			jsonObject += aj.asString(protocol.getProgram()) + "@";
 
 			// Save the distribution
-				ArrayJsonizer dj_sonizer = new ArrayJsonizer(
-						Defaults.DOUBLE_JSONIZER) {
-					@Override
-					protected Object[] createArray(int size) {
-						return new Double[size];
-					}
-				};
-				double[] distribution = initialDistribution.getDistribution();
-				Double[] temp = new Double[distribution.length];
-				for (int i = 0; i < distribution.length; i++) {
-					temp[i] = distribution[i];
-				}
-				jsonObject += dj_sonizer.asString(temp) + "|";
+			ArrayListJsonizer doubleAJ = new ArrayListJsonizer(Defaults.DOUBLE_JSONIZER);
+			ArrayList<Double> initList = new ArrayList<Double>();
+			double[] initArray = initialDistribution.getVector();
+			
+			for(int i = 0; i < initArray.length; i++){
+				initList.add(initArray[i]);
+			}
+			jsonObject += doubleAJ.asString(initList) + "@";
 			
 			// Save the number of steps
 			jsonObject += nrSteps;
@@ -241,6 +236,5 @@ public class ApplicationState {
 		protocol.setProgram(mixingList); 
 	}
 
-	public interface ApplicationStateJsonizer extends Jsonizer {
-	}
+	public interface ApplicationStateJsonizer extends Jsonizer {}
 }
