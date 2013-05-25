@@ -14,8 +14,6 @@ public class SimulationResult implements Serializable {
 	 * Randomly generated serial version uid
 	 */
 	private static final long serialVersionUID = -3437263386499901097L;
-
-	private Simulation simulation;
 	
 	private double[][] concentrationVectors;
 	
@@ -32,13 +30,8 @@ public class SimulationResult implements Serializable {
 	 * @param concentrationVectors The resulting concentration vectors
 	 * @param segregationPoints The resulting segregation values
 	 */
-	public SimulationResult(final Simulation simulation, 
-						   final double[][] concentrationVectors,
-						   final double[] segregationPoints) {
-		if (simulation == null) {
-			throw new NullPointerException(
-					"Argument simulation cannot be null");
-		}
+	public SimulationResult(final double[][] concentrationVectors,
+						    final double[] segregationPoints) {
 		if (concentrationVectors == null) {
 			throw new NullPointerException(
 					"Argument concentrationVectors cannot be null");
@@ -48,16 +41,8 @@ public class SimulationResult implements Serializable {
 					"Argument segragationPoints cannot be null");
 		}
 		
-		this.simulation = simulation;
 		this.concentrationVectors = concentrationVectors;
 		this.segregationPoints = segregationPoints;
-	}
-	
-	/**
-	 * @return the simulation
-	 */
-	public Simulation getSimulation() {
-		return simulation;
 	}
 
 	/**
