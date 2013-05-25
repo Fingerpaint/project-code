@@ -224,27 +224,6 @@ public class Fingerpaint implements EntryPoint {
 	private void saveState() {
 		ArrayListJsonizer aj = new ArrayListJsonizer((MixingStepJsonizer) GWT.create(MixingStepJsonizer.class));		
 		String ajString = aj.asString(as.getProtocol().getProgram());
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 		storage.setItem("save1", ajString);
 	}
 	
@@ -571,9 +550,10 @@ public class Fingerpaint implements EntryPoint {
 			
 			@Override
 			public void onClick(ClickEvent event) {
-				if (defineProtocolCheckBox.isChecked()) {
+				if (defineProtocolCheckBox.getValue()) {
 					showProtocolWidgets();
 				} else {
+					resetProtocol();
 					hideProtocolWidgets();
 				}
 			}
@@ -624,8 +604,8 @@ public class Fingerpaint implements EntryPoint {
 	private void resetProtocol() {
 		as.setProtocol(new MixingProtocol());
 		taProtocolRepresentation.setText("");
-		as.setNrSteps(1);
-		nrStepsSpinner.setValue(1);
+		as.setNrSteps(NRSTEPS_DEFAULT);
+		nrStepsSpinner.setValue(NRSTEPS_DEFAULT);
 		mixNowButton.setEnabled(false);
 	}
 
@@ -903,28 +883,10 @@ public class Fingerpaint implements EntryPoint {
 			mixNowButton.setEnabled(true);
 		} else {
 			MixingProtocol protocol = new MixingProtocol();
+			step.setStepSize(as.getStepSize());
 			protocol.addStep(step);
 			executeMixingRun(protocol);
 		}
-	}
-
-	/**
-	 * A semi-transparent windows that covers the entire application pops up
-	 * that blocks the user from accessing other features. A loading-icon will
-	 * be shown. {@code closeLoadingWindow()} removes this window.
-	 */
-	private void showLoadingWindow() {
-		RootPanel.get().add(loadPanel);
-	}
-
-	/**
-	 * Removes Removes the loading-window that {@code showLoadingWindow()} has
-	 * created.
-	 * 
-	 * <pre> showLoadingWindow() has been executed
-	 */
-	private void closeLoadingWindow() {
-		loadPanel.removeFromParent();
 	}
 
 	/**
