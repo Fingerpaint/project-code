@@ -454,7 +454,9 @@ public abstract class Geometry {
 					} else if (x > 0) {
 						x = Math.max(x - speed * ANIMATION_DISTANCE, 0);
 					}
+					removeClippingArea();
 					fillWall(x, topWallStep);
+					clipGeometryOutline();
 				}
 			};
 			animationTimer.scheduleRepeating(REFRESH_INTERVAL);
