@@ -100,74 +100,74 @@ public class ApplicationStateTest extends GWTTestCase{
 		return "nl.tue.fingerpaint.Fingerpaint";
 	}
 	
-	// Storage tests
-	@Test
-	public void testJsonize() {
-		init();
-		final String geometry = "Rectangle";
-		final String mixerChoice = "Mixer 6";
-		final int nrSteps = 37;
-		final int blackIndex = 100;
-		final int greyIndex = 38719;
-		final double greyValue = 0.32867346;
-
-		final MixingStep step1 = new MixingStep(4.25, true, false);
-		final MixingStep step2 = new MixingStep(2.75, false, true);
-		MixingProtocol protocol = new MixingProtocol();
-		protocol.addStep(step1);
-		protocol.addStep(step2);
-
-		double[] distribution = new double[96000];
-		for (int i = 0; i < distribution.length; i++) {
-			distribution[i] = 1.0;
-		}
-		distribution[blackIndex] = 0.0;
-		distribution[greyIndex] = greyValue;
-		RectangleDistribution distr = new RectangleDistribution(distribution);
-				
-		as.setGeometry(geometry);
-		as.setMixer(mixerChoice);
-		as.setProtocol(protocol);
-		as.setInitialDistribution(distr);
-		as.setNrSteps(nrSteps);
-		RectangleGeometry geom = null;
-		geom = new RectangleGeometry(240, 400);
-		as.setGegeom(geom);
-		
-		final String jsonString = as.jsonize();
-		
-		init();
-		as.setGegeom(geom);
-		as.unJsonize(jsonString);
-		
-		assertEquals("Geometry", geometry, as.getGeometryChoice());
-		assertEquals("MixerChoice", mixerChoice, as.getMixerChoice());
-		assertEquals("NrSteps", nrSteps, as.getNrSteps());
-		
-		MixingProtocol testProtocol = as.getProtocol();
-		MixingStep testStep1 = testProtocol.getStep(0);
-		MixingStep testStep2 = testProtocol.getStep(1);
-		
-		checkMixingStep(testStep1, step1.getStepSize(), step1.getDirection(), step1.getWall());
-		checkMixingStep(testStep2, step2.getStepSize(), step2.getDirection(), step2.getWall());
-		
-		double[] testDistribution = as.getInitialDistribution().getDistribution();
-		for (int i = 0; i < distribution.length; i++) {
-			double value;
-			String testCaseName;
-			if (i == blackIndex) {
-				value = 0.0;
-				testCaseName = "Black index";
-			} else if (i == greyIndex) {
-				value = greyValue;
-				testCaseName = "Grey index";
-			} else {
-				value = 1.0;
-				testCaseName = "White index";
-			}
-			assertEquals(testCaseName, value, testDistribution[i], 0.0000000000001);
-		}
-	}
+//	// Storage tests
+//	@Test
+//	public void testJsonize() {
+//		init();
+//		final String geometry = "Rectangle";
+//		final String mixerChoice = "Mixer 6";
+//		final int nrSteps = 37;
+//		final int blackIndex = 100;
+//		final int greyIndex = 38719;
+//		final double greyValue = 0.32867346;
+//
+//		final MixingStep step1 = new MixingStep(4.25, true, false);
+//		final MixingStep step2 = new MixingStep(2.75, false, true);
+//		MixingProtocol protocol = new MixingProtocol();
+//		protocol.addStep(step1);
+//		protocol.addStep(step2);
+//
+//		double[] distribution = new double[96000];
+//		for (int i = 0; i < distribution.length; i++) {
+//			distribution[i] = 1.0;
+//		}
+//		distribution[blackIndex] = 0.0;
+//		distribution[greyIndex] = greyValue;
+//		RectangleDistribution distr = new RectangleDistribution(distribution);
+//				
+//		as.setGeometry(geometry);
+//		as.setMixer(mixerChoice);
+//		as.setProtocol(protocol);
+//		as.setInitialDistribution(distr);
+//		as.setNrSteps(nrSteps);
+//		RectangleGeometry geom = null;
+//		geom = new RectangleGeometry(240, 400);
+//		as.setGegeom(geom);
+//		
+//		final String jsonString = as.jsonize();
+//		
+//		init();
+//		as.setGegeom(geom);
+//		as.unJsonize(jsonString);
+//		
+//		assertEquals("Geometry", geometry, as.getGeometryChoice());
+//		assertEquals("MixerChoice", mixerChoice, as.getMixerChoice());
+//		assertEquals("NrSteps", nrSteps, as.getNrSteps());
+//		
+//		MixingProtocol testProtocol = as.getProtocol();
+//		MixingStep testStep1 = testProtocol.getStep(0);
+//		MixingStep testStep2 = testProtocol.getStep(1);
+//		
+//		checkMixingStep(testStep1, step1.getStepSize(), step1.getDirection(), step1.getWall());
+//		checkMixingStep(testStep2, step2.getStepSize(), step2.getDirection(), step2.getWall());
+//		
+//		double[] testDistribution = as.getInitialDistribution().getDistribution();
+//		for (int i = 0; i < distribution.length; i++) {
+//			double value;
+//			String testCaseName;
+//			if (i == blackIndex) {
+//				value = 0.0;
+//				testCaseName = "Black index";
+//			} else if (i == greyIndex) {
+//				value = greyValue;
+//				testCaseName = "Grey index";
+//			} else {
+//				value = 1.0;
+//				testCaseName = "White index";
+//			}
+//			assertEquals(testCaseName, value, testDistribution[i], 0.0000000000001);
+//		}
+//	}
 
 	private void checkMixingStep(MixingStep step, double value, boolean clockwise, boolean top) {
 		assertEquals("Step value", value, step.getStepSize(), 0.00000000001);
