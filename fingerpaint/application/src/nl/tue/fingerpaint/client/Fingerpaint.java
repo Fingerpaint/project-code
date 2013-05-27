@@ -887,7 +887,7 @@ public class Fingerpaint implements EntryPoint {
 		
 		// Initially, the save button is disabled; it will become available if
 		// "Mix Now" is pressed.
-		saveResultsButton.setEnabled(true);
+		saveResultsButton.setEnabled(false);
 
 		saveResultsVerticalPanel = new VerticalPanel();
 		saveButtonsPanel = new HorizontalPanel();
