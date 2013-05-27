@@ -35,3 +35,17 @@ body {
 	font-weight: bold;
 	color: #FFF;
 }
+
+/* remove list header row */
+.removeListHeader {
+  background-color: #2062B8;
+  color: white;
+  font-style: italic;
+}
+
+/* remove list flex table */
+.removeList {
+  border: 1px solid silver;
+  padding: 2px;
+  margin-bottom:6px;
+}

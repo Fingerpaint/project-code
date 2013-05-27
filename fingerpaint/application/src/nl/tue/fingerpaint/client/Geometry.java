@@ -154,9 +154,14 @@ public abstract class Geometry {
 
 		// Initialise drawing colour to black
 		setColor(CssColor.make("black"));
-
-		// Initialise drawing tool to a square with radius 3
-		setDrawingTool(new SquareDrawingTool(3));
+		
+		// Surrounded with try-catch for testing purposes
+		try {
+			// Initialise drawing tool to a square with radius 3
+			setDrawingTool(new SquareDrawingTool(3));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	// ----Getters and Setters---------------------------------------

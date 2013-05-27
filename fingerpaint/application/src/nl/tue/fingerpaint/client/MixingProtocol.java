@@ -120,6 +120,10 @@ public class MixingProtocol implements Serializable {
 		return program;
 	}
 	
+	public void setProgram(ArrayList<MixingStep> program) {
+		this.program = program;
+	}
+
 	public interface MixingProtocolJsonizer extends Jsonizer { }
 	
 	/**
