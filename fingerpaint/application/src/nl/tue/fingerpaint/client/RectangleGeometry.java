@@ -399,12 +399,37 @@ public class RectangleGeometry extends Geometry {
 	 */
 	@Override
 	public void drawDistribution(double[] dist) {
-		for (int i = 0; i < dist.length; i++) {
-			Point coords = new Point(i % 400, 239 - i / 400);
-			fillPixel(changeToAbsoluteCoords((int) coords.getX()),
-					changeToAbsoluteCoords((int) coords.getY()),
-					getColour(dist[i]));
+//		for (int i = 0; i < dist.length; i++) {
+//			Point coords = new Point(i % 400, 239 - i / 400);
+//			fillPixel(changeToAbsoluteCoords((int) coords.getX()),
+//					changeToAbsoluteCoords((int) coords.getY()),
+//					getColour(dist[i]));
+//		}
+		ImageData img = context.getImageData(X_OFFSET + 1, TOP_OFFSET + 1,
+				getWidth(), getHeight());
+		CanvasPixelArray data = img.getData();
+		int width = getWidth();
+		int l = dist.length;
+		int x, y, col, index, sw, sh, w2, h2;
+		
+		for (int i = 0; i < l; i++) {
+			x = i % 400;
+			y = 239 - i / 400;
+			col = (int) (dist[i] * 255);
+			sw = x * factor;
+			sh = y * factor;
+			w2 = (x + 1) * factor;
+			h2 = (y + 1) * factor;
+			for (int w = sw; w < w2; w++) {
+				for (int h = sh; h < h2; h++) {
+					index = (h * width + w) * 4;
+					data.set(index, col);
+					data.set(++index, col);
+					data.set(++index, col);
+				}
+			}
 		}
+		context.putImageData(img, X_OFFSET + 1, TOP_OFFSET + 1);
 	}
 
 	/**
