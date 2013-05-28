@@ -2,10 +2,14 @@ package nl.tue.fingerpaint.client.serverdata;
 
 import java.util.ArrayList;
 
+import nl.tue.fingerpaint.client.TimeoutRpcRequestBuilder;
+import nl.tue.fingerpaint.client.simulator.SimulatorService;
+import nl.tue.fingerpaint.client.simulator.SimulatorServiceAsync;
 import nl.tue.fingerpaint.shared.ServerDataResult;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.rpc.ServiceDefTarget;
 
 /**
  * A {@code ServerDataCache} can obtain data from the server, namely the
@@ -129,8 +133,10 @@ public class ServerDataCache {
 	 *            (but it will be initialised anyway!).
 	 */
 	public static void initialise(final AsyncCallback<String> onInitialised) {
+		TimeoutRpcRequestBuilder timeoutRpcRequestBuilder = new TimeoutRpcRequestBuilder(5000);
 		ServerDataServiceAsync service = (ServerDataServiceAsync) GWT
 				.create(ServerDataService.class);
+    	((ServiceDefTarget) service).setRpcRequestBuilder(timeoutRpcRequestBuilder);
 		AsyncCallback<ServerDataResult> callback = new AsyncCallback<ServerDataResult>() {
 			@Override
 			public void onSuccess(ServerDataResult result) {

@@ -1,6 +1,16 @@
 package nl.tue.fingerpaint.client;
 
-import java.io.Serializable;
+import java.util.ArrayList;
+
+import nl.tue.fingerpaint.client.MixingStep.MixingStepJsonizer;
+
+import org.jsonmaker.gwt.client.Jsonizer;
+import org.jsonmaker.gwt.client.JsonizerParser;
+import org.jsonmaker.gwt.client.base.ArrayJsonizer;
+import org.jsonmaker.gwt.client.base.ArrayListJsonizer;
+import org.jsonmaker.gwt.client.base.Defaults;
+
+import com.google.gwt.core.client.GWT;
 
 /**
  * Class that keeps track of the Geometry and Mixer the user has selected. Used
@@ -8,17 +18,7 @@ import java.io.Serializable;
  * 
  * @author Group Fingerpaint
  */
-public class ApplicationState implements Serializable {
-	
-	/**
-	 * Auto-generated UID for the serialisation.
-	 */
-	private static final long serialVersionUID = -3490165289933738235L;
-
-	/**
-	 * Stores the initial distribution, once set.
-	 */
-	private Distribution initialDistribution = null;
+public class ApplicationState {
 
 	/**
 	 * The chosen geometry.
@@ -28,19 +28,30 @@ public class ApplicationState implements Serializable {
 	 * The chosen matrix.
 	 */
 	private String mixChoice = null;
-	
-	//the current mixing protocol
+
+	// the current mixing protocol
 	private MixingProtocol protocol = new MixingProtocol();
-	
+
+	/**
+	 * Stores the initial distribution, and not the current distribution as
+	 * shown on the canvas, once set.
+	 */
+	private double[] initialDistribution = null;
+
+	/** Rectangular geometry to draw on */
+	private Geometry geom;
+
 	/*
 	 * The number of times (#steps) that the defined protocol will be applied.
-	 * Initially set to 0, to indicate that the spinner has not been loaded
-	 * yet.
+	 * Initially set to 0, to indicate that the spinner has not been loaded yet.
 	 */
 	private int nrSteps = 0;
-	
-	private double stepsize; 
-	
+
+	/**
+	 * Stores the current value for the Step size spinner.
+	 */
+	private double stepsize;
+
 	/**
 	 * Returns the current value of number of steps.
 	 * 
@@ -51,11 +62,11 @@ public class ApplicationState implements Serializable {
 	}
 
 	/**
-	 * Sets the value for the number of steps.
-	 * It accepts a double, as the (default)value of the numberspinner
-	 * is a double; it can immediately be converted to an integer, as
-	 * the numberspinner for this variable guarantees that correct rounding has been
-	 * performed, when this method is called.
+	 * Sets the value for the number of steps. It accepts a double, as the
+	 * (default)value of the numberspinner is a double; it can immediately be
+	 * converted to an integer, as the numberspinner for this variable
+	 * guarantees that correct rounding has been performed, when this method is
+	 * called.
 	 * 
 	 * @param nrSteps
 	 *            The new value for number of steps.
@@ -65,11 +76,12 @@ public class ApplicationState implements Serializable {
 	 * @post The current number of steps is set to @param{nrSteps}.
 	 */
 	public void setNrSteps(double steps) {
-		nrSteps = (int)steps;
+		nrSteps = (int) steps;
 	}
 
 	/**
-	 * Change the chosen geometry. Note that it should be compatible with the chosen mixer!
+	 * Change the chosen geometry. Note that it should be compatible with the
+	 * chosen mixer!
 	 * 
 	 * @param g
 	 *            The value to be set
@@ -79,7 +91,8 @@ public class ApplicationState implements Serializable {
 	}
 
 	/**
-	 * Change the chosen mixer. Note that it should be compatible with the chosen geometry!
+	 * Change the chosen mixer. Note that it should be compatible with the
+	 * chosen geometry!
 	 * 
 	 * @param m
 	 *            The value to be set
@@ -105,36 +118,41 @@ public class ApplicationState implements Serializable {
 	public String getMixerChoice() {
 		return mixChoice;
 	}
-	
-	public MixingProtocol getProtocol(){
+
+	public MixingProtocol getProtocol() {
 		return protocol;
 	}
-	
+
 	/**
 	 * sets the current mixing protocol
 	 * 
-	 * @param mixingProtocol, the new mixing protocol
-	 * @throws NullPointerException if mixingProtocol == null
+	 * @param mixingProtocol
+	 *            , the new mixing protocol
+	 * @throws NullPointerException
+	 *             if mixingProtocol == null
 	 */
-	public void setProtocol(MixingProtocol mixingProtocol){
-		if(mixingProtocol == null){
+	public void setProtocol(MixingProtocol mixingProtocol) {
+		if (mixingProtocol == null) {
 			throw new NullPointerException();
 		}
 		protocol = mixingProtocol;
 	}
-	
+
 	/**
 	 * Updates the current mixing step with a new value
 	 * 
-	 * @param value the new StepSize for the current mixing step
+	 * @param value
+	 *            the new StepSize for the current mixing step
 	 */
-	public void editStepSize(double value){
+	public void editStepSize(double value) {
 		stepsize = value;
 	}
-	
+
 	/**
 	 * Add a step to the mixing protocol.
-	 * @param step {@code Step} to be added.
+	 * 
+	 * @param step
+	 *            {@code Step} to be added.
 	 */
 	public void addMixingStep(MixingStep step) {
 		protocol.addStep(step);
@@ -143,12 +161,114 @@ public class ApplicationState implements Serializable {
 	public double getStepSize() {
 		return stepsize;
 	}
-
-	public void setInitialDistribution(Distribution distribution) {
+	
+	public void setInitialDistribution(double[] distribution) {
 		this.initialDistribution = distribution;	
 	}
 	
-	public Distribution getInitialDistribution() {
+	public double[] getInitialDistribution() {
 		return initialDistribution;
 	}
+
+	public String getMixChoice() {
+		return mixChoice;
+	}
+
+	public double getStepsize() {
+		return stepsize;
+	}
+
+	public Geometry getGeometry() {
+		return geom;
+	}
+
+	public void setGegeom(Geometry geometry) {
+		geom = geometry;
+	}
+
+	/**
+	 * Encapsulates the entire ApplicationState into a JSON object, i.e. a
+	 * string representing all its variables. The returned String has the
+	 * following format: geoChoice|mixChoice|protocol|distribution|nrSteps. If
+	 * either one of these objects have not been set yet (null or 0), the empty
+	 * String is returned.
+	 * 
+	 * @return JSON representation of {@code this} or the empty String, if
+	 *         either of the components of {@code this} have not been set yet.
+	 */
+	public String jsonize() {
+		String jsonObject = ""; // The resulting object
+
+		if (geoChoice != null && mixChoice != null
+				&& protocol.getProgram() != null && initialDistribution != null
+				&& nrSteps != 0) {
+			// Save the chosen geometry
+			jsonObject += geoChoice + "@";
+
+			// Save the chosen matrix/mixer
+			jsonObject += mixChoice + "@";
+
+			// Save the protocol
+			ArrayListJsonizer aj = new ArrayListJsonizer(
+					(MixingStepJsonizer) GWT.create(MixingStepJsonizer.class));
+			jsonObject += aj.asString(protocol.getProgram()) + "@";
+
+			// Save the distribution
+			ArrayListJsonizer doubleAJ = new ArrayListJsonizer(
+					Defaults.DOUBLE_JSONIZER);
+			ArrayList<Double> initList = new ArrayList<Double>();
+			double[] initArray = initialDistribution;
+
+			for (int i = 0; i < initArray.length; i++) {
+				initList.add(initArray[i]);
+			}
+			jsonObject += doubleAJ.asString(initList) + "@";
+
+			// Save the number of steps
+			jsonObject += nrSteps;
+		}
+
+		return jsonObject;
+	}
+
+	/**
+	 * Unjsonizes a JSON object and sets variables
+	 * 
+	 * @param jsonObject
+	 */
+	public void unJsonize(String jsonObject) {
+		String[] objects = jsonObject.split("@");
+		
+		geoChoice = objects[0];
+		mixChoice = objects[1];
+		
+		ArrayListJsonizer aj = new ArrayListJsonizer((MixingStepJsonizer) GWT.create(MixingStepJsonizer.class));
+		ArrayList<MixingStep> mixingList = (ArrayList<MixingStep>) JsonizerParser.parse(aj, objects[2]);
+		protocol.setProgram(mixingList);
+		
+		ArrayListJsonizer dj_sonizer = new ArrayListJsonizer(Defaults.DOUBLE_JSONIZER);
+		ArrayList<Double> djList = (ArrayList<Double>) JsonizerParser.parse(dj_sonizer, objects[3]);
+		
+		double[] initDistribution = new double[djList.size()];
+		for (int i = 0; i < djList.size(); i++) {
+			initDistribution[i] = djList.get(i);
+		}
+		initialDistribution = initDistribution;
+		nrSteps = Integer.parseInt(objects[4]);
+	}
+
+	public void drawDistribution() {
+		geom.drawDistribution(initialDistribution);
+	}
+
+	private ArrayJsonizer getDoubleJsonizer() {
+		return new ArrayJsonizer(Defaults.DOUBLE_JSONIZER) {
+			@Override
+			protected Object[] createArray(int size) {
+				return new Double[size];
+			}
+		};
+	}
+
+	public interface ApplicationStateJsonizer extends Jsonizer {}
 }

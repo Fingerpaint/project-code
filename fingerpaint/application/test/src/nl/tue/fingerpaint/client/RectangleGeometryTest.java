@@ -68,11 +68,10 @@ public class RectangleGeometryTest extends GWTTestCase {
 	public void testRectangleGeometry() {
 		geom = new RectangleGeometry(400, 600);
 
-		assertEquals("Length of representation vector", 240 * 400, geom
-				.getDistribution().getVector().length);
-		for (int i = 0; i < geom.getDistribution().getVector().length; i++) {
-			assertEquals("Initial distribution", 1.0, geom.getDistribution()
-					.getVector()[i]);
+		assertEquals("Length of representation vector", 240 * 400,
+				geom.getDistribution().length);
+		for (int i = 0; i < geom.getDistribution().length; i++) {
+			assertEquals("Initial distribution", 1.0, geom.getDistribution()[i]);
 		}
 		assertNotNull(geom.getCanvas());
 		assertEquals("Initial drawing color",
@@ -197,8 +196,7 @@ public class RectangleGeometryTest extends GWTTestCase {
 		// reset the canvas to white
 		geom.resetDistribution();
 		// verify the result
-		Distribution distribution = geom.getDistribution();
-		double[] dist = distribution.getVector();
+		double[] dist = geom.getDistribution();
 		// check all indices
 		for (int i = 0; i < dist.length; i++) {
 			assertEquals(1, dist[i]);

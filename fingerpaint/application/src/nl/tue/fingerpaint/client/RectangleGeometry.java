@@ -1,5 +1,6 @@
 package nl.tue.fingerpaint.client;
 
+import com.google.gwt.canvas.dom.client.CanvasPixelArray;
 import com.google.gwt.canvas.dom.client.CssColor;
 
 import com.google.gwt.canvas.dom.client.ImageData;
@@ -17,9 +18,11 @@ public class RectangleGeometry extends Geometry {
 	/**
 	 * The parameters of the canvas
 	 */
-	private final int rectangleHeight = 240;
-	private final int rectangleWidth = 400;
+	private static final int VERTICAL_CELLS = 240;
+	private static final int HORIZONTAL_CELLS = 400;
 
+	
+	// ----Constructors-----------------------------------------
 	/**
 	 * Uses constructor from super class (Geometry.java)
 	 * 
@@ -40,7 +43,7 @@ public class RectangleGeometry extends Geometry {
 	 */
 	@Override
 	public int getBaseHeight() {
-		return this.rectangleHeight;
+		return VERTICAL_CELLS;
 	}
 
 	/**
@@ -50,17 +53,7 @@ public class RectangleGeometry extends Geometry {
 	 */
 	@Override
 	public int getBaseWidth() {
-		return this.rectangleWidth;
-	}
-
-	/**
-	 * Sets the distribution belonging to this geometry to the dist parameter
-	 * 
-	 * @param dist
-	 *            The distribution the set
-	 */
-	public void setDistribution(double[] dist) {
-		setDistribution(new RectangleDistribution(dist));
+		return HORIZONTAL_CELLS;
 	}
 
 	/**
@@ -71,12 +64,23 @@ public class RectangleGeometry extends Geometry {
 	 * 
 	 */
 	@Override
-	public Distribution getDistribution() {
+	public double[] getDistribution() {
+		double[] dist = new double[HORIZONTAL_CELLS * VERTICAL_CELLS];
 		ImageData img = context.getImageData(X_OFFSET + 1, TOP_OFFSET + 1,
 				getWidth(), getHeight());
-		this.distribution.setDistribution(img, factor);
-
-		return this.distribution;
+		CanvasPixelArray data = img.getData();
+		int width = img.getWidth();
+		int height = img.getHeight();
+		int index;
+		for (int y = height - factor; y >= 0; y -= factor) {
+			for (int x = 0; x < width; x += factor) {
+				index = (y * width + x) * 4;
+				dist[x / factor + HORIZONTAL_CELLS
+						* (VERTICAL_CELLS - 1 - y / factor)] = (double) data
+						.get(index) / 255;
+			}
+		}
+		return dist;
 	}
 
 	// ----Implemented abstract methods from superclass----------------
@@ -168,13 +172,16 @@ public class RectangleGeometry extends Geometry {
 
 	/**
 	 * Creates vector (array) of length 240 * 400. Initialises colour to all
-	 * white (0)
+	 * white (1)
 	 * 
 	 * @post {@code representationVector} is initialised
 	 */
 	@Override
 	protected void initialiseDistribution() {
-		distribution = new RectangleDistribution();
+		distribution = new double[HORIZONTAL_CELLS * VERTICAL_CELLS];
+		for (int i = 0; i < distribution.length; i++) {
+			distribution[i] = 1;
+		}
 	}
 
 	/**
@@ -184,9 +191,11 @@ public class RectangleGeometry extends Geometry {
 	 */
 	@Override
 	protected void drawWalls() {
+		// Set the lineWidth to 1 and colour to black
 		context.setLineWidth(1);
 		context.setStrokeStyle(CssColor.make("black"));
 
+		// Draw the outline of the top wall
 		context.beginPath();
 		context.moveTo(X_OFFSET + 0.5, TOP_OFFSET + 0.5 - HEIGHT_OF_WALL);
 		context.lineTo(X_OFFSET + getWidth() + 1.5, TOP_OFFSET + 0.5
@@ -195,7 +204,8 @@ public class RectangleGeometry extends Geometry {
 		context.lineTo(X_OFFSET + 0.5, TOP_OFFSET + 0.5);
 		context.closePath();
 		context.stroke();
-
+		
+		// Draw the outline of the bottom wall
 		context.beginPath();
 		context.moveTo(X_OFFSET + 0.5, TOP_OFFSET + getHeight() + 1.5);
 		context.lineTo(X_OFFSET + getWidth() + 1.5, TOP_OFFSET + getHeight()
@@ -206,6 +216,75 @@ public class RectangleGeometry extends Geometry {
 				+ HEIGHT_OF_WALL);
 		context.closePath();
 		context.stroke();
+		
+		// Fill the top and bottom walls
+		fillWall(0, true);
+		fillWall(0, false);
+	}
+
+	/**
+	 * Colours the inside of one of the walls of the geometry.
+	 * 
+	 * @param xOffset
+	 *            The x-distance to the initial position
+	 * @param topWal
+	 *            {@code true} if the top wall has to be filled, {@code false}
+	 *            otherwise
+	 */
+	@Override
+	protected void fillWall(int xOffset, boolean topWal) {
+		// Set the height of the upper border of the wall
+		double y = topWal ? TOP_OFFSET + 1 - HEIGHT_OF_WALL : TOP_OFFSET
+				+ getHeight() + 2;
+		
+		// Clip the area inside the wall
+		context.beginPath();
+		context.moveTo(X_OFFSET + 1, y);
+		context.lineTo(X_OFFSET + getWidth() + 1, y);
+		context.lineTo(X_OFFSET + getWidth() + 1, y + HEIGHT_OF_WALL - 1);
+		context.lineTo(X_OFFSET + 1, y + HEIGHT_OF_WALL - 1);
+		context.closePath();
+		context.clip();
+
+		// Fill the area inside the wall
+		context.setFillStyle(wallColor);
+		context.fillRect(X_OFFSET + 1, y, getWidth() + 1, HEIGHT_OF_WALL - 1);
+
+		// Set the stroke style for the arrows (stripes)
+		context.setStrokeStyle(wallStripeColor);
+		context.setLineWidth(STRIPE_WIDTH);
+		
+		// Set the initial x and y values for the arrows to the left
+		double x = X_OFFSET + 1 + getWidth() / 2.0 - STRIPE_INTERVAL / 2.0
+				+ xOffset;
+		y = topWal ? TOP_OFFSET + 0.5 - HEIGHT_OF_WALL / 2.0 : TOP_OFFSET
+				+ getHeight() + 1.5 + HEIGHT_OF_WALL / 2.0;
+		
+		// Draw all the arrows to the left
+		while (x > X_OFFSET + 0.5) {
+			context.beginPath();
+			context.moveTo(x, y - HEIGHT_OF_WALL / 2.0);
+			context.lineTo(x - STRIPE_SLOPE, y);
+			context.lineTo(x, y + HEIGHT_OF_WALL / 2.0);
+			context.stroke();
+			x -= STRIPE_INTERVAL;
+		}
+
+		// Set the initial x value for the arrows to the right (y stays the same)
+		x = X_OFFSET + 1 + getWidth() / 2.0 + STRIPE_INTERVAL / 2.0 + xOffset;
+		
+		// Draw all the arrows to the right
+		while (x < X_OFFSET + getWidth()) {
+			context.beginPath();
+			context.moveTo(x, y - HEIGHT_OF_WALL / 2.0);
+			context.lineTo(x + STRIPE_SLOPE, y);
+			context.lineTo(x, y + HEIGHT_OF_WALL / 2.0);
+			context.stroke();
+			x += STRIPE_INTERVAL;
+		}
+		
+		// Restore clipping area to full canvas
+		removeClippingArea();
 	}
 
 	/**
@@ -242,12 +321,13 @@ public class RectangleGeometry extends Geometry {
 	 * 
 	 * @post The outline of the geometry has been clipped
 	 */
+	@Override
 	protected void clipGeometryOutline() {
 		context.beginPath();
-		context.moveTo(X_OFFSET + 0, TOP_OFFSET + 0);
-		context.lineTo(X_OFFSET + getWidth() + 1, TOP_OFFSET + 0);
+		context.moveTo(X_OFFSET + 1, TOP_OFFSET + 1);
+		context.lineTo(X_OFFSET + getWidth() + 1, TOP_OFFSET + 1);
 		context.lineTo(X_OFFSET + getWidth() + 1, TOP_OFFSET + getHeight() + 1);
-		context.lineTo(X_OFFSET + 0, TOP_OFFSET + getHeight() + 1);
+		context.lineTo(X_OFFSET + 1, TOP_OFFSET + getHeight() + 1);
 		context.closePath();
 		context.clip();
 	}
@@ -256,8 +336,8 @@ public class RectangleGeometry extends Geometry {
 	 * Checks whether a new {@code Step} should be added. If the MouseEvent's
 	 * coordinates are near the top of the rectangular geometry, a {@code TOP}
 	 * mixing step is generated; if it is near the bottom, a {@code BOTTOM} is
-	 * generated. The direction of movement decides whether the movement is
-	 * clockwise or counterclockwise.
+	 * generated. The direction of movement decides whether the movement is to
+	 * the left or to the right.
 	 */
 	@Override
 	protected void stopDefineMixingStep(int mouseX, int mouseY) {
@@ -285,19 +365,8 @@ public class RectangleGeometry extends Geometry {
 	@Override
 	protected MixingStep determineSwipe(int mouseX, int mouseY) {
 		int diffX = mouseX - swipeStartX;
-		boolean topWall = false;
+		boolean topWall = topWallStep;
 		boolean toTheLeft = false;
-
-		// used to be: 0 < mouseY && mouseY < HEIGHT_OF_WALL * factor
-		if (isInsideTopWall(mouseX, mouseY)) { // Top wall
-			topWall = true;
-			// used to be: (rectangleHeight - HEIGHT_OF_WALL) * factor < mouseY
-			// && mouseY < rectangleHeight * factor
-		} else if (isInsideBottomWall(mouseX, mouseY)) { // Bottom wall
-			topWall = false;
-		} else { // No movement of the geometry was specified
-			return null;
-		}
 
 		if (diffX < -SWIPE_THRESHOLD) { // To the left
 			toTheLeft = true;
@@ -305,24 +374,6 @@ public class RectangleGeometry extends Geometry {
 			toTheLeft = false;
 		} else { // No movement of the geometry was specified
 			return null;
-		}
-
-		// draw an arrow corresponding to the swipe
-		if (diffX > 0) {
-			// the left side of the image should be at the starting location
-			int imageLeft = swipeStartX;
-			// the top is moved upward to center the picture around the starting
-			// location, picture size is 100
-			int imageTop = swipeStartY - 50;
-			drawImage("rightarrow", imageLeft, imageTop);
-		} else {
-			// the right side of the image should be at the starting location,
-			// picture size is 100
-			int imageLeft = swipeStartX - 100;
-			// the top is moved upward to center the picture around the starting
-			// location, picture size is 100
-			int imageTop = swipeStartY - 50;
-			drawImage("leftarrow", imageLeft, imageTop);
 		}
 
 		// converting the toTheLeft boolean to clockwise representation
@@ -348,20 +399,46 @@ public class RectangleGeometry extends Geometry {
 	 */
 	@Override
 	public void drawDistribution(double[] dist) {
-		for (int i = 0; i < dist.length; i++) {
-			Point coords = distribution.getCoordinates(i);
-			fillPixel(changeToAbsoluteCoords((int) coords.getX()),
-					changeToAbsoluteCoords((int) coords.getY()),
-					getColour(dist[i]));
+//		for (int i = 0; i < dist.length; i++) {
+//			Point coords = new Point(i % 400, 239 - i / 400);
+//			fillPixel(changeToAbsoluteCoords((int) coords.getX()),
+//					changeToAbsoluteCoords((int) coords.getY()),
+//					getColour(dist[i]));
+//		}
+		ImageData img = context.getImageData(X_OFFSET + 1, TOP_OFFSET + 1,
+				getWidth(), getHeight());
+		CanvasPixelArray data = img.getData();
+		int width = getWidth();
+		int l = dist.length;
+		int x, y, col, index, sw, sh, w2, h2;
+		
+		for (int i = 0; i < l; i++) {
+			x = i % 400;
+			y = 239 - i / 400;
+			col = (int) (dist[i] * 255);
+			sw = x * factor;
+			sh = y * factor;
+			w2 = (x + 1) * factor;
+			h2 = (y + 1) * factor;
+			for (int w = sw; w < w2; w++) {
+				for (int h = sh; h < h2; h++) {
+					index = (h * width + w) * 4;
+					data.set(index, col);
+					data.set(++index, col);
+					data.set(++index, col);
+				}
+			}
 		}
+		context.putImageData(img, X_OFFSET + 1, TOP_OFFSET + 1);
 	}
-	
+
 	/**
-	 * Resets the current distribution to all white.
-	 * Equivalent to calling drawDistribution with
-	 * a dist parameter containing '1' at all indices (but faster)
+	 * Resets the current distribution to all white. Equivalent to calling
+	 * drawDistribution with a dist parameter containing '1' at all indices (but
+	 * faster)
 	 */
-	public void resetDistribution(){
+	@Override
+	public void resetDistribution() {
 		context.setFillStyle(CssColor.make("white"));
 		context.fillRect(X_OFFSET + 1, TOP_OFFSET + 1, getWidth(), getHeight());
 	}
@@ -379,3 +456,4 @@ public class RectangleGeometry extends Geometry {
 	}
 
 }
+//>>>>>>> ffff3624f9ce63f36e29b5879d9a44fee78de850

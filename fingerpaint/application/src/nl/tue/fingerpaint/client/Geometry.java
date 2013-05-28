@@ -1,13 +1,13 @@
 package nl.tue.fingerpaint.client;
 
 import java.util.ArrayList;
+
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.canvas.dom.client.ImageData;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.ImageElement;
-import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.dom.client.MouseMoveEvent;
@@ -16,7 +16,16 @@ import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
+import com.google.gwt.event.dom.client.TouchCancelEvent;
+import com.google.gwt.event.dom.client.TouchCancelHandler;
+import com.google.gwt.event.dom.client.TouchEndEvent;
+import com.google.gwt.event.dom.client.TouchEndHandler;
+import com.google.gwt.event.dom.client.TouchMoveEvent;
+import com.google.gwt.event.dom.client.TouchMoveHandler;
+import com.google.gwt.event.dom.client.TouchStartEvent;
+import com.google.gwt.event.dom.client.TouchStartHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -31,7 +40,7 @@ public abstract class Geometry {
 	/**
 	 * Internal representation of the geometry
 	 */
-	protected Distribution distribution;
+	protected double[] distribution;
 
 	/**
 	 * The canvas and its parameters
@@ -72,6 +81,11 @@ public abstract class Geometry {
 	 * Reference to the current MouseMoveHandler attached to the canvas
 	 */
 	private HandlerRegistration mouseMove;
+	
+	/**
+	 * 
+	 */
+	private HandlerRegistration touchMove;
 
 	/**
 	 * Parameters to handle the drawing
@@ -90,14 +104,35 @@ public abstract class Geometry {
 	 * Stores the y-coordinate of the mouse event that initiates swiping.
 	 */
 	protected int swipeStartY;
-	
+
 	/**
 	 * Threshold in pixels to decide when a large enough swipe has been carried
 	 * out.
 	 */
 	protected final static int SWIPE_THRESHOLD = 20;
 
+	/**
+	 * Parameters for the looks of the walls
+	 */
+	protected static CssColor wallColor = CssColor.make("gray");
+	protected static CssColor wallStripeColor = CssColor.make("black");
+	protected static int STRIPE_WIDTH = 5;
+	protected static int STRIPE_INTERVAL = 50;
+	protected static int STRIPE_SLOPE = 5;
+
+	/**
+	 * Parameters for the wall animation
+	 */
+	private Timer animationTimer;
+	private static int REFRESH_INTERVAL = 20;
+	private static int ANIMATION_DISTANCE = 3;
+	private static int ACCELERATION_DISTANCE = 50;
+
+	/**
+	 * Parameters for defining a mixing step
+	 */
 	private boolean definingStep;
+	protected boolean topWallStep;
 
 	// ----Constructor-----------------------------------------------
 	/**
@@ -117,8 +152,10 @@ public abstract class Geometry {
 				(Math.min((clientHeight - TOP_OFFSET - BOTTOM_OFFSET)
 						/ getBaseHeight(), (clientWidth - X_OFFSET)
 						/ getBaseWidth()))));
+
 		drawing = false;
 		definingStep = false;
+		topWallStep = true;
 
 		createCanvas(clientHeight, clientWidth);
 
@@ -130,9 +167,14 @@ public abstract class Geometry {
 
 		// Initialise drawing colour to black
 		setColor(CssColor.make("black"));
-
-		// Initialise drawing tool to a square with radius 3
-		setDrawingTool(new SquareDrawingTool(3));
+		
+		// Surrounded with try-catch for testing purposes
+		try {
+			// Initialise drawing tool to a square with radius 3
+			setDrawingTool(new SquareDrawingTool(3));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	// ----Getters and Setters---------------------------------------
@@ -174,7 +216,7 @@ public abstract class Geometry {
 	 * 
 	 * @return The distribution of this geometry
 	 */
-	abstract public Distribution getDistribution();
+	abstract public double[] getDistribution();
 
 	/**
 	 * Sets the distribution to {@code dist}
@@ -182,17 +224,9 @@ public abstract class Geometry {
 	 * @param dist
 	 *            The distribution to set
 	 */
-	public void setDistribution(Distribution dist) {
+	public void setDistribution(double[] dist) {
 		this.distribution = dist;
 	}
-
-	/**
-	 * Sets the distribution to {@code dist}
-	 * 
-	 * @param dist
-	 *            The distribution to set
-	 */
-	abstract public void setDistribution(double[] dist);
 
 	/**
 	 * Returns the base height of the geometry
@@ -290,8 +324,10 @@ public abstract class Geometry {
 		canvas.setHeight(height + "px");
 		canvas.setCoordinateSpaceHeight(height);
 
-		// Get context of canvas, to use for painting
+		// Get context of canvas, to use for painting, and save it in its
+		// original state
 		context = canvas.getContext2d();
+		context.save();
 
 		// When the left mouse button is pressed, drawing is started
 		canvas.addMouseDownHandler(new MouseDownHandler() {
@@ -306,49 +342,25 @@ public abstract class Geometry {
 				Element elem = event.getRelativeElement();
 				int x = event.getRelativeX(elem);
 				int y = event.getRelativeY(elem);
+				
+				onDragStart(elem, x, y);
 
-				if (isInsideDrawingArea(x - X_OFFSET, y - TOP_OFFSET)) {
-					// User started drawing the concentration distribution
-					drawing = true;
-
-					// Store starting coordinates
-					previousX = x - X_OFFSET;
-					previousY = y - TOP_OFFSET;
-
-					x = getValidCoord(x - X_OFFSET);
-					y = getValidCoord(y - TOP_OFFSET);
-
-					// Draw the first image of the drawing tool
-					context.drawImage(toolImage, Math.max(x - displacement, 0)
-							+ X_OFFSET, Math.max(y - displacement, 0)
-							+ TOP_OFFSET);
-					mouseMove = canvas
-							.addMouseMoveHandler(new MouseMoveHandler() {
-								/*
-								 * Draw a line from the previous to the next
-								 * point of the mouseEvent took place within the
-								 * drawing area. Otherwise remove
-								 * MouseMoveHandler.
-								 */
-								@Override
-								public void onMouseMove(MouseMoveEvent e) {
-									Element elem = e.getRelativeElement();
-									int x = e.getRelativeX(elem) - X_OFFSET;
-									int y = e.getRelativeY(elem) - TOP_OFFSET;
-									if (isInsideDrawingArea(x, y)) {
-										drawLine(previousX, previousY, x, y);
-										previousX = x;
-										previousY = y;
-									}
-								}
-							});
-				} else if (isInsideTopWall(x, y) || isInsideBottomWall(x, y)) {
-					// User started defining a step of the protocol
-					definingStep = true;
-					startDefineMixingStep(x, y);
-				}
 			}
 
+		});
+		
+		canvas.addTouchStartHandler(new TouchStartHandler() {
+
+			@Override
+			public void onTouchStart(TouchStartEvent event) {
+				Element elem = event.getRelativeElement();
+				int x = event.getTouches().get(0).getRelativeX(elem);
+				int y = event.getTouches().get(0).getRelativeY(elem);
+				
+				onDragStart(elem, x, y);
+				
+			}
+			
 		});
 
 		canvas.addMouseUpHandler(new MouseUpHandler() {
@@ -358,34 +370,204 @@ public abstract class Geometry {
 			 */
 			@Override
 			public void onMouseUp(MouseUpEvent event) {
-				removeMouseMoveHandler();
-				if (definingStep) {
-					stopDefineMixingStep(event.getX(), event.getY());
-					definingStep = false;
-				}
+				Element elem = event.getRelativeElement();
+				int x = event.getRelativeX(elem);
+				int y = event.getRelativeY(elem);
+				
+				onDragEnd(elem, x, y);
 			}
 
 		});
+		
+		canvas.addTouchEndHandler(new TouchEndHandler() {
+
+			@Override
+			public void onTouchEnd(TouchEndEvent event) {
+				Element elem = event.getRelativeElement();
+				int x = event.getTouches().get(0).getRelativeX(elem);
+				int y = event.getTouches().get(0).getRelativeX(elem);
+				
+				onDragEnd(elem, x, y);
+			}
+			
+		});
 
 		/*
-		 * When the mouse leaves the canvas area, drawing is ended
+		 * When the mouse leaves the canvas area, defining a step is ended
 		 */
 		canvas.addMouseOutHandler(new MouseOutHandler() {
 			@Override
 			public void onMouseOut(MouseOutEvent event) {
-				removeMouseMoveHandler();
-				definingStep = false;
+				onDragOut();
 			}
 		});
+		
+		canvas.addTouchCancelHandler(new TouchCancelHandler() {
+
+			@Override
+			public void onTouchCancel(TouchCancelEvent event) {
+				onDragOut();
+				
+			}
+			
+		});
+	}
+	
+	public void onDragStart(Element elem, int x, int y) {
+
+		if (isInsideDrawingArea(x - X_OFFSET, y - TOP_OFFSET)) {
+			// User started drawing the concentration distribution
+			drawing = true;
+
+			// Store starting coordinates
+			previousX = x - X_OFFSET;
+			previousY = y - TOP_OFFSET;
+
+			x = getValidCoord(x - X_OFFSET);
+			y = getValidCoord(y - TOP_OFFSET);
+
+			// Draw the first image of the drawing tool
+			context.drawImage(toolImage, Math.max(x - displacement, 0)
+					+ X_OFFSET, Math.max(y - displacement, 0)
+					+ TOP_OFFSET);
+			mouseMove = canvas
+					.addMouseMoveHandler(new MouseMoveHandler() {
+						/*
+						 * Draw a line from the previous to the next
+						 * point of the mouseEvent took place within the
+						 * drawing area. Otherwise remove
+						 * MouseMoveHandler.
+						 */
+						@Override
+						public void onMouseMove(MouseMoveEvent e) {
+							Element elem = e.getRelativeElement();
+							int x = e.getRelativeX(elem) - X_OFFSET;
+							int y = e.getRelativeY(elem) - TOP_OFFSET;
+							if (isInsideDrawingArea(x, y)) {
+								drawLine(previousX, previousY, x, y);
+								previousX = x;
+								previousY = y;
+							}
+						}
+					});
+			
+			touchMove = canvas.addTouchMoveHandler(new TouchMoveHandler() {
+
+				@Override
+				public void onTouchMove(TouchMoveEvent event) {
+					Element elem = event.getRelativeElement();
+					int x = event.getTouches().get(0).getRelativeX(elem) - X_OFFSET;
+					int y = event.getTouches().get(0).getRelativeY(elem) - TOP_OFFSET;
+					if (isInsideDrawingArea(x, y)) {
+						drawLine(previousX, previousY, x, y);
+						previousX = x;
+						previousY = y;
+					}
+					
+				}
+				
+			});
+			
+			
+		} else if (isInsideTopWall(x, y) || isInsideBottomWall(x, y)) {
+			// User started defining a step of the protocol
+			definingStep = true;
+			topWallStep = isInsideTopWall(x, y);
+
+			// cancel current animation if there is one
+			if (animationTimer != null) {
+				animationTimer.cancel();
+				removeClippingArea();
+				fillWall(0, topWallStep);
+				clipGeometryOutline();
+			}
+
+			startDefineMixingStep(x, y);
+			mouseMove = canvas
+					.addMouseMoveHandler(new MouseMoveHandler() {
+
+						@Override
+						public void onMouseMove(MouseMoveEvent event) {
+							Element elem = event.getRelativeElement();
+							int currentX = event.getRelativeX(elem);
+
+							removeClippingArea();
+							fillWall(currentX - swipeStartX,
+									topWallStep);
+							clipGeometryOutline();
+						}
+
+					});
+			
+			touchMove = canvas.addTouchMoveHandler(new TouchMoveHandler() {
+
+				@Override
+				public void onTouchMove(TouchMoveEvent event) {
+					Element elem = event.getRelativeElement();
+					int currentX = event.getTouches().get(0).getRelativeX(elem);
+
+					removeClippingArea();
+					fillWall(currentX - swipeStartX,
+							topWallStep);
+					clipGeometryOutline();
+					
+				}
+				
+			});
+		}
 	}
 
+	public void onDragEnd(Element elem, int x, int y) {
+		if (definingStep) {
+			stopDefineMixingStep(x, y);
+		}
+		removeMouseMoveHandler(x - swipeStartX);
+	}
+	
+	public void onDragOut() {
+		removeClippingArea();
+		fillWall(0, topWallStep);
+		clipGeometryOutline();
+
+		removeMouseMoveHandler(0);
+	}
+	
 	/**
-	 * Removes the mouseMoveHandler from the canvas, if it is present
+	 * Removes the mouseMoveHandler from the canvas, if it is present. If
+	 * defining a step has been ended, an animation is started to move the walls
+	 * back to their initial position.
 	 */
-	private void removeMouseMoveHandler() {
+	private void removeMouseMoveHandler(final int xStop) {
 		if (drawing) {
 			drawing = false;
 			mouseMove.removeHandler();
+			touchMove.removeHandler();
+		}
+		if (definingStep) {
+			definingStep = false;
+			mouseMove.removeHandler();
+			touchMove.removeHandler();
+
+			animationTimer = new Timer() {
+				private int x = xStop;
+
+				@Override
+				public void run() {
+					int speed = Math.abs(x) / ACCELERATION_DISTANCE + 1;
+					if (x == 0) {
+						animationTimer.cancel();
+						return;
+					} else if (x < 0) {
+						x = Math.min(x + speed * ANIMATION_DISTANCE, 0);
+					} else if (x > 0) {
+						x = Math.max(x - speed * ANIMATION_DISTANCE, 0);
+					}
+					removeClippingArea();
+					fillWall(x, topWallStep);
+					clipGeometryOutline();
+				}
+			};
+			animationTimer.scheduleRepeating(REFRESH_INTERVAL);
 		}
 	}
 
@@ -402,6 +584,17 @@ public abstract class Geometry {
 	 * @post The outline of the walls has been drawn on the {@code canvas}
 	 */
 	abstract protected void drawWalls();
+
+	/**
+	 * Colours the inside of one of the walls of the geometry.
+	 * 
+	 * @param xOffset
+	 *            The x-distance to the initial position
+	 * @param topWal
+	 *            {@code true} if the top wall has to be filled, {@code false}
+	 *            otherwise
+	 */
+	abstract protected void fillWall(int xOffset, boolean topWal);
 
 	/**
 	 * Draws the border around the drawing area
@@ -424,14 +617,8 @@ public abstract class Geometry {
 	 * @post The entire canvas has been clipped
 	 */
 	protected void removeClippingArea() {
-		context.beginPath();
-		context.moveTo(0, 0);
-		context.lineTo(canvas.getCoordinateSpaceWidth() - 1, 0);
-		context.lineTo(canvas.getCoordinateSpaceWidth() - 1,
-				canvas.getCoordinateSpaceHeight() - 1);
-		context.lineTo(0, canvas.getCoordinateSpaceHeight() - 1);
-		context.closePath();
-		context.clip();
+		context.restore();
+		context.save();
 	}
 
 	/**
@@ -626,24 +813,6 @@ public abstract class Geometry {
 	}
 
 	/**
-	 * Draws an image located in the map war/img.
-	 * 
-	 * @param name
-	 *            the name of the image file itself
-	 * @param locationX
-	 *            the desired left location of the image
-	 * @param locationY
-	 *            the desired top location of the image
-	 */
-	protected void drawImage(String name, int locationX, int locationY) {
-		Image image = new Image("/img/" + name + ".png");
-		image.getElement().getStyle().setLeft(locationX, Unit.PX);
-		image.getElement().getStyle().setTop(locationY, Unit.PX);
-		ImageElement imgelem = ImageElement.as(image.getElement());
-		// context.drawImage(imgelem, locationX, locationY);
-	}
-
-	/**
 	 * clears the canvas between locationX and locationX + sizeX, and locationY
 	 * and locationY + sizeY
 	 * 
@@ -710,26 +879,15 @@ public abstract class Geometry {
 	 * @param dist
 	 *            The distribution to be set and drawn
 	 */
-	public void drawDistribution(Distribution dist) {
-		drawDistribution(dist.getVector());
-	}
-
-	/**
-	 * Sets the given distribution as the current distribution, and draws it on
-	 * the canvas
-	 * 
-	 * @param dist
-	 *            The distribution to be set and drawn
-	 */
 	abstract public void drawDistribution(double[] dist);
-	
+
 	/**
 	 * Resets the current distribution to all white
 	 */
 	abstract public void resetDistribution();
 
-	//TODO: Add javadoc to methods below
-	
+	// TODO: Add javadoc to methods below
+
 	protected ArrayList<StepAddedListener> stepAddedListeners = new ArrayList<StepAddedListener>();
 
 	public interface StepAddedListener {

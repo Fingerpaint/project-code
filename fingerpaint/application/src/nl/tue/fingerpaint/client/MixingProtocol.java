@@ -3,6 +3,8 @@ package nl.tue.fingerpaint.client;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import org.jsonmaker.gwt.client.Jsonizer;
+
 /**
  * This class symbolises a mixing program consisting of a number of mixing steps
  * 
@@ -12,9 +14,10 @@ import java.util.ArrayList;
 public class MixingProtocol implements Serializable {
 
 	/**
-	 * Auto-generated UID for the serialisation.
+	 * Random serival version uid
 	 */
-	private static final long serialVersionUID = 7441045169355767680L;
+	private static final long serialVersionUID = 4124497679451697792L;
+	
 	/**the current mixing program*/
 	private ArrayList<MixingStep> program = new ArrayList<MixingStep>();
 	
@@ -111,6 +114,25 @@ public class MixingProtocol implements Serializable {
 	 */
 	public int getProgramSize(){
 		return program.size();
+	}
+	
+	public ArrayList<MixingStep> getProgram() {
+		return program;
+	}
+	
+	public void setProgram(ArrayList<MixingStep> program) {
+		this.program = program;
+	}
+
+	public interface MixingProtocolJsonizer extends Jsonizer { }
+	
+	/**
+	 * TODO: Currently hardcoded, needs to be made dynamic
+	 * 
+	 * @return The name of the geometry this protocol is defined for.
+	 */
+	public String getGeometry() {
+		return "Rectangle400x240";
 	}
 	
 }

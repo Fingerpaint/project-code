@@ -1,5 +1,6 @@
 package nl.tue.fingerpaint.client;
 
+import org.jsonmaker.gwt.client.Jsonizer;
 import com.google.gwt.touch.client.Point;
 
 /**
@@ -107,4 +108,11 @@ public class RectangleDistribution extends Distribution {
 			representationVector[i] = dist[i];
 		}
 	}
+	
+	public double[] getDistribution() {
+		return super.getDistribution();
+	}
+	
+	public interface RectangleDistributionJsonizer extends Jsonizer {}
+	
 }
