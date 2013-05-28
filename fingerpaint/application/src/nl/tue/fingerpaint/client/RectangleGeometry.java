@@ -256,14 +256,12 @@ public class RectangleGeometry extends Geometry {
 	 * Checks whether a new {@code Step} should be added. If the MouseEvent's
 	 * coordinates are near the top of the rectangular geometry, a {@code TOP}
 	 * mixing step is generated; if it is near the bottom, a {@code BOTTOM} is
-	 * generated. The direction of movement decides whether the movement is to
-	 * the left or to the right.
+	 * generated. The direction of movement decides whether the movement is
+	 * clockwise or counterclockwise.
 	 */
 	@Override
 	protected void stopDefineMixingStep(int mouseX, int mouseY) {
 		MixingStep movement = determineSwipe(mouseX, mouseY);
-
-		int stepSize = 1; // TODO: Get value from spinner
 
 		if (movement != null) {
 			for (StepAddedListener l : stepAddedListeners) {

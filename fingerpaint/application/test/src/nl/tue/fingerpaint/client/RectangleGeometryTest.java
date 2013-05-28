@@ -84,30 +84,39 @@ public class RectangleGeometryTest extends GWTTestCase {
 
 	@Test
 	public void testStopDefineMixingStep() {
-		testStopDefineMixingStep("T", true, true, true, 100, 140, 10, 1.0);
-		testStopDefineMixingStep("-T", true, true, false, 100, 60, 10, 1.0);
+		// TODO: Add factor everywhere.
+		testStopDefineMixingStep("T", true, true, true, 100, 140,
+				Geometry.TOP_OFFSET, 1.0);
+		testStopDefineMixingStep("-T", true, true, false, 100, 60,
+				Geometry.TOP_OFFSET, 1.0);
 		testStopDefineMixingStep("T step size 10", true, true, true, 100, 140,
-				10, 10.0);
+				Geometry.TOP_OFFSET, 10.0);
 		testStopDefineMixingStep("T step size 12.5", true, true, false, 100,
-				60, 10, 12.5);
+				60, Geometry.TOP_OFFSET, 12.5);
 		testStopDefineMixingStep("T step size 1.25", true, true, false, 100,
-				60, 10, 1.25);
+				60, Geometry.TOP_OFFSET, 1.25);
 		testStopDefineMixingStep("B", true, false, true, 100, 60,
-				clientHeight - 10, 1.0);
+				Geometry.TOP_OFFSET + clientHeight + 10, 1.0);
 		testStopDefineMixingStep("-B", true, false, false, 100, 140,
-				clientHeight - 10, 1.0);
+				Geometry.TOP_OFFSET + clientHeight + 10, 1.0);
 		testStopDefineMixingStep("On border TR", false, true, true,
-				clientWidth - 20, clientWidth, 0, 1.0);
-		testStopDefineMixingStep("On border BL", false, false, true, 20, 0,
-				clientHeight, 1.0);
+				Geometry.X_OFFSET + clientWidth - 30, Geometry.X_OFFSET
+						+ clientWidth, Geometry.TOP_OFFSET, 1.0);
+		testStopDefineMixingStep("On border BL", false, false, true,
+				Geometry.X_OFFSET - 30, Geometry.X_OFFSET, Geometry.TOP_OFFSET
+						+ clientHeight, 1.0);
 		testStopDefineMixingStep("Just inside TR", true, true, true,
-				clientWidth - 21, clientWidth - 1, 1, 1.0);
+				Geometry.X_OFFSET + clientWidth - 30, Geometry.X_OFFSET
+						+ clientWidth - 1, Geometry.TOP_OFFSET + 1, 1.0);
 		testStopDefineMixingStep("Just inside BR", true, false, false,
-				clientWidth - 21, clientWidth - 1, clientHeight - 1, 1.0);
-		testStopDefineMixingStep("Just inside TL", true, true, true, 21, 1, 1,
-				1.0);
-		testStopDefineMixingStep("Just inside BL", true, false, false, 21, 1,
-				clientHeight - 1, 1.0);
+				Geometry.X_OFFSET - 30, Geometry.X_OFFSET, Geometry.TOP_OFFSET
+						+ clientHeight, 1.0);
+		testStopDefineMixingStep("Just inside TL", true, true, true,
+				Geometry.X_OFFSET + 30, Geometry.X_OFFSET
+						+ 1, Geometry.TOP_OFFSET + 1, 1.0);
+		testStopDefineMixingStep("Just inside BL", true, false, false, 
+				Geometry.X_OFFSET + 30, Geometry.X_OFFSET
+				+ 1, Geometry.TOP_OFFSET + clientHeight - 1, 1.0);
 		testStopDefineMixingStep("Swipe in middle", false, true, true, 100,
 				140, clientHeight / 2, 1.0);
 		testStopDefineMixingStep("Left top outside", false, true, true, 10,
@@ -150,7 +159,7 @@ public class RectangleGeometryTest extends GWTTestCase {
 		StepAddedListener stl = setUpStepAddedListener(message, top, clockwise,
 				stepSize);
 		geom.addStepAddedListener(stl);
-		geom.startDefineMixingStep(startX, 50);// startY is constant
+		geom.startDefineMixingStep(startX, 50);
 		geom.stopDefineMixingStep(endX, endY);
 
 		assertEquals(message + " should be called", shouldBeCalled,
@@ -174,27 +183,28 @@ public class RectangleGeometryTest extends GWTTestCase {
 
 		// TODO test the result
 	}
-	
+
 	/**
-	 * Tests if the resetButton creates
-	 * a completely white canvas (internal representation)
+	 * Tests if the resetButton creates a completely white canvas (internal
+	 * representation)
 	 */
 	@Test
-	private void testResetDist(){
+	private void testResetDist() {
 		geom = new RectangleGeometry(clientHeight, clientWidth);
-		//make the canvas black
-		geom.setDistribution(new double[96000]);// using the initialisation value of 0
-		//reset the canvas to white
+		// make the canvas black
+		geom.setDistribution(new double[96000]);// using the initialisation
+												// value of 0
+		// reset the canvas to white
 		geom.resetDistribution();
-		//verify the result
+		// verify the result
 		Distribution distribution = geom.getDistribution();
 		double[] dist = distribution.getVector();
-		//check all indices
-		for(int i = 0; i<dist.length; i++){
-			assertEquals(1,dist[i]);
+		// check all indices
+		for (int i = 0; i < dist.length; i++) {
+			assertEquals(1, dist[i]);
 		}
 	}
-	
+
 	private StepAddedListener setUpStepAddedListener(final String message,
 			final boolean top, final boolean clockwise, final double stepSize) {
 		StepAddedListener stl = new StepAddedListener() {
