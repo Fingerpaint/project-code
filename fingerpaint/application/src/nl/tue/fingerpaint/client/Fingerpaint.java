@@ -5,6 +5,8 @@ import java.util.Arrays;
 
 import nl.tue.fingerpaint.client.Geometry.StepAddedListener;
 import nl.tue.fingerpaint.client.MixingStep.MixingStepJsonizer;
+import nl.tue.fingerpaint.client.json.ProtocolMap;
+import nl.tue.fingerpaint.client.json.ProtocolStorage;
 import nl.tue.fingerpaint.client.resources.FingerpaintConstants;
 import nl.tue.fingerpaint.client.resources.FingerpaintResources;
 import nl.tue.fingerpaint.client.serverdata.ServerDataCache;
@@ -314,6 +316,16 @@ public class Fingerpaint implements EntryPoint {
 
 		storage.setItem(name, asJson);
 	}
+	
+	private void saveProtocol(String name) {
+		String jsonProtocols = storage.getItem("PROT");
+		// TODO: extract
+		ProtocolStorage saveProtObject = null; // TODO:
+		ProtocolMap saveProt = saveProtObject.getProtocols().get("RECT"); // TODO: Replace RECT
+		saveProt.addProtocol(name, as.getProtocol());
+		storage.setItem("PROT", saveProtObject.jsonize());
+	}
+	
 
 	/**
 	 * Returns whether a saved state with key {@code name} exists in local

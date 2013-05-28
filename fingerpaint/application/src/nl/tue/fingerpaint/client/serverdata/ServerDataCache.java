@@ -3,8 +3,6 @@ package nl.tue.fingerpaint.client.serverdata;
 import java.util.ArrayList;
 
 import nl.tue.fingerpaint.client.TimeoutRpcRequestBuilder;
-import nl.tue.fingerpaint.client.simulator.SimulatorService;
-import nl.tue.fingerpaint.client.simulator.SimulatorServiceAsync;
 import nl.tue.fingerpaint.shared.ServerDataResult;
 
 import com.google.gwt.core.client.GWT;

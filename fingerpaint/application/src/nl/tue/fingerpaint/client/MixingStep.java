@@ -1,21 +1,14 @@
 package nl.tue.fingerpaint.client;
 
-import java.io.Serializable;
-
 import org.jsonmaker.gwt.client.Jsonizer;
 
 /**
  * MixingStep is a class that stores information for an individual mixing step of a mixing protocol
  * 
- * @author Roel van Happen
+ * @author Group Fingerpaint
  *
  */
-public class MixingStep implements Serializable {
-	
-	/**
-	 * Randomly generated serial version uid
-	 */
-	private static final long serialVersionUID = -8587281937586037724L;
+public class MixingStep {
 	
 	/**the minimum step size, all step sizes should be a multiple of this*/
 	public static final double STEP_UNIT = 0.25;

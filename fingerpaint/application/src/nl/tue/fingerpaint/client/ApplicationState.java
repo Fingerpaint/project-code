@@ -11,6 +11,7 @@ import org.jsonmaker.gwt.client.base.ArrayListJsonizer;
 import org.jsonmaker.gwt.client.base.Defaults;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.storage.client.Storage;
 
 /**
  * Class that keeps track of the Geometry and Mixer the user has selected. Used
@@ -161,11 +162,11 @@ public class ApplicationState {
 	public double getStepSize() {
 		return stepsize;
 	}
-	
+
 	public void setInitialDistribution(double[] distribution) {
-		this.initialDistribution = distribution;	
+		this.initialDistribution = distribution;
 	}
-	
+
 	public double[] getInitialDistribution() {
 		return initialDistribution;
 	}
@@ -209,9 +210,7 @@ public class ApplicationState {
 			jsonObject += mixChoice + "@";
 
 			// Save the protocol
-			ArrayListJsonizer aj = new ArrayListJsonizer(
-					(MixingStepJsonizer) GWT.create(MixingStepJsonizer.class));
-			jsonObject += aj.asString(protocol.getProgram()) + "@";
+			jsonObject += saveProtocol();
 
 			// Save the distribution
 			ArrayListJsonizer doubleAJ = new ArrayListJsonizer(
@@ -231,6 +230,12 @@ public class ApplicationState {
 		return jsonObject;
 	}
 
+	private String saveProtocol() {
+		ArrayListJsonizer aj = new ArrayListJsonizer(
+				(MixingStepJsonizer) GWT.create(MixingStepJsonizer.class));
+		return aj.asString(protocol.getProgram()) + "@";
+	}
+
 	/**
 	 * Unjsonizes a JSON object and sets variables
 	 * 
@@ -238,17 +243,21 @@ public class ApplicationState {
 	 */
 	public void unJsonize(String jsonObject) {
 		String[] objects = jsonObject.split("@");
-		
+
 		geoChoice = objects[0];
 		mixChoice = objects[1];
-		
-		ArrayListJsonizer aj = new ArrayListJsonizer((MixingStepJsonizer) GWT.create(MixingStepJsonizer.class));
-		ArrayList<MixingStep> mixingList = (ArrayList<MixingStep>) JsonizerParser.parse(aj, objects[2]);
+
+		ArrayListJsonizer aj = new ArrayListJsonizer(
+				(MixingStepJsonizer) GWT.create(MixingStepJsonizer.class));
+		ArrayList<MixingStep> mixingList = (ArrayList<MixingStep>) JsonizerParser
+				.parse(aj, objects[2]);
 		protocol.setProgram(mixingList);
-		
-		ArrayListJsonizer dj_sonizer = new ArrayListJsonizer(Defaults.DOUBLE_JSONIZER);
-		ArrayList<Double> djList = (ArrayList<Double>) JsonizerParser.parse(dj_sonizer, objects[3]);
-		
+
+		ArrayListJsonizer dj_sonizer = new ArrayListJsonizer(
+				Defaults.DOUBLE_JSONIZER);
+		ArrayList<Double> djList = (ArrayList<Double>) JsonizerParser.parse(
+				dj_sonizer, objects[3]);
+
 		double[] initDistribution = new double[djList.size()];
 		for (int i = 0; i < djList.size(); i++) {
 			initDistribution[i] = djList.get(i);
@@ -270,5 +279,6 @@ public class ApplicationState {
 		};
 	}
 
-	public interface ApplicationStateJsonizer extends Jsonizer {}
+	public interface ApplicationStateJsonizer extends Jsonizer {
+	}
 }
