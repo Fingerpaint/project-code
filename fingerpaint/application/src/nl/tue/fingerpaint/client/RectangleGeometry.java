@@ -456,3 +456,4 @@ public class RectangleGeometry extends Geometry {
 	}
 
 }
+//>>>>>>> ffff3624f9ce63f36e29b5879d9a44fee78de850
