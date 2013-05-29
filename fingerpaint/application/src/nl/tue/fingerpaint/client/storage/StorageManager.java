@@ -1,11 +1,13 @@
 package nl.tue.fingerpaint.client.storage;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import nl.tue.fingerpaint.client.json.FingerpaintJsonizer;
 import nl.tue.fingerpaint.shared.GeometryNames;
 
-import com.google.gwt.core.shared.GWT;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.storage.client.Storage;
 import com.google.gwt.storage.client.StorageMap;
 
@@ -131,7 +133,7 @@ public class StorageManager {
 						FingerpaintJsonizer.toString(secondLevel));
 			} else {
 				HashMap<String, Object> secondLevel = FingerpaintJsonizer
-						.fromString(sm.get(firstLevelKey));
+						.hashMapFromString(sm.get(firstLevelKey));
 				boolean changed = false;
 				for (String secondLevelKey : secondLevelKeys) {
 					if (!secondLevel.containsKey(secondLevelKey)) {
@@ -154,6 +156,74 @@ public class StorageManager {
 	}
 
 	/**
+	 * Return the distribution that is stored with given name, or {@code null}
+	 * if such a distribution does not exist.
+	 * 
+	 * @param geometry
+	 *            The geometry in which the distribution is stored.
+	 * @param key
+	 *            The name of the saved distribution.
+	 * @return The saved distribution, or {@code null} if no distribution with
+	 *         the given name was saved. This function will also return
+	 *         {@code null} if the storage cannot be used.
+	 */
+	public double[] getDistribution(String geometry, String key) {
+		if (state != INITIALISED) {
+			return null;
+		}
+
+		HashMap<String, Object> firstLevel = FingerpaintJsonizer
+				.hashMapFromString(localStorage.getItem(KEY_INITDIST));
+		if (firstLevel.containsKey(geometry)) {
+			HashMap<String, Object> secondLevel = FingerpaintJsonizer
+					.hashMapFromString((String) firstLevel.get(geometry));
+			for (String secondLevelKey : secondLevel.keySet()) {
+				if (secondLevelKey.equals(key)) {
+					return FingerpaintJsonizer
+							.doubleArrayFromString((String) secondLevel
+									.get(secondLevelKey));
+				}
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Return a list of all distributions stored under the given geometry.
+	 * 
+	 * @param geometry
+	 *            The geometry under which saved distributions need to be found.
+	 * @return A list of all saved distributions (may be an empty list), or
+	 *         {@code null} if the given geometry is not at all present in the
+	 *         storage. When the latter happens, you probably asked for a
+	 *         non-existent geometry, because all default geometries are loaded
+	 *         in the storage on initialisation. This function will also return
+	 *         {@code null} if the storage cannot be used.
+	 */
+	public List<String> getDistributions(String geometry) {
+		if (state != INITIALISED) {
+			return null;
+		}
+
+		GWT.log("getDistributions");
+		HashMap<String, Object> firstLevel = FingerpaintJsonizer
+				.hashMapFromString(localStorage.getItem(KEY_INITDIST));
+		if (firstLevel.containsKey(geometry)) {
+			for (String bla : firstLevel.keySet()) {
+				GWT.log("KEY: " + bla + ", VAL: " + firstLevel.get(bla));
+			}
+			HashMap<String, Object> secondLevel = FingerpaintJsonizer
+					.hashMapFromString((String) firstLevel.get(geometry));
+			ArrayList<String> result = new ArrayList<String>();
+			for (String secondLevelKey : secondLevel.keySet()) {
+				result.add(secondLevelKey);
+			}
+			return result;
+		}
+		return null;
+	}
+
+	/**
 	 * Save an initial distribution to the local storage. If the name already
 	 * exists, do not attempt to overwrite.
 	 * 
@@ -164,7 +234,8 @@ public class StorageManager {
 	 * @param value
 	 *            The distribution to be saved.
 	 * @return True if the value has been saved, false if the name is already in
-	 *         use (no attempt to overwrite will be made).
+	 *         use (no attempt to overwrite will be made). Will also return
+	 *         false when the storage cannot be used.
 	 */
 	public boolean putDistribution(String geometry, String key, double[] value) {
 		return putDistribution(geometry, key, value, false);
@@ -184,20 +255,24 @@ public class StorageManager {
 	 *            If the value should be overwritten if the name is already in
 	 *            use.
 	 * @return True if the value has been saved, false if the name is already in
-	 *         use (no attempt to overwrite will be made).
+	 *         use (no attempt to overwrite will be made). Will also return
+	 *         false when the storage cannot be used.
 	 */
 	public boolean putDistribution(String geometry, String key, double[] value,
 			boolean overwrite) {
+		if (state != INITIALISED) {
+			return false;
+		}
+
 		if (isNameInUse(KEY_INITDIST, geometry, key) && !overwrite) {
 			return false;
 		}
 
 		HashMap<String, Object> firstLevel = FingerpaintJsonizer
-				.fromString(localStorage.getItem(KEY_INITDIST));
-		GWT.log(firstLevel.get(GeometryNames.CIRC_SHORT).toString());
+				.hashMapFromString(localStorage.getItem(KEY_INITDIST));
 		if (firstLevel.containsKey(geometry)) {
 			HashMap<String, Object> secondLevel = FingerpaintJsonizer
-					.fromString((String) firstLevel.get(geometry));
+					.hashMapFromString((String) firstLevel.get(geometry));
 			secondLevel.put(key, FingerpaintJsonizer.toString(value));
 			firstLevel.put(geometry, FingerpaintJsonizer.toString(secondLevel));
 			localStorage.setItem(KEY_INITDIST,
@@ -239,7 +314,7 @@ public class StorageManager {
 		if (thirdLevelKey == null) {
 			// Looking for a result here
 			HashMap<String, Object> results = FingerpaintJsonizer
-					.fromString(localStorage.getItem(firstLevelKey));
+					.hashMapFromString(localStorage.getItem(firstLevelKey));
 			for (String key : results.keySet()) {
 				if (key.equals(secondLevelKey)) {
 					return true;
@@ -249,10 +324,11 @@ public class StorageManager {
 		} else {
 			// Looking for a distribution or protocol here
 			HashMap<String, Object> firstLevel = FingerpaintJsonizer
-					.fromString(localStorage.getItem(firstLevelKey));
+					.hashMapFromString(localStorage.getItem(firstLevelKey));
 			if (firstLevel.containsKey(secondLevelKey)) {
 				HashMap<String, Object> secondLevel = FingerpaintJsonizer
-						.fromString((String) firstLevel.get(secondLevelKey));
+						.hashMapFromString((String) firstLevel
+								.get(secondLevelKey));
 				for (String key : secondLevel.keySet()) {
 					if (key.equals(thirdLevelKey)) {
 						return true;
