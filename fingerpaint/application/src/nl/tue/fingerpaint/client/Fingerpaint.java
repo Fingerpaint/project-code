@@ -5,11 +5,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import nl.tue.fingerpaint.client.Geometry.StepAddedListener;
-
-import nl.tue.fingerpaint.client.MixingStep.MixingStepJsonizer;
 import nl.tue.fingerpaint.client.json.ProtocolMap;
 import nl.tue.fingerpaint.client.json.ProtocolStorage;
-
 import nl.tue.fingerpaint.client.resources.FingerpaintConstants;
 import nl.tue.fingerpaint.client.resources.FingerpaintResources;
 import nl.tue.fingerpaint.client.serverdata.ServerDataCache;
@@ -44,7 +41,6 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -88,6 +84,30 @@ public class Fingerpaint implements EntryPoint {
 	// Button to load a mixing protocol
 	private Button loadProtocolButton;
 
+	// --------------------------------------------------------------------------------------
+	// Popup Panel to handle the loading of an initial distribution or mixing
+	// protocol
+
+	// Vertical Panel to hold the textbar and the cancel button in the load
+	// popuppanel
+	private VerticalPanel loadVerticalPanel;
+
+	// close Button inside the save popup menu
+	private Button closeLoadButton;
+
+	// --------------------------------------------------------------------------------------
+
+	// Button to remove previously saved results
+
+	// --------------------------------------------------------------------------------------
+
+	// Button to adapt the drawing tool
+	// TODO: Change this to a button on which the current tool is drawn
+
+	// Panel that covers the entire application and blocks the user from
+	// accessing other features
+	private static FlowPanel loadingPanel = new FlowPanel();
+
 	// Popup Panel to handle the saving of the current results
 	private PopupPanel saveResultsPanel;
 
@@ -123,23 +143,11 @@ public class Fingerpaint implements EntryPoint {
 	private HorizontalPanel confirmButtonsPanel;
 
 	// Ok / Cancel button to close the save results popup panel
-	private Button closeSaveResultsButton;
+	private Button closeSaveButton;
 
 	// Overwrite button to confirm the save if an already used name has been
 	// chosen
-	private Button confirmSaveButton;
-
-	// --------------------------------------------------------------------------------------
-	// Popup Panel to handle the loading of an initial distribution or mixing
-	// protocol
-	private PopupPanel loadPanel;
-
-	// Vertical Panel to hold the textbar and the cancel button in the load
-	// popuppanel
-	private VerticalPanel loadVerticalPanel;
-
-	// close Button inside the save popup menu
-	private Button closeLoadButton;
+	private Button confirmSaveResultsButton;
 
 	// --------------------------------------------------------------------------------------
 
@@ -159,6 +167,18 @@ public class Fingerpaint implements EntryPoint {
 	private Button closeResultsButton;
 
 	// --------------------------------------------------------------------------------------
+
+	private Button saveProtocolButton;
+
+	private Button saveProtocolPanelButton;
+
+	private Button confirmSaveProtocolButton;
+
+	private Button saveDistributionButton;
+
+	private Button saveDistributionPanelButton;
+
+	private Button confirmSaveDistributionButton;
 
 	// Button to adapt the drawing tool
 	// TODO: Change this to a button on which the current tool is drawn
@@ -190,7 +210,7 @@ public class Fingerpaint implements EntryPoint {
 
 	// Panel that covers the entire application and blocks the user from
 	// accessing other features
-	private static FlowPanel loadingPanel = new FlowPanel();
+	private static PopupPanel loadPanel = new PopupPanel();
 	private Label loadPanelMessage;
 
 	// The NumberSpinner and label to define the step size
@@ -211,8 +231,6 @@ public class Fingerpaint implements EntryPoint {
 	/**
 	 * Shows the textual representation of the mixing protocol.
 	 */
-	private TextArea taProtocolRepresentation = new TextArea();
-
 	// Button that executes the current mixing run when it is pressed
 	private Button mixNowButton;
 
@@ -240,6 +258,11 @@ public class Fingerpaint implements EntryPoint {
 	// a vertical scroll bar appears.
 	private final int topBarHeight = 65;
 
+	/**
+	 * Shows the textual representation of the mixing protocol.
+	 */
+	private TextArea taProtocolRepresentation = new TextArea();
+
 	private Storage storage;
 
 	/**
@@ -254,6 +277,7 @@ public class Fingerpaint implements EntryPoint {
 		Image loadImage = new Image(FingerpaintResources.INSTANCE.loadImage()
 				.getSafeUri());
 		loadingPanel.add(loadImage);
+
 		// Add label that may contain explanatory text
 		loadPanelMessage = new Label(
 				FingerpaintConstants.INSTANCE.loadingGeometries(), false);
@@ -340,12 +364,29 @@ public class Fingerpaint implements EntryPoint {
 	}
 
 	private void saveProtocol(String name) {
-		String jsonProtocols = storage.getItem("PROT");
-		// TODO: extract
-		ProtocolStorage saveProtObject = null; // TODO:
-		ProtocolMap saveProt = saveProtObject.getProtocols().get("RECT"); // TODO:
-																			// Replace
-																			// RECT
+		// JSONObject jsonProtocols;
+		String jsonProtocols;
+		// try {
+		// jsonProtocols = new JSONObject(storage.getItem("PROT"));
+		jsonProtocols = storage.getItem("PROT");
+		// } catch (JSONException e) {
+		// System.err.println(e.toString());
+		// jsonProtocols = null;
+		// }
+		ProtocolStorage saveProtObject = null;
+		if (jsonProtocols == null) {
+			saveProtObject = new ProtocolStorage();
+		} else {
+			saveProtObject = ProtocolStorage.unJsonize(jsonProtocols);
+			// TODO: extract
+		}
+
+		String shortName = GeometryNames.getShortName(as.getGeometryChoice());
+		ProtocolMap saveProt = saveProtObject.getProtocols().get(shortName);
+		if (saveProt == null) {
+			saveProt = new ProtocolMap();
+			saveProtObject.addProtocol(shortName, saveProt);
+		}
 		saveProt.addProtocol(name, as.getProtocol());
 		storage.setItem("PROT", saveProtObject.jsonize());
 	}
@@ -566,6 +607,10 @@ public class Fingerpaint implements EntryPoint {
 			createRemoveSavedResultsButton();
 			menuPanel.add(removeSavedResultsButton);
 
+			// Initialise the saveProtocolButton and add it to the menuPanel
+			createSaveDistributionButton();
+			menuPanel.add(saveDistributionButton);
+
 			// Initialise a spinner for changing the length of a mixing protocol
 			// step and add to menuPanel.
 			createStepSizeSpinner();
@@ -584,6 +629,9 @@ public class Fingerpaint implements EntryPoint {
 			// Initialise the resetProtocol button
 			createResetProtocolButton();
 
+			// Initialise the saveProtocolButton and add it to the menuPanel
+			createSaveProtocolButton();
+
 			createProtocolRepresentationTextArea();
 
 			// Initialise the mixNow button
@@ -596,6 +644,7 @@ public class Fingerpaint implements EntryPoint {
 			menuPanel.add(nrStepsSpinner);
 			menuPanel.add(taProtocolRepresentation);
 			menuPanel.add(mixNowButton);
+			menuPanel.add(saveProtocolButton);
 			menuPanel.add(resetProtocolButton);
 			toggleProtocolWidgets(false);
 
@@ -723,6 +772,8 @@ public class Fingerpaint implements EntryPoint {
 		nrStepsSpinner.setVisible(value);
 		taProtocolRepresentation.setVisible(value);
 		mixNowButton.setVisible(value);
+		saveProtocolButton.setVisible(value);
+		saveProtocolButton.setEnabled(value);
 		resetProtocolButton.setVisible(value);
 		resetProtocolButton.setEnabled(value);
 	}
@@ -920,43 +971,55 @@ public class Fingerpaint implements EntryPoint {
 		});
 	}
 
-	/*
-	 * Initialises the createSaveResultsButton. When pressed, this button allows
-	 * a user to save a mixing run
-	 */
-	private void createSaveResultsButton() {
+	// /*
+	// * Initialises the createSaveResultsButton. When pressed, this button
+	// allows
+	// * a user to save a mixing run
+	// */
+	// private void createSaveResultsButton() {
+	// // TODO: The text 'Save Results' should be translated later on
+	// saveResultsButton = new Button("Save Results");
+	// saveResultsPanel = new PopupPanel();
+	// saveResultsPanel.setModal(true);
+	//
+	// // Initially, the save button is disabled; it will become available if
+	// // "Mix Now" is pressed.
+	// saveResultsButton.setEnabled(true); // TODO: Set to false. True is for
+	// // testing only
+	//
+	// saveResultsVerticalPanel = new VerticalPanel();
+	// saveButtonsPanel = new HorizontalPanel();
+	// saveNameTextBox = new TextBox();
+	// saveNameTextBox.setMaxLength(30);
+	//
+	// saveResultsPanelButton = new Button("Save");
+	// saveResultsPanelButton.setEnabled(false);
+	// cancelSaveResultsButton = new Button("Cancel");
+	// confirmSavePanel = new PopupPanel();
+	// confirmSavePanel.setModal(true);
+	//
+	// confirmSaveVerticalPanel = new VerticalPanel();
+	// saveMessageLabel = new Label();
+	// confirmButtonsPanel = new HorizontalPanel();
+	// closeSaveResultsButton = new Button();
+	// confirmSaveButton = new Button("Overwrite");
+	//
+	// // Display the first popuppanel when the save button is pressed
+
+	private void createSaveProtocolButton() {
 		// TODO: The text 'Save Results' should be translated later on
-		saveResultsButton = new Button("Save Results");
-		saveResultsPanel = new PopupPanel();
-		saveResultsPanel.setModal(true);
+		saveProtocolButton = new Button("Save Protocol");
+		saveProtocolButton.setEnabled(true);
+		saveProtocolPanelButton = new Button("Save");
+		saveProtocolPanelButton.setEnabled(false);
+		confirmSaveProtocolButton = new Button("Overwrite");
 
-		// Initially, the save button is disabled; it will become available if
-		// "Mix Now" is pressed.
-		saveResultsButton.setEnabled(true); // TODO: Set to false. True is for
-											// testing only
-
-		saveResultsVerticalPanel = new VerticalPanel();
-		saveButtonsPanel = new HorizontalPanel();
-		saveNameTextBox = new TextBox();
-		saveNameTextBox.setMaxLength(30);
-
-		saveResultsPanelButton = new Button("Save");
-		saveResultsPanelButton.setEnabled(false);
-		cancelSaveResultsButton = new Button("Cancel");
-		confirmSavePanel = new PopupPanel();
-		confirmSavePanel.setModal(true);
-
-		confirmSaveVerticalPanel = new VerticalPanel();
-		saveMessageLabel = new Label();
-		confirmButtonsPanel = new HorizontalPanel();
-		closeSaveResultsButton = new Button();
-		confirmSaveButton = new Button("Overwrite");
-
-		// Display the first popuppanel when the save button is pressed
-		saveResultsButton.addClickHandler(new ClickHandler() {
+		saveProtocolButton.addClickHandler(new ClickHandler() {
 
 			@Override
 			public void onClick(ClickEvent event) {
+				createSavePanel(saveProtocolButton, saveProtocolPanelButton,
+						confirmSaveProtocolButton);
 				saveResultsPanel
 						.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
 							public void setPosition(int offsetWidth,
@@ -971,21 +1034,19 @@ public class Fingerpaint implements EntryPoint {
 
 		});
 
-		// add all components to first popuppanel
-		saveResultsPanel.add(saveResultsVerticalPanel);
-		saveResultsVerticalPanel.add(saveNameTextBox);
-		saveResultsVerticalPanel.add(saveButtonsPanel);
-		saveButtonsPanel.add(saveResultsPanelButton);
-		saveButtonsPanel.add(cancelSaveResultsButton);
+		confirmSaveProtocolButton.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				String name = saveNameTextBox.getText();
+				saveProtocol(name);
+				saveMessageLabel.setText("Save has been succesful");
+				closeSaveButton.setText("OK");
+				confirmSaveProtocolButton.removeFromParent();
+				confirmSavePanel.center();
+			}
+		});
 
-		// add all components to second popup panel
-		confirmSavePanel.add(confirmSaveVerticalPanel);
-		confirmSaveVerticalPanel.add(saveMessageLabel);
-		confirmSaveVerticalPanel.add(confirmButtonsPanel);
-		confirmButtonsPanel.add(closeSaveResultsButton);
-
-		// display the second popup panel when the second save button is pressed
-		saveResultsPanelButton.addClickHandler(new ClickHandler() {
+		saveProtocolPanelButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				String name = saveNameTextBox.getText();
@@ -993,17 +1054,17 @@ public class Fingerpaint implements EntryPoint {
 					saveMessageLabel.setText("This name is already in use. "
 							+ "Choose whether to overwrite existing file "
 							+ "or to cancel.");
-					closeSaveResultsButton.setText("Cancel");
+					closeSaveButton.setText("Cancel");
 
-					confirmButtonsPanel.remove(closeSaveResultsButton);
-					confirmButtonsPanel.add(confirmSaveButton);
-					confirmButtonsPanel.add(closeSaveResultsButton);
+					confirmButtonsPanel.remove(closeSaveButton);
+					confirmButtonsPanel.add(confirmSaveProtocolButton);
+					confirmButtonsPanel.add(closeSaveButton);
 				} else {
-					saveState(name);
+					saveProtocol(name);
 					saveMessageLabel.setText("Save has been succesful");
-					closeSaveResultsButton.setText("OK");
-					if (confirmSaveButton.isAttached()) {
-						confirmButtonsPanel.remove(confirmSaveButton);
+					closeSaveButton.setText("OK");
+					if (confirmSaveProtocolButton.isAttached()) {
+						confirmButtonsPanel.remove(confirmSaveProtocolButton);
 					}
 				}
 				confirmSavePanel
@@ -1019,13 +1080,226 @@ public class Fingerpaint implements EntryPoint {
 			}
 		});
 
+		createSavePanel(saveProtocolButton, saveProtocolPanelButton,
+				confirmSaveProtocolButton);
+	}
+
+	/*
+	 * Initialises the createSaveResultsButton. When pressed, this button allows
+	 * a user to save a mixing run
+	 */
+	private void createSaveResultsButton() {
+		// TODO: The text 'Save Results' should be translated later on
+		saveResultsButton = new Button("Save Results");
+		saveResultsButton.setEnabled(true);
+		saveResultsPanelButton = new Button("Save");
+		saveResultsPanelButton.setEnabled(false);
+		confirmSaveResultsButton = new Button("Overwrite");
+
+		saveResultsButton.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+
+				createSavePanel(saveResultsButton, saveResultsPanelButton,
+						confirmSaveResultsButton);
+				saveResultsPanel
+						.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
+							public void setPosition(int offsetWidth,
+									int offsetHeight) {
+								int left = (Window.getClientWidth() - offsetWidth) / 2;
+								int top = (Window.getClientHeight() - offsetHeight) / 2;
+								saveResultsPanel.setPopupPosition(left, top);
+							}
+						});
+				saveNameTextBox.setFocus(true);
+			}
+
+		});
+
+		confirmSaveResultsButton.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				String name = saveNameTextBox.getText();
+				saveState(name);
+				saveMessageLabel.setText("Save has been succesful");
+				closeSaveButton.setText("OK");
+				confirmSaveResultsButton.removeFromParent();
+				confirmSavePanel.center();
+			}
+		});
+
+		saveResultsPanelButton.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				String name = saveNameTextBox.getText();
+				if (isNameInUse(name)) {
+					saveMessageLabel.setText("This name is already in use. "
+							+ "Choose whether to overwrite existing file "
+							+ "or to cancel.");
+					closeSaveButton.setText("Cancel");
+
+					confirmButtonsPanel.remove(closeSaveButton);
+					confirmButtonsPanel.add(confirmSaveResultsButton);
+					confirmButtonsPanel.add(closeSaveButton);
+				} else {
+					saveState(name);
+					saveMessageLabel.setText("Save has been succesful");
+					closeSaveButton.setText("OK");
+					if (confirmSaveResultsButton.isAttached()) {
+						confirmButtonsPanel.remove(confirmSaveResultsButton);
+					}
+				}
+				confirmSavePanel
+						.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
+							public void setPosition(int offsetWidth,
+									int offsetHeight) {
+								int left = (Window.getClientWidth() - offsetWidth) / 2;
+								int top = (Window.getClientHeight() - offsetHeight) / 2;
+								confirmSavePanel.setPopupPosition(left, top);
+							}
+						});
+				saveResultsPanel.hide();
+			}
+		});
+
+	}
+
+	/*
+	 * Initialises the createSaveButton. When pressed, this button allows a user
+	 * to save a mixing run
+	 */
+	private void createSaveDistributionButton() {
+		// TODO: The text 'Save Distribution' should be translated later on
+		saveDistributionButton = new Button("Save Distribution");
+		saveDistributionButton.setEnabled(true);
+		saveDistributionPanelButton = new Button("Save");
+		saveDistributionPanelButton.setEnabled(false);
+		confirmSaveDistributionButton = new Button("Overwrite");
+
+		saveDistributionButton.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				createSavePanel(saveDistributionButton,
+						saveDistributionPanelButton,
+						confirmSaveDistributionButton);
+				saveResultsPanel
+						.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
+							public void setPosition(int offsetWidth,
+									int offsetHeight) {
+								int left = (Window.getClientWidth() - offsetWidth) / 2;
+								int top = (Window.getClientHeight() - offsetHeight) / 2;
+								saveResultsPanel.setPopupPosition(left, top);
+							}
+						});
+				saveNameTextBox.setFocus(true);
+			}
+
+		});
+
+		confirmSaveDistributionButton.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				String name = saveNameTextBox.getText();
+				saveDistribution(name);
+				saveMessageLabel.setText("Save has been succesful");
+				closeSaveButton.setText("OK");
+				confirmSaveDistributionButton.removeFromParent();
+				confirmSavePanel.center();
+			}
+		});
+
+		saveDistributionPanelButton.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				String name = saveNameTextBox.getText();
+				if (isNameInUse(name)) {
+					saveMessageLabel.setText("This name is already in use. "
+							+ "Choose whether to overwrite existing file "
+							+ "or to cancel.");
+					closeSaveButton.setText("Cancel");
+
+					confirmButtonsPanel.remove(closeSaveButton);
+					confirmButtonsPanel.add(confirmSaveDistributionButton);
+					confirmButtonsPanel.add(closeSaveButton);
+				} else {
+					saveDistribution(name);
+					saveMessageLabel.setText("Save has been succesful");
+					closeSaveButton.setText("OK");
+					if (confirmSaveDistributionButton.isAttached()) {
+						confirmButtonsPanel
+								.remove(confirmSaveDistributionButton);
+					}
+				}
+				confirmSavePanel
+						.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
+							public void setPosition(int offsetWidth,
+									int offsetHeight) {
+								int left = (Window.getClientWidth() - offsetWidth) / 2;
+								int top = (Window.getClientHeight() - offsetHeight) / 2;
+								confirmSavePanel.setPopupPosition(left, top);
+							}
+						});
+				saveResultsPanel.hide();
+			}
+
+		});
+
+	}
+
+	private void saveDistribution(String name) {
+		// TODO Auto-generated method stub
+
+	}
+
+	public void createSavePanel(Button save1, final Button save2,
+			final Button overwrite) {
+
+		saveResultsPanel = new PopupPanel();
+		saveResultsPanel.setModal(true);
+
+		// Initially, the save button is disabled; it will become available if
+		// "Mix Now" is pressed.
+
+		saveResultsVerticalPanel = new VerticalPanel();
+		saveButtonsPanel = new HorizontalPanel();
+		saveNameTextBox = new TextBox();
+		saveNameTextBox.setMaxLength(30);
+
+		cancelSaveResultsButton = new Button("Cancel");
+		confirmSavePanel = new PopupPanel();
+		confirmSavePanel.setModal(true);
+
+		confirmSaveVerticalPanel = new VerticalPanel();
+		saveMessageLabel = new Label();
+		confirmButtonsPanel = new HorizontalPanel();
+		closeSaveButton = new Button();
+
+		// Display the first popuppanel when the save button is pressed
+
+		// add all components to first popuppanel
+		saveResultsPanel.add(saveResultsVerticalPanel);
+		saveResultsVerticalPanel.add(saveNameTextBox);
+		saveResultsVerticalPanel.add(saveButtonsPanel);
+		saveButtonsPanel.add(save2);
+		saveButtonsPanel.add(cancelSaveResultsButton);
+
+		// add all components to second popup panel
+		confirmSavePanel.add(confirmSaveVerticalPanel);
+		confirmSaveVerticalPanel.add(saveMessageLabel);
+		confirmSaveVerticalPanel.add(confirmButtonsPanel);
+		confirmButtonsPanel.add(closeSaveButton);
+
+		// display the second popup panel when the second save button is pressed
+
 		// Hide the first popup panel when the first cancel button is pressed
 		cancelSaveResultsButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				saveResultsPanel.hide();
 				saveNameTextBox.setText("");
-				saveResultsPanelButton.setEnabled(false);
+				save2.setEnabled(false);
 			}
 		});
 
@@ -1049,42 +1323,28 @@ public class Fingerpaint implements EntryPoint {
 					textlength--;
 				}
 				if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER) {
-					saveResultsPanelButton.click();
+					save2.click();
 				}
-				saveResultsPanelButton.setEnabled(textlength > 0);
+				save2.setEnabled(textlength > 0);
 			}
 		});
 
 		// Hide both popup panels if the OK button was pressed. Hide only the
 		// second panel if the cancel button was pressed.
-		closeSaveResultsButton.addClickHandler(new ClickHandler() {
+		closeSaveButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				confirmSavePanel.hide();
-				if (!closeSaveResultsButton.getText().equals("OK")) {
-					confirmSavePanel.remove(confirmSaveButton);
+				if (!closeSaveButton.getText().equals("OK")) {
+					confirmSavePanel.remove(overwrite);
 					saveResultsPanel.show();
 					saveNameTextBox.setSelectionRange(0, saveNameTextBox
 							.getText().length());
 					saveNameTextBox.setFocus(true);
 				} else {
 					saveNameTextBox.setText("");
-					saveResultsPanelButton.setEnabled(false);
+					save2.setEnabled(false);
 				}
-			}
-		});
-
-		// Display a save was succesful message after overwrite has been
-		// pressed.
-		confirmSaveButton.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				String name = saveNameTextBox.getText();
-				saveState(name);
-				saveMessageLabel.setText("Save has been succesful");
-				closeSaveResultsButton.setText("OK");
-				confirmSaveButton.removeFromParent();
-				confirmSavePanel.center();
 			}
 		});
 	}
@@ -1151,7 +1411,7 @@ public class Fingerpaint implements EntryPoint {
 								//as.setProtocol(StorageManager.INSTANCE.getProtocol(selected));
 
 								// TODO: Remove this substitute functionality
-								Window.alert("Look, it works! You selected "
+								Window.alert("Dummy functionality: \n Look, it works! You selected "
 										+ selected);
 								loadPanel.removeFromParent();
 							}
@@ -1184,6 +1444,7 @@ public class Fingerpaint implements EntryPoint {
 		loadInitDistButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
+
 				loadVerticalPanel = new VerticalPanel();
 				loadPanel = new PopupPanel();
 				loadPanel.setModal(true);
@@ -1199,9 +1460,10 @@ public class Fingerpaint implements EntryPoint {
 				
 				
 				//TODO: un-comment when StorageManager is implemented.				
+
 				// Get all initial distributions for current geometry
-//				List<String> geometryDistributions = StorageManager.INSTANCE
-//						.getDistributions(as.getGeometryChoice());
+				// List<String> geometryDistributions = StorageManager.INSTANCE
+				// .getDistributions(as.getGeometryChoice());
 
 				// TODO: Replace with geometryDistributions after StorageManager
 				// is implemented.
@@ -1228,11 +1490,12 @@ public class Fingerpaint implements EntryPoint {
 
 								// TODO: un-comment after StorageManager
 								// is implemented.
-								// get the selected initial distribution, and set it in the AS								
-								//as.setInitialDistribution(StorageManager.INSTANCE.getDistributions(selected));
+								// get the selected initial distribution, and
+								// set it in the AS
+								// as.setInitialDistribution(StorageManager.INSTANCE.getDistributions(selected));
 
 								// TODO: Remove this substitute functionality
-								Window.alert("Look, it works! You selected "
+								Window.alert("Dummy functionality: \n Look, it works! You selected "
 										+ selected);
 								loadPanel.removeFromParent();
 							}

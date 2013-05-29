@@ -1,5 +1,6 @@
 package nl.tue.fingerpaint.client.json;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import nl.tue.fingerpaint.client.MixingProtocol;
@@ -7,10 +8,12 @@ import nl.tue.fingerpaint.client.MixingProtocol.MixingProtocolJsonizer;
 
 import org.jsonmaker.gwt.client.Jsonizer;
 import org.jsonmaker.gwt.client.JsonizerException;
+import org.jsonmaker.gwt.client.JsonizerParser;
 import org.jsonmaker.gwt.client.base.Defaults;
 import org.jsonmaker.gwt.client.base.HashMapJsonizer;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.JavaScriptObject;
 
 public class ProtocolMap {
 	private HashMap<String, MixingProtocol> protocols = new HashMap<String, MixingProtocol>();
@@ -30,9 +33,19 @@ public class ProtocolMap {
 
 		return hj.asString(protocols);
 	}
+	
+	public static ProtocolMap unJsonize(String jsValue) {
+		ProtocolMap result = (ProtocolMap) JsonizerParser.parse((MixingProtocolJsonizer) GWT
+				.create(MixingProtocolJsonizer.class), jsValue);
+		
+		return result;
+	}
 
 	public interface ProtocolMapJsonizer extends Jsonizer {
 		@Override
 		public String asString(Object javaValue) throws JsonizerException;
+		@Override
+		public Object asJavaObject(JavaScriptObject jsValue)
+				throws JsonizerException;
 	}
 }
