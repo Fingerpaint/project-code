@@ -33,17 +33,20 @@ public class ProtocolMap {
 
 		return hj.asString(protocols);
 	}
-	
+
 	public static ProtocolMap unJsonize(String jsValue) {
-		ProtocolMap result = (ProtocolMap) JsonizerParser.parse((MixingProtocolJsonizer) GWT
-				.create(MixingProtocolJsonizer.class), jsValue);
-		
+		HashMapJsonizer hj = new HashMapJsonizer(Defaults.STRING_JSONIZER,
+				(MixingProtocolJsonizer) GWT
+						.create(MixingProtocolJsonizer.class));
+		ProtocolMap result = (ProtocolMap) JsonizerParser.parse(hj, jsValue);
+
 		return result;
 	}
 
 	public interface ProtocolMapJsonizer extends Jsonizer {
 		@Override
 		public String asString(Object javaValue) throws JsonizerException;
+
 		@Override
 		public Object asJavaObject(JavaScriptObject jsValue)
 				throws JsonizerException;

@@ -5,8 +5,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import nl.tue.fingerpaint.client.Geometry.StepAddedListener;
-import nl.tue.fingerpaint.client.json.ProtocolMap;
-import nl.tue.fingerpaint.client.json.ProtocolStorage;
 import nl.tue.fingerpaint.client.resources.FingerpaintConstants;
 import nl.tue.fingerpaint.client.resources.FingerpaintResources;
 import nl.tue.fingerpaint.client.serverdata.ServerDataCache;
@@ -28,7 +26,6 @@ import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.http.client.RequestTimeoutException;
 import com.google.gwt.storage.client.Storage;
-import com.google.gwt.storage.client.StorageMap;
 import com.google.gwt.user.cellview.client.CellBrowser;
 import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
@@ -69,9 +66,6 @@ public class Fingerpaint implements EntryPoint {
 	// Button to toggle between black and white drawing colour
 	private ToggleButton toggleColor;
 
-	// Button to save the current distribution
-	private Button saveDistButton;
-
 	// Button to load predefined distribution half black, half white
 	// Needed for testing purposes for story 32
 	private Button loadDistButton;
@@ -84,7 +78,7 @@ public class Fingerpaint implements EntryPoint {
 
 	// Button to load an initial distribution
 	private Button loadInitDistButton;
-	
+
 	// Button to load a mixing protocol
 	private Button loadProtocolButton;
 
@@ -125,9 +119,6 @@ public class Fingerpaint implements EntryPoint {
 	// Textbox to input the name in to name the file
 	private TextBox saveNameTextBox;
 
-	// Save Button inside the save popup menu
-	private Button saveResultsPanelButton;
-
 	// Cancel Button inside the save popup menu
 	private Button cancelSaveResultsButton;
 
@@ -148,10 +139,6 @@ public class Fingerpaint implements EntryPoint {
 
 	// Ok / Cancel button to close the save results popup panel
 	private Button closeSaveButton;
-
-	// Overwrite button to confirm the save if an already used name has been
-	// chosen
-	private Button confirmSaveResultsButton;
 
 	// --------------------------------------------------------------------------------------
 
@@ -174,15 +161,11 @@ public class Fingerpaint implements EntryPoint {
 
 	private Button saveProtocolButton;
 
-	private Button saveProtocolPanelButton;
-
-	private Button confirmSaveProtocolButton;
-
 	private Button saveDistributionButton;
 
-	private Button saveDistributionPanelButton;
+	private Button savePanelButton;
 
-	private Button confirmSaveDistributionButton;
+	private Button confirmSaveButton;
 
 	// Button to adapt the drawing tool
 	// TODO: Change this to a button on which the current tool is drawn
@@ -268,6 +251,7 @@ public class Fingerpaint implements EntryPoint {
 	private TextArea taProtocolRepresentation = new TextArea();
 
 	private Storage storage;
+	private String koeala;
 
 	/**
 	 * This is the entry point method.
@@ -354,78 +338,9 @@ public class Fingerpaint implements EntryPoint {
 		}
 	}
 
-	/**
-	 * Saves the state of the application to the HTML5 local storage under key
-	 * {@code name}.
-	 * 
-	 * @param name
-	 *            The name to save the state under.
+	/*
+	 * TODO : Call this when a new state has been loaded
 	 */
-	private void saveState(String name) {
-		String asJson = as.jsonize();
-
-		storage.setItem(name, asJson);
-	}
-
-	private void saveProtocol(String name) {
-		// JSONObject jsonProtocols;
-		String jsonProtocols;
-		// try {
-		// jsonProtocols = new JSONObject(storage.getItem("PROT"));
-		jsonProtocols = storage.getItem("PROT");
-		// } catch (JSONException e) {
-		// System.err.println(e.toString());
-		// jsonProtocols = null;
-		// }
-		ProtocolStorage saveProtObject = null;
-		if (jsonProtocols == null) {
-			saveProtObject = new ProtocolStorage();
-		} else {
-			saveProtObject = ProtocolStorage.unJsonize(jsonProtocols);
-			// TODO: extract
-		}
-
-		String shortName = GeometryNames.getShortName(as.getGeometryChoice());
-		ProtocolMap saveProt = saveProtObject.getProtocols().get(shortName);
-		if (saveProt == null) {
-			saveProt = new ProtocolMap();
-			saveProtObject.addProtocol(shortName, saveProt);
-		}
-		saveProt.addProtocol(name, as.getProtocol());
-		storage.setItem("PROT", saveProtObject.jsonize());
-	}
-
-	/**
-	 * Returns whether a saved state with key {@code name} exists in local
-	 * storage.
-	 * 
-	 * @param name
-	 *            The key to check.
-	 * @return whether a saved state with key {@code name} exists in local
-	 *         storage.
-	 */
-	private boolean isNameInUse(String name) {
-		StorageMap storageMap = new StorageMap(storage);
-		return storageMap.containsKey(name);
-	}
-
-	/**
-	 * Loads the JSON object from HTML storage. Has no effect if no information
-	 * is stored under {@code saveName}.
-	 * 
-	 * @param saveName
-	 */
-	private void loadState(String saveName) {
-		String jsonObject = storage.getItem(saveName);
-
-		if (jsonObject != null && jsonObject != "") {
-			as.unJsonize(jsonObject);
-			as.drawDistribution();
-		}
-
-		refreshWidgets();
-	}
-
 	private void refreshWidgets() {
 		nrStepsSpinner.setValue(as.getNrSteps());
 		sizeSpinner.setValue(as.getStepSize());
@@ -585,10 +500,6 @@ public class Fingerpaint implements EntryPoint {
 			createToggleButton();
 			menuPanel.add(toggleColor);
 
-			// Initialise the saveDistButton and add to menuPanel
-			createSaveDistButton();
-			menuPanel.add(saveDistButton);
-
 			// Initialise the loadDistButton and add to
 			// menuPanel
 			createLoadDistButton();
@@ -601,7 +512,7 @@ public class Fingerpaint implements EntryPoint {
 			// Initialise the loadInitDistButton and add it to the menuPanel
 			createLoadInitDistButton();
 			menuPanel.add(loadInitDistButton);
-			
+
 			// Initialise the loadProtocolButton and add it to the menuPanel
 			createLoadProtocolButton();
 			menuPanel.add(loadProtocolButton);
@@ -609,6 +520,8 @@ public class Fingerpaint implements EntryPoint {
 			// Initialise the saveResultsButton and add it to the menuPanel
 			createSaveResultsButton();
 			menuPanel.add(saveResultsButton);
+
+			createSaveWidgets();
 
 			// Initialise the removeSavedResultsButton and add it to the
 			// menuPanel
@@ -646,7 +559,7 @@ public class Fingerpaint implements EntryPoint {
 			createMixNowButton();
 
 			// TODO: Initialise other menu items and add them to menuPanel
-			// Add all the protocolwidgets to the menuPanel and hide them
+			// Add all the protocol widgets to the menuPanel and hide them
 			// initially.
 			menuPanel.add(nrStepsLabel);
 			menuPanel.add(nrStepsSpinner);
@@ -979,117 +892,31 @@ public class Fingerpaint implements EntryPoint {
 		});
 	}
 
-	// /*
-	// * Initialises the createSaveResultsButton. When pressed, this button
-	// allows
-	// * a user to save a mixing run
-	// */
-	// private void createSaveResultsButton() {
-	// // TODO: The text 'Save Results' should be translated later on
-	// saveResultsButton = new Button("Save Results");
-	// saveResultsPanel = new PopupPanel();
-	// saveResultsPanel.setModal(true);
-	//
-	// // Initially, the save button is disabled; it will become available if
-	// // "Mix Now" is pressed.
-	// saveResultsButton.setEnabled(true); // TODO: Set to false. True is for
-	// // testing only
-	//
-	// saveResultsVerticalPanel = new VerticalPanel();
-	// saveButtonsPanel = new HorizontalPanel();
-	// saveNameTextBox = new TextBox();
-	// saveNameTextBox.setMaxLength(30);
-	//
-	// saveResultsPanelButton = new Button("Save");
-	// saveResultsPanelButton.setEnabled(false);
-	// cancelSaveResultsButton = new Button("Cancel");
-	// confirmSavePanel = new PopupPanel();
-	// confirmSavePanel.setModal(true);
-	//
-	// confirmSaveVerticalPanel = new VerticalPanel();
-	// saveMessageLabel = new Label();
-	// confirmButtonsPanel = new HorizontalPanel();
-	// closeSaveResultsButton = new Button();
-	// confirmSaveButton = new Button("Overwrite");
-	//
-	// // Display the first popuppanel when the save button is pressed
-
+	/*
+	 * Initialises the saveProtocol Button. When this button is pressed, the
+	 * currently defined protocol is saved.
+	 */
 	private void createSaveProtocolButton() {
 		// TODO: The text 'Save Results' should be translated later on
 		saveProtocolButton = new Button("Save Protocol");
 		saveProtocolButton.setEnabled(true);
-		saveProtocolPanelButton = new Button("Save");
-		saveProtocolPanelButton.setEnabled(false);
-		confirmSaveProtocolButton = new Button("Overwrite");
 
 		saveProtocolButton.addClickHandler(new ClickHandler() {
 
 			@Override
 			public void onClick(ClickEvent event) {
-				createSavePanel(saveProtocolButton, saveProtocolPanelButton,
-						confirmSaveProtocolButton);
+				koeala = StorageManager.KEY_PROTOCOLS;
 				saveResultsPanel
 						.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
 							public void setPosition(int offsetWidth,
 									int offsetHeight) {
-								int left = (Window.getClientWidth() - offsetWidth) / 2;
-								int top = (Window.getClientHeight() - offsetHeight) / 2;
-								saveResultsPanel.setPopupPosition(left, top);
+								saveResultsPanel.center();
 							}
 						});
 				saveNameTextBox.setFocus(true);
 			}
 
 		});
-
-		confirmSaveProtocolButton.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				String name = saveNameTextBox.getText();
-				saveProtocol(name);
-				saveMessageLabel.setText("Save has been succesful");
-				closeSaveButton.setText("OK");
-				confirmSaveProtocolButton.removeFromParent();
-				confirmSavePanel.center();
-			}
-		});
-
-		saveProtocolPanelButton.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				String name = saveNameTextBox.getText();
-				if (isNameInUse(name)) {
-					saveMessageLabel.setText("This name is already in use. "
-							+ "Choose whether to overwrite existing file "
-							+ "or to cancel.");
-					closeSaveButton.setText("Cancel");
-
-					confirmButtonsPanel.remove(closeSaveButton);
-					confirmButtonsPanel.add(confirmSaveProtocolButton);
-					confirmButtonsPanel.add(closeSaveButton);
-				} else {
-					saveProtocol(name);
-					saveMessageLabel.setText("Save has been succesful");
-					closeSaveButton.setText("OK");
-					if (confirmSaveProtocolButton.isAttached()) {
-						confirmButtonsPanel.remove(confirmSaveProtocolButton);
-					}
-				}
-				confirmSavePanel
-						.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
-							public void setPosition(int offsetWidth,
-									int offsetHeight) {
-								int left = (Window.getClientWidth() - offsetWidth) / 2;
-								int top = (Window.getClientHeight() - offsetHeight) / 2;
-								confirmSavePanel.setPopupPosition(left, top);
-							}
-						});
-				saveResultsPanel.hide();
-			}
-		});
-
-		createSavePanel(saveProtocolButton, saveProtocolPanelButton,
-				confirmSaveProtocolButton);
 	}
 
 	/*
@@ -1100,75 +927,22 @@ public class Fingerpaint implements EntryPoint {
 		// TODO: The text 'Save Results' should be translated later on
 		saveResultsButton = new Button("Save Results");
 		saveResultsButton.setEnabled(true);
-		saveResultsPanelButton = new Button("Save");
-		saveResultsPanelButton.setEnabled(false);
-		confirmSaveResultsButton = new Button("Overwrite");
 
 		saveResultsButton.addClickHandler(new ClickHandler() {
 
 			@Override
 			public void onClick(ClickEvent event) {
-
-				createSavePanel(saveResultsButton, saveResultsPanelButton,
-						confirmSaveResultsButton);
+				koeala = StorageManager.KEY_RESULTS;
 				saveResultsPanel
 						.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
 							public void setPosition(int offsetWidth,
 									int offsetHeight) {
-								int left = (Window.getClientWidth() - offsetWidth) / 2;
-								int top = (Window.getClientHeight() - offsetHeight) / 2;
-								saveResultsPanel.setPopupPosition(left, top);
+								saveResultsPanel.center();
 							}
 						});
 				saveNameTextBox.setFocus(true);
 			}
 
-		});
-
-		confirmSaveResultsButton.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				String name = saveNameTextBox.getText();
-				saveState(name);
-				saveMessageLabel.setText("Save has been succesful");
-				closeSaveButton.setText("OK");
-				confirmSaveResultsButton.removeFromParent();
-				confirmSavePanel.center();
-			}
-		});
-
-		saveResultsPanelButton.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				String name = saveNameTextBox.getText();
-				if (isNameInUse(name)) {
-					saveMessageLabel.setText("This name is already in use. "
-							+ "Choose whether to overwrite existing file "
-							+ "or to cancel.");
-					closeSaveButton.setText("Cancel");
-
-					confirmButtonsPanel.remove(closeSaveButton);
-					confirmButtonsPanel.add(confirmSaveResultsButton);
-					confirmButtonsPanel.add(closeSaveButton);
-				} else {
-					saveState(name);
-					saveMessageLabel.setText("Save has been succesful");
-					closeSaveButton.setText("OK");
-					if (confirmSaveResultsButton.isAttached()) {
-						confirmButtonsPanel.remove(confirmSaveResultsButton);
-					}
-				}
-				confirmSavePanel
-						.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
-							public void setPosition(int offsetWidth,
-									int offsetHeight) {
-								int left = (Window.getClientWidth() - offsetWidth) / 2;
-								int top = (Window.getClientHeight() - offsetHeight) / 2;
-								confirmSavePanel.setPopupPosition(left, top);
-							}
-						});
-				saveResultsPanel.hide();
-			}
 		});
 
 	}
@@ -1181,24 +955,17 @@ public class Fingerpaint implements EntryPoint {
 		// TODO: The text 'Save Distribution' should be translated later on
 		saveDistributionButton = new Button("Save Distribution");
 		saveDistributionButton.setEnabled(true);
-		saveDistributionPanelButton = new Button("Save");
-		saveDistributionPanelButton.setEnabled(false);
-		confirmSaveDistributionButton = new Button("Overwrite");
 
 		saveDistributionButton.addClickHandler(new ClickHandler() {
 
 			@Override
 			public void onClick(ClickEvent event) {
-				createSavePanel(saveDistributionButton,
-						saveDistributionPanelButton,
-						confirmSaveDistributionButton);
+				koeala = StorageManager.KEY_INITDIST;
 				saveResultsPanel
 						.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
 							public void setPosition(int offsetWidth,
 									int offsetHeight) {
-								int left = (Window.getClientWidth() - offsetWidth) / 2;
-								int top = (Window.getClientHeight() - offsetHeight) / 2;
-								saveResultsPanel.setPopupPosition(left, top);
+								saveResultsPanel.center();
 							}
 						});
 				saveNameTextBox.setFocus(true);
@@ -1206,38 +973,48 @@ public class Fingerpaint implements EntryPoint {
 
 		});
 
-		confirmSaveDistributionButton.addClickHandler(new ClickHandler() {
+	}
+
+	/*
+	 * Initialises all widgets that are neede for the save popup panel
+	 */
+	private void createSaveWidgets() {
+
+		savePanelButton = new Button("Save");
+		savePanelButton.setEnabled(false);
+		confirmSaveButton = new Button("Overwrite");
+
+		confirmSaveButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				String name = saveNameTextBox.getText();
-				saveDistribution(name);
-				saveMessageLabel.setText("Save has been succesful");
+				save(name, true);
+				saveMessageLabel.setText("Save has been successful");
 				closeSaveButton.setText("OK");
-				confirmSaveDistributionButton.removeFromParent();
+				confirmSaveButton.removeFromParent();
 				confirmSavePanel.center();
 			}
 		});
 
-		saveDistributionPanelButton.addClickHandler(new ClickHandler() {
+		savePanelButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				String name = saveNameTextBox.getText();
-				if (isNameInUse(name)) {
+				boolean success = save(name, false);
+				if (!success) {
 					saveMessageLabel.setText("This name is already in use. "
 							+ "Choose whether to overwrite existing file "
 							+ "or to cancel.");
 					closeSaveButton.setText("Cancel");
 
 					confirmButtonsPanel.remove(closeSaveButton);
-					confirmButtonsPanel.add(confirmSaveDistributionButton);
+					confirmButtonsPanel.add(confirmSaveButton);
 					confirmButtonsPanel.add(closeSaveButton);
 				} else {
-					saveDistribution(name);
-					saveMessageLabel.setText("Save has been succesful");
+					saveMessageLabel.setText("Save has been successful");
 					closeSaveButton.setText("OK");
-					if (confirmSaveDistributionButton.isAttached()) {
-						confirmButtonsPanel
-								.remove(confirmSaveDistributionButton);
+					if (confirmSaveButton.isAttached()) {
+						confirmButtonsPanel.remove(confirmSaveButton);
 					}
 				}
 				confirmSavePanel
@@ -1253,16 +1030,6 @@ public class Fingerpaint implements EntryPoint {
 			}
 
 		});
-
-	}
-
-	private void saveDistribution(String name) {
-		// TODO Auto-generated method stub
-
-	}
-
-	public void createSavePanel(Button save1, final Button save2,
-			final Button overwrite) {
 
 		saveResultsPanel = new PopupPanel();
 		saveResultsPanel.setModal(true);
@@ -1290,7 +1057,7 @@ public class Fingerpaint implements EntryPoint {
 		saveResultsPanel.add(saveResultsVerticalPanel);
 		saveResultsVerticalPanel.add(saveNameTextBox);
 		saveResultsVerticalPanel.add(saveButtonsPanel);
-		saveButtonsPanel.add(save2);
+		saveButtonsPanel.add(savePanelButton);
 		saveButtonsPanel.add(cancelSaveResultsButton);
 
 		// add all components to second popup panel
@@ -1307,7 +1074,7 @@ public class Fingerpaint implements EntryPoint {
 			public void onClick(ClickEvent event) {
 				saveResultsPanel.hide();
 				saveNameTextBox.setText("");
-				save2.setEnabled(false);
+				savePanelButton.setEnabled(false);
 			}
 		});
 
@@ -1331,9 +1098,9 @@ public class Fingerpaint implements EntryPoint {
 					textlength--;
 				}
 				if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER) {
-					save2.click();
+					savePanelButton.click();
 				}
-				save2.setEnabled(textlength > 0);
+				savePanelButton.setEnabled(textlength > 0);
 			}
 		});
 
@@ -1344,24 +1111,44 @@ public class Fingerpaint implements EntryPoint {
 			public void onClick(ClickEvent event) {
 				confirmSavePanel.hide();
 				if (!closeSaveButton.getText().equals("OK")) {
-					confirmSavePanel.remove(overwrite);
+					confirmSavePanel.remove(confirmSaveButton);
 					saveResultsPanel.show();
 					saveNameTextBox.setSelectionRange(0, saveNameTextBox
 							.getText().length());
 					saveNameTextBox.setFocus(true);
 				} else {
 					saveNameTextBox.setText("");
-					save2.setEnabled(false);
+					savePanelButton.setEnabled(false);
 				}
 			}
 		});
 	}
-	
+
+	/*
+	 * Saves the current protocol, distribution or mixing results, depending on
+	 * which save-button was pressed last.
+	 */
+	private boolean save(String name, boolean canOverwrite) {
+		if (koeala.equals(StorageManager.KEY_INITDIST)) {
+			return StorageManager.INSTANCE.putDistribution(
+					GeometryNames.getShortName(as.getGeometryChoice()), name,
+					as.getGeometry().getDistribution(), canOverwrite);
+
+		} else if (koeala.equals(StorageManager.KEY_PROTOCOLS)) {
+			return StorageManager.INSTANCE.putProtocol(
+					GeometryNames.getShortName(as.getGeometryChoice()), name,
+					as.getProtocol(), canOverwrite);
+
+		} else if (koeala.equals(StorageManager.KEY_RESULTS)) {
+			// TODO: Save current results / state
+		}
+		return false;
+	}
+
 	/*
 	 * Initialises the loadProtocolButton. When pressed, this button allows a
-	 * user to load a protocol. Also initializes the corresponding loading popup.
-	 * 
-	 * 
+	 * user to load a protocol. Also initializes the corresponding loading
+	 * popup.
 	 */
 	private void createLoadProtocolButton() {
 		loadProtocolButton = new Button("Load Mixing Protocol");
@@ -1369,7 +1156,7 @@ public class Fingerpaint implements EntryPoint {
 		loadProtocolButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				
+
 				loadVerticalPanel = new VerticalPanel();
 				loadPanel = new PopupPanel();
 				loadPanel.setModal(true);
@@ -1383,18 +1170,16 @@ public class Fingerpaint implements EntryPoint {
 					}
 				});
 
-				
-
-				//TODO: un-comment when StorageManager is implemented.				
+				// TODO: un-comment when StorageManager is implemented.
 				// Get all protocols for the current geometry
-//				List<String> geometryProtocols = StorageManager.INSTANCE
-//						.getProtocols(as.getGeometryChoice());
+				// List<String> geometryProtocols = StorageManager.INSTANCE
+				// .getProtocols(as.getGeometryChoice());
 
 				// TODO: Replace with geometryProtocols after StorageManager
 				// is implemented.
-				final List<String> NAMES = Arrays.asList("Load Protocol list", "Sunday", "Monday",
-						"Tuesday", "Wednesday", "Thursday", "Friday",
-						"Saturday");
+				final List<String> NAMES = Arrays.asList("Load Protocol list",
+						"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday",
+						"Friday", "Saturday");
 
 				// Create a cell to render each value.
 				TextCell textCell = new TextCell();
@@ -1415,8 +1200,9 @@ public class Fingerpaint implements EntryPoint {
 
 								// TODO: un-comment after StorageManager
 								// is implemented.
-								// get the selected protocol, and set it in the AS								
-								//as.setProtocol(StorageManager.INSTANCE.getProtocol(selected));
+								// get the selected protocol, and set it in the
+								// AS
+								// as.setProtocol(StorageManager.INSTANCE.getProtocol(selected));
 
 								// TODO: Remove this substitute functionality
 								Window.alert("Dummy functionality: \n Look, it works! You selected "
@@ -1440,11 +1226,11 @@ public class Fingerpaint implements EntryPoint {
 			}
 		});
 	}
-	
+
 	/*
 	 * Initialises the loadInitDistButton. When pressed, this button allows a
-	 * user to load an initial distribution to the canvas. 
-	 * Also initializes the corresponding loading popup.
+	 * user to load an initial distribution to the canvas. Also initializes the
+	 * corresponding loading popup.
 	 */
 	private void createLoadInitDistButton() {
 		loadInitDistButton = new Button("Load Initial Distribution");
@@ -1466,16 +1252,16 @@ public class Fingerpaint implements EntryPoint {
 						loadPanel.removeFromParent();
 					}
 				});
-				
-				
-				//TODO: un-comment when StorageManager is implemented.				
+
+				// TODO: un-comment when StorageManager is implemented.
 				// Get all initial distributions for current geometry
 				// List<String> geometryDistributions = StorageManager.INSTANCE
 				// .getDistributions(as.getGeometryChoice());
 
 				// TODO: Replace with geometryDistributions after StorageManager
 				// is implemented.
-				final List<String> NAMES = Arrays.asList("Load initial Distribution list", "Sunday", "Monday",
+				final List<String> NAMES = Arrays.asList(
+						"Load initial Distribution list", "Sunday", "Monday",
 						"Tuesday", "Wednesday", "Thursday", "Friday",
 						"Saturday");
 
@@ -1619,22 +1405,6 @@ public class Fingerpaint implements EntryPoint {
 		stepString += "[" + step.getStepSize() + "]";
 
 		taProtocolRepresentation.setText(oldProtocol + stepString + " ");
-	}
-
-	/**
-	 * TODO
-	 */
-	private void createSaveDistButton() {
-		saveDistButton = new Button("Save Current Distribution");
-		saveDistButton.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				StorageManager.INSTANCE.putDistribution(GeometryNames
-						.getShortName(as.getGeometryChoice()),
-						"SUPERSEXYSTANDAARDNAAM", as.getGeometry()
-								.getDistribution(), true);
-			}
-		});
 	}
 
 	/**

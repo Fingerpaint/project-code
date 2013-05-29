@@ -3,6 +3,10 @@ package nl.tue.fingerpaint.client.json;
 import java.util.HashMap;
 import java.util.Set;
 
+import nl.tue.fingerpaint.client.MixingProtocol;
+import nl.tue.fingerpaint.client.MixingProtocol.MixingProtocolJsonizer;
+
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JsonUtils;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
@@ -84,6 +88,12 @@ public class FingerpaintJsonizer {
 
 		sb.append("]");
 		return sb.toString();
+	}
+	
+	public static String toString(MixingProtocol protocol) {
+		MixingProtocolJsonizer ja = (MixingProtocolJsonizer) GWT
+		.create(MixingProtocolJsonizer.class);
+		return ja.asString(protocol);
 	}
 
 	/**

@@ -2,10 +2,10 @@ package nl.tue.fingerpaint.client.storage;
 
 import java.util.HashMap;
 
+import nl.tue.fingerpaint.client.MixingProtocol;
 import nl.tue.fingerpaint.client.json.FingerpaintJsonizer;
 import nl.tue.fingerpaint.shared.GeometryNames;
 
-import com.google.gwt.core.shared.GWT;
 import com.google.gwt.storage.client.Storage;
 import com.google.gwt.storage.client.StorageMap;
 
@@ -194,7 +194,7 @@ public class StorageManager {
 
 		HashMap<String, Object> firstLevel = FingerpaintJsonizer
 				.fromString(localStorage.getItem(KEY_INITDIST));
-		GWT.log(firstLevel.get(GeometryNames.CIRC_SHORT).toString());
+
 		if (firstLevel.containsKey(geometry)) {
 			HashMap<String, Object> secondLevel = FingerpaintJsonizer
 					.fromString((String) firstLevel.get(geometry));
@@ -202,6 +202,62 @@ public class StorageManager {
 			firstLevel.put(geometry, FingerpaintJsonizer.toString(secondLevel));
 			localStorage.setItem(KEY_INITDIST,
 					FingerpaintJsonizer.toString(firstLevel));
+			return true;
+		}
+
+		return false;
+	}
+	
+	/**
+	 * Save an initial distribution to the local storage. If the name already
+	 * exists, do not attempt to overwrite.
+	 * 
+	 * @param geometry
+	 *            The geometry to store the distribution under.
+	 * @param key
+	 *            The name of the distribution.
+	 * @param value
+	 *            The distribution to be saved.
+	 * @return True if the value has been saved, false if the name is already in
+	 *         use (no attempt to overwrite will be made).
+	 */
+	public boolean putProtocol(String geometry, String key, MixingProtocol protocol) {
+		return putProtocol(geometry, key, protocol, false);
+	}
+
+	/**
+	 * Save an initial distribution to the local storage. If the name already
+	 * exists, does overwrite when asked.
+	 * 
+	 * @param geometry
+	 *            The geometry to store the distribution under.
+	 * @param key
+	 *            The name of the distribution.
+	 * @param value
+	 *            The distribution to be saved.
+	 * @param overwrite
+	 *            If the value should be overwritten if the name is already in
+	 *            use.
+	 * @return True if the value has been saved, false if the name is already in
+	 *         use (no attempt to overwrite will be made).
+	 */
+	public boolean putProtocol(String geometry, String key, MixingProtocol protocol,
+			boolean overwrite) {
+		if (isNameInUse(KEY_PROTOCOLS, geometry, key) && !overwrite) {
+			return false;
+		}
+
+		HashMap<String, Object> firstLevel = FingerpaintJsonizer
+				.fromString(localStorage.getItem(KEY_PROTOCOLS));
+
+		if (firstLevel.containsKey(geometry)) {
+			HashMap<String, Object> secondLevel = FingerpaintJsonizer
+					.fromString((String) firstLevel.get(geometry));
+			secondLevel.put(key, FingerpaintJsonizer.toString(protocol));
+			firstLevel.put(geometry, FingerpaintJsonizer.toString(secondLevel));
+			localStorage.setItem(KEY_PROTOCOLS,
+					FingerpaintJsonizer.toString(firstLevel));
+			return true;
 		}
 
 		return false;
