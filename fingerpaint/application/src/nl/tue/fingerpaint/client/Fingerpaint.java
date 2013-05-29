@@ -410,7 +410,6 @@ public class Fingerpaint implements EntryPoint {
 			public void update(String value) {
 				as.setGeometry(value);
 				lastClickedLevel = 0;
-				GWT.log("Update geometry = \"" + as.getGeometryChoice() + "\"!");
 			}
 		};
 
@@ -420,7 +419,6 @@ public class Fingerpaint implements EntryPoint {
 			public void update(String value) {
 				as.setMixer(value);
 				lastClickedLevel = 1;
-				GWT.log("Update mixer = \"" + as.getMixerChoice() + "\"!");
 			}
 		};
 
@@ -1238,8 +1236,6 @@ public class Fingerpaint implements EntryPoint {
 		loadInitDistButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				// TODO: un-comment when StorageManager is implemented.
-
 				loadVerticalPanel = new VerticalPanel();
 				loadPanel = new PopupPanel();
 				loadPanel.setModal(true);
@@ -1253,17 +1249,10 @@ public class Fingerpaint implements EntryPoint {
 					}
 				});
 
-				// TODO: un-comment when StorageManager is implemented.
 				// Get all initial distributions for current geometry
-				// List<String> geometryDistributions = StorageManager.INSTANCE
-				// .getDistributions(as.getGeometryChoice());
-
-				// TODO: Replace with geometryDistributions after StorageManager
-				// is implemented.
-				final List<String> NAMES = Arrays.asList(
-						"Load initial Distribution list", "Sunday", "Monday",
-						"Tuesday", "Wednesday", "Thursday", "Friday",
-						"Saturday");
+				List<String> geometryDistributions = StorageManager.INSTANCE
+						.getDistributions(GeometryNames.getShortName(as.getGeometryChoice()));
+				GWT.log("" + geometryDistributions.size());
 
 				// Create a cell to render each value.
 				TextCell textCell = new TextCell();
@@ -1282,15 +1271,16 @@ public class Fingerpaint implements EntryPoint {
 								String selected = selectionModel
 										.getSelectedObject();
 
-								// TODO: un-comment after StorageManager
-								// is implemented.
 								// get the selected initial distribution, and
 								// set it in the AS
-								// as.setInitialDistribution(StorageManager.INSTANCE.getDistributions(selected));
-
-								// TODO: Remove this substitute functionality
-								Window.alert("Dummy functionality: \n Look, it works! You selected "
-										+ selected);
+								as.getGeometry()
+										.setDistribution(
+												StorageManager.INSTANCE.getDistribution(
+														GeometryNames
+																.getShortName(as
+																		.getGeometryChoice()),
+														selected));
+								as.drawDistribution();
 								loadPanel.removeFromParent();
 							}
 						});
@@ -1299,10 +1289,10 @@ public class Fingerpaint implements EntryPoint {
 				// it affects
 				// paging calculations, so its good habit to keep the row count
 				// up to date.
-				cellList.setRowCount(NAMES.size(), true);
+				cellList.setRowCount(geometryDistributions.size(), true);
 
 				// Push the data into the widget.
-				cellList.setRowData(0, NAMES);
+				cellList.setRowData(0, geometryDistributions);
 
 				loadVerticalPanel.add(cellList);
 				loadVerticalPanel.add(closeLoadButton);

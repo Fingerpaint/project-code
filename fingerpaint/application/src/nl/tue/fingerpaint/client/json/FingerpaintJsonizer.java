@@ -8,6 +8,8 @@ import nl.tue.fingerpaint.client.MixingProtocol.MixingProtocolJsonizer;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JsonUtils;
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONNumber;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONString;
@@ -22,15 +24,40 @@ import com.google.gwt.json.client.JSONValue;
 public class FingerpaintJsonizer {
 
 	/**
-	 * Create a hash map that is represented by the given JSON string.
+	 * Create a double array that is represented by the given JSON string. When
+	 * the given value does not represent an array, {@code null} is returned.
+	 * When a value in the array is not a double, 1.0 is used as a default
+	 * value.
 	 * 
-	 * @param jsonHashMap
-	 *            A JSON string that represents an object and can be used as a
-	 *            hash map in Java.
-	 * @return The hash map that the given JSON string represents.
+	 * @param jsonDoubleArray
+	 *            A JSON string that represents an array and can be used as a
+	 *            double array in Java.
+	 * @return The double array that the given JSON string represents.
 	 */
-	public static HashMap<String, Object> fromString(JSONString jsonHashMap) {
-		return FingerpaintJsonizer.fromString(jsonHashMap.stringValue());
+	public static double[] doubleArrayFromString(String jsonDoubleArray) {
+		JSONValue val;
+		try {
+			val = JSONParser.parseStrict(jsonDoubleArray);
+		} catch (Exception e) {
+			// When the value is null or empty, return null
+			return null;
+		}
+		JSONArray valArr;
+		JSONNumber valNr;
+
+		if ((valArr = val.isArray()) != null) {
+			double[] result = new double[valArr.size()];
+			for (int i = 0; i < valArr.size(); i++) {
+				val = valArr.get(i);
+				if ((valNr = val.isNumber()) != null) {
+					result[i] = valNr.doubleValue();
+				} else {
+					result[i] = 1;
+				}
+			}
+		}
+
+		return null;
 	}
 
 	/**
@@ -41,7 +68,20 @@ public class FingerpaintJsonizer {
 	 *            hash map in Java.
 	 * @return The hash map that the given JSON string represents.
 	 */
-	public static HashMap<String, Object> fromString(String jsonHashMap) {
+	public static HashMap<String, Object> hahsMapFromString(
+			JSONString jsonHashMap) {
+		return FingerpaintJsonizer.hashMapFromString(jsonHashMap.stringValue());
+	}
+
+	/**
+	 * Create a hash map that is represented by the given JSON string.
+	 * 
+	 * @param jsonHashMap
+	 *            A JSON string that represents an object and can be used as a
+	 *            hash map in Java.
+	 * @return The hash map that the given JSON string represents.
+	 */
+	public static HashMap<String, Object> hashMapFromString(String jsonHashMap) {	
 		HashMap<String, Object> hm = new HashMap<String, Object>();
 		JSONValue val;
 		try {
@@ -51,11 +91,20 @@ public class FingerpaintJsonizer {
 			return hm;
 		}
 		JSONObject valObj;
+		JSONString tmpValStr;
+		JSONObject tmpValObj;
 
 		if ((valObj = val.isObject()) != null) {
 			for (String key : valObj.keySet()) {
-				hm.put(key, FingerpaintJsonizer.toUnquotedString(valObj
-						.get(key).isString()));
+				val = valObj.get(key);
+				GWT.log("HENK(" + key + ") " + (val == null ? "null" : "object/string"));
+				if ((tmpValStr = val.isString()) != null) {
+					hm.put(key, FingerpaintJsonizer.toUnquotedString(tmpValStr));
+				} else if ((tmpValObj = val.isObject()) != null) {
+					for (String tmpKey : tmpValObj.keySet()) {
+						GWT.log("HENK  " + tmpKey);
+					}
+				}
 			}
 		}
 
@@ -112,7 +161,7 @@ public class FingerpaintJsonizer {
 		for (String key : keySet) {
 			sb.append(JsonUtils.escapeValue(key));
 			sb.append(":");
-			sb.append(JsonUtils.escapeValue(hashMap.get(key).toString()));
+			sb.append(hashMap.get(key).toString());
 			added++;
 			if (added < keySet.size()) {
 				sb.append(",");
@@ -127,7 +176,8 @@ public class FingerpaintJsonizer {
 	 * Return the contents of the given JSONString, but without quotes as
 	 * opposed to the standard {@link JSONString#toString()}.
 	 * 
-	 * @param jsonString The JSONString of which a String representation is needed.
+	 * @param jsonString
+	 *            The JSONString of which a String representation is needed.
 	 * @return The unquoted value of the JSONString.
 	 */
 	public static String toUnquotedString(JSONString jsonString) {
