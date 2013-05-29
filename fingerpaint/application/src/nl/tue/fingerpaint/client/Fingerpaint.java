@@ -29,6 +29,8 @@ import com.google.gwt.storage.client.Storage;
 import com.google.gwt.user.cellview.client.CellBrowser;
 import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.ServiceDefTarget;
@@ -57,7 +59,7 @@ import com.google.gwt.view.client.TreeViewModel;
  * @author Group Fingerpaint
  */
 public class Fingerpaint implements EntryPoint {
-	// Class to keep track of everything the user has selected
+	/** Class to keep track of everything the user has selected */
 	protected ApplicationState as;
 
 	// Label that displays the userChoice values
@@ -250,7 +252,6 @@ public class Fingerpaint implements EntryPoint {
 	 */
 	private TextArea taProtocolRepresentation = new TextArea();
 
-	private Storage storage;
 	private String koeala;
 
 	/**
@@ -297,12 +298,6 @@ public class Fingerpaint implements EntryPoint {
 				showError(caught.getMessage());
 			}
 		});
-
-		try {
-			initLocalStorage();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 
 	/**
@@ -321,21 +316,6 @@ public class Fingerpaint implements EntryPoint {
 
 		// Add the tree to the root layout panel.
 		RootLayoutPanel.get().add(tree);
-	}
-
-	/**
-	 * Tries to initialise local storage.
-	 * 
-	 * @throws Exception
-	 *             If HTML5 Local Storage is not supported in this browser.
-	 */
-	private void initLocalStorage() throws Exception {
-		storage = Storage.getLocalStorageIfSupported();
-
-		if (storage == null) {
-			throw new Exception(
-					"HTML5 Local Storage is not supported in this browser.");
-		}
 	}
 
 	/*
@@ -486,9 +466,6 @@ public class Fingerpaint implements EntryPoint {
 			};
 			as.getGeometry().addStepAddedListener(l);
 
-			// Initialise the loadPanel
-			createLoadPanel();
-
 			// Initialise the toolSelectButton and add to menuPanel
 			createToolSelector();
 			menuPanel.add(toolSelectButton);
@@ -581,7 +558,7 @@ public class Fingerpaint implements EntryPoint {
 		}
 
 		/**
-		 * Get the {@link NodeInfo} that provides the children of the specified
+		 * Get the {@link com.google.gwt.view.client.TreeViewModel.NodeInfo} that provides the children of the specified
 		 * value.
 		 */
 		public <T> NodeInfo<?> getNodeInfo(T value) {
@@ -648,22 +625,6 @@ public class Fingerpaint implements EntryPoint {
 			}
 
 		});
-	}
-
-	/*
-	 * Initialises the loadPanel
-	 */
-	private void createLoadPanel() {
-		// Initialise the loading panel
-		// Add animation image
-		loadingPanel = new FlowPanel();
-		Image loadImage = new Image("/img/loading_animation.gif");
-		loadingPanel.add(loadImage);
-		// Add label that may contain explanatory text
-		loadPanelMessage = new Label("Loading geometries and mixers...", false);
-		loadPanelMessage.getElement().setId(LOADPANEL_MESSAGE_ID);
-		loadingPanel.add(loadPanelMessage);
-		loadingPanel.getElement().setId(LOADPANEL_ID);
 	}
 
 	/*
@@ -736,24 +697,6 @@ public class Fingerpaint implements EntryPoint {
 			}
 		});
 		toggleColor.setWidth("100px");
-	}
-
-	public ArrayList<String> getStoredNames() {
-		ArrayList<String> names = new ArrayList<String>();
-		for (int i = 0; i < storage.getLength(); i++) {
-			names.add(storage.key(i));
-		}
-		return names;
-	}
-
-	/**
-	 * Removes an item from local storage.
-	 * 
-	 * @param key
-	 *            Item to remove.
-	 */
-	public void removeStoredItem(String key) {
-		storage.removeItem(key);
 	}
 
 	/*
@@ -1227,8 +1170,8 @@ public class Fingerpaint implements EntryPoint {
 
 	/*
 	 * Initialises the loadInitDistButton. When pressed, this button allows a
-	 * user to load an initial distribution to the canvas. Also initializes the
-	 * corresponding loading popup.
+	 * user to load an initial distribution to the canvas. Also initialises the
+	 * corresponding loading pop up.
 	 */
 	private void createLoadInitDistButton() {
 		loadInitDistButton = new Button("Load Initial Distribution");
@@ -1251,8 +1194,8 @@ public class Fingerpaint implements EntryPoint {
 
 				// Get all initial distributions for current geometry
 				List<String> geometryDistributions = StorageManager.INSTANCE
-						.getDistributions(GeometryNames.getShortName(as.getGeometryChoice()));
-				GWT.log("" + geometryDistributions.size());
+						.getDistributions(GeometryNames.getShortName(as
+								.getGeometryChoice()));
 
 				// Create a cell to render each value.
 				TextCell textCell = new TextCell();
@@ -1333,7 +1276,7 @@ public class Fingerpaint implements EntryPoint {
 						"removeListHeader");
 				resultsFlexTable.addStyleName("removeList");
 
-				final ArrayList<String> names = getStoredNames();
+				final ArrayList<String> names = (ArrayList<String>) StorageManager.INSTANCE.getResults();
 				for (int i = 0; i < names.size(); i++) {
 					final int row = i + 1;
 					final String name = names.get(i);
@@ -1343,7 +1286,7 @@ public class Fingerpaint implements EntryPoint {
 						public void onClick(ClickEvent event) {
 							int removedIndex = names.indexOf(name);
 							names.remove(removedIndex);
-							removeStoredItem(name);
+							StorageManager.INSTANCE.removeResult(name);
 							resultsFlexTable.removeRow(removedIndex + 1);
 						}
 					});
@@ -1440,11 +1383,11 @@ public class Fingerpaint implements EntryPoint {
 	 */
 	protected void setLoadPanelVisible(boolean visible) {
 		if (visible) {
-			if (RootPanel.get(LOADPANEL_ID) == null) {
+			if (DOM.getElementById(LOADPANEL_ID) == null) {
 				RootPanel.get().add(loadingPanel);
 			}
 		} else {
-			if (RootPanel.get(LOADPANEL_ID) != null) {
+			if (DOM.getElementById(LOADPANEL_ID) != null) {
 				loadingPanel.removeFromParent();
 				setLoadPanelMessage(null);
 			}
@@ -1530,43 +1473,59 @@ public class Fingerpaint implements EntryPoint {
 	 * protocol and the distribution to the server. Displays the results on
 	 * screen.
 	 */
-	private void executeMixingRun(MixingProtocol protocol) {
-
-		as.setInitialDistribution(as.getGeometry().getDistribution());
-
-		Simulation simulation = new Simulation(as.getMixChoice(), protocol,
-				as.getInitialDistribution(), as.getNrSteps(), false);
-
-		TimeoutRpcRequestBuilder timeoutRpcRequestBuilder = new TimeoutRpcRequestBuilder(
-				10000);
-		SimulatorServiceAsync service = GWT.create(SimulatorService.class);
-		((ServiceDefTarget) service)
-				.setRpcRequestBuilder(timeoutRpcRequestBuilder);
-		AsyncCallback<SimulationResult> callback = new AsyncCallback<SimulationResult>() {
+	private void executeMixingRun(final MixingProtocol protocol) {
+		setLoadPanelMessage("Preparing data...");
+		setLoadPanelVisible(true);
+		
+		// Now use timers, to make sure the loading panel is set up and shown correctly
+		// before we start doing some heavy calculations and simulation...
+		// Basically, we simply do a 'setTimeout' JavaScript call here
+		final Timer doEvenLaterTimer = new Timer() {
 			@Override
-			public void onSuccess(SimulationResult result) {
-				as.getGeometry().drawDistribution(
-						result.getConcentrationVectors()[0]);
-				setLoadPanelVisible(false);
-			}
+			public void run() {
+				Simulation simulation = new Simulation(as.getMixChoice(), protocol,
+						as.getInitialDistribution(), as.getNrSteps(), false);
 
-			@Override
-			public void onFailure(Throwable caught) {
-				setLoadPanelVisible(false);
-				if (caught instanceof RequestTimeoutException) {
-					showError("The simulation server did not respond in"
-							+ " time. Try again later");
-				} else {
-					showError(caught.getMessage());
-				}
+				TimeoutRpcRequestBuilder timeoutRpcRequestBuilder = new TimeoutRpcRequestBuilder(
+						10000);
+				SimulatorServiceAsync service = GWT.create(SimulatorService.class);
+				((ServiceDefTarget) service)
+						.setRpcRequestBuilder(timeoutRpcRequestBuilder);
+				AsyncCallback<SimulationResult> callback = new AsyncCallback<SimulationResult>() {
+					@Override
+					public void onSuccess(SimulationResult result) {
+						as.getGeometry().drawDistribution(
+								result.getConcentrationVectors()[result.getConcentrationVectors().length - 1]);
+						saveResultsButton.setEnabled(true);
+						setLoadPanelVisible(false);
+					}
+
+					@Override
+					public void onFailure(Throwable caught) {
+						setLoadPanelVisible(false);
+						if (caught instanceof RequestTimeoutException) {
+							showError("The simulation server did not respond in"
+									+ " time. Try again later");
+						} else {
+							showError("Could not reach the server, try again later.");
+						}
+					}
+				};
+				// Call the service
+				service.simulate(simulation, callback);
 			}
 		};
+		
+		Timer doLaterTimer = new Timer() {
+			@Override
+			public void run() {
+				as.setInitialDistribution(as.getGeometry().getDistribution());
 
-		service.simulate(simulation, callback);
-		setLoadPanelMessage("Running the simulation. Please wait...");
-		setLoadPanelVisible(true);
-
-		saveResultsButton.setEnabled(true);
+				setLoadPanelMessage("Running the simulation. Please wait...");
+				doEvenLaterTimer.schedule(100);
+			}
+		};
+		doLaterTimer.schedule(100);
 	}
 
 }

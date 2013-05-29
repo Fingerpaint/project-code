@@ -74,6 +74,8 @@ import com.google.gwt.storage.client.StorageMap;
  */
 public class StorageManager {
 
+	// ---- PUBLIC CONSTANTS
+	// ----------------------------------------------------------------------
 	/** Used to indicate that the local storage cannot be used. */
 	public static final int ERROR = -1;
 	/** Used to indicate that the local storage has not yet been initialised. */
@@ -98,11 +100,15 @@ public class StorageManager {
 	 */
 	public static final String KEY_RESULTS = "RES";
 
+	// ---- PUBLIC GLOBALS
+	// ------------------------------------------------------------------------
 	/**
 	 * Instance that must be used for interaction with local storage.
 	 */
 	public static StorageManager INSTANCE = new StorageManager();
 
+	// ---- PROTECTED GLOBALS
+	// ---------------------------------------------------------------------
 	/** GWT object that is the actual interface with the local storage. */
 	protected Storage localStorage;
 	/** State of the storage. */
@@ -116,6 +122,8 @@ public class StorageManager {
 			GeometryNames.CIRC_SHORT, GeometryNames.JOBE_SHORT,
 			GeometryNames.RECT_SHORT, GeometryNames.SQR_SHORT };
 
+	// ---- CONSTRUCTOR
+	// ---------------------------------------------------------------------------
 	/**
 	 * Make constructor protected to prevent instantiations of this class.
 	 */
@@ -156,6 +164,8 @@ public class StorageManager {
 		}
 	}
 
+	// ---- PUBLIC PART OF CLASS
+	// ------------------------------------------------------------------
 	/**
 	 * Return the distribution that is stored with given name, or {@code null}
 	 * if such a distribution does not exist.
@@ -176,13 +186,12 @@ public class StorageManager {
 		HashMap<String, Object> firstLevel = FingerpaintJsonizer
 				.hashMapFromString(localStorage.getItem(KEY_INITDIST));
 		if (firstLevel.containsKey(geometry)) {
-			HashMap<String, Object> secondLevel = FingerpaintJsonizer
-					.hashMapFromString((String) firstLevel.get(geometry));
+			@SuppressWarnings("unchecked")
+			HashMap<String, Object> secondLevel = (HashMap<String, Object>) firstLevel
+					.get(geometry);
 			for (String secondLevelKey : secondLevel.keySet()) {
 				if (secondLevelKey.equals(key)) {
-					return FingerpaintJsonizer
-							.doubleArrayFromString((String) secondLevel
-									.get(secondLevelKey));
+					return (double[]) secondLevel.get(secondLevelKey);
 				}
 			}
 		}
@@ -206,22 +215,41 @@ public class StorageManager {
 			return null;
 		}
 
-		GWT.log("getDistributions");
 		HashMap<String, Object> firstLevel = FingerpaintJsonizer
 				.hashMapFromString(localStorage.getItem(KEY_INITDIST));
 		if (firstLevel.containsKey(geometry)) {
-			for (String bla : firstLevel.keySet()) {
-				GWT.log("KEY: " + bla + ", VAL: " + firstLevel.get(bla));
-			}
-			HashMap<String, Object> secondLevel = FingerpaintJsonizer
-					.hashMapFromString((String) firstLevel.get(geometry));
-			ArrayList<String> result = new ArrayList<String>();
+			@SuppressWarnings("unchecked")
+			HashMap<String, Object> secondLevel = (HashMap<String, Object>) firstLevel
+					.get(geometry);
+
 			for (String secondLevelKey : secondLevel.keySet()) {
-				result.add(secondLevelKey);
+				GWT.log(secondLevelKey);
 			}
+
+			ArrayList<String> result = new ArrayList<String>();
+			result.addAll(secondLevel.keySet());
 			return result;
 		}
 		return null;
+	}
+
+	/**
+	 * Return a list of all results stored in the local storage currently.
+	 * 
+	 * @return A list of all saved results (may be an empty list), or
+	 *         {@code null} if the storage cannot be used.
+	 */
+	public List<String> getResults() {
+		if (state != INITIALISED) {
+			return null;
+		}
+
+		HashMap<String, Object> firstLevel = FingerpaintJsonizer
+				.hashMapFromString(localStorage.getItem(KEY_RESULTS));
+		ArrayList<String> result = new ArrayList<String>();
+		result.addAll(firstLevel.keySet());
+
+		return result;
 	}
 
 	/**
@@ -273,8 +301,9 @@ public class StorageManager {
 				.hashMapFromString(localStorage.getItem(KEY_INITDIST));
 
 		if (firstLevel.containsKey(geometry)) {
-			HashMap<String, Object> secondLevel = FingerpaintJsonizer
-					.hashMapFromString((String) firstLevel.get(geometry));
+			@SuppressWarnings("unchecked")
+			HashMap<String, Object> secondLevel = (HashMap<String, Object>) firstLevel
+					.get(geometry);
 			secondLevel.put(key, FingerpaintJsonizer.toString(value));
 			firstLevel.put(geometry, FingerpaintJsonizer.toString(secondLevel));
 			localStorage.setItem(KEY_INITDIST,
@@ -284,42 +313,47 @@ public class StorageManager {
 
 		return false;
 	}
-	
+
 	/**
-	 * Save an initial distribution to the local storage. If the name already
-	 * exists, do not attempt to overwrite.
+	 * Save a mixing protocol to the local storage. If the name already exists,
+	 * do not attempt to overwrite.
 	 * 
 	 * @param geometry
 	 *            The geometry to store the distribution under.
 	 * @param key
-	 *            The name of the distribution.
-	 * @param value
-	 *            The distribution to be saved.
+	 *            The name of the protocol.
+	 * @param protocol
+	 *            The protocol to be saved.
 	 * @return True if the value has been saved, false if the name is already in
 	 *         use (no attempt to overwrite will be made).
 	 */
-	public boolean putProtocol(String geometry, String key, MixingProtocol protocol) {
+	public boolean putProtocol(String geometry, String key,
+			MixingProtocol protocol) {
 		return putProtocol(geometry, key, protocol, false);
 	}
 
 	/**
-	 * Save an initial distribution to the local storage. If the name already
-	 * exists, does overwrite when asked.
+	 * Save a mixing protocol to the local storage. If the name already exists,
+	 * do not attempt to overwrite.
 	 * 
 	 * @param geometry
 	 *            The geometry to store the distribution under.
 	 * @param key
-	 *            The name of the distribution.
-	 * @param value
-	 *            The distribution to be saved.
+	 *            The name of the protocol.
+	 * @param protocol
+	 *            The protocol to be saved.
 	 * @param overwrite
 	 *            If the value should be overwritten if the name is already in
 	 *            use.
 	 * @return True if the value has been saved, false if the name is already in
 	 *         use (no attempt to overwrite will be made).
 	 */
-	public boolean putProtocol(String geometry, String key, MixingProtocol protocol,
-			boolean overwrite) {
+	public boolean putProtocol(String geometry, String key,
+			MixingProtocol protocol, boolean overwrite) {
+		if (state != INITIALISED) {
+			return false;
+		}
+
 		if (isNameInUse(KEY_PROTOCOLS, geometry, key) && !overwrite) {
 			return false;
 		}
@@ -328,8 +362,9 @@ public class StorageManager {
 				.hashMapFromString(localStorage.getItem(KEY_PROTOCOLS));
 
 		if (firstLevel.containsKey(geometry)) {
-			HashMap<String, Object> secondLevel = FingerpaintJsonizer
-					.hashMapFromString((String) firstLevel.get(geometry));
+			@SuppressWarnings("unchecked")
+			HashMap<String, Object> secondLevel = (HashMap<String, Object>) firstLevel
+					.get(geometry);
 			secondLevel.put(key, FingerpaintJsonizer.toString(protocol));
 			firstLevel.put(geometry, FingerpaintJsonizer.toString(secondLevel));
 			localStorage.setItem(KEY_PROTOCOLS,
@@ -340,6 +375,31 @@ public class StorageManager {
 		return false;
 	}
 
+	/**
+	 * Remove a result with the given name from the local storage.
+	 * 
+	 * @param key
+	 *            The name of the result to remove.
+	 * @return True if a result with the given name is removed from the storage,
+	 *         false if no result with the given name is present in the storage.
+	 */
+	public boolean removeResult(String key) {
+		HashMap<String, Object> firstLevel = FingerpaintJsonizer
+				.hashMapFromString(localStorage.getItem(KEY_RESULTS));
+		for (String firstLevelKey : firstLevel.keySet()) {
+			if (firstLevelKey.equals(key)) {
+				firstLevel.remove(key);
+				localStorage.setItem(KEY_RESULTS,
+						FingerpaintJsonizer.toString(firstLevel));
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	// ---- PROTECTED PART OF CLASS
+	// ---------------------------------------------------------------
 	/**
 	 * Returns if there is a key at the specified level with given name. When
 	 * you want to test a key on the second level, leave the value for the third
@@ -383,10 +443,11 @@ public class StorageManager {
 			// Looking for a distribution or protocol here
 			HashMap<String, Object> firstLevel = FingerpaintJsonizer
 					.hashMapFromString(localStorage.getItem(firstLevelKey));
-			if (firstLevel.containsKey(secondLevelKey)) {
-				HashMap<String, Object> secondLevel = FingerpaintJsonizer
-						.hashMapFromString((String) firstLevel
-								.get(secondLevelKey));
+			if (firstLevel.containsKey(secondLevelKey)
+					&& firstLevel.get(secondLevelKey) instanceof HashMap) {
+				@SuppressWarnings("unchecked")
+				HashMap<String, Object> secondLevel = (HashMap<String, Object>) firstLevel
+						.get(secondLevelKey);
 				for (String key : secondLevel.keySet()) {
 					if (key.equals(thirdLevelKey)) {
 						return true;
