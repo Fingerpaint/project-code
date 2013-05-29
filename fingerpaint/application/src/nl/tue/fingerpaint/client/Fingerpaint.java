@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import nl.tue.fingerpaint.client.Geometry.StepAddedListener;
-import nl.tue.fingerpaint.client.MixingStep.MixingStepJsonizer;
 import nl.tue.fingerpaint.client.json.ProtocolMap;
 import nl.tue.fingerpaint.client.json.ProtocolStorage;
 import nl.tue.fingerpaint.client.resources.FingerpaintConstants;
@@ -12,9 +11,8 @@ import nl.tue.fingerpaint.client.resources.FingerpaintResources;
 import nl.tue.fingerpaint.client.serverdata.ServerDataCache;
 import nl.tue.fingerpaint.client.simulator.SimulatorService;
 import nl.tue.fingerpaint.client.simulator.SimulatorServiceAsync;
-
-import org.jsonmaker.gwt.client.JsonizerParser;
-import org.jsonmaker.gwt.client.base.ArrayListJsonizer;
+import nl.tue.fingerpaint.client.storage.StorageManager;
+import nl.tue.fingerpaint.shared.GeometryNames;
 
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.cell.client.ClickableTextCell;
@@ -51,8 +49,6 @@ import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
 import com.google.gwt.view.client.TreeViewModel;
-import com.google.gwt.view.client.TreeViewModel.DefaultNodeInfo;
-import com.google.gwt.view.client.TreeViewModel.NodeInfo;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
@@ -69,6 +65,9 @@ public class Fingerpaint implements EntryPoint {
 		// Button to toggle between black and white drawing colour
 		private ToggleButton toggleColor;
 
+		// Button to save the current distribution
+		private Button saveDistButton;
+		
 		// Button to load predefined distribution half black, half white
 		// Needed for testing purposes for story 32
 		private Button loadDistButton;
@@ -517,6 +516,10 @@ public class Fingerpaint implements EntryPoint {
 			createToggleButton();
 			menuPanel.add(toggleColor);
 
+			// Initialise the saveDistButton and add to menuPanel
+			createSaveDistButton();
+			menuPanel.add(saveDistButton);
+			
 			// Initialise the loadDistButton and add to
 			// menuPanel
 			createLoadDistButton();
@@ -1150,7 +1153,16 @@ public class Fingerpaint implements EntryPoint {
 		taProtocolRepresentation.setText(oldProtocol + stepString + " ");
 	}
 
-	// --Methods for testing purposes only---------------------------------
+	private void createSaveDistButton() {
+		saveDistButton = new Button("Save Current Distribution");
+		saveDistButton.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				StorageManager.INSTANCE.putDistribution(GeometryNames.toShortName(as.getGeometryChoice()), key, value, overwrite);
+			}
+		});
+	}
+
 	/*
 	 * Initialises the Load Distribution button. This button only exists for
 	 * testing purposes. When it is pressed, the distribution of the geometry is
