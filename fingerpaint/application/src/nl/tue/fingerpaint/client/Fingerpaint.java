@@ -84,6 +84,9 @@ public class Fingerpaint implements EntryPoint {
 
 	// Button to load an initial distribution
 	private Button loadInitDistButton;
+	
+	// Button to load a mixing protocol
+	private Button loadProtocolButton;
 
 	// Popup Panel to handle the saving of the current results
 	private PopupPanel saveResultsPanel;
@@ -549,6 +552,10 @@ public class Fingerpaint implements EntryPoint {
 			// Initialise the loadInitDistButton and add it to the menuPanel
 			createLoadInitDistButton();
 			menuPanel.add(loadInitDistButton);
+			
+			// Initialise the loadProtocolButton and add it to the menuPanel
+			createLoadProtocolButton();
+			menuPanel.add(loadProtocolButton);
 
 			// Initialise the saveResultsButton and add it to the menuPanel
 			createSaveResultsButton();
@@ -1081,32 +1088,116 @@ public class Fingerpaint implements EntryPoint {
 			}
 		});
 	}
+	
+	/*
+	 * Initialises the loadProtocolButton. When pressed, this button allows a
+	 * user to load a protocol. Also initializes the corresponding loading popup.
+	 * 
+	 * 
+	 */
+	private void createLoadProtocolButton() {
+		loadProtocolButton = new Button("Load Mixing Protocol");
 
+		loadProtocolButton.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				
+				loadVerticalPanel = new VerticalPanel();
+				loadPanel = new PopupPanel();
+				loadPanel.setModal(true);
+				loadPanel.add(loadVerticalPanel);
+				closeLoadButton = new Button("Close");
+
+				closeLoadButton.addClickHandler(new ClickHandler() {
+					@Override
+					public void onClick(ClickEvent event) {
+						loadPanel.removeFromParent();
+					}
+				});
+
+				
+
+				//TODO: un-comment when StorageManager is implemented.				
+				// Get all protocols for the current geometry
+//				List<String> geometryProtocols = StorageManager.INSTANCE
+//						.getProtocols(as.getGeometryChoice());
+
+				// TODO: Replace with geometryProtocols after StorageManager
+				// is implemented.
+				final List<String> NAMES = Arrays.asList("Load Protocol list", "Sunday", "Monday",
+						"Tuesday", "Wednesday", "Thursday", "Friday",
+						"Saturday");
+
+				// Create a cell to render each value.
+				TextCell textCell = new TextCell();
+
+				// Create a CellList that uses the cell.
+				CellList<String> cellList = new CellList<String>(textCell);
+				cellList.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.ENABLED);
+
+				// Add a selection model to handle user selection.
+				final SingleSelectionModel<String> selectionModel = new SingleSelectionModel<String>();
+				cellList.setSelectionModel(selectionModel);
+				selectionModel
+						.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
+							public void onSelectionChange(
+									SelectionChangeEvent event) {
+								String selected = selectionModel
+										.getSelectedObject();
+
+								// TODO: un-comment after StorageManager
+								// is implemented.
+								// get the selected protocol, and set it in the AS								
+								//as.setProtocol(StorageManager.INSTANCE.getProtocol(selected));
+
+								// TODO: Remove this substitute functionality
+								Window.alert("Look, it works! You selected "
+										+ selected);
+								loadPanel.removeFromParent();
+							}
+						});
+
+				// Set the total row count. This isn't strictly necessary, but
+				// it affects
+				// paging calculations, so its good habit to keep the row count
+				// up to date.
+				cellList.setRowCount(NAMES.size(), true);
+
+				// Push the data into the widget.
+				cellList.setRowData(0, NAMES);
+
+				loadVerticalPanel.add(cellList);
+				loadVerticalPanel.add(closeLoadButton);
+				loadPanel.center();
+			}
+		});
+	}
+	
 	/*
 	 * Initialises the loadInitDistButton. When pressed, this button allows a
-	 * user to load an initial distribution to the canvas.
+	 * user to load an initial distribution to the canvas. 
+	 * Also initializes the corresponding loading popup.
 	 */
 	private void createLoadInitDistButton() {
 		loadInitDistButton = new Button("Load Initial Distribution");
-		loadVerticalPanel = new VerticalPanel();
-		loadPanel = new PopupPanel();
-		loadPanel.setModal(true);
-		loadPanel.add(loadVerticalPanel);
-		closeLoadButton = new Button("Close");
-
-		closeLoadButton.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				loadPanel.removeFromParent();
-			}
-		});
-
-		// loadFlexTable = new FlexTable();
 
 		loadInitDistButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
+				loadVerticalPanel = new VerticalPanel();
+				loadPanel = new PopupPanel();
+				loadPanel.setModal(true);
+				loadPanel.add(loadVerticalPanel);
+				closeLoadButton = new Button("Close");
 
+				closeLoadButton.addClickHandler(new ClickHandler() {
+					@Override
+					public void onClick(ClickEvent event) {
+						loadPanel.removeFromParent();
+					}
+				});
+				
+				
 				//TODO: un-comment when StorageManager is implemented.				
 				// Get all initial distributions for current geometry
 //				List<String> geometryDistributions = StorageManager.INSTANCE
@@ -1114,7 +1205,7 @@ public class Fingerpaint implements EntryPoint {
 
 				// TODO: Replace with geometryDistributions after StorageManager
 				// is implemented.
-				final List<String> NAMES = Arrays.asList("Sunday", "Monday",
+				final List<String> NAMES = Arrays.asList("Load initial Distribution list", "Sunday", "Monday",
 						"Tuesday", "Wednesday", "Thursday", "Friday",
 						"Saturday");
 
