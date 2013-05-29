@@ -2,22 +2,24 @@ package nl.tue.fingerpaint.client;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import nl.tue.fingerpaint.client.Geometry.StepAddedListener;
+
 import nl.tue.fingerpaint.client.MixingStep.MixingStepJsonizer;
 import nl.tue.fingerpaint.client.json.ProtocolMap;
 import nl.tue.fingerpaint.client.json.ProtocolStorage;
+
 import nl.tue.fingerpaint.client.resources.FingerpaintConstants;
 import nl.tue.fingerpaint.client.resources.FingerpaintResources;
 import nl.tue.fingerpaint.client.serverdata.ServerDataCache;
 import nl.tue.fingerpaint.client.simulator.SimulatorService;
 import nl.tue.fingerpaint.client.simulator.SimulatorServiceAsync;
-
-import org.jsonmaker.gwt.client.JsonizerParser;
-import org.jsonmaker.gwt.client.base.ArrayListJsonizer;
+import nl.tue.fingerpaint.shared.GeometryNames;
 
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.cell.client.ClickableTextCell;
+import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.cell.client.ValueUpdater;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
@@ -30,6 +32,8 @@ import com.google.gwt.http.client.RequestTimeoutException;
 import com.google.gwt.storage.client.Storage;
 import com.google.gwt.storage.client.StorageMap;
 import com.google.gwt.user.cellview.client.CellBrowser;
+import com.google.gwt.user.cellview.client.CellList;
+import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.ServiceDefTarget;
@@ -40,6 +44,7 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -51,8 +56,6 @@ import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
 import com.google.gwt.view.client.TreeViewModel;
-import com.google.gwt.view.client.TreeViewModel.DefaultNodeInfo;
-import com.google.gwt.view.client.TreeViewModel.NodeInfo;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
@@ -61,165 +64,180 @@ import com.google.gwt.view.client.TreeViewModel.NodeInfo;
  */
 public class Fingerpaint implements EntryPoint {
 	// Class to keep track of everything the user has selected
-		protected ApplicationState as;
+	protected ApplicationState as;
 
-		// Label that displays the userChoice values
-		private Label mixingDetails = new Label();
+	// Label that displays the userChoice values
+	private Label mixingDetails = new Label();
 
-		// Button to toggle between black and white drawing colour
-		private ToggleButton toggleColor;
+	// Button to toggle between black and white drawing colour
+	private ToggleButton toggleColor;
 
-		// Button to load predefined distribution half black, half white
-		// Needed for testing purposes for story 32
-		private Button loadDistButton;
+	// Button to load predefined distribution half black, half white
+	// Needed for testing purposes for story 32
+	private Button loadDistButton;
 
-		// Button to reset the distribution to all white
-		private Button resetDistButton;
+	// Button to reset the distribution to all white
+	private Button resetDistButton;
 
-		// Button to save the current results
-		private Button saveResultsButton;
+	// Button to save the current results
+	private Button saveResultsButton;
 
-		// Popup Panel to handle the saving of the current results
-		private PopupPanel saveResultsPanel;
+	// Button to load an initial distribution
+	private Button loadInitDistButton;
 
-		// Vertical Panel to hold the textbar and the save button in the save
-		// popuppanel
-		private VerticalPanel saveResultsVerticalPanel;
+	// Popup Panel to handle the saving of the current results
+	private PopupPanel saveResultsPanel;
 
-		// Horizontal Panel to hold the Save and Cancel buttons in the popup panel
-		private HorizontalPanel saveButtonsPanel;
+	// Vertical Panel to hold the textbar and the save button in the save
+	// popuppanel
+	private VerticalPanel saveResultsVerticalPanel;
 
-		// Textbox to input the name in to name the file
-		private TextBox saveNameTextBox;
+	// Horizontal Panel to hold the Save and Cancel buttons in the popup panel
+	private HorizontalPanel saveButtonsPanel;
 
-		// Save Button inside the save popup menu
-		private Button saveResultsPanelButton;
+	// Textbox to input the name in to name the file
+	private TextBox saveNameTextBox;
 
-		// Cancel Button inside the save popup menu
-		private Button cancelSaveResultsButton;
+	// Save Button inside the save popup menu
+	private Button saveResultsPanelButton;
 
-		// Popup Panel that appears after the Save button in the save popup panel
-		// has been pressed
-		private PopupPanel confirmSavePanel;
+	// Cancel Button inside the save popup menu
+	private Button cancelSaveResultsButton;
 
-		// Vertical Panel to hold the save message and the ok/overwrite button in
-		// the confirm save popup panel
-		private VerticalPanel confirmSaveVerticalPanel;
+	// Popup Panel that appears after the Save button in the save popup panel
+	// has been pressed
+	private PopupPanel confirmSavePanel;
 
-		// Label to hold the save message
-		private Label saveMessageLabel;
+	// Vertical Panel to hold the save message and the ok/overwrite button in
+	// the confirm save popup panel
+	private VerticalPanel confirmSaveVerticalPanel;
 
-		// Horizontal Panel to hold the ok or overwrite/cancel button(s) in the
-		// confirm save popup panel
-		private HorizontalPanel confirmButtonsPanel;
+	// Label to hold the save message
+	private Label saveMessageLabel;
 
-		// Ok / Cancel button to close the save results popup panel
-		private Button closeSaveResultsButton;
+	// Horizontal Panel to hold the ok or overwrite/cancel button(s) in the
+	// confirm save popup panel
+	private HorizontalPanel confirmButtonsPanel;
 
-		// Overwrite button to confirm the save if an already used name has been
-		// chosen
-		private Button confirmSaveButton;
+	// Ok / Cancel button to close the save results popup panel
+	private Button closeSaveResultsButton;
 
-		// --------------------------------------------------------------------------------------
+	// Overwrite button to confirm the save if an already used name has been
+	// chosen
+	private Button confirmSaveButton;
 
-		// Button to remove previously saved results
-		private Button removeSavedResultsButton;
+	// --------------------------------------------------------------------------------------
+	// Popup Panel to handle the loading of an initial distribution or mixing
+	// protocol
+	private PopupPanel loadPanel;
 
-		// Popup Panel to handle the removing of results
-		private PopupPanel removeResultsPanel;
+	// Vertical Panel to hold the textbar and the cancel button in the load
+	// popuppanel
+	private VerticalPanel loadVerticalPanel;
 
-		// Vertical panel to hold the flex panel and close button
-		private VerticalPanel removeResultsVerticalPanel;
+	// close Button inside the save popup menu
+	private Button closeLoadButton;
 
-		// FlexTable to hold all the result entries
-		private FlexTable resultsFlexTable;
+	// --------------------------------------------------------------------------------------
 
-		// Button to close the remove results popup panel
-		private Button closeResultsButton;
+	// Button to remove previously saved results
+	private Button removeSavedResultsButton;
 
-		// --------------------------------------------------------------------------------------
+	// Popup Panel to handle the removing of results
+	private PopupPanel removeResultsPanel;
 
-		// Button to adapt the drawing tool
-		// TODO: Change this to a button on which the current tool is drawn
-		private Button toolSelectButton;
+	// Vertical panel to hold the flex panel and close button
+	private VerticalPanel removeResultsVerticalPanel;
 
-		// PopupPanel which contains options for selecting a different drawing tool
-		private PopupPanel toolSelector;
+	// FlexTable to hold all the result entries
+	private FlexTable resultsFlexTable;
 
-		// The panel in the popup panel to seperate the toolSelector from the
-		// toolSizer
-		private HorizontalPanel popupPanelPanel;
+	// Button to close the remove results popup panel
+	private Button closeResultsButton;
 
-		// The panel in the popup panel that contains the different drawing tools
-		private VerticalPanel popupPanelMenu;
+	// --------------------------------------------------------------------------------------
 
-		// Button to select the square drawing tool
-		// TODO: Change this to a button on which a square is drawn
-		private ToggleButton squareDrawingTool;
+	// Button to adapt the drawing tool
+	// TODO: Change this to a button on which the current tool is drawn
+	private Button toolSelectButton;
 
-		// Button to select the circle drawing tool
-		// TODO: Change this to a button on which a circle is drawn
-		private ToggleButton circleDrawingTool;
+	// PopupPanel which contains options for selecting a different drawing tool
+	private PopupPanel toolSelector;
 
-		// Horizontal panel to contain drawing canvas and menu bar
-		private HorizontalPanel panel = new HorizontalPanel();
+	// The panel in the popup panel to seperate the toolSelector from the
+	// toolSizer
+	private HorizontalPanel popupPanelPanel;
 
-		// Vertical panel to contain all menu items
-		private VerticalPanel menuPanel = new VerticalPanel();
+	// The panel in the popup panel that contains the different drawing tools
+	private VerticalPanel popupPanelMenu;
 
-		// Panel that covers the entire application and blocks the user from
-		// accessing other features
-		private static FlowPanel loadPanel = new FlowPanel();
-		private Label loadPanelMessage;
+	// Button to select the square drawing tool
+	// TODO: Change this to a button on which a square is drawn
+	private ToggleButton squareDrawingTool;
 
-		// The NumberSpinner and label to define the step size
-		// TODO: The text 'Step size' should be translated later on
-		private Label sizeLabel = new Label("Step size");
-		private NumberSpinner sizeSpinner;
+	// Button to select the circle drawing tool
+	// TODO: Change this to a button on which a circle is drawn
+	private ToggleButton circleDrawingTool;
 
-		// Checkbox that needs to be checked to define a protocol. If it isn't
-		// checked, steps are executed directly.
-		private CheckBox defineProtocolCheckBox;
+	// Horizontal panel to contain drawing canvas and menu bar
+	private HorizontalPanel panel = new HorizontalPanel();
 
-		// The NumberSpinner and label to define how many times the mixing protocol
-		// is executed
-		// TODO: The text '#steps' should be translated later on
-		private Label nrStepsLabel = new Label("#steps");
-		private NumberSpinner nrStepsSpinner;
+	// Vertical panel to contain all menu items
+	private VerticalPanel menuPanel = new VerticalPanel();
 
-		/**
-		 * Shows the textual representation of the mixing protocol.
-		 */
-		private TextArea taProtocolRepresentation = new TextArea();
+	// Panel that covers the entire application and blocks the user from
+	// accessing other features
+	private static FlowPanel loadingPanel = new FlowPanel();
+	private Label loadPanelMessage;
 
-		// Button that executes the current mixing run when it is pressed
-		private Button mixNowButton;
+	// The NumberSpinner and label to define the step size
+	// TODO: The text 'Step size' should be translated later on
+	private Label sizeLabel = new Label("Step size");
+	private NumberSpinner sizeSpinner;
 
-		// Button that resets the protocol when it is pressed
-		private Button resetProtocolButton;
+	// Checkbox that needs to be checked to define a protocol. If it isn't
+	// checked, steps are executed directly.
+	private CheckBox defineProtocolCheckBox;
 
-		/*
-		 * The NumberSpinner to set the #steps parameter. Its settings are described
-		 * via the following parameters.
-		 */
-		private final double NRSTEPS_DEFAULT = 1.0;
-		private final double NRSTEPS_RATE = 1.0;
-		private final double NRSTEPS_MIN = 1.0;
-		private final double NRSTEPS_MAX = 50.0;
+	// The NumberSpinner and label to define how many times the mixing protocol
+	// is executed
+	// TODO: The text '#steps' should be translated later on
+	private Label nrStepsLabel = new Label("#steps");
+	private NumberSpinner nrStepsSpinner;
 
-		private static final String LOADPANEL_ID = "loading-overlay";
-		private static final String LOADPANEL_MESSAGE_ID = "loading-overlay-message";
+	/**
+	 * Shows the textual representation of the mixing protocol.
+	 */
+	private TextArea taProtocolRepresentation = new TextArea();
 
-		// Width of the menu in which buttons are displayed
-		// on the right side of the window in pixels
-		private final int menuWidth = 200;
+	// Button that executes the current mixing run when it is pressed
+	private Button mixNowButton;
 
-		// Height of address-bar / tabs / menu-bar in the
-		// browser in pixels. If this is not taken into account,
-		// a vertical scroll bar appears.
-		private final int topBarHeight = 65;
+	// Button that resets the protocol when it is pressed
+	private Button resetProtocolButton;
 
-		private Storage storage;
+	/*
+	 * The NumberSpinner to set the #steps parameter. Its settings are described
+	 * via the following parameters.
+	 */
+	private final double NRSTEPS_DEFAULT = 1.0;
+	private final double NRSTEPS_RATE = 1.0;
+	private final double NRSTEPS_MIN = 1.0;
+	private final double NRSTEPS_MAX = 50.0;
+
+	private static final String LOADPANEL_ID = "loading-overlay";
+	private static final String LOADPANEL_MESSAGE_ID = "loading-overlay-message";
+
+	// Width of the menu in which buttons are displayed
+	// on the right side of the window in pixels
+	private final int menuWidth = 200;
+
+	// Height of address-bar / tabs / menu-bar in the
+	// browser in pixels. If this is not taken into account,
+	// a vertical scroll bar appears.
+	private final int topBarHeight = 65;
+
+	private Storage storage;
 
 	/**
 	 * This is the entry point method.
@@ -227,16 +245,18 @@ public class Fingerpaint implements EntryPoint {
 	public void onModuleLoad() {
 		// Load CSS
 		FingerpaintResources.INSTANCE.css().ensureInjected();
-		
+
 		// Initialise the loading panel
 		// Add animation image
-		Image loadImage = new Image(FingerpaintResources.INSTANCE.loadImage().getSafeUri());
-		loadPanel.add(loadImage);
+		Image loadImage = new Image(FingerpaintResources.INSTANCE.loadImage()
+				.getSafeUri());
+		loadingPanel.add(loadImage);
 		// Add label that may contain explanatory text
-		loadPanelMessage = new Label(FingerpaintConstants.INSTANCE.loadingGeometries(), false);
+		loadPanelMessage = new Label(
+				FingerpaintConstants.INSTANCE.loadingGeometries(), false);
 		loadPanelMessage.getElement().setId(LOADPANEL_MESSAGE_ID);
-		loadPanel.add(loadPanelMessage);
-		loadPanel.getElement().setId(LOADPANEL_ID);
+		loadingPanel.add(loadPanelMessage);
+		loadingPanel.getElement().setId(LOADPANEL_ID);
 
 		// initialise the underlying model of the application
 		as = new ApplicationState();
@@ -253,9 +273,8 @@ public class Fingerpaint implements EntryPoint {
 			public void onFailure(Throwable caught) {
 				setLoadPanelVisible(false);
 				if (caught instanceof RequestTimeoutException) {
-					showError(
-							"The simulation server did not respond in" +
-							" time. Try again later");
+					showError("The simulation server did not respond in"
+							+ " time. Try again later");
 				} else {
 					showError(caught.getMessage());
 				}
@@ -316,16 +335,17 @@ public class Fingerpaint implements EntryPoint {
 
 		storage.setItem(name, asJson);
 	}
-	
+
 	private void saveProtocol(String name) {
 		String jsonProtocols = storage.getItem("PROT");
 		// TODO: extract
 		ProtocolStorage saveProtObject = null; // TODO:
-		ProtocolMap saveProt = saveProtObject.getProtocols().get("RECT"); // TODO: Replace RECT
+		ProtocolMap saveProt = saveProtObject.getProtocols().get("RECT"); // TODO:
+																			// Replace
+																			// RECT
 		saveProt.addProtocol(name, as.getProtocol());
 		storage.setItem("PROT", saveProtObject.jsonize());
 	}
-	
 
 	/**
 	 * Returns whether a saved state with key {@code name} exists in local
@@ -354,7 +374,7 @@ public class Fingerpaint implements EntryPoint {
 			as.unJsonize(jsonObject);
 			as.drawDistribution();
 		}
-		
+
 		refreshWidgets();
 	}
 
@@ -526,6 +546,10 @@ public class Fingerpaint implements EntryPoint {
 			createResetDistButton();
 			menuPanel.add(resetDistButton);
 
+			// Initialise the loadInitDistButton and add it to the menuPanel
+			createLoadInitDistButton();
+			menuPanel.add(loadInitDistButton);
+
 			// Initialise the saveResultsButton and add it to the menuPanel
 			createSaveResultsButton();
 			menuPanel.add(saveResultsButton);
@@ -652,22 +676,6 @@ public class Fingerpaint implements EntryPoint {
 	}
 
 	/*
-	 * Initialises the loadPanel
-	 */
-	private void createLoadPanel() {
-		// Initialise the loading panel
-		// Add animation image
-		loadPanel = new FlowPanel();
-		Image loadImage = new Image("/img/loading_animation.gif");
-		loadPanel.add(loadImage);
-		// Add label that may contain explanatory text
-		loadPanelMessage = new Label("Loading geometries and mixers...", false);
-		loadPanelMessage.getElement().setId(LOADPANEL_MESSAGE_ID);
-		loadPanel.add(loadPanelMessage);
-		loadPanel.getElement().setId(LOADPANEL_ID);
-	}
-
-	/*
 	 * Initialises the reset Distribution Button. When this button is pressed,
 	 * the current canvas is reset to all white
 	 */
@@ -684,8 +692,23 @@ public class Fingerpaint implements EntryPoint {
 	}
 
 	/*
-	 * Toggles the visibility and availability of all the
-	 * protocol widgets.
+	 * Initialises the loadPanel
+	 */
+	private void createLoadPanel() {
+		// Initialise the loading panel
+		// Add animation image
+		loadingPanel = new FlowPanel();
+		Image loadImage = new Image("/img/loading_animation.gif");
+		loadingPanel.add(loadImage);
+		// Add label that may contain explanatory text
+		loadPanelMessage = new Label("Loading geometries and mixers...", false);
+		loadPanelMessage.getElement().setId(LOADPANEL_MESSAGE_ID);
+		loadingPanel.add(loadPanelMessage);
+		loadingPanel.getElement().setId(LOADPANEL_ID);
+	}
+
+	/*
+	 * Toggles the visibility and availability of all the protocol widgets.
 	 */
 	private void toggleProtocolWidgets(boolean value) {
 		// TODO: make a setEnabled for the numberspinner
@@ -737,7 +760,7 @@ public class Fingerpaint implements EntryPoint {
 		});
 		toggleColor.setWidth("100px");
 	}
-	
+
 	public ArrayList<String> getStoredNames() {
 		ArrayList<String> names = new ArrayList<String>();
 		for (int i = 0; i < storage.getLength(); i++) {
@@ -745,10 +768,12 @@ public class Fingerpaint implements EntryPoint {
 		}
 		return names;
 	}
-	
+
 	/**
 	 * Removes an item from local storage.
-	 * @param key Item to remove.
+	 * 
+	 * @param key
+	 *            Item to remove.
 	 */
 	public void removeStoredItem(String key) {
 		storage.removeItem(key);
@@ -880,7 +905,8 @@ public class Fingerpaint implements EntryPoint {
 			@Override
 			public void onClick(ClickEvent event) {
 				resetProtocol();
-				// When reset protocol is pressed, the save results button is also disabled.
+				// When reset protocol is pressed, the save results button is
+				// also disabled.
 				saveResultsButton.setEnabled(false);
 			}
 
@@ -896,10 +922,11 @@ public class Fingerpaint implements EntryPoint {
 		saveResultsButton = new Button("Save Results");
 		saveResultsPanel = new PopupPanel();
 		saveResultsPanel.setModal(true);
-		
+
 		// Initially, the save button is disabled; it will become available if
 		// "Mix Now" is pressed.
-		saveResultsButton.setEnabled(false);
+		saveResultsButton.setEnabled(true); // TODO: Set to false. True is for
+											// testing only
 
 		saveResultsVerticalPanel = new VerticalPanel();
 		saveButtonsPanel = new HorizontalPanel();
@@ -1056,6 +1083,88 @@ public class Fingerpaint implements EntryPoint {
 	}
 
 	/*
+	 * Initialises the loadInitDistButton. When pressed, this button allows a
+	 * user to load an initial distribution to the canvas.
+	 */
+	private void createLoadInitDistButton() {
+		loadInitDistButton = new Button("Load Initial Distribution");
+		loadVerticalPanel = new VerticalPanel();
+		loadPanel = new PopupPanel();
+		loadPanel.setModal(true);
+		loadPanel.add(loadVerticalPanel);
+		closeLoadButton = new Button("Close");
+
+		closeLoadButton.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				loadPanel.removeFromParent();
+			}
+		});
+
+		// loadFlexTable = new FlexTable();
+
+		loadInitDistButton.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+
+				//TODO: un-comment when StorageManager is implemented.				
+				// Get all initial distributions for current geometry
+//				List<String> geometryDistributions = StorageManager.INSTANCE
+//						.getDistributions(as.getGeometryChoice());
+
+				// TODO: Replace with geometryDistributions after StorageManager
+				// is implemented.
+				final List<String> NAMES = Arrays.asList("Sunday", "Monday",
+						"Tuesday", "Wednesday", "Thursday", "Friday",
+						"Saturday");
+
+				// Create a cell to render each value.
+				TextCell textCell = new TextCell();
+
+				// Create a CellList that uses the cell.
+				CellList<String> cellList = new CellList<String>(textCell);
+				cellList.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.ENABLED);
+
+				// Add a selection model to handle user selection.
+				final SingleSelectionModel<String> selectionModel = new SingleSelectionModel<String>();
+				cellList.setSelectionModel(selectionModel);
+				selectionModel
+						.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
+							public void onSelectionChange(
+									SelectionChangeEvent event) {
+								String selected = selectionModel
+										.getSelectedObject();
+
+								// TODO: un-comment after StorageManager
+								// is implemented.
+								// get the selected initial distribution, and set it in the AS								
+								//as.setInitialDistribution(StorageManager.INSTANCE.getDistributions(selected));
+
+								// TODO: Remove this substitute functionality
+								Window.alert("Look, it works! You selected "
+										+ selected);
+								loadPanel.removeFromParent();
+							}
+						});
+
+				// Set the total row count. This isn't strictly necessary, but
+				// it affects
+				// paging calculations, so its good habit to keep the row count
+				// up to date.
+				cellList.setRowCount(NAMES.size(), true);
+
+				// Push the data into the widget.
+				cellList.setRowData(0, NAMES);
+
+				loadVerticalPanel.add(cellList);
+				loadVerticalPanel.add(closeLoadButton);
+				loadPanel.center();
+			}
+		});
+
+	}
+
+	/*
 	 * Initialises the removeSavedResultsButton. When pressed, this button
 	 * allows a user to remove a previously saved mixing run
 	 */
@@ -1195,11 +1304,11 @@ public class Fingerpaint implements EntryPoint {
 	protected void setLoadPanelVisible(boolean visible) {
 		if (visible) {
 			if (RootPanel.get(LOADPANEL_ID) == null) {
-				RootPanel.get().add(loadPanel);
+				RootPanel.get().add(loadingPanel);
 			}
 		} else {
 			if (RootPanel.get(LOADPANEL_ID) != null) {
-				loadPanel.removeFromParent();
+				loadingPanel.removeFromParent();
 				setLoadPanelMessage(null);
 			}
 		}
@@ -1213,7 +1322,7 @@ public class Fingerpaint implements EntryPoint {
 		// TODO: The text 'Define Protocol' should be translated later on
 		defineProtocolCheckBox = new CheckBox("Define Protocol");
 		defineProtocolCheckBox.addClickHandler(new ClickHandler() {
-			
+
 			@Override
 			public void onClick(ClickEvent event) {
 				if (defineProtocolCheckBox.getValue()) {
@@ -1285,20 +1394,22 @@ public class Fingerpaint implements EntryPoint {
 	 * screen.
 	 */
 	private void executeMixingRun(MixingProtocol protocol) {
-		
+
 		as.setInitialDistribution(as.getGeometry().getDistribution());
-		
-		Simulation simulation = new Simulation(
-				as.getMixChoice(), protocol, 
+
+		Simulation simulation = new Simulation(as.getMixChoice(), protocol,
 				as.getInitialDistribution(), as.getNrSteps(), false);
-		
-		TimeoutRpcRequestBuilder timeoutRpcRequestBuilder = new TimeoutRpcRequestBuilder(10000);
+
+		TimeoutRpcRequestBuilder timeoutRpcRequestBuilder = new TimeoutRpcRequestBuilder(
+				10000);
 		SimulatorServiceAsync service = GWT.create(SimulatorService.class);
-    	((ServiceDefTarget) service).setRpcRequestBuilder(timeoutRpcRequestBuilder);
+		((ServiceDefTarget) service)
+				.setRpcRequestBuilder(timeoutRpcRequestBuilder);
 		AsyncCallback<SimulationResult> callback = new AsyncCallback<SimulationResult>() {
 			@Override
 			public void onSuccess(SimulationResult result) {
-				as.getGeometry().drawDistribution(result.getConcentrationVectors()[0]);
+				as.getGeometry().drawDistribution(
+						result.getConcentrationVectors()[0]);
 				setLoadPanelVisible(false);
 			}
 
@@ -1306,9 +1417,8 @@ public class Fingerpaint implements EntryPoint {
 			public void onFailure(Throwable caught) {
 				setLoadPanelVisible(false);
 				if (caught instanceof RequestTimeoutException) {
-					showError(
-							"The simulation server did not respond in" +
-							" time. Try again later");
+					showError("The simulation server did not respond in"
+							+ " time. Try again later");
 				} else {
 					showError(caught.getMessage());
 				}
@@ -1318,7 +1428,7 @@ public class Fingerpaint implements EntryPoint {
 		service.simulate(simulation, callback);
 		setLoadPanelMessage("Running the simulation. Please wait...");
 		setLoadPanelVisible(true);
-		
+
 		saveResultsButton.setEnabled(true);
 	}
 
