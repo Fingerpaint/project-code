@@ -170,7 +170,23 @@ public class ApplicationState {
 	public double[] getInitialDistribution() {
 		return initialDistribution;
 	}
-
+	
+	/**
+	 * <pre> {@code jsonDist} contains a jsonized double array that represents a initial distribution for the rectangle geometry
+	 * @param jsonDist A jsonized initial distribution object  
+	 */
+	public void setInitialDistribution(String jsonDist) {
+		//TODO: Generalise method for all geometries
+		ArrayListJsonizer dj_sonizer = new ArrayListJsonizer(Defaults.DOUBLE_JSONIZER);
+		ArrayList<Double> djList = (ArrayList<Double>) JsonizerParser.parse(dj_sonizer, jsonDist); //objects[3]);
+		
+		double[] initDistribution = new double[djList.size()];
+		for (int i = 0; i < djList.size(); i++) {
+			initDistribution[i] = djList.get(i);
+		}
+		initialDistribution = initDistribution;
+	}
+	
 	public String getMixChoice() {
 		return mixChoice;
 	}
@@ -242,6 +258,7 @@ public class ApplicationState {
 	 * @param jsonObject
 	 */
 	public void unJsonize(String jsonObject) {
+		//TODO: Refactor name. The method is a setter, which sets an jsonObject. 
 		String[] objects = jsonObject.split("@");
 
 		geoChoice = objects[0];
