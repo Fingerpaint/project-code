@@ -2,6 +2,8 @@ package nl.tue.fingerpaint.client;
 
 import java.io.Serializable;
 
+import org.jsonmaker.gwt.client.Jsonizer;
+
 /**
  * Represents a the results of a {@link Simulation}.
  * 
@@ -73,4 +75,6 @@ public class SimulationResult implements Serializable {
 //		concentrationVectors = (double[][]) o.readObject();
 //		segregationPoints = (double[]) o.readObject();
 //	}
+	
+	public static interface SimulationResultJsonizer extends Jsonizer {}
 }

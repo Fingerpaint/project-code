@@ -6,6 +6,7 @@ import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.canvas.dom.client.ImageData;
+import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.ImageElement;
 import com.google.gwt.event.dom.client.MouseDownEvent;
@@ -26,6 +27,7 @@ import com.google.gwt.event.dom.client.TouchStartEvent;
 import com.google.gwt.event.dom.client.TouchStartHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -353,6 +355,9 @@ public abstract class Geometry {
 
 			@Override
 			public void onTouchStart(TouchStartEvent event) {
+				event.stopPropagation();
+				event.preventDefault();
+				
 				Element elem = event.getRelativeElement();
 				int x = event.getTouches().get(0).getRelativeX(elem);
 				int y = event.getTouches().get(0).getRelativeY(elem);
@@ -383,9 +388,12 @@ public abstract class Geometry {
 
 			@Override
 			public void onTouchEnd(TouchEndEvent event) {
+				event.stopPropagation();
+				event.preventDefault();
+				
 				Element elem = event.getRelativeElement();
 				int x = event.getTouches().get(0).getRelativeX(elem);
-				int y = event.getTouches().get(0).getRelativeX(elem);
+				int y = event.getTouches().get(0).getRelativeY(elem);
 				
 				onDragEnd(elem, x, y);
 			}
@@ -406,8 +414,10 @@ public abstract class Geometry {
 
 			@Override
 			public void onTouchCancel(TouchCancelEvent event) {
-				onDragOut();
+				event.stopPropagation();
+				event.preventDefault();
 				
+				onDragOut();
 			}
 			
 		});
@@ -455,6 +465,9 @@ public abstract class Geometry {
 
 				@Override
 				public void onTouchMove(TouchMoveEvent event) {
+					event.stopPropagation();
+					event.preventDefault();
+					
 					Element elem = event.getRelativeElement();
 					int x = event.getTouches().get(0).getRelativeX(elem) - X_OFFSET;
 					int y = event.getTouches().get(0).getRelativeY(elem) - TOP_OFFSET;
@@ -503,6 +516,9 @@ public abstract class Geometry {
 
 				@Override
 				public void onTouchMove(TouchMoveEvent event) {
+					event.stopPropagation();
+					event.preventDefault();
+					
 					Element elem = event.getRelativeElement();
 					int currentX = event.getTouches().get(0).getRelativeX(elem);
 

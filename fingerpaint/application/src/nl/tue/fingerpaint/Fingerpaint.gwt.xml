@@ -23,6 +23,9 @@
 	
 	<!-- use I18N -->
 	<inherits name="com.google.gwt.i18n.I18N"/>
+	
+	<!-- use JSON -->
+	<inherits name="com.google.gwt.json.JSON" />
 
 	<!-- Specify the app entry point class. -->
 	<entry-point class='nl.tue.fingerpaint.client.Fingerpaint' />
