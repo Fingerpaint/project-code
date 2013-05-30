@@ -7,7 +7,7 @@ import org.jsonmaker.gwt.client.Jsonizer;
 /**
  * Represents a the results of a {@link Simulation}.
  * 
- * @author Lasse Blaauwbroek
+ * @author Group Fingerpaint
  *
  */
 public class SimulationResult implements Serializable {

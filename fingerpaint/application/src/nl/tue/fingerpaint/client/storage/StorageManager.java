@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import nl.tue.fingerpaint.client.MixingProtocol;
+import nl.tue.fingerpaint.client.SimulationResult;
 import nl.tue.fingerpaint.client.json.FingerpaintJsonizer;
 import nl.tue.fingerpaint.shared.GeometryNames;
 
@@ -255,6 +256,33 @@ public class StorageManager {
 		result.addAll(firstLevel.keySet());
 
 		return result;
+	}
+
+	/**
+	 * Return the result that is stored with given name, or {@code null} if such
+	 * a result does not exist.
+	 * 
+	 * @param key
+	 *            The name of the saved result.
+	 * @return The saved result, or {@code null} if no result with the given
+	 *         name was saved. This function will also return {@code null} if
+	 *         the storage cannot be used.
+	 * */
+	public SimulationResult getResult(String key) {
+		if (state != INITIALISED) {
+			return null;
+		}
+
+		HashMap<String, Object> firstLevel = FingerpaintJsonizer
+				.hashMapFromString(localStorage.getItem(KEY_RESULTS));
+		for (String firstLevelKey : firstLevel.keySet()) {
+			if (firstLevelKey.equals(key)) {
+				String result = (String) firstLevel.get(key);
+				// TODO:Deserialize result and return it
+			}
+		}
+
+		return null;
 	}
 
 	/**
