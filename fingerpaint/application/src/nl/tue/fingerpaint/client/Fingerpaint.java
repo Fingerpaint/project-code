@@ -3,6 +3,7 @@ package nl.tue.fingerpaint.client;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import nl.tue.fingerpaint.client.Geometry.StepAddedListener;
 import nl.tue.fingerpaint.client.resources.FingerpaintConstants;
@@ -19,13 +20,13 @@ import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.cell.client.ValueUpdater;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.BrowserEvents;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.http.client.RequestTimeoutException;
-import com.google.gwt.storage.client.Storage;
 import com.google.gwt.user.cellview.client.CellBrowser;
 import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
@@ -41,6 +42,7 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -48,7 +50,11 @@ import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.view.client.CellPreviewEvent;
+import com.google.gwt.view.client.CellPreviewEvent.Handler;
+import com.google.gwt.view.client.DefaultSelectionEventManager;
 import com.google.gwt.view.client.ListDataProvider;
+import com.google.gwt.view.client.MultiSelectionModel;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
 import com.google.gwt.view.client.TreeViewModel;
@@ -107,6 +113,7 @@ public class Fingerpaint implements EntryPoint {
 	// Panel that covers the entire application and blocks the user from
 	// accessing other features
 	private static FlowPanel loadingPanel = new FlowPanel();
+	private Label loadingPanelMessage;
 
 	// Popup Panel to handle the saving of the current results
 	private PopupPanel saveResultsPanel;
@@ -144,6 +151,22 @@ public class Fingerpaint implements EntryPoint {
 
 	// --------------------------------------------------------------------------------------
 
+	private Button comparePerformanceButton;
+
+	private PopupPanel compareSelectPopupPanel;
+
+	private Button compareButton;
+
+	private Button cancelCompareButton;
+
+	private PopupPanel comparePopupPanel;
+
+	private Button closeCompareButton;
+
+	private Button newCompareButton;
+
+	// --------------------------------------------------------------------------------------
+
 	// Button to remove previously saved results
 	private Button removeSavedResultsButton;
 
@@ -158,8 +181,6 @@ public class Fingerpaint implements EntryPoint {
 
 	// Button to close the remove results popup panel
 	private Button closeResultsButton;
-
-	// --------------------------------------------------------------------------------------
 
 	private Button saveProtocolButton;
 
@@ -197,10 +218,8 @@ public class Fingerpaint implements EntryPoint {
 	// Vertical panel to contain all menu items
 	private VerticalPanel menuPanel = new VerticalPanel();
 
-	// Panel that covers the entire application and blocks the user from
-	// accessing other features
+	// Panel for loading stuff
 	private static PopupPanel loadPanel = new PopupPanel();
-	private Label loadPanelMessage;
 
 	// The NumberSpinner and label to define the step size
 	// TODO: The text 'Step size' should be translated later on
@@ -246,8 +265,8 @@ public class Fingerpaint implements EntryPoint {
 	private final double CURSOR_MIN = 1.0;
 	private final double CURSOR_MAX = 50.0; //good value should be determined for performance
 
-	private static final String LOADPANEL_ID = "loading-overlay";
-	private static final String LOADPANEL_MESSAGE_ID = "loading-overlay-message";
+	private static final String LOADINGPANEL_ID = "loading-overlay";
+	private static final String LOADINGPANEL_MESSAGE_ID = "loading-overlay-message";
 
 	// Width of the menu in which buttons are displayed
 	// on the right side of the window in pixels
@@ -279,26 +298,26 @@ public class Fingerpaint implements EntryPoint {
 		loadingPanel.add(loadImage);
 
 		// Add label that may contain explanatory text
-		loadPanelMessage = new Label(
+		loadingPanelMessage = new Label(
 				FingerpaintConstants.INSTANCE.loadingGeometries(), false);
-		loadPanelMessage.getElement().setId(LOADPANEL_MESSAGE_ID);
-		loadingPanel.add(loadPanelMessage);
-		loadingPanel.getElement().setId(LOADPANEL_ID);
+		loadingPanelMessage.getElement().setId(LOADINGPANEL_MESSAGE_ID);
+		loadingPanel.add(loadingPanelMessage);
+		loadingPanel.getElement().setId(LOADINGPANEL_ID);
 
 		// initialise the underlying model of the application
 		as = new ApplicationState();
 		as.setNrSteps(1.0);
-		setLoadPanelVisible(true);
+		setLoadingPanelVisible(true);
 		ServerDataCache.initialise(new AsyncCallback<String>() {
 			@Override
 			public void onSuccess(String result) {
-				setLoadPanelVisible(false);
+				setLoadingPanelVisible(false);
 				loadMenu();
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
-				setLoadPanelVisible(false);
+				setLoadingPanelVisible(false);
 				if (caught instanceof RequestTimeoutException) {
 					showError("The simulation server did not respond in"
 							+ " time. Try again later");
@@ -371,12 +390,12 @@ public class Fingerpaint implements EntryPoint {
 	 *            The message to show below the animation. When {@code null},
 	 *            the message will be deleted.
 	 */
-	protected void setLoadPanelMessage(String message) {
+	protected void setLoadingPanelMessage(String message) {
 		if (message == null) {
 			message = "";
 		}
 
-		loadPanelMessage.setText(message);
+		loadingPanelMessage.setText(message);
 	}
 
 	/**
@@ -519,6 +538,11 @@ public class Fingerpaint implements EntryPoint {
 			createSaveDistributionButton();
 			menuPanel.add(saveDistributionButton);
 
+			// Initialise the comparePerformanceButton and add it to the
+			// menuPanel
+			createComparePerformanceButton();
+			menuPanel.add(comparePerformanceButton);
+
 			// Initialise a spinner for changing the length of a mixing protocol
 			// step and add to menuPanel.
 			createStepSizeSpinner();
@@ -570,8 +594,8 @@ public class Fingerpaint implements EntryPoint {
 		}
 
 		/**
-		 * Get the {@link com.google.gwt.view.client.TreeViewModel.NodeInfo} that provides the children of the specified
-		 * value.
+		 * Get the {@link com.google.gwt.view.client.TreeViewModel.NodeInfo}
+		 * that provides the children of the specified value.
 		 */
 		public <T> NodeInfo<?> getNodeInfo(T value) {
 			// When the Tree is being initialised, the last clicked level will
@@ -1285,6 +1309,7 @@ public class Fingerpaint implements EntryPoint {
 	 * Initialises the removeSavedResultsButton. When pressed, this button
 	 * allows a user to remove a previously saved mixing run
 	 */
+	// TODO : refactor this method so that it uses the StorageManager
 	private void createRemoveSavedResultsButton() {
 		// TODO: The text 'Remove Saved Results' should be translated later on
 		removeSavedResultsButton = new Button("Remove Saved Results");
@@ -1312,7 +1337,8 @@ public class Fingerpaint implements EntryPoint {
 						"removeListHeader");
 				resultsFlexTable.addStyleName("removeList");
 
-				final ArrayList<String> names = (ArrayList<String>) StorageManager.INSTANCE.getResults();
+				final ArrayList<String> names = (ArrayList<String>) StorageManager.INSTANCE
+						.getResults();
 				for (int i = 0; i < names.size(); i++) {
 					final int row = i + 1;
 					final String name = names.get(i);
@@ -1411,23 +1437,171 @@ public class Fingerpaint implements EntryPoint {
 	 * 
 	 * <p>
 	 * When hiding the panel, the message will also be reset. Change it with
-	 * {@link #setLoadPanelMessage}.
+	 * {@link #setLoadingPanelMessage}.
 	 * </p>
 	 * 
 	 * @param visible
 	 *            If the panel should be hidden or shown.
 	 */
-	protected void setLoadPanelVisible(boolean visible) {
+	protected void setLoadingPanelVisible(boolean visible) {
 		if (visible) {
-			if (DOM.getElementById(LOADPANEL_ID) == null) {
+			if (DOM.getElementById(LOADINGPANEL_ID) == null) {
 				RootPanel.get().add(loadingPanel);
 			}
 		} else {
-			if (DOM.getElementById(LOADPANEL_ID) != null) {
+			if (DOM.getElementById(LOADINGPANEL_ID) != null) {
 				loadingPanel.removeFromParent();
-				setLoadPanelMessage(null);
+				setLoadingPanelMessage(null);
 			}
 		}
+	}
+
+	private void createComparePerformanceButton() {
+		// TODO : translate the text on all these buttons
+		comparePerformanceButton = new Button("Compare Performance");
+		compareButton = new Button("Compare");
+		cancelCompareButton = new Button("Cancel");
+		closeCompareButton = new Button("Close");
+		newCompareButton = new Button("New Comparison");
+		compareSelectPopupPanel = new PopupPanel();
+		compareSelectPopupPanel.setModal(true);
+		comparePopupPanel = new PopupPanel();
+		comparePopupPanel.setModal(true);
+
+		// Initialise the cellList to contain all the mixing runs
+		TextCell textCell = new TextCell();
+		CellList<String> cellList = new CellList<String>(textCell);
+		final MultiSelectionModel<String> selectionModel = new MultiSelectionModel<String>();
+		final Handler<String> selectionEventManager = DefaultSelectionEventManager
+				.createCheckboxManager();
+		cellList.setSelectionModel(selectionModel, selectionEventManager);
+		cellList.addCellPreviewHandler(new Handler<String>() {
+
+			@Override
+			public void onCellPreview(CellPreviewEvent<String> event) {
+				if (BrowserEvents.CLICK
+						.equals(event.getNativeEvent().getType())) {
+
+					final String value = event.getValue();
+					final Boolean state = !event.getDisplay()
+							.getSelectionModel().isSelected(value);
+					event.getDisplay().getSelectionModel()
+							.setSelected(value, state);
+					event.setCanceled(true);
+				}
+			}
+		});
+
+
+
+		ArrayList<String> resultNames = (ArrayList<String>) StorageManager.INSTANCE.getResults();
+
+		cellList.setRowCount(resultNames.size());
+
+		// Push the data into the widget.
+		cellList.setRowData(0, resultNames);
+
+		// ----------------------------------------------------------
+
+		// Initialise all components of the second popup panel
+		final VerticalPanel vertPanel = new VerticalPanel();
+		HorizontalPanel horPanel = new HorizontalPanel();
+		horPanel.add(closeCompareButton);
+		horPanel.add(newCompareButton);
+		comparePopupPanel.add(vertPanel);
+
+		closeCompareButton.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				Set<String> selected = selectionModel.getSelectedSet();
+				for (String s : selected) {
+					selectionModel.setSelected(s, false);
+				}
+				comparePopupPanel.hide();
+			}
+		});
+
+		newCompareButton.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				Set<String> selected = selectionModel.getSelectedSet();
+				for (String s : selected) {
+					selectionModel.setSelected(s, false);
+				}
+				comparePopupPanel.hide();
+				compareSelectPopupPanel.show();
+			}
+		});
+
+		// ------------------------------------------------------
+
+		// Initialise all components of the first popup panel
+		VerticalPanel compareVerticalPanel = new VerticalPanel();
+		compareSelectPopupPanel.add(compareVerticalPanel);
+		compareVerticalPanel.add(cellList);
+		HorizontalPanel compareHorizontalPanel = new HorizontalPanel();
+		compareVerticalPanel.add(compareHorizontalPanel);
+		compareHorizontalPanel.add(compareButton);
+		compareHorizontalPanel.add(cancelCompareButton);
+
+		compareButton.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				ArrayList<String> names = new ArrayList<String>();
+				ArrayList<double[]> graphs = new ArrayList<double[]>();
+				Set<String> chosenNames = selectionModel.getSelectedSet();
+				for (String s : chosenNames) {
+					names.add(s);
+					graphs.add(StorageManager.INSTANCE.getResult(s)
+							.getSegregationPoints());
+				}
+
+				createGraph(vertPanel, names, graphs);
+				compareSelectPopupPanel.hide();
+				comparePopupPanel
+						.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
+							public void setPosition(int offsetWidth,
+									int offsetHeight) {
+								comparePopupPanel.center();
+							}
+						});
+			}
+
+		});
+
+		cancelCompareButton.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				Set<String> selected = selectionModel.getSelectedSet();
+				for (String s : selected) {
+					selectionModel.setSelected(s, false);
+				}
+				compareSelectPopupPanel.hide();
+			}
+
+		});
+
+		comparePerformanceButton.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				compareSelectPopupPanel
+						.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
+							public void setPosition(int offsetWidth,
+									int offsetHeight) {
+								compareSelectPopupPanel.center();
+							}
+						});
+			}
+		});
+		// ---------------------------------------------------------
+
+	}
+
+	private void createGraph(Panel panel, ArrayList<String> names,
+			ArrayList<double[]> points) {
+		// TODO: to be implemented by hugo;
 	}
 
 	/*
@@ -1510,35 +1684,39 @@ public class Fingerpaint implements EntryPoint {
 	 * screen.
 	 */
 	private void executeMixingRun(final MixingProtocol protocol) {
-		setLoadPanelMessage("Preparing data...");
-		setLoadPanelVisible(true);
-		
-		// Now use timers, to make sure the loading panel is set up and shown correctly
+		setLoadingPanelMessage("Preparing data...");
+		setLoadingPanelVisible(true);
+
+		// Now use timers, to make sure the loading panel is set up and shown
+		// correctly
 		// before we start doing some heavy calculations and simulation...
 		// Basically, we simply do a 'setTimeout' JavaScript call here
 		final Timer doEvenLaterTimer = new Timer() {
 			@Override
 			public void run() {
-				Simulation simulation = new Simulation(as.getMixChoice(), protocol,
-						as.getInitialDistribution(), as.getNrSteps(), false);
+				Simulation simulation = new Simulation(as.getMixChoice(),
+						protocol, as.getInitialDistribution(), as.getNrSteps(),
+						false);
 
 				TimeoutRpcRequestBuilder timeoutRpcRequestBuilder = new TimeoutRpcRequestBuilder(
 						10000);
-				SimulatorServiceAsync service = GWT.create(SimulatorService.class);
+				SimulatorServiceAsync service = GWT
+						.create(SimulatorService.class);
 				((ServiceDefTarget) service)
 						.setRpcRequestBuilder(timeoutRpcRequestBuilder);
 				AsyncCallback<SimulationResult> callback = new AsyncCallback<SimulationResult>() {
 					@Override
 					public void onSuccess(SimulationResult result) {
 						as.getGeometry().drawDistribution(
-								result.getConcentrationVectors()[result.getConcentrationVectors().length - 1]);
+								result.getConcentrationVectors()[result
+										.getConcentrationVectors().length - 1]);
 						saveResultsButton.setEnabled(true);
-						setLoadPanelVisible(false);
+						setLoadingPanelVisible(false);
 					}
 
 					@Override
 					public void onFailure(Throwable caught) {
-						setLoadPanelVisible(false);
+						setLoadingPanelVisible(false);
 						if (caught instanceof RequestTimeoutException) {
 							showError("The simulation server did not respond in"
 									+ " time. Try again later");
@@ -1551,13 +1729,13 @@ public class Fingerpaint implements EntryPoint {
 				service.simulate(simulation, callback);
 			}
 		};
-		
+
 		Timer doLaterTimer = new Timer() {
 			@Override
 			public void run() {
 				as.setInitialDistribution(as.getGeometry().getDistribution());
 
-				setLoadPanelMessage("Running the simulation. Please wait...");
+				setLoadingPanelMessage("Running the simulation. Please wait...");
 				doEvenLaterTimer.schedule(100);
 			}
 		};

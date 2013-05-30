@@ -11,7 +11,6 @@ import org.jsonmaker.gwt.client.base.ArrayListJsonizer;
 import org.jsonmaker.gwt.client.base.Defaults;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.storage.client.Storage;
 
 /**
  * Class that keeps track of the Geometry and Mixer the user has selected. Used

@@ -1,6 +1,5 @@
 package nl.tue.fingerpaint.client.json;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import nl.tue.fingerpaint.client.MixingProtocol;
