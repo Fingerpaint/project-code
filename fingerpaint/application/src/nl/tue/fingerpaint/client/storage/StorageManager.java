@@ -9,7 +9,7 @@ import nl.tue.fingerpaint.client.SimulationResult;
 import nl.tue.fingerpaint.client.json.FingerpaintJsonizer;
 import nl.tue.fingerpaint.shared.GeometryNames;
 
-import com.google.gwt.core.client.GWT;
+import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.storage.client.Storage;
 import com.google.gwt.storage.client.StorageMap;
 
@@ -82,7 +82,7 @@ public class StorageManager {
 	/** Used to indicate that the local storage has not yet been initialised. */
 	public static final int NOT_INITIALISED = 0;
 	/** Used to indicate that the local storage is ready for use. */
-	public static final int INITIALISED = 0;
+	public static final int INITIALISED = 1;
 
 	/**
 	 * Key on the highest level of the local storage that can be used to
@@ -134,14 +134,21 @@ public class StorageManager {
 		// Make sure that all keys are set
 		StorageMap sm = new StorageMap(localStorage);
 		for (String firstLevelKey : firstLevelKeys) {
+			// For the KEY_RESULTS, we do not have to initialise all geometries,
+			// otherwise, we do
 			if (!sm.containsKey(firstLevelKey)) {
-				HashMap<String, Object> secondLevel = new HashMap<String, Object>();
-				for (String secondLevelKey : secondLevelKeys) {
-					secondLevel.put(secondLevelKey, "{}");
+				if (firstLevelKey.equals(KEY_RESULTS)) {
+					localStorage.setItem(firstLevelKey, FingerpaintJsonizer
+							.toString(new HashMap<String, Object>()));
+				} else {
+					HashMap<String, Object> secondLevel = new HashMap<String, Object>();
+					for (String secondLevelKey : secondLevelKeys) {
+						secondLevel.put(secondLevelKey, "{}");
+					}
+					localStorage.setItem(firstLevelKey,
+							FingerpaintJsonizer.toString(secondLevel));
 				}
-				localStorage.setItem(firstLevelKey,
-						FingerpaintJsonizer.toString(secondLevel));
-			} else {
+			} else if (!firstLevelKey.equals(KEY_RESULTS)) {
 				HashMap<String, Object> secondLevel = FingerpaintJsonizer
 						.hashMapFromString(sm.get(firstLevelKey));
 				boolean changed = false;
@@ -192,7 +199,12 @@ public class StorageManager {
 					.get(geometry);
 			for (String secondLevelKey : secondLevel.keySet()) {
 				if (secondLevelKey.equals(key)) {
-					return (double[]) secondLevel.get(secondLevelKey);
+					Object[] val = (Object[]) secondLevel.get(secondLevelKey);
+					double[] result = new double[val.length];
+					for (int i = 0; i < val.length; i++) {
+						result[i] = ((Double) val[i]).doubleValue();
+					}
+					return result;
 				}
 			}
 		}
@@ -217,20 +229,22 @@ public class StorageManager {
 		}
 
 		HashMap<String, Object> firstLevel = FingerpaintJsonizer
-				.hashMapFromString(localStorage.getItem(KEY_INITDIST));
+				.hashMapFromString(localStorage.getItem(KEY_INITDIST), false);
 		if (firstLevel.containsKey(geometry)) {
-			@SuppressWarnings("unchecked")
-			HashMap<String, Object> secondLevel = (HashMap<String, Object>) firstLevel
-					.get(geometry);
-
-			for (String secondLevelKey : secondLevel.keySet()) {
-				GWT.log(secondLevelKey);
-			}
+			HashMap<String, Object> secondLevel = FingerpaintJsonizer
+					.hashMapFromJSONObject(
+							((JSONValue) firstLevel.get(geometry)).isObject(),
+							false);
 
 			ArrayList<String> result = new ArrayList<String>();
 			result.addAll(secondLevel.keySet());
 			return result;
 		}
+		return null;
+	}
+
+	public MixingProtocol getProtocol(String geometry, String key) {
+		// TODO: Load a protocol
 		return null;
 	}
 
@@ -246,7 +260,7 @@ public class StorageManager {
 		}
 
 		HashMap<String, Object> firstLevel = FingerpaintJsonizer
-				.hashMapFromString(localStorage.getItem(KEY_RESULTS));
+				.hashMapFromString(localStorage.getItem(KEY_RESULTS), false);
 		ArrayList<String> result = new ArrayList<String>();
 		result.addAll(firstLevel.keySet());
 
@@ -365,7 +379,7 @@ public class StorageManager {
 	 * do not attempt to overwrite.
 	 * 
 	 * @param geometry
-	 *            The geometry to store the distribution under.
+	 *            The short name of the geometry to store the distribution under.
 	 * @param key
 	 *            The name of the protocol.
 	 * @param protocol
