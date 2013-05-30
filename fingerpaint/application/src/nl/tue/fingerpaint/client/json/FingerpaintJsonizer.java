@@ -9,6 +9,7 @@ import nl.tue.fingerpaint.client.MixingProtocol.MixingProtocolJsonizer;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JsonUtils;
 import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONBoolean;
 import com.google.gwt.json.client.JSONNumber;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
@@ -22,6 +23,63 @@ import com.google.gwt.json.client.JSONValue;
  * @author Group Fingerpaint
  */
 public class FingerpaintJsonizer {
+
+	/**
+	 * Create an array that is represented by the given JSON array.
+	 * 
+	 * @param jsonArray
+	 *            A JSON array that can be used as an array in Java.
+	 * @return The array that the given JSON array represents.
+	 */
+	public static Object[] arrayFromJSONArray(JSONArray jsonArray) {
+		Object[] result = new Object[jsonArray.size()];
+		JSONValue val;
+		JSONObject valObj;
+		JSONArray valArr;
+		JSONString valStr;
+		JSONNumber valNr;
+		JSONBoolean valBool;
+		
+		for (int i = 0; i < jsonArray.size(); i++) {
+			val = jsonArray.get(i);
+			if ((valNr = val.isNumber()) != null) {
+				result[i] = valNr.doubleValue();
+			} else if ((valStr = val.isString()) != null) {
+				result[i] = valStr.stringValue();
+			} else if ((valObj = val.isObject()) != null) {
+				result[i] = FingerpaintJsonizer.hashMapFromJSONObject(valObj);
+			} else if ((valArr = val.isArray()) != null) {
+				result[i] = FingerpaintJsonizer.arrayFromJSONArray(valArr);
+			} else if ((valBool = val.isBoolean()) != null) {
+				result[i] = valBool.booleanValue();
+			}
+		}
+		return result;
+	}
+	
+	/**
+	 * Create a double array that is represented by the given JSON array. When a
+	 * value in the array is not a number, 1.0 is used as a default value.
+	 * 
+	 * @param jsonArray
+	 *            A JSON array that can be used as a double array in Java.
+	 * @return The double array that the given JSON array represents.
+	 */
+	public static double[] doubleArrayFromJSONArray(JSONArray jsonArray) {
+		double[] result = new double[jsonArray.size()];
+		JSONValue val;
+		JSONNumber valNr;
+		
+		for (int i = 0; i < jsonArray.size(); i++) {
+			val = jsonArray.get(i);
+			if ((valNr = val.isNumber()) != null) {
+				result[i] = valNr.doubleValue();
+			} else {
+				result[i] = 1;
+			}
+		}
+		return result;
+	}
 
 	/**
 	 * Create a double array that is represented by the given JSON string. When
@@ -43,21 +101,48 @@ public class FingerpaintJsonizer {
 			return null;
 		}
 		JSONArray valArr;
-		JSONNumber valNr;
 
 		if ((valArr = val.isArray()) != null) {
-			double[] result = new double[valArr.size()];
-			for (int i = 0; i < valArr.size(); i++) {
-				val = valArr.get(i);
-				if ((valNr = val.isNumber()) != null) {
-					result[i] = valNr.doubleValue();
-				} else {
-					result[i] = 1;
-				}
-			}
+			return doubleArrayFromJSONArray(valArr);
 		}
 
 		return null;
+	}
+
+	/**
+	 * Create a hash map that is represented by the given JSON object.
+	 * 
+	 * @param jsonObj
+	 *            A JSON object that can be used as a hash map in Java.
+	 * @return The hash map that the given JSON object represents.
+	 */
+	public static HashMap<String, Object> hashMapFromJSONObject(
+			JSONObject jsonObj) {
+		HashMap<String, Object> hm = new HashMap<String, Object>();
+		JSONValue tmpVal;
+		JSONObject tmpValObj;
+		JSONArray tmpValArr;
+		JSONString tmpValStr;
+		JSONNumber tmpValNr;
+		JSONBoolean tmpValBool;
+
+		for (String key : jsonObj.keySet()) {
+			tmpVal = jsonObj.get(key);
+
+			if ((tmpValStr = tmpVal.isString()) != null) {
+				hm.put(key, FingerpaintJsonizer.toUnquotedString(tmpValStr));
+			} else if ((tmpValObj = tmpVal.isObject()) != null) {
+				hm.put(key, hashMapFromJSONObject(tmpValObj));
+			} else if ((tmpValArr = tmpVal.isArray()) != null) {
+				hm.put(key, FingerpaintJsonizer.arrayFromJSONArray(tmpValArr));
+			} else if ((tmpValNr = tmpVal.isNumber()) != null) {
+				hm.put(key, tmpValNr.doubleValue());
+			} else if ((tmpValBool = tmpVal.isBoolean()) != null) {
+				hm.put(key, tmpValBool.booleanValue());
+			}
+		}
+
+		return hm;
 	}
 
 	/**
@@ -79,36 +164,25 @@ public class FingerpaintJsonizer {
 	 * @param jsonHashMap
 	 *            A JSON string that represents an object and can be used as a
 	 *            hash map in Java.
-	 * @return The hash map that the given JSON string represents.
+	 * @return The hash map that the given JSON string represents. If the string
+	 *         is malformed or does not represent an object, {@code null} is
+	 *         returned.
 	 */
-	public static HashMap<String, Object> hashMapFromString(String jsonHashMap) {	
-		HashMap<String, Object> hm = new HashMap<String, Object>();
+	public static HashMap<String, Object> hashMapFromString(String jsonHashMap) {
 		JSONValue val;
 		try {
 			val = JSONParser.parseStrict(jsonHashMap);
 		} catch (Exception e) {
 			// When the value is null or empty, return an empty hash map
-			return hm;
+			return null;
 		}
 		JSONObject valObj;
-		JSONString tmpValStr;
-		JSONObject tmpValObj;
 
 		if ((valObj = val.isObject()) != null) {
-			for (String key : valObj.keySet()) {
-				val = valObj.get(key);
-				GWT.log("HENK(" + key + ") " + (val == null ? "null" : "object/string"));
-				if ((tmpValStr = val.isString()) != null) {
-					hm.put(key, FingerpaintJsonizer.toUnquotedString(tmpValStr));
-				} else if ((tmpValObj = val.isObject()) != null) {
-					for (String tmpKey : tmpValObj.keySet()) {
-						GWT.log("HENK  " + tmpKey);
-					}
-				}
-			}
+			return hashMapFromJSONObject(valObj);
 		}
 
-		return hm;
+		return null;
 	}
 
 	/**
@@ -138,10 +212,17 @@ public class FingerpaintJsonizer {
 		sb.append("]");
 		return sb.toString();
 	}
-	
+
+	/**
+	 * Creates a JSON string that is a representation of the given protocol.
+	 * 
+	 * @param protocol
+	 *            The mixing protocol to be converted to a JSON string.
+	 * @return The JSON string that represents the given mixing protocol.
+	 */
 	public static String toString(MixingProtocol protocol) {
 		MixingProtocolJsonizer ja = (MixingProtocolJsonizer) GWT
-		.create(MixingProtocolJsonizer.class);
+				.create(MixingProtocolJsonizer.class);
 		return ja.asString(protocol);
 	}
 
