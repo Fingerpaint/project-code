@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import nl.tue.fingerpaint.client.ApplicationState;
 import nl.tue.fingerpaint.client.MixingProtocol;
 import nl.tue.fingerpaint.client.SimulationResult;
 import nl.tue.fingerpaint.client.json.FingerpaintJsonizer;
@@ -401,6 +402,55 @@ public class StorageManager {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Save a mixing result to the local storage. If the name already exists, do
+	 * not attempt to overwrite.
+	 * 
+	 * @param key
+	 *            The name of the result.
+	 * @param result
+	 *            The result to be saved.
+	 * @return True if the value has been saved, false if the name is already in
+	 *         use (no attempt to overwrite will be made).
+	 */
+	public boolean putResult(String key, ResultStorage result) {
+		return putResult(key, result, false);
+	}
+
+	/**
+	 * Save a mixing protocol to the local storage. If the name already exists,
+	 * do not attempt to overwrite.
+	 * 
+	 * @param geometry
+	 *            The geometry to store the distribution under.
+	 * @param key
+	 *            The name of the protocol.
+	 * @param protocol
+	 *            The protocol to be saved.
+	 * @param overwrite
+	 *            If the value should be overwritten if the name is already in
+	 *            use.
+	 * @return True if the value has been saved, false if the name is already in
+	 *         use (no attempt to overwrite will be made).
+	 */
+	public boolean putResult(String key, ResultStorage result, boolean overwrite) {
+		if (state != INITIALISED) {
+			return false;
+		}
+
+		if (isNameInUse(KEY_RESULTS, key, null) && !overwrite) {
+			return false;
+		}
+
+		HashMap<String, Object> firstLevel = FingerpaintJsonizer
+				.hashMapFromString(localStorage.getItem(KEY_RESULTS));
+		firstLevel.put(key, FingerpaintJsonizer.toString(result));
+		localStorage.setItem(KEY_RESULTS,
+				FingerpaintJsonizer.toString(firstLevel));
+		return true;
+
 	}
 
 	/**

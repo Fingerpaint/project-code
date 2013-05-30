@@ -11,6 +11,7 @@ import nl.tue.fingerpaint.client.resources.FingerpaintResources;
 import nl.tue.fingerpaint.client.serverdata.ServerDataCache;
 import nl.tue.fingerpaint.client.simulator.SimulatorService;
 import nl.tue.fingerpaint.client.simulator.SimulatorServiceAsync;
+import nl.tue.fingerpaint.client.storage.ResultStorage;
 import nl.tue.fingerpaint.client.storage.StorageManager;
 import nl.tue.fingerpaint.shared.GeometryNames;
 
@@ -1103,14 +1104,17 @@ public class Fingerpaint implements EntryPoint {
 					as.getProtocol(), canOverwrite);
 
 		} else if (koeala.equals(StorageManager.KEY_RESULTS)) {
-			// TODO: Save current results / state
+			ResultStorage result = new ResultStorage(as.getGeometryChoice(),
+					as.getMixerChoice(), as.getInitialDistribution(),
+					as.getProtocol(), as.getSegregation(), as.getNrSteps());
+			return StorageManager.INSTANCE.putResult(name, result, canOverwrite);
 		}
 		return false;
 	}
 
 	/*
 	 * Initialises the loadProtocolButton. When pressed, this button allows a
-	 * user to load a protocol. Also initializes the corresponding loading
+	 * user to load a protocol. Also initialises the corresponding loading
 	 * popup.
 	 */
 	private void createLoadProtocolButton() {
@@ -1454,9 +1458,8 @@ public class Fingerpaint implements EntryPoint {
 			}
 		});
 
-
-
-		ArrayList<String> resultNames = (ArrayList<String>) StorageManager.INSTANCE.getResults();
+		ArrayList<String> resultNames = (ArrayList<String>) StorageManager.INSTANCE
+				.getResults();
 
 		cellList.setRowCount(resultNames.size());
 
@@ -1656,7 +1659,7 @@ public class Fingerpaint implements EntryPoint {
 		final Timer doEvenLaterTimer = new Timer() {
 			@Override
 			public void run() {
-				Simulation simulation = new Simulation(as.getMixChoice(),
+				Simulation simulation = new Simulation(as.getMixerChoice(),
 						protocol, as.getInitialDistribution(), as.getNrSteps(),
 						false);
 
@@ -1672,6 +1675,7 @@ public class Fingerpaint implements EntryPoint {
 						as.getGeometry().drawDistribution(
 								result.getConcentrationVectors()[result
 										.getConcentrationVectors().length - 1]);
+						as.setSegregation(result.getSegregationPoints());
 						saveResultsButton.setEnabled(true);
 						setLoadingPanelVisible(false);
 					}
