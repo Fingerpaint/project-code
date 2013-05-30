@@ -2,9 +2,7 @@ package nl.tue.fingerpaint.client;
 
 import com.google.gwt.canvas.dom.client.CanvasPixelArray;
 import com.google.gwt.canvas.dom.client.CssColor;
-
 import com.google.gwt.canvas.dom.client.ImageData;
-import com.google.gwt.touch.client.Point;
 
 /**
  * Class that represents the rectangular geometry. Keeps the internal
@@ -399,12 +397,6 @@ public class RectangleGeometry extends Geometry {
 	 */
 	@Override
 	public void drawDistribution(double[] dist) {
-//		for (int i = 0; i < dist.length; i++) {
-//			Point coords = new Point(i % 400, 239 - i / 400);
-//			fillPixel(changeToAbsoluteCoords((int) coords.getX()),
-//					changeToAbsoluteCoords((int) coords.getY()),
-//					getColour(dist[i]));
-//		}
 		ImageData img = context.getImageData(X_OFFSET + 1, TOP_OFFSET + 1,
 				getWidth(), getHeight());
 		CanvasPixelArray data = img.getData();
@@ -443,17 +435,4 @@ public class RectangleGeometry extends Geometry {
 		context.fillRect(X_OFFSET + 1, TOP_OFFSET + 1, getWidth(), getHeight());
 	}
 
-	/**
-	 * Converts the input value to an absolute coordinate on the canvas
-	 * 
-	 * @param x
-	 *            The value to be converted
-	 * @return The location relative to the top-left corner of the canvas,
-	 *         corresponding to this value
-	 */
-	private int changeToAbsoluteCoords(int x) {
-		return x * factor + 1;
-	}
-
 }
-//>>>>>>> ffff3624f9ce63f36e29b5879d9a44fee78de850

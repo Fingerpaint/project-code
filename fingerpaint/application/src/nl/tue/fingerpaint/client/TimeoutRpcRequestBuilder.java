@@ -1,16 +1,14 @@
 package nl.tue.fingerpaint.client;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.user.client.rpc.RpcRequestBuilder;
-import com.google.gwt.user.client.rpc.ServiceDefTarget;
 
 /**
  * Class that creates a {@link ServicedDefTarget} class class of your choice
  * that fails after
  * a given amount of time before the request returns.
  * 
- * @author Lasse Blaauwbroek
+ * @author Group Fingerpaint
  *
  */
 public class TimeoutRpcRequestBuilder extends RpcRequestBuilder {
