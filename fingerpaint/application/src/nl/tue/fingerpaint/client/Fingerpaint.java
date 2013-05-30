@@ -301,7 +301,7 @@ public class Fingerpaint implements EntryPoint {
 	public void onModuleLoad() {
 		// Load CSS
 		FingerpaintResources.INSTANCE.css().ensureInjected();
-
+		
 		// Initialise the loading panel
 		// Add animation image
 		Image loadImage = new Image(FingerpaintResources.INSTANCE.loadImage()
@@ -1286,13 +1286,12 @@ public class Fingerpaint implements EntryPoint {
 
 								// get the selected initial distribution, and
 								// set it in the AS
-								as.getGeometry()
-										.setDistribution(
-												StorageManager.INSTANCE.getDistribution(
-														GeometryNames
-																.getShortName(as
-																		.getGeometryChoice()),
-														selected));
+								double[] dist = StorageManager.INSTANCE
+										.getDistribution(GeometryNames
+												.getShortName(as
+														.getGeometryChoice()),
+												selected);
+								as.setInitialDistribution(dist);
 								as.drawDistribution();
 								loadPanel.removeFromParent();
 							}
