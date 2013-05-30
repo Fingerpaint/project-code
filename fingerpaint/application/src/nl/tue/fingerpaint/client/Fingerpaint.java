@@ -206,6 +206,8 @@ public class Fingerpaint implements EntryPoint {
 	// TODO: The text 'Step size' should be translated later on
 	private Label sizeLabel = new Label("Step size");
 	private NumberSpinner sizeSpinner;
+	
+	private NumberSpinner cursorSizeSpinner;
 
 	// Checkbox that needs to be checked to define a protocol. If it isn't
 	// checked, steps are executed directly.
@@ -234,6 +236,15 @@ public class Fingerpaint implements EntryPoint {
 	private final double NRSTEPS_RATE = 1.0;
 	private final double NRSTEPS_MIN = 1.0;
 	private final double NRSTEPS_MAX = 50.0;
+	
+	/*
+	 * The initialisation parameters for the cursorSizeSpinner
+	 * these sizes represent cursor pixels
+	 */
+	private final double CURSOR_DEFAULT = 3.0;
+	private final double CURSOR_RATE = 1.0;
+	private final double CURSOR_MIN = 1.0;
+	private final double CURSOR_MAX = 50.0; //good value should be determined for performance
 
 	private static final String LOADPANEL_ID = "loading-overlay";
 	private static final String LOADPANEL_MESSAGE_ID = "loading-overlay-message";
@@ -464,6 +475,9 @@ public class Fingerpaint implements EntryPoint {
 			};
 			as.getGeometry().addStepAddedListener(l);
 
+			// Initialise the cursorSizeSpinner so it can be added to the tool selector popup
+			createCursorSizeSpinner();
+			
 			// Initialise the toolSelectButton and add to menuPanel
 			createToolSelector();
 			menuPanel.add(toolSelectButton);
@@ -676,6 +690,24 @@ public class Fingerpaint implements EntryPoint {
 			}
 		});
 	}
+	
+	/*
+	 * Initialises the spinner that edits the cursorsize
+	 */
+	private void createCursorSizeSpinner(){
+		cursorSizeSpinner = new NumberSpinner(CURSOR_DEFAULT, CURSOR_RATE, CURSOR_MIN, CURSOR_MAX, true);
+		
+		cursorSizeSpinner.setSpinnerListener(new NumberSpinnerListener(){
+			
+			@Override
+			public void onValueChange(double value){
+				
+				// TODO: uncomment when setDrawingToolSize exists
+				//as.getGeometry().setDrawingToolSize(value-1);
+				//-1 because the drawingTools have a default size of 1 pixel for inputSize 0
+			}
+		});
+	}
 
 	/*
 	 * Initialises the toggleColor button. TODO: Use pictures instead of text on
@@ -744,9 +776,7 @@ public class Fingerpaint implements EntryPoint {
 				if (!squareDrawingTool.isDown()) {
 					squareDrawingTool.setDown(true);
 				} else {
-					// TODO Change hard-coded 3 to 'size-slider.getValue()' or
-					// something
-					as.getGeometry().setDrawingTool(new SquareDrawingTool(3));
+					as.getGeometry().setDrawingTool(new SquareDrawingTool(getCursorSize()));
 
 					circleDrawingTool.setDown(false);
 				}
@@ -766,9 +796,7 @@ public class Fingerpaint implements EntryPoint {
 				if (!circleDrawingTool.isDown()) {
 					circleDrawingTool.setDown(true);
 				} else {
-					// TODO Change hard-coded 3 to 'size-slider.getValue()' or
-					// something
-					as.getGeometry().setDrawingTool(new CircleDrawingTool(3));
+					as.getGeometry().setDrawingTool(new CircleDrawingTool(getCursorSize()));
 
 					squareDrawingTool.setDown(false);
 				}
@@ -781,6 +809,7 @@ public class Fingerpaint implements EntryPoint {
 
 		// --TODO: Add DrawingTool Size slider below ----------------
 		popupPanelPanel.add(popupPanelMenu);
+		popupPanelPanel.add(cursorSizeSpinner);
 
 		// Add everything to the popup panel
 		toolSelector.add(popupPanelPanel);
@@ -808,6 +837,15 @@ public class Fingerpaint implements EntryPoint {
 			}
 
 		});
+	}
+
+	/*
+	 * this method is used to acquire the size of the current cursor in pixels
+	 * 
+	 * @return cursorSizeSpinner.getValue()-1
+	 */
+	private int getCursorSize() {
+		return (int) cursorSizeSpinner.getValue()-1;
 	}
 
 	/*

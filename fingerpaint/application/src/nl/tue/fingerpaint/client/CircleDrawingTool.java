@@ -79,12 +79,18 @@ public class CircleDrawingTool extends DrawingTool {
 			for (int w = x - j; w <= x + j; w++) {
 				fillEntirePixel(data, w, y - i, factor, col, width);
 			}
+			for (int w = x - i; w <= x + i; w++) {
+				fillEntirePixel(data, w, y + j, factor, col, width);
+			}
+			for (int w = x - i; w <= x + i; w++) {
+				fillEntirePixel(data, w, y - j, factor, col, width);
+			}
 
-			fillEntirePixel(data, x + i, y - j, factor, col, width);
-			fillEntirePixel(data, x + i, y + j, factor, col, width);
+			// fillEntirePixel(data, x + i, y - j, factor, col, width);
+			// fillEntirePixel(data, x + i, y + j, factor, col, width);
 
-			fillEntirePixel(data, x - i, y - j, factor, col, width);
-			fillEntirePixel(data, x - i, y + j, factor, col, width);
+			// fillEntirePixel(data, x - i, y - j, factor, col, width);
+			// fillEntirePixel(data, x - i, y + j, factor, col, width);
 
 			i++;
 			j = (int) (Math.sqrt(radius * radius - i * i) + 0.5);
