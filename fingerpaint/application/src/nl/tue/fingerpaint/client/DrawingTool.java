@@ -35,6 +35,10 @@ public abstract class DrawingTool {
 	public int getRadius() {
 		return this.radius;
 	}
+	
+	public void setRadius(int r) {
+		radius = r;
+	}
 
 	// --Private and protected methods for internal use---------------
 	/**
