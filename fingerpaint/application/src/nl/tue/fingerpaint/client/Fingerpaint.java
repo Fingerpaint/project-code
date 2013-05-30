@@ -294,8 +294,6 @@ public class Fingerpaint implements EntryPoint {
 				} else {
 					showError(caught.getMessage());
 				}
-				setLoadPanelVisible(false);
-				showError(caught.getMessage());
 			}
 		});
 	}
