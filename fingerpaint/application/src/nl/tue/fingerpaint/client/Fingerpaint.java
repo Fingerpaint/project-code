@@ -124,18 +124,18 @@ public class Fingerpaint implements EntryPoint {
 
 	// Popup Panel that appears after the Save button in the save popup panel
 	// has been pressed
-	private PopupPanel confirmSavePanel;
+	private PopupPanel overwriteSavePanel;
 
 	// Vertical Panel to hold the save message and the ok/overwrite button in
 	// the confirm save popup panel
-	private VerticalPanel confirmSaveVerticalPanel;
+	private VerticalPanel overwriteSaveVerticalPanel;
 
 	// Label to hold the save message
 	private Label saveMessageLabel;
 
 	// Horizontal Panel to hold the ok or overwrite/cancel button(s) in the
 	// confirm save popup panel
-	private HorizontalPanel confirmButtonsPanel;
+	private HorizontalPanel overwriteButtonsPanel;
 
 	// Ok / Cancel button to close the save results popup panel
 	private Button closeSaveButton;
@@ -165,7 +165,7 @@ public class Fingerpaint implements EntryPoint {
 
 	private Button savePanelButton;
 
-	private Button confirmSaveButton;
+	private Button overwriteSaveButton;
 
 	// Button to adapt the drawing tool
 	// TODO: Change this to a button on which the current tool is drawn
@@ -236,6 +236,17 @@ public class Fingerpaint implements EntryPoint {
 	private static final String LOADPANEL_ID = "loading-overlay";
 	private static final String LOADPANEL_MESSAGE_ID = "loading-overlay-message";
 
+	/**
+	 * Stores how long in milliseconds a SAVE_SUCCESS_MESSAGE should be shown in
+	 * a NotificationPanel.
+	 */
+	private static final int SAVE_SUCCESS_TIMEOUT = 2000;
+
+	/**
+	 * The message that is shown to the user upon a successful save.
+	 */
+	private static final String SAVE_SUCCESS_MESSAGE = "Save has been successful.";
+
 	// Width of the menu in which buttons are displayed
 	// on the right side of the window in pixels
 	private final int menuWidth = 200;
@@ -251,7 +262,7 @@ public class Fingerpaint implements EntryPoint {
 	private TextArea taProtocolRepresentation = new TextArea();
 
 	private Storage storage;
-	private String koeala;
+	private String lastSaveButtonClicked;
 
 	/**
 	 * This is the entry point method.
@@ -460,7 +471,7 @@ public class Fingerpaint implements EntryPoint {
 										// safe i made this msg so fails are
 										// visible
 									mixingDetails
-											.setText("Geometry and/or Mixer was not selected succesfully");
+											.setText("Geometry and/or Mixer was not selected successfully");
 								}
 
 								RootPanel.get().add(mixingDetails);
@@ -903,14 +914,16 @@ public class Fingerpaint implements EntryPoint {
 
 			@Override
 			public void onClick(ClickEvent event) {
-				koeala = StorageManager.KEY_PROTOCOLS;
-				saveResultsPanel
-						.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
-							public void setPosition(int offsetWidth,
-									int offsetHeight) {
-								saveResultsPanel.center();
-							}
-						});
+				lastSaveButtonClicked = StorageManager.KEY_PROTOCOLS;
+				// saveResultsPanel
+				// .setPopupPositionAndShow(new PopupPanel.PositionCallback() {
+				// public void setPosition(int offsetWidth,
+				// int offsetHeight) {
+				// saveResultsPanel.center();
+				// }
+				// });
+				saveResultsPanel.center();
+				saveResultsPanel.show();
 				saveNameTextBox.setFocus(true);
 			}
 
@@ -930,7 +943,7 @@ public class Fingerpaint implements EntryPoint {
 
 			@Override
 			public void onClick(ClickEvent event) {
-				koeala = StorageManager.KEY_RESULTS;
+				lastSaveButtonClicked = StorageManager.KEY_RESULTS;
 				saveResultsPanel
 						.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
 							public void setPosition(int offsetWidth,
@@ -945,9 +958,9 @@ public class Fingerpaint implements EntryPoint {
 
 	}
 
-	/*
+	/**
 	 * Initialises the createSaveButton. When pressed, this button allows a user
-	 * to save a mixing run
+	 * to save a mixing run.
 	 */
 	private void createSaveDistributionButton() {
 		// TODO: The text 'Save Distribution' should be translated later on
@@ -955,101 +968,82 @@ public class Fingerpaint implements EntryPoint {
 		saveDistributionButton.setEnabled(true);
 
 		saveDistributionButton.addClickHandler(new ClickHandler() {
-
 			@Override
 			public void onClick(ClickEvent event) {
-				koeala = StorageManager.KEY_INITDIST;
-				saveResultsPanel
-						.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
-							public void setPosition(int offsetWidth,
-									int offsetHeight) {
-								saveResultsPanel.center();
-							}
-						});
+				lastSaveButtonClicked = StorageManager.KEY_INITDIST;
+				// saveResultsPanel
+				// .setPopupPositionAndShow(new PopupPanel.PositionCallback() {
+				// public void setPosition(int offsetWidth,
+				// int offsetHeight) {
+				// saveResultsPanel.center();
+				// }
+				// });
+				saveResultsPanel.center();
+				saveResultsPanel.show();
+
 				saveNameTextBox.setFocus(true);
 			}
-
 		});
-
 	}
 
-	/*
-	 * Initialises all widgets that are neede for the save popup panel
+	/**
+	 * Initialises all widgets that are needed for the save popup panel
 	 */
 	private void createSaveWidgets() {
+		createSavePanel();
+		createOverwritePanel();
+	}
 
-		savePanelButton = new Button("Save");
-		savePanelButton.setEnabled(false);
-		confirmSaveButton = new Button("Overwrite");
-
-		confirmSaveButton.addClickHandler(new ClickHandler() {
+	private void createOverwritePanel() {
+		overwriteSaveButton = new Button("Overwrite");
+		overwriteSaveButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				String name = saveNameTextBox.getText();
-				save(name, true);
-				saveMessageLabel.setText("Save has been successful");
-				closeSaveButton.setText("OK");
-				confirmSaveButton.removeFromParent();
-				confirmSavePanel.center();
+				overwriteSaveButtonOnClick();
 			}
 		});
 
+		overwriteSavePanel = new PopupPanel();
+		overwriteSavePanel.setModal(true);
+
+		overwriteButtonsPanel = new HorizontalPanel();
+		
+		overwriteSaveVerticalPanel = new VerticalPanel();
+		
+		saveMessageLabel = new Label();
+
+		// add all components to second popup panel
+		overwriteSavePanel.add(overwriteSaveVerticalPanel);
+		overwriteSaveVerticalPanel.add(saveMessageLabel);
+		overwriteSaveVerticalPanel.add(overwriteButtonsPanel);
+		overwriteButtonsPanel.add(closeSaveButton);
+	}
+
+	private void createSavePanel() {
+		// Initially, the save button is disabled; it will become available if
+		// "Mix Now" is pressed.
+		savePanelButton = new Button("Save");
+		savePanelButton.setEnabled(false);
 		savePanelButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				String name = saveNameTextBox.getText();
-				boolean success = save(name, false);
-				if (!success) {
-					saveMessageLabel.setText("This name is already in use. "
-							+ "Choose whether to overwrite existing file "
-							+ "or to cancel.");
-					closeSaveButton.setText("Cancel");
-
-					confirmButtonsPanel.remove(closeSaveButton);
-					confirmButtonsPanel.add(confirmSaveButton);
-					confirmButtonsPanel.add(closeSaveButton);
-				} else {
-					saveMessageLabel.setText("Save has been successful");
-					closeSaveButton.setText("OK");
-					if (confirmSaveButton.isAttached()) {
-						confirmButtonsPanel.remove(confirmSaveButton);
-					}
-				}
-				confirmSavePanel
-						.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
-							public void setPosition(int offsetWidth,
-									int offsetHeight) {
-								int left = (Window.getClientWidth() - offsetWidth) / 2;
-								int top = (Window.getClientHeight() - offsetHeight) / 2;
-								confirmSavePanel.setPopupPosition(left, top);
-							}
-						});
-				saveResultsPanel.hide();
+				savePanelButtonOnClick();
 			}
-
 		});
 
 		saveResultsPanel = new PopupPanel();
 		saveResultsPanel.setModal(true);
 
-		// Initially, the save button is disabled; it will become available if
-		// "Mix Now" is pressed.
-
 		saveResultsVerticalPanel = new VerticalPanel();
+
 		saveButtonsPanel = new HorizontalPanel();
+
 		saveNameTextBox = new TextBox();
 		saveNameTextBox.setMaxLength(30);
 
 		cancelSaveResultsButton = new Button("Cancel");
-		confirmSavePanel = new PopupPanel();
-		confirmSavePanel.setModal(true);
 
-		confirmSaveVerticalPanel = new VerticalPanel();
-		saveMessageLabel = new Label();
-		confirmButtonsPanel = new HorizontalPanel();
 		closeSaveButton = new Button();
-
-		// Display the first popuppanel when the save button is pressed
 
 		// add all components to first popuppanel
 		saveResultsPanel.add(saveResultsVerticalPanel);
@@ -1057,14 +1051,6 @@ public class Fingerpaint implements EntryPoint {
 		saveResultsVerticalPanel.add(saveButtonsPanel);
 		saveButtonsPanel.add(savePanelButton);
 		saveButtonsPanel.add(cancelSaveResultsButton);
-
-		// add all components to second popup panel
-		confirmSavePanel.add(confirmSaveVerticalPanel);
-		confirmSaveVerticalPanel.add(saveMessageLabel);
-		confirmSaveVerticalPanel.add(confirmButtonsPanel);
-		confirmButtonsPanel.add(closeSaveButton);
-
-		// display the second popup panel when the second save button is pressed
 
 		// Hide the first popup panel when the first cancel button is pressed
 		cancelSaveResultsButton.addClickHandler(new ClickHandler() {
@@ -1079,26 +1065,9 @@ public class Fingerpaint implements EntryPoint {
 		// Determine whether user input is valid. Enable/disable the save
 		// button. Execute save when ENTER is pressed.
 		saveNameTextBox.addKeyPressHandler(new KeyPressHandler() {
-
 			@Override
 			public void onKeyPress(KeyPressEvent event) {
-				String text = saveNameTextBox.getText();
-				String inputCharacter = Character.toString(event.getCharCode());
-				int textlength = text.length();
-				if (inputCharacter
-						.matches("[~`!@#$%^&*()+={}\\[\\]:;\"|\'\\\\<>?,./\\s]")) {
-					saveNameTextBox.cancelKey();
-				}
-				if (inputCharacter.matches("[A-Za-z0-9]")) {
-					textlength++;
-				}
-				if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_BACKSPACE) {
-					textlength--;
-				}
-				if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER) {
-					savePanelButton.click();
-				}
-				savePanelButton.setEnabled(textlength > 0);
+				handleKeyPress(event);
 			}
 		});
 
@@ -1107,40 +1076,106 @@ public class Fingerpaint implements EntryPoint {
 		closeSaveButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				confirmSavePanel.hide();
-				if (!closeSaveButton.getText().equals("OK")) {
-					confirmSavePanel.remove(confirmSaveButton);
-					saveResultsPanel.show();
-					saveNameTextBox.setSelectionRange(0, saveNameTextBox
-							.getText().length());
-					saveNameTextBox.setFocus(true);
-				} else {
-					saveNameTextBox.setText("");
-					savePanelButton.setEnabled(false);
-				}
+				closeSaveButtonOnClick();
 			}
 		});
 	}
 
-	/*
+	private void closeSaveButtonOnClick() {
+		overwriteSavePanel.hide();
+		if (!closeSaveButton.getText().equals("OK")) {
+			overwriteSavePanel.remove(overwriteSaveButton);
+			saveResultsPanel.show();
+			saveNameTextBox.setSelectionRange(0, saveNameTextBox.getText()
+					.length());
+			saveNameTextBox.setFocus(true);
+		} else {
+			saveNameTextBox.setText("");
+			savePanelButton.setEnabled(false);
+		}
+	}
+
+	private void handleKeyPress(KeyPressEvent event) {
+		String text = saveNameTextBox.getText();
+		String inputCharacter = Character.toString(event.getCharCode());
+		int textlength = text.length();
+		if (inputCharacter
+				.matches("[~`!@#$%^&*()+={}\\[\\]:;\"|\'\\\\<>?,./\\s]")) {
+			saveNameTextBox.cancelKey();
+		} else if (inputCharacter.matches("[A-Za-z0-9]")) {
+			textlength++;
+		} else if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_BACKSPACE) {
+			textlength--;
+		} else if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER) {
+			savePanelButton.click();
+		}
+		savePanelButton.setEnabled(textlength > 0);
+	}
+
+	/**
 	 * Saves the current protocol, distribution or mixing results, depending on
 	 * which save-button was pressed last.
 	 */
 	private boolean save(String name, boolean canOverwrite) {
-		if (koeala.equals(StorageManager.KEY_INITDIST)) {
+		if (lastSaveButtonClicked.equals(StorageManager.KEY_INITDIST)) {
 			return StorageManager.INSTANCE.putDistribution(
 					GeometryNames.getShortName(as.getGeometryChoice()), name,
 					as.getGeometry().getDistribution(), canOverwrite);
 
-		} else if (koeala.equals(StorageManager.KEY_PROTOCOLS)) {
+		} else if (lastSaveButtonClicked.equals(StorageManager.KEY_PROTOCOLS)) {
 			return StorageManager.INSTANCE.putProtocol(
 					GeometryNames.getShortName(as.getGeometryChoice()), name,
 					as.getProtocol(), canOverwrite);
 
-		} else if (koeala.equals(StorageManager.KEY_RESULTS)) {
+		} else if (lastSaveButtonClicked.equals(StorageManager.KEY_RESULTS)) {
 			// TODO: Save current results / state
 		}
 		return false;
+	}
+
+	private void savePanelButtonOnClick() {
+		String name = saveNameTextBox.getText();
+		boolean success = save(name, false);
+		if (!success) {
+			saveMessageLabel.setText("This name is already in use. "
+					+ "Choose whether to overwrite existing file "
+					+ "or to cancel.");
+			closeSaveButton.setText("Cancel");
+
+			overwriteButtonsPanel.remove(closeSaveButton);
+			overwriteButtonsPanel.add(overwriteSaveButton);
+			overwriteButtonsPanel.add(closeSaveButton);
+		} else {
+			// saveMessageLabel.setText("Save has been successful");
+			// closeSaveButton.setText("OK");
+			NotificationPanel np = new NotificationPanel(SAVE_SUCCESS_MESSAGE);
+			np.show(SAVE_SUCCESS_TIMEOUT);
+			if (overwriteSaveButton.isAttached()) {
+				overwriteButtonsPanel.remove(overwriteSaveButton);
+			}
+		}
+		overwriteSavePanel
+				.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
+					public void setPosition(int offsetWidth, int offsetHeight) {
+						int left = (Window.getClientWidth() - offsetWidth) / 2;
+						int top = (Window.getClientHeight() - offsetHeight) / 2;
+						overwriteSavePanel.setPopupPosition(left, top);
+					}
+				});
+		saveResultsPanel.hide();
+	}
+
+	private void overwriteSaveButtonOnClick() {
+		String name = saveNameTextBox.getText();
+		save(name, true);
+
+		NotificationPanel np = new NotificationPanel(SAVE_SUCCESS_MESSAGE);
+		np.show(SAVE_SUCCESS_TIMEOUT);
+
+		// saveMessageLabel.setText("Save has been successful");
+		// closeSaveButton.setText("OK");
+		overwriteSaveButton.removeFromParent();
+		overwriteSavePanel.hide();
 	}
 
 	/*
@@ -1251,7 +1286,8 @@ public class Fingerpaint implements EntryPoint {
 
 				// Get all initial distributions for current geometry
 				List<String> geometryDistributions = StorageManager.INSTANCE
-						.getDistributions(GeometryNames.getShortName(as.getGeometryChoice()));
+						.getDistributions(GeometryNames.getShortName(as
+								.getGeometryChoice()));
 				GWT.log("" + geometryDistributions.size());
 
 				// Create a cell to render each value.
