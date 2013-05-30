@@ -54,7 +54,7 @@ public class RectangleDistribution extends Distribution {
 	 * {@code y})
 	 */
 	@Override
-	protected int getIndex(int x, int y) {
+	public int getIndex(int x, int y) {
 		return x + 400 * (239 - y);
 	}
 
