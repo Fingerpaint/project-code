@@ -1,5 +1,7 @@
 package nl.tue.fingerpaint.client;
 
+import java.io.Serializable;
+
 import org.jsonmaker.gwt.client.Jsonizer;
 
 /**
@@ -8,7 +10,7 @@ import org.jsonmaker.gwt.client.Jsonizer;
  * @author Group Fingerpaint
  *
  */
-public class MixingStep {
+public class MixingStep implements Serializable{
 	
 	/**the minimum step size, all step sizes should be a multiple of this*/
 	public static final double STEP_UNIT = 0.25;

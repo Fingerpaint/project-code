@@ -9,7 +9,6 @@ import org.jsonmaker.gwt.client.JsonizerParser;
 import org.jsonmaker.gwt.client.base.Defaults;
 import org.jsonmaker.gwt.client.base.HashMapJsonizer;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.json.client.JSONObject;
 

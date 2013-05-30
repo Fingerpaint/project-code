@@ -1,8 +1,8 @@
 package nl.tue.fingerpaint.client;
 
 import org.junit.Test;
+
 import com.google.gwt.junit.client.GWTTestCase;
-import com.google.gwt.storage.client.Storage;
 
 public class ApplicationStateTest extends GWTTestCase{ 
 	private ApplicationState as;
@@ -169,7 +169,8 @@ public class ApplicationStateTest extends GWTTestCase{
 //		}
 //	}
 
-	private void checkMixingStep(MixingStep step, double value, boolean clockwise, boolean top) {
+	private void checkMixingStep(MixingStep step, double value,
+			boolean clockwise, boolean top) {
 		assertEquals("Step value", value, step.getStepSize(), 0.00000000001);
 		assertEquals("Direction", clockwise, step.getDirection());
 		assertEquals("Wall", top, step.getWall());
