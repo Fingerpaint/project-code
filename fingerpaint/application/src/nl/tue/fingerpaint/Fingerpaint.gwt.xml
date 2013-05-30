@@ -27,6 +27,10 @@
 	<!-- use JSON -->
 	<inherits name="com.google.gwt.json.JSON" />
 
+
+	<!--  Add neccessary inherits for gwt chart tools -->
+	<inherits name='com.google.gwt.visualization.Visualization'/>
+
 	<!-- gwt-log -->
 	<inherits name="com.google.gwt.logging.Logging"/>
 	<set-property name="gwt.logging.logLevel" value="INFO"/>
@@ -47,4 +51,6 @@
 	
 	<!--  Supported languages (apart from English, which is the default language) -->
 	<extend-property name="locale" values="nl"/>
+	
+	
 </module>

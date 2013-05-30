@@ -58,6 +58,8 @@ import com.google.gwt.view.client.MultiSelectionModel;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
 import com.google.gwt.view.client.TreeViewModel;
+import com.google.gwt.visualization.client.VisualizationUtils;
+import com.google.gwt.visualization.client.visualizations.LineChart;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
@@ -190,6 +192,13 @@ public class Fingerpaint implements EntryPoint {
 
 	private Button overwriteSaveButton;
 
+	private PopupPanel viewSingleGraphPopupPanel;
+	private VerticalPanel viewSingleGraphVerticalPanel;
+	private HorizontalPanel viewSingleGraphHorizontalPanel;
+	private Button viewSingleGraph;
+	private Button closeSingleGraphViewButton;
+	private Button exportSingleGraphButton;
+
 	// Button to adapt the drawing tool
 	// TODO: Change this to a button on which the current tool is drawn
 	private Button toolSelectButton;
@@ -287,6 +296,9 @@ public class Fingerpaint implements EntryPoint {
 	// browser in pixels. If this is not taken into account,
 	// a vertical scroll bar appears.
 	private final int topBarHeight = 65;
+
+	// Holds the mixingPerformance of the last run.
+	private GraphVisualisator graphVisualisator;
 
 	/**
 	 * Shows the textual representation of the mixing protocol.
@@ -548,6 +560,9 @@ public class Fingerpaint implements EntryPoint {
 			// Initialise the saveProtocolButton and add it to the menuPanel
 			createSaveDistributionButton();
 			menuPanel.add(saveDistributionButton);
+
+			createViewSingleGraphButton();
+			menuPanel.add(viewSingleGraph);
 
 			// Initialise the comparePerformanceButton and add it to the
 			// menuPanel
@@ -957,6 +972,73 @@ public class Fingerpaint implements EntryPoint {
 		});
 	}
 
+	private void createViewSingleGraphButton() {
+		viewSingleGraph = new Button("View single graph");
+		// TODO: Uncomment when no longer needed for testing
+		// viewSingleGraph.setEnabled(false);
+		viewSingleGraphPopupPanel = new PopupPanel();
+		viewSingleGraphPopupPanel.setModal(true);
+		viewSingleGraphVerticalPanel = new VerticalPanel();
+		viewSingleGraphHorizontalPanel = new HorizontalPanel();
+		exportSingleGraphButton = new Button("Export graph");
+		viewSingleGraphHorizontalPanel.add(exportSingleGraphButton);
+		closeSingleGraphViewButton = new Button("Close");
+		viewSingleGraphHorizontalPanel.add(closeSingleGraphViewButton);
+
+		exportSingleGraphButton.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				// TODO: Insert Method-call which exports the graph
+			}
+		});
+		closeSingleGraphViewButton.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				// Clear the data of the graph and close panel
+				graphVisualisator.clearSegregationResults();
+				viewSingleGraphPopupPanel.clear();
+				viewSingleGraphVerticalPanel.clear();
+				viewSingleGraphPopupPanel.hide();
+			}
+		});
+
+		viewSingleGraph.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				ArrayList<double[]> performance = new ArrayList<double[]>();
+				// performance.add(as.getSegregation());//TODO: Implemented by
+				// Tessa
+
+				// Dummy values. Remove when above line is implemented
+				performance.add(new double[] { 0.5, 0.3, 0.9, 0.4, 0.6 });
+
+				// Make graph and add it to viewSingleGraphVerticalPanel
+				createGraph(
+						viewSingleGraphVerticalPanel,
+						new ArrayList<String>(Arrays
+								.asList("Current mixing run")), performance);
+				viewSingleGraphVerticalPanel
+						.add(viewSingleGraphHorizontalPanel);
+				viewSingleGraphPopupPanel.add(viewSingleGraphVerticalPanel);
+
+				// TODO: Inside vert panel; Make buttons in hori-panel appear
+				// below Graph
+
+				viewSingleGraphPopupPanel
+						.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
+							public void setPosition(int offsetWidth,
+									int offsetHeight) {
+								int left = (Window.getClientWidth() - offsetWidth) / 2;
+								int top = (Window.getClientHeight() - offsetHeight) / 2;
+								viewSingleGraphPopupPanel.setPopupPosition(
+										left, top);
+							}
+						});
+			}
+		});
+
+	}
+
 	/**
 	 * Initialises all widgets that are needed for the save popup panel
 	 */
@@ -989,7 +1071,9 @@ public class Fingerpaint implements EntryPoint {
 		closeSaveButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
+
 				closeSaveButtonOnClick();
+
 			}
 		});
 
@@ -1249,6 +1333,7 @@ public class Fingerpaint implements EntryPoint {
 		loadInitDistButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
+
 				loadVerticalPanel = new VerticalPanel();
 				loadPanel = new PopupPanel();
 				loadPanel.setModal(true);
@@ -1501,9 +1586,8 @@ public class Fingerpaint implements EntryPoint {
 			}
 		});
 
-
-
-		ArrayList<String> resultNames = (ArrayList<String>) StorageManager.INSTANCE.getResults();
+		ArrayList<String> resultNames = (ArrayList<String>) StorageManager.INSTANCE
+				.getResults();
 
 		cellList.setRowCount(resultNames.size());
 
@@ -1605,12 +1689,31 @@ public class Fingerpaint implements EntryPoint {
 			}
 		});
 		// ---------------------------------------------------------
-
 	}
 
+	/**
+	 * Adds a linechart-graph of the {@code performance} to {@code panel}
+	 * 
+	 * @param panel
+	 *            The panel the chart will be added to
+	 * @param names
+	 *            List of names of the different plots in the chart
+	 * @param performance
+	 *            Values of the different plots
+	 */
 	private void createGraph(Panel panel, ArrayList<String> names,
-			ArrayList<double[]> points) {
-		// TODO: to be implemented by hugo;
+			ArrayList<double[]> performance) {
+
+		graphVisualisator = new GraphVisualisator();
+		// Adds the graph to the Panel-parameter of
+		// visualisator.getOnLoadCallBack()
+		try {
+			VisualizationUtils.loadVisualizationApi(
+					graphVisualisator.createGraph(panel, names, performance),
+					LineChart.PACKAGE);
+		} catch (Exception e) {
+			Window.alert("Loading graph failed.");
+		}
 	}
 
 	/*
@@ -1720,6 +1823,7 @@ public class Fingerpaint implements EntryPoint {
 								result.getConcentrationVectors()[result
 										.getConcentrationVectors().length - 1]);
 						saveResultsButton.setEnabled(true);
+						viewSingleGraph.setEnabled(true);
 						setLoadingPanelVisible(false);
 					}
 
