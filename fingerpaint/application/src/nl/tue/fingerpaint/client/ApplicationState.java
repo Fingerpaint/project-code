@@ -40,6 +40,8 @@ public class ApplicationState {
 
 	/** Rectangular geometry to draw on */
 	private Geometry geom;
+	
+	private double[] segregation;
 
 	/*
 	 * The number of times (#steps) that the defined protocol will be applied.
@@ -122,6 +124,16 @@ public class ApplicationState {
 	public MixingProtocol getProtocol() {
 		return protocol;
 	}
+	
+	
+
+	public double[] getSegregation() {
+		return segregation;
+	}
+
+	public void setSegregation(double[] segregation) {
+		this.segregation = segregation;
+	}
 
 	/**
 	 * sets the current mixing protocol
@@ -184,10 +196,6 @@ public class ApplicationState {
 			initDistribution[i] = djList.get(i);
 		}
 		initialDistribution = initDistribution;
-	}
-	
-	public String getMixChoice() {
-		return mixChoice;
 	}
 
 	public double getStepsize() {

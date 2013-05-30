@@ -186,6 +186,11 @@ public abstract class Geometry {
 	public Canvas getCanvas() {
 		return this.canvas;
 	}
+	
+	public void setDrawingToolSize(int size) {
+		tool.setRadius(size);
+		setDrawingTool(tool);
+	}
 
 	/**
 	 * Returns the current drawing colour

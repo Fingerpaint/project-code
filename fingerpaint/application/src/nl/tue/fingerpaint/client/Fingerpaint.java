@@ -11,6 +11,7 @@ import nl.tue.fingerpaint.client.resources.FingerpaintResources;
 import nl.tue.fingerpaint.client.serverdata.ServerDataCache;
 import nl.tue.fingerpaint.client.simulator.SimulatorService;
 import nl.tue.fingerpaint.client.simulator.SimulatorServiceAsync;
+import nl.tue.fingerpaint.client.storage.ResultStorage;
 import nl.tue.fingerpaint.client.storage.StorageManager;
 import nl.tue.fingerpaint.shared.GeometryNames;
 
@@ -234,7 +235,7 @@ public class Fingerpaint implements EntryPoint {
 	// TODO: The text 'Step size' should be translated later on
 	private Label sizeLabel = new Label("Step size");
 	private NumberSpinner sizeSpinner;
-	
+
 	private NumberSpinner cursorSizeSpinner;
 
 	// Checkbox that needs to be checked to define a protocol. If it isn't
@@ -264,15 +265,16 @@ public class Fingerpaint implements EntryPoint {
 	private final double NRSTEPS_RATE = 1.0;
 	private final double NRSTEPS_MIN = 1.0;
 	private final double NRSTEPS_MAX = 50.0;
-	
+
 	/*
-	 * The initialisation parameters for the cursorSizeSpinner
-	 * these sizes represent cursor pixels
+	 * The initialisation parameters for the cursorSizeSpinner these sizes
+	 * represent cursor pixels
 	 */
 	private final double CURSOR_DEFAULT = 3.0;
 	private final double CURSOR_RATE = 1.0;
 	private final double CURSOR_MIN = 1.0;
-	private final double CURSOR_MAX = 50.0; //good value should be determined for performance
+	private final double CURSOR_MAX = 50.0; // good value should be determined
+											// for performance
 
 	private static final String LOADINGPANEL_ID = "loading-overlay";
 	private static final String LOADINGPANEL_MESSAGE_ID = "loading-overlay-message";
@@ -313,7 +315,7 @@ public class Fingerpaint implements EntryPoint {
 	public void onModuleLoad() {
 		// Load CSS
 		FingerpaintResources.INSTANCE.css().ensureInjected();
-		
+
 		// Initialise the loading panel
 		// Add animation image
 		Image loadImage = new Image(FingerpaintResources.INSTANCE.loadImage()
@@ -517,9 +519,10 @@ public class Fingerpaint implements EntryPoint {
 			};
 			as.getGeometry().addStepAddedListener(l);
 
-			// Initialise the cursorSizeSpinner so it can be added to the tool selector popup
+			// Initialise the cursorSizeSpinner so it can be added to the tool
+			// selector popup
 			createCursorSizeSpinner();
-			
+
 			// Initialise the toolSelectButton and add to menuPanel
 			createToolSelector();
 			menuPanel.add(toolSelectButton);
@@ -740,21 +743,23 @@ public class Fingerpaint implements EntryPoint {
 			}
 		});
 	}
-	
+
 	/*
 	 * Initialises the spinner that edits the cursorsize
 	 */
-	private void createCursorSizeSpinner(){
-		cursorSizeSpinner = new NumberSpinner(CURSOR_DEFAULT, CURSOR_RATE, CURSOR_MIN, CURSOR_MAX, true);
-		
-		cursorSizeSpinner.setSpinnerListener(new NumberSpinnerListener(){
-			
+	private void createCursorSizeSpinner() {
+		cursorSizeSpinner = new NumberSpinner(CURSOR_DEFAULT, CURSOR_RATE,
+				CURSOR_MIN, CURSOR_MAX, true);
+
+		cursorSizeSpinner.setSpinnerListener(new NumberSpinnerListener() {
+
 			@Override
-			public void onValueChange(double value){
-				
+			public void onValueChange(double value) {
+
 				// TODO: uncomment when setDrawingToolSize exists
-				//as.getGeometry().setDrawingToolSize(value-1);
-				//-1 because the drawingTools have a default size of 1 pixel for inputSize 0
+				// as.getGeometry().setDrawingToolSize(value-1);
+				// -1 because the drawingTools have a default size of 1 pixel
+				// for inputSize 0
 			}
 		});
 	}
@@ -826,7 +831,8 @@ public class Fingerpaint implements EntryPoint {
 				if (!squareDrawingTool.isDown()) {
 					squareDrawingTool.setDown(true);
 				} else {
-					as.getGeometry().setDrawingTool(new SquareDrawingTool(getCursorSize()));
+					as.getGeometry().setDrawingTool(
+							new SquareDrawingTool(getCursorSize()));
 
 					circleDrawingTool.setDown(false);
 				}
@@ -846,7 +852,8 @@ public class Fingerpaint implements EntryPoint {
 				if (!circleDrawingTool.isDown()) {
 					circleDrawingTool.setDown(true);
 				} else {
-					as.getGeometry().setDrawingTool(new CircleDrawingTool(getCursorSize()));
+					as.getGeometry().setDrawingTool(
+							new CircleDrawingTool(getCursorSize()));
 
 					squareDrawingTool.setDown(false);
 				}
@@ -895,7 +902,7 @@ public class Fingerpaint implements EntryPoint {
 	 * @return cursorSizeSpinner.getValue()-1
 	 */
 	private int getCursorSize() {
-		return (int) cursorSizeSpinner.getValue()-1;
+		return (int) cursorSizeSpinner.getValue() - 1;
 	}
 
 	/*
@@ -1234,7 +1241,11 @@ public class Fingerpaint implements EntryPoint {
 					GeometryNames.getShortName(as.getGeometryChoice()), name,
 					as.getProtocol(), canOverwrite);
 		} else if (lastSaveButtonClicked.equals(StorageManager.KEY_RESULTS)) {
-			// TODO: Save current results / state
+			ResultStorage result = new ResultStorage(as.getGeometryChoice(),
+					as.getMixerChoice(), as.getInitialDistribution(),
+					as.getProtocol(), as.getSegregation(), as.getNrSteps());
+			return StorageManager.INSTANCE
+					.putResult(name, result, canOverwrite);
 		}
 
 		return false;
@@ -1806,7 +1817,7 @@ public class Fingerpaint implements EntryPoint {
 		final Timer doEvenLaterTimer = new Timer() {
 			@Override
 			public void run() {
-				Simulation simulation = new Simulation(as.getMixChoice(),
+				Simulation simulation = new Simulation(as.getMixerChoice(),
 						protocol, as.getInitialDistribution(), as.getNrSteps(),
 						false);
 
@@ -1822,6 +1833,7 @@ public class Fingerpaint implements EntryPoint {
 						as.getGeometry().drawDistribution(
 								result.getConcentrationVectors()[result
 										.getConcentrationVectors().length - 1]);
+						as.setSegregation(result.getSegregationPoints());
 						saveResultsButton.setEnabled(true);
 						viewSingleGraph.setEnabled(true);
 						setLoadingPanelVisible(false);

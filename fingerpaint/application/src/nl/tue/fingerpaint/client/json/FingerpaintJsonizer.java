@@ -7,6 +7,8 @@ import java.util.logging.Logger;
 
 import nl.tue.fingerpaint.client.MixingProtocol;
 import nl.tue.fingerpaint.client.MixingProtocol.MixingProtocolJsonizer;
+import nl.tue.fingerpaint.client.storage.ResultStorage;
+import nl.tue.fingerpaint.client.storage.ResultStorage.ResultStorageJsonizer;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JsonUtils;
@@ -253,6 +255,19 @@ public class FingerpaintJsonizer {
 		MixingProtocolJsonizer ja = (MixingProtocolJsonizer) GWT
 				.create(MixingProtocolJsonizer.class);
 		return ja.asString(protocol);
+	}
+	
+	/**
+	 * Creates a JSON string that is a representation of the given result.
+	 * 
+	 * @param result
+	 *            The result to be converted to a JSON string.
+	 * @return The JSON string that represents the given result.
+	 */
+	public static String toString(ResultStorage result) {
+		ResultStorageJsonizer json = (ResultStorageJsonizer) GWT
+				.create(ResultStorageJsonizer.class);
+		return json.asString(result);
 	}
 
 	/**
