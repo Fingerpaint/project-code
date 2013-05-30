@@ -27,6 +27,9 @@
 	<!-- use JSON -->
 	<inherits name="com.google.gwt.json.JSON" />
 
+	<!--  Add neccessary inherits for gwt chart tools -->
+	<inherits name='com.google.gwt.visualization.Visualization'/>
+
 	<!-- Specify the app entry point class. -->
 	<entry-point class='nl.tue.fingerpaint.client.Fingerpaint' />
 
@@ -36,4 +39,6 @@
 	
 	<!--  Supported languages (apart from English, which is the default language) -->
 	<extend-property name="locale" values="nl"/>
+	
+	
 </module>
