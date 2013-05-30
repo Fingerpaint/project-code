@@ -1097,7 +1097,7 @@ public class Fingerpaint implements EntryPoint {
 
 	/*
 	 * Initialises the loadProtocolButton. When pressed, this button allows a
-	 * user to load a protocol. Also initializes the corresponding loading
+	 * user to load a protocol. Also initialises the corresponding loading
 	 * popup.
 	 */
 	private void createLoadProtocolButton() {

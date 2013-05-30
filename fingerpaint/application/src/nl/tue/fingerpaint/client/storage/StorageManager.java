@@ -233,6 +233,11 @@ public class StorageManager {
 		return null;
 	}
 
+	public MixingProtocol getProtocol(String geometry, String key) {
+		// TODO: Load a protocol
+		return null;
+	}
+
 	/**
 	 * Return a list of all results stored in the local storage currently.
 	 * 
@@ -337,7 +342,7 @@ public class StorageManager {
 	 * do not attempt to overwrite.
 	 * 
 	 * @param geometry
-	 *            The geometry to store the distribution under.
+	 *            The short name of the geometry to store the distribution under.
 	 * @param key
 	 *            The name of the protocol.
 	 * @param protocol
