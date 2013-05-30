@@ -2,6 +2,8 @@ package nl.tue.fingerpaint.client.json;
 
 import java.util.HashMap;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import nl.tue.fingerpaint.client.MixingProtocol;
 import nl.tue.fingerpaint.client.MixingProtocol.MixingProtocolJsonizer;
@@ -39,7 +41,7 @@ public class FingerpaintJsonizer {
 		JSONString valStr;
 		JSONNumber valNr;
 		JSONBoolean valBool;
-		
+
 		for (int i = 0; i < jsonArray.size(); i++) {
 			val = jsonArray.get(i);
 			if ((valNr = val.isNumber()) != null) {
@@ -47,7 +49,7 @@ public class FingerpaintJsonizer {
 			} else if ((valStr = val.isString()) != null) {
 				result[i] = valStr.stringValue();
 			} else if ((valObj = val.isObject()) != null) {
-				result[i] = FingerpaintJsonizer.hashMapFromJSONObject(valObj);
+				result[i] = FingerpaintJsonizer.hashMapFromJSONObject(valObj, true);
 			} else if ((valArr = val.isArray()) != null) {
 				result[i] = FingerpaintJsonizer.arrayFromJSONArray(valArr);
 			} else if ((valBool = val.isBoolean()) != null) {
@@ -56,7 +58,7 @@ public class FingerpaintJsonizer {
 		}
 		return result;
 	}
-	
+
 	/**
 	 * Create a double array that is represented by the given JSON array. When a
 	 * value in the array is not a number, 1.0 is used as a default value.
@@ -69,7 +71,7 @@ public class FingerpaintJsonizer {
 		double[] result = new double[jsonArray.size()];
 		JSONValue val;
 		JSONNumber valNr;
-		
+
 		for (int i = 0; i < jsonArray.size(); i++) {
 			val = jsonArray.get(i);
 			if ((valNr = val.isNumber()) != null) {
@@ -114,10 +116,13 @@ public class FingerpaintJsonizer {
 	 * 
 	 * @param jsonObj
 	 *            A JSON object that can be used as a hash map in Java.
+	 * @param deep
+	 *            If the hash map should be constructed on all levels, or just
+	 *            the top level.
 	 * @return The hash map that the given JSON object represents.
 	 */
 	public static HashMap<String, Object> hashMapFromJSONObject(
-			JSONObject jsonObj) {
+			JSONObject jsonObj, boolean deep) {
 		HashMap<String, Object> hm = new HashMap<String, Object>();
 		JSONValue tmpVal;
 		JSONObject tmpValObj;
@@ -129,16 +134,20 @@ public class FingerpaintJsonizer {
 		for (String key : jsonObj.keySet()) {
 			tmpVal = jsonObj.get(key);
 
-			if ((tmpValStr = tmpVal.isString()) != null) {
-				hm.put(key, FingerpaintJsonizer.toUnquotedString(tmpValStr));
-			} else if ((tmpValObj = tmpVal.isObject()) != null) {
-				hm.put(key, hashMapFromJSONObject(tmpValObj));
-			} else if ((tmpValArr = tmpVal.isArray()) != null) {
-				hm.put(key, FingerpaintJsonizer.arrayFromJSONArray(tmpValArr));
-			} else if ((tmpValNr = tmpVal.isNumber()) != null) {
-				hm.put(key, tmpValNr.doubleValue());
-			} else if ((tmpValBool = tmpVal.isBoolean()) != null) {
-				hm.put(key, tmpValBool.booleanValue());
+			if (deep) {
+				if ((tmpValStr = tmpVal.isString()) != null) {
+					hm.put(key, FingerpaintJsonizer.toUnquotedString(tmpValStr));
+				} else if ((tmpValObj = tmpVal.isObject()) != null) {
+					hm.put(key, hashMapFromJSONObject(tmpValObj, deep));
+				} else if ((tmpValArr = tmpVal.isArray()) != null) {
+					hm.put(key, FingerpaintJsonizer.arrayFromJSONArray(tmpValArr));
+				} else if ((tmpValNr = tmpVal.isNumber()) != null) {
+					hm.put(key, tmpValNr.doubleValue());
+				} else if ((tmpValBool = tmpVal.isBoolean()) != null) {
+					hm.put(key, tmpValBool.booleanValue());
+				}
+			} else {
+				hm.put(key, tmpVal);
 			}
 		}
 
@@ -169,17 +178,36 @@ public class FingerpaintJsonizer {
 	 *         returned.
 	 */
 	public static HashMap<String, Object> hashMapFromString(String jsonHashMap) {
+		return hashMapFromString(jsonHashMap, true);
+	}
+	
+	/**
+	 * Create a hash map that is represented by the given JSON string.
+	 * 
+	 * @param jsonHashMap
+	 *            A JSON string that represents an object and can be used as a
+	 *            hash map in Java.
+	 * @param deep
+	 *            If the hash map should be constructed on all levels, or just
+	 *            the top level.
+	 * @return The hash map that the given JSON string represents. If the string
+	 *         is malformed or does not represent an object, {@code null} is
+	 *         returned.
+	 */
+	public static HashMap<String, Object> hashMapFromString(String jsonHashMap, boolean deep) {
 		JSONValue val;
 		try {
 			val = JSONParser.parseStrict(jsonHashMap);
 		} catch (Exception e) {
 			// When the value is null or empty, return an empty hash map
+			Logger.getLogger("").log(Level.SEVERE,
+					"[hashMapFromString] Could not parse value...");
 			return null;
 		}
 		JSONObject valObj;
 
 		if ((valObj = val.isObject()) != null) {
-			return hashMapFromJSONObject(valObj);
+			return hashMapFromJSONObject(valObj, deep);
 		}
 
 		return null;
@@ -203,7 +231,8 @@ public class FingerpaintJsonizer {
 			fPart = array[i] - iPart;
 			// below assumes (by looking at the actual code) that the toString
 			// of a double that is smaller than 1 starts with "0."
-			sb.append(iPart + "." + Double.toString(fPart).substring(2));
+			String fPartStr = Double.toString(fPart).substring(2);
+			sb.append(iPart + "." + (fPartStr.length() > 0 ? fPartStr : "0"));
 			if (i < array.length - 1) {
 				sb.append(",");
 			}
@@ -242,7 +271,7 @@ public class FingerpaintJsonizer {
 		for (String key : keySet) {
 			sb.append(JsonUtils.escapeValue(key));
 			sb.append(":");
-			sb.append(hashMap.get(key).toString());
+			sb.append(toString(hashMap.get(key)));
 			added++;
 			if (added < keySet.size()) {
 				sb.append(",");
@@ -253,6 +282,56 @@ public class FingerpaintJsonizer {
 		return sb.toString();
 	}
 
+	/**
+	 * Creates a JSON string that is a representation of the given object, as
+	 * good as possible, by looking at the type of the object.
+	 * 
+	 * @param object
+	 *            The object to be converted to a JSON string.
+	 * @return The JSON string that represents the given object.
+	 */
+	@SuppressWarnings("unchecked")
+	public static String toString(Object object) {
+		if (object instanceof double[]) {
+			return toString((double[]) object);
+		} else if (object instanceof int[]) {
+			return toString((int[]) object);
+		} else if (object instanceof JSONString) {
+			return toUnquotedString((JSONString) object);
+		} else if (object instanceof HashMap) {
+			return toString((HashMap<String, Object>) object);
+		} else if (object instanceof MixingProtocol) {
+			return toString((MixingProtocol) object);
+		} else if (object instanceof Object[]) {
+			return toString((Object[]) object);
+		}
+		
+		return object.toString();
+	}
+
+	/**
+	 * Creates a JSON string that is a representation of the given array of objects, as
+	 * good as possible, by looking at the type of the objects.
+	 * 
+	 * @param objects
+	 *            The array of objects to be converted to a JSON string.
+	 * @return The JSON string that represents the given objects.
+	 */
+	public static String toString(Object[] objects) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("[");
+		
+		for (int i = 0; i < objects.length; i++) {
+			sb.append(toString(objects[i]));
+			if (i < objects.length - 1) {
+				sb.append(",");
+			}
+		}
+		
+		sb.append("]");
+		return sb.toString();
+	}
+	
 	/**
 	 * Return the contents of the given JSONString, but without quotes as
 	 * opposed to the standard {@link JSONString#toString()}.
