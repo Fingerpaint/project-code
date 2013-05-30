@@ -277,7 +277,7 @@ public class Fingerpaint implements EntryPoint {
 	/**
 	 * The message that is shown to the user upon a successful save.
 	 */
-	private static final String SAVE_SUCCESS_MESSAGE = "Save has been successful.";
+	private static final String SAVE_SUCCESS_MESSAGE = "Save successful.";
 
 	// Width of the menu in which buttons are displayed
 	// on the right side of the window in pixels
