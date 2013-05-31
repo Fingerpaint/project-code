@@ -38,7 +38,7 @@ public class GraphVisualisator {
 
 	/**
 	 * Returns the runnable object to initiate drawing the graph in
-	 * Fingerpaint.createGraph().
+	 * Fingerpaint.createGraph()
 	 * 
 	 * @param panel
 	 *            The panel the graph will be added to
@@ -132,7 +132,6 @@ public class GraphVisualisator {
 				data.setValue(j, 0, Integer.toString(j + 1));
 				data.setValue(j, i + 1, segregationPoints.get(i)[j]);
 			}
-
 		}
 
 		// Data view -- read only, and no location column
