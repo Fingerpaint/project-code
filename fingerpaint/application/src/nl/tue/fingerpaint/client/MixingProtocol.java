@@ -19,7 +19,7 @@ public class MixingProtocol implements Serializable {
 	private ArrayList<MixingStep> program = new ArrayList<MixingStep>();
 
 	/**
-	 * Returns the MixingStep located at index {@code index}
+	 * Returns the MixingStep located at index {@code index}.
 	 * 
 	 * @param index
 	 *            the index of the element to be returned
@@ -33,7 +33,7 @@ public class MixingProtocol implements Serializable {
 	}
 
 	/**
-	 * adds a single mixing step to the end of the current program
+	 * Adds a single mixing step to the end of the current program.
 	 * 
 	 * @param stepSize
 	 *            The stepSize of the wall movement, should be divisible by 0.25
@@ -50,7 +50,7 @@ public class MixingProtocol implements Serializable {
 	}
 
 	/**
-	 * adds the mixing step step to the end of the currennt program
+	 * Adds the mixing step step to the end of the current program.
 	 * 
 	 * @param step
 	 *            the MixingStep to be added
@@ -65,7 +65,7 @@ public class MixingProtocol implements Serializable {
 	}
 
 	/**
-	 * edits a single mixing step at index {@code index}
+	 * Edits a single mixing step at index {@code index}.
 	 * 
 	 * @param index
 	 *            the index of the step to be removed
@@ -89,7 +89,7 @@ public class MixingProtocol implements Serializable {
 	}
 
 	/**
-	 * moves a single MixingStep from index oroginalIndex to newIndex
+	 * Moves a single MixingStep from index oroginalIndex to newIndex.
 	 * 
 	 * @param originalIndex
 	 *            The original index of the MixingStep
@@ -112,6 +112,7 @@ public class MixingProtocol implements Serializable {
 	}
 
 	/**
+	 * Removes a single step from the protocol.
 	 * 
 	 * @param index
 	 *            the index of the step to be removed
@@ -125,6 +126,7 @@ public class MixingProtocol implements Serializable {
 	}
 
 	/**
+	 * Returns the number of steps in the protocol.
 	 * 
 	 * @return the size of the program; i.e. the number of steps in it
 	 */
@@ -132,32 +134,67 @@ public class MixingProtocol implements Serializable {
 		return program.size();
 	}
 
+	/**
+	 * Returns all the current steps in the protocol.
+	 * 
+	 * @return An array list containing all current steps
+	 */
 	public ArrayList<MixingStep> getProgram() {
 		return program;
 	}
 
+	/**
+	 * Sets a new protocol.
+	 * 
+	 * @param program
+	 *            The list of mixing steps to set as the current protocol
+	 */
 	public void setProgram(ArrayList<MixingStep> program) {
 		this.program = program;
 	}
 
 	/**
-	 * TODO: Currently hardcoded, needs to be made dynamic
+	 * Returns the long name of the geometry this protocol is defined for.
 	 * 
-	 * @return The name of the geometry this protocol is defined for.
+	 * TODO: Currently hard coded, needs to be made dynamic .
+	 * 
+	 * @return The long name of the geometry this protocol is defined for.
 	 */
 	public String getGeometry() {
 		return "Rectangle400x240";
 	}
 
-	public interface MixingProtocolJsonizer extends Jsonizer {
-	}
-	
+	/**
+	 * Returns a string representation of this protocol.
+	 */
 	@Override
 	public String toString() {
 		String result = "";
 		for (MixingStep ms : program) {
-			result += ms.toString() +", ";
-			}
+			result += ms.toString() + ", ";
+		}
 		return result.substring(0, result.length() - 2);
+	}
+
+	/**
+	 * Converts a string to a mixing protocol.
+	 * 
+	 * @param protocol
+	 *            The string to be converted
+	 * @return A mixing protocol object that matches the given input string
+	 */
+	public static MixingProtocol fromString(String protocol) {
+		MixingProtocol result = new MixingProtocol();
+		String[] steps = protocol.split(", ");
+		for (int i = 0; i < steps.length; i++) {
+			result.addStep(MixingStep.fromString(steps[i]));
+		}
+
+		return result;
+	}
+
+	/** MixingProtocol JSONizer Interface */
+	public interface MixingProtocolJsonizer extends Jsonizer {
+		// Empty on purpose
 	}
 }

@@ -220,20 +220,52 @@ public class FingerpaintJsonizer {
 		return null;
 	}
 
+	/**
+	 * Create a ResultStorage object that is represented by the given JSON
+	 * String
+	 * 
+	 * @param jsonString
+	 *            A JSON string that represents an object and can be used as a
+	 *            ResultStorage in Java.
+	 * @return The ResultStorage object that the given JSON string represents.
+	 *         If the string is malformed or does not represent an object,
+	 *         {@code null} is returned.
+	 */
 	public static ResultStorage resultFromString(String jsonString) {
-		//System.out.println(jsonString);
 		ResultStorageJsonizer json = (ResultStorageJsonizer) GWT
 				.create(ResultStorageJsonizer.class);
-		//System.out.println(json == null ? "null" : "niet null");
-		return (ResultStorage) JsonizerParser.parse(json, jsonString);
+		try {
+			return (ResultStorage) JsonizerParser.parse(json, jsonString);
+		} catch (Exception e) {
+			// When the value is null or empty, return an empty hash map
+			Logger.getLogger("").log(Level.SEVERE,
+					"[resultFromString] Could not parse value...");
+			return null;
+		}
 	}
-	
+
+	/**
+	 * Create a MixingProtocol object that is represented by the given JSON
+	 * String
+	 * 
+	 * @param jsonString
+	 *            A JSON string that represents an object and can be used as a
+	 *            MixingProtocol in Java.
+	 * @return The MixingProtocol object that the given JSON string represents.
+	 *         If the string is malformed or does not represent an object,
+	 *         {@code null} is returned.
+	 */
 	public static MixingProtocol protocolFromString(String jsonString) {
-		//System.out.println(jsonString);
 		MixingProtocolJsonizer json = (MixingProtocolJsonizer) GWT
 				.create(MixingProtocolJsonizer.class);
-		//System.out.println(json == null ? "null" : "niet null");
-		return (MixingProtocol) JsonizerParser.parse(json, jsonString);
+		try {
+			return (MixingProtocol) JsonizerParser.parse(json, jsonString);
+		} catch (Exception e) {
+			// When the value is null or empty, return an empty hash map
+			Logger.getLogger("").log(Level.SEVERE,
+					"[resultFromString] Could not parse value...");
+			return null;
+		}
 	}
 
 	/**
@@ -266,10 +298,10 @@ public class FingerpaintJsonizer {
 	}
 
 	/**
-	 * Creates a JSON string that is a representation of the given protocol.
+	 * Convert a MixingProtocol object to JSON string representation.
 	 * 
 	 * @param protocol
-	 *            The mixing protocol to be converted to a JSON string.
+	 *            The MixingProtocol to be converted to a JSON string.
 	 * @return The JSON string that represents the given mixing protocol.
 	 */
 	public static String toString(MixingProtocol protocol) {
@@ -279,16 +311,17 @@ public class FingerpaintJsonizer {
 	}
 
 	/**
-	 * Creates a JSON string that is a representation of the given result.
+	 * Convert a StorageResult object to JSON string representation.
 	 * 
 	 * @param result
-	 *            The result to be converted to a JSON string.
-	 * @return The JSON string that represents the given result.
+	 *            The StorageResult to be converted to a JSON string.
+	 * @return The JSON string that represents the given mixing protocol.
 	 */
 	public static String toString(ResultStorage result) {
 		ResultStorageJsonizer json = (ResultStorageJsonizer) GWT
 				.create(ResultStorageJsonizer.class);
 		return json.asString(result);
+
 	}
 
 	/**

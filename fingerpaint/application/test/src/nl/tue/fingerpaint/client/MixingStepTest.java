@@ -6,54 +6,64 @@ import org.junit.Test;
 
 import com.google.gwt.junit.client.GWTTestCase;
 
-public class MixingStepTest extends GWTTestCase{
-	
+/**
+ * GWT jUnit tests for the class {@link MixingStep}.
+ * 
+ * @author Group Fingerpaint
+ */
+public class MixingStepTest extends GWTTestCase {
+	/** The mixing step to be tested in this class. */
 	MixingStep stepClass;
-	
-	/*
-	 * Setup method
-	 */
-	private void init(){
-		stepClass = new MixingStep(1, true, true);
-	}
-	
-	/*
-	 * Tests if the getter returns the stepsize it was initialised with
+
+	/**
+	 * A test to check whether the getter returns the step size it was
+	 * initialised with.
 	 */
 	@Test
-	public void testGetStepSize(){
+	public void testGetStepSize() {
 		init();
-		assertEquals(1.0, stepClass.getStepSize()); //initialised on 1.0, convenient
+		assertEquals(1.0, stepClass.getStepSize()); // initialised on 1.0,
+													// convenient
 	}
-	
-	/*
-	 * Tests if the method setStepSize sets the stepsize correctly
+
+	/**
+	 * A test to check whether the method setStepSize sets the step size
+	 * correctly.
 	 */
 	@Test
-	public void testSetStepSize(){
+	public void testSetStepSize() {
 		init();
 		stepClass.setStepSize(42.0);
 		assertEquals(42.0, stepClass.getStepSize());
 	}
 
-	/*
-	 * Tests if the implemented rounding function rounds up and down correctly to produce a stepSize that is a multiple of
-	 * {@code MixingStep.tepUnit}
+	/**
+	 * A test whether the implemented rounding function rounds up and down
+	 * correctly to produce a step size that is a multiple of
+	 * {@code MixingStep.STEP_UNIT}.
 	 */
 	@Test
-	public void testRounding(){
+	public void testRounding() {
 		init();
-		//for rounding down
+		// for rounding down
 		stepClass.setStepSize(1.1);
 		assertEquals(1.0, stepClass.getStepSize());
-		//for rounding up
+		// for rounding up
 		stepClass.setStepSize(0.9);
 		assertEquals(1.0, stepClass.getStepSize());
 	}
-	
+
 	@Override
 	public String getModuleName() {
 		return "nl.tue.fingerpaint.Fingerpaint";
+	}
+
+	// --- PRIVATE PART---------------------------------------------------
+	/**
+	 * Setup method for the mixing step in this test class.
+	 */
+	private void init() {
+		stepClass = new MixingStep(1, true, true);
 	}
 
 }

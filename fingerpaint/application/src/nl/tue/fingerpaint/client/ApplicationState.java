@@ -1,17 +1,5 @@
 package nl.tue.fingerpaint.client;
 
-import java.util.ArrayList;
-
-import nl.tue.fingerpaint.client.MixingStep.MixingStepJsonizer;
-
-import org.jsonmaker.gwt.client.Jsonizer;
-import org.jsonmaker.gwt.client.JsonizerParser;
-import org.jsonmaker.gwt.client.base.ArrayJsonizer;
-import org.jsonmaker.gwt.client.base.ArrayListJsonizer;
-import org.jsonmaker.gwt.client.base.Defaults;
-
-import com.google.gwt.core.client.GWT;
-
 /**
  * Class that keeps track of the Geometry and Mixer the user has selected. Used
  * by the cellBrowser widget in Fingerpaint.java to store chosen variables.
@@ -20,17 +8,18 @@ import com.google.gwt.core.client.GWT;
  */
 public class ApplicationState {
 
-	/**
-	 * The chosen geometry.
-	 */
+	/** The chosen geometry. */
 	private String geoChoice = null;
-	/**
-	 * The chosen matrix.
-	 */
+	/** The chosen matrix. */
 	private String mixChoice = null;
-
-	// the current mixing protocol
+	/** the current mixing protocol */
 	private MixingProtocol protocol = new MixingProtocol();
+	/** Geometry to draw on */
+	private Geometry geom;
+	/** The segregation array belonging to this state */
+	private double[] segregation;
+	/** Stores the current value for the Step size spinner. */
+	private double stepsize;
 
 	/**
 	 * Stores the initial distribution, and not the current distribution as
@@ -38,22 +27,13 @@ public class ApplicationState {
 	 */
 	private double[] initialDistribution = null;
 
-	/** Rectangular geometry to draw on */
-	private Geometry geom;
-	
-	private double[] segregation;
-
-	/*
+	/**
 	 * The number of times (#steps) that the defined protocol will be applied.
 	 * Initially set to 0, to indicate that the spinner has not been loaded yet.
 	 */
 	private int nrSteps = 0;
 
-	/**
-	 * Stores the current value for the Step size spinner.
-	 */
-	private double stepsize;
-
+	// --Getters and Setters------------------------------------------------
 	/**
 	 * Returns the current value of number of steps.
 	 * 
@@ -70,15 +50,24 @@ public class ApplicationState {
 	 * guarantees that correct rounding has been performed, when this method is
 	 * called.
 	 * 
-	 * @param nrSteps
+	 * @param steps
 	 *            The new value for number of steps.
 	 * 
 	 *            <pre>
-	 * {@param steps} is valid, according to the settings for the numberspinner in class Fingerpaint.
+	 * {@code steps} is valid, according to the settings for the numberspinner in class Fingerpaint.
 	 * @post The current number of steps is set to @param{nrSteps}.
 	 */
 	public void setNrSteps(double steps) {
 		nrSteps = (int) steps;
+	}
+
+	/**
+	 * Returns the long name of the chosen geometry.
+	 * 
+	 * @return the long name of the chosen geometry
+	 */
+	public String getGeometryChoice() {
+		return geoChoice;
 	}
 
 	/**
@@ -88,7 +77,7 @@ public class ApplicationState {
 	 * @param g
 	 *            The value to be set
 	 */
-	public void setGeometry(String g) {
+	public void setGeometryChoice(String g) {
 		geoChoice = g;
 	}
 
@@ -99,17 +88,8 @@ public class ApplicationState {
 	 * @param m
 	 *            The value to be set
 	 */
-	public void setMixer(String m) {
+	public void setMixerChoice(String m) {
 		mixChoice = m;
-	}
-
-	/**
-	 * Returns the name of the chosen geometry.
-	 * 
-	 * @return the name of the chosen geometry
-	 */
-	public String getGeometryChoice() {
-		return geoChoice;
 	}
 
 	/**
@@ -121,22 +101,17 @@ public class ApplicationState {
 		return mixChoice;
 	}
 
+	/**
+	 * Returns the mixing protocol
+	 * 
+	 * @return the current mixing protocol
+	 */
 	public MixingProtocol getProtocol() {
 		return protocol;
 	}
-	
-	
-
-	public double[] getSegregation() {
-		return segregation;
-	}
-
-	public void setSegregation(double[] segregation) {
-		this.segregation = segregation;
-	}
 
 	/**
-	 * sets the current mixing protocol
+	 * Sets the current mixing protocol
 	 * 
 	 * @param mixingProtocol
 	 *            , the new mixing protocol
@@ -151,13 +126,79 @@ public class ApplicationState {
 	}
 
 	/**
+	 * Returns the segregation points
+	 * 
+	 * @return double array containing the segregation points
+	 */
+	public double[] getSegregation() {
+		return segregation;
+	}
+
+	/**
+	 * Sets the segregation points
+	 * 
+	 * @param segregation
+	 *            The array containing the points to be set
+	 */
+	public void setSegregation(double[] segregation) {
+		this.segregation = segregation;
+	}
+
+	/**
+	 * Gives the current step size
+	 * 
+	 * @return The current step size
+	 */
+	public double getStepSize() {
+		return stepsize;
+	}
+
+	/**
 	 * Updates the current mixing step with a new value
 	 * 
 	 * @param value
 	 *            the new StepSize for the current mixing step
 	 */
-	public void editStepSize(double value) {
+	public void setStepSize(double value) {
 		stepsize = value;
+	}
+
+	/**
+	 * Gives the initial concentration distribution
+	 * 
+	 * @return The current initial concentration distribution
+	 */
+	public double[] getInitialDistribution() {
+		return initialDistribution;
+	}
+
+	/**
+	 * Sets the initial concentration distribution
+	 * 
+	 * @param distribution
+	 *            The distribution to set
+	 */
+	public void setInitialDistribution(double[] distribution) {
+		this.initialDistribution = distribution;
+	}
+
+	/**
+	 * Gives the current geometry object
+	 * 
+	 * @return The geometry object
+	 */
+	public Geometry getGeometry() {
+		return geom;
+	}
+
+	/**
+	 * Sets the current geometry object
+	 * 
+	 * @param geometry
+	 *            The geometry object to set
+	 */
+	public void setGeometry(Geometry geometry) {
+		geom = geometry;
 	}
 
 	/**
@@ -170,139 +211,11 @@ public class ApplicationState {
 		protocol.addStep(step);
 	}
 
-	public double getStepSize() {
-		return stepsize;
-	}
-
-	public void setInitialDistribution(double[] distribution) {
-		this.initialDistribution = distribution;
-	}
-
-	public double[] getInitialDistribution() {
-		return initialDistribution;
-	}
-	
 	/**
-	 * <pre> {@code jsonDist} contains a jsonized double array that represents a initial distribution for the rectangle geometry
-	 * @param jsonDist A jsonized initial distribution object  
+	 * Draws the initial concentration distribution on the canvas
 	 */
-	public void setInitialDistribution(String jsonDist) {
-		//TODO: Generalise method for all geometries
-		ArrayListJsonizer dj_sonizer = new ArrayListJsonizer(Defaults.DOUBLE_JSONIZER);
-		ArrayList<Double> djList = (ArrayList<Double>) JsonizerParser.parse(dj_sonizer, jsonDist); //objects[3]);
-		
-		double[] initDistribution = new double[djList.size()];
-		for (int i = 0; i < djList.size(); i++) {
-			initDistribution[i] = djList.get(i);
-		}
-		initialDistribution = initDistribution;
-	}
-
-	public double getStepsize() {
-		return stepsize;
-	}
-
-	public Geometry getGeometry() {
-		return geom;
-	}
-
-	public void setGegeom(Geometry geometry) {
-		geom = geometry;
-	}
-
-	/**
-	 * Encapsulates the entire ApplicationState into a JSON object, i.e. a
-	 * string representing all its variables. The returned String has the
-	 * following format: geoChoice|mixChoice|protocol|distribution|nrSteps. If
-	 * either one of these objects have not been set yet (null or 0), the empty
-	 * String is returned.
-	 * 
-	 * @return JSON representation of {@code this} or the empty String, if
-	 *         either of the components of {@code this} have not been set yet.
-	 */
-	public String jsonize() {
-		String jsonObject = ""; // The resulting object
-
-		if (geoChoice != null && mixChoice != null
-				&& protocol.getProgram() != null && initialDistribution != null
-				&& nrSteps != 0) {
-			// Save the chosen geometry
-			jsonObject += geoChoice + "@";
-
-			// Save the chosen matrix/mixer
-			jsonObject += mixChoice + "@";
-
-			// Save the protocol
-			jsonObject += saveProtocol();
-
-			// Save the distribution
-			ArrayListJsonizer doubleAJ = new ArrayListJsonizer(
-					Defaults.DOUBLE_JSONIZER);
-			ArrayList<Double> initList = new ArrayList<Double>();
-			double[] initArray = initialDistribution;
-
-			for (int i = 0; i < initArray.length; i++) {
-				initList.add(initArray[i]);
-			}
-			jsonObject += doubleAJ.asString(initList) + "@";
-
-			// Save the number of steps
-			jsonObject += nrSteps;
-		}
-
-		return jsonObject;
-	}
-
-	private String saveProtocol() {
-		ArrayListJsonizer aj = new ArrayListJsonizer(
-				(MixingStepJsonizer) GWT.create(MixingStepJsonizer.class));
-		return aj.asString(protocol.getProgram()) + "@";
-	}
-
-	/**
-	 * Unjsonizes a JSON object and sets variables
-	 * 
-	 * @param jsonObject
-	 */
-	public void unJsonize(String jsonObject) {
-		//TODO: Refactor name. The method is a setter, which sets an jsonObject. 
-		String[] objects = jsonObject.split("@");
-
-		geoChoice = objects[0];
-		mixChoice = objects[1];
-
-		ArrayListJsonizer aj = new ArrayListJsonizer(
-				(MixingStepJsonizer) GWT.create(MixingStepJsonizer.class));
-		ArrayList<MixingStep> mixingList = (ArrayList<MixingStep>) JsonizerParser
-				.parse(aj, objects[2]);
-		protocol.setProgram(mixingList);
-
-		ArrayListJsonizer dj_sonizer = new ArrayListJsonizer(
-				Defaults.DOUBLE_JSONIZER);
-		ArrayList<Double> djList = (ArrayList<Double>) JsonizerParser.parse(
-				dj_sonizer, objects[3]);
-
-		double[] initDistribution = new double[djList.size()];
-		for (int i = 0; i < djList.size(); i++) {
-			initDistribution[i] = djList.get(i);
-		}
-		initialDistribution = initDistribution;
-		nrSteps = Integer.parseInt(objects[4]);
-	}
-
 	public void drawDistribution() {
 		geom.drawDistribution(initialDistribution);
 	}
 
-	private ArrayJsonizer getDoubleJsonizer() {
-		return new ArrayJsonizer(Defaults.DOUBLE_JSONIZER) {
-			@Override
-			protected Object[] createArray(int size) {
-				return new Double[size];
-			}
-		};
-	}
-
-	public interface ApplicationStateJsonizer extends Jsonizer {
-	}
 }

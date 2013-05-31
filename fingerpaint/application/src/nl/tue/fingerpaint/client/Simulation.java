@@ -6,30 +6,35 @@ import java.io.Serializable;
  * Defines all information necessary for a simulation run. Results are saved
  * into a {@link SimulationResult}.
  * 
- * @author Lasse Blaauwbroek
+ * @author Group Fingerpaint
  * 
  */
 public class Simulation implements Serializable {
 
-	/**
-	 * Randomly generated version uid
-	 */
+	/** Randomly generated version UID */
 	private static final long serialVersionUID = -2535797540411490267L;
-
+	/** The name of the mixer used */
 	private String mixer;
-
+	/** The protocol that has to be applied */
 	private MixingProtocol protocol;
-
+	/** The initial concentration distribution */
 	private double[] concentrationVector;
-
+	/** The number of times the protocol has to be run */
 	private int protocolRuns;
 
+	/**
+	 * {@code true} if concentration vectors in between steps have to be
+	 * returned, {@code false} otherwise
+	 */
 	private boolean intermediateVectors;
 
+	/**
+	 * Default constructor.
+	 */
 	public Simulation() {
-		
+		// Needed to implement Serializable
 	}
-	
+
 	/**
 	 * Creates a new SimulatorRequest.
 	 * 
@@ -99,23 +104,4 @@ public class Simulation implements Serializable {
 	public boolean calculatesIntermediateVectors() {
 		return intermediateVectors;
 	}
-
-//	private void writeObject(ObjectOutputStream o) throws IOException {
-//
-//		o.writeObject(mixer);
-//		o.writeObject(protocol);
-//		o.writeObject(concentrationVector);
-//		o.writeInt(protocolRuns);
-//		o.writeBoolean(intermediateVectors);
-//	}
-//
-//	private void readObject(ObjectInputStream o) throws IOException,
-//			ClassNotFoundException {
-//
-//		mixer = (String) o.readObject();
-//		protocol = (MixingProtocol) o.readObject();
-//		concentrationVector = (double[]) o.readObject();
-//		protocolRuns = o.readInt();
-//		intermediateVectors = o.readBoolean();
-//	}
 }

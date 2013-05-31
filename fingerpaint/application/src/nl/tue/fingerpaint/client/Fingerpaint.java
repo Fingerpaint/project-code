@@ -47,6 +47,8 @@ import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -162,6 +164,8 @@ public class Fingerpaint implements EntryPoint {
 
 	private PopupPanel comparePopupPanel;
 
+	private SimplePanel compareGraphPanel;
+	
 	private Button closeCompareButton;
 
 	private Button newCompareButton;
@@ -194,6 +198,7 @@ public class Fingerpaint implements EntryPoint {
 	private PopupPanel viewSingleGraphPopupPanel;
 	private VerticalPanel viewSingleGraphVerticalPanel;
 	private HorizontalPanel viewSingleGraphHorizontalPanel;
+	private SimplePanel viewSingleGraphGraphPanel;
 	private Button viewSingleGraph;
 	private Button closeSingleGraphViewButton;
 	private Button exportSingleGraphButton;
@@ -367,10 +372,11 @@ public class Fingerpaint implements EntryPoint {
 		CellBrowser tree = (new CellBrowser.Builder<Object>(model, null))
 				.build();
 
-		// tree.setStyleName("center");
-
 		// Add the tree to the root layout panel.
 		RootLayoutPanel.get().add(tree);
+		
+		//for debugging purposes
+		tree.ensureDebugId("cell");
 	}
 
 	/*
@@ -443,7 +449,7 @@ public class Fingerpaint implements EntryPoint {
 		private final ValueUpdater<String> valueGeometryUpdater = new ValueUpdater<String>() {
 			@Override
 			public void update(String value) {
-				as.setGeometry(value);
+				as.setGeometryChoice(value);
 				lastClickedLevel = 0;
 			}
 		};
@@ -452,7 +458,7 @@ public class Fingerpaint implements EntryPoint {
 		private final ValueUpdater<String> valueMixerUpdater = new ValueUpdater<String>() {
 			@Override
 			public void update(String value) {
-				as.setMixer(value);
+				as.setMixerChoice(value);
 				lastClickedLevel = 1;
 			}
 		};
@@ -463,7 +469,7 @@ public class Fingerpaint implements EntryPoint {
 		private void setUserChoiceValues(String selectedMixer) {
 			// TODO: Actually create a different geometry depending on the
 			// chosen geometry...
-			as.setGegeom(new RectangleGeometry(Window.getClientHeight()
+			as.setGeometry(new RectangleGeometry(Window.getClientHeight()
 					- topBarHeight, Window.getClientWidth() - menuWidth));
 		}
 
@@ -526,20 +532,20 @@ public class Fingerpaint implements EntryPoint {
 
 			// Initialise the loadDistButton and add to
 			// menuPanel
-			createLoadDistButton();
-			menuPanel.add(loadDistButton);
+			// createLoadDistButton();
+			// menuPanel.add(loadDistButton);
 
 			// Initialise the resetDistButton and add to menuPanel
 			createResetDistButton();
 			menuPanel.add(resetDistButton);
 
+			// Initialise the saveProtocolButton and add it to the menuPanel
+			createSaveDistributionButton();
+			menuPanel.add(saveDistributionButton);
+
 			// Initialise the loadInitDistButton and add it to the menuPanel
 			createLoadInitDistButton();
 			menuPanel.add(loadInitDistButton);
-
-			// Initialise the loadProtocolButton and add it to the menuPanel
-			createLoadProtocolButton();
-			menuPanel.add(loadProtocolButton);
 
 			// Initialise the saveResultsButton and add it to the menuPanel
 			createSaveResultsButton();
@@ -551,10 +557,6 @@ public class Fingerpaint implements EntryPoint {
 			// menuPanel
 			createRemoveSavedResultsButton();
 			menuPanel.add(removeSavedResultsButton);
-
-			// Initialise the saveProtocolButton and add it to the menuPanel
-			createSaveDistributionButton();
-			menuPanel.add(saveDistributionButton);
 
 			createViewSingleGraphButton();
 			menuPanel.add(viewSingleGraph);
@@ -590,6 +592,9 @@ public class Fingerpaint implements EntryPoint {
 			// Initialise the mixNow button
 			createMixNowButton();
 
+			// Initialise the loadProtocolButton and add it to the menuPanel
+			createLoadProtocolButton();
+
 			// TODO: Initialise other menu items and add them to menuPanel
 			// Add all the protocol widgets to the menuPanel and hide them
 			// initially.
@@ -599,8 +604,9 @@ public class Fingerpaint implements EntryPoint {
 			protocolPanel.add(labelProtocolLabel);
 			protocolPanel.add(labelProtocolRepresentation);
 			protocolPanel.add(mixNowButton);
-			protocolPanel.add(saveProtocolButton);
 			protocolPanel.add(resetProtocolButton);
+			protocolPanel.add(saveProtocolButton);
+			protocolPanel.add(loadProtocolButton);
 			
 			protocolPanelContainer = new PopupPanel();
 			protocolPanelContainer.getElement().setId("protPanel");
@@ -619,6 +625,9 @@ public class Fingerpaint implements EntryPoint {
 
 			// Add panel to RootPanel
 			RootPanel.get().add(panel);
+			
+			//for debugging
+			viewSingleGraph.ensureDebugId("viewGraph");
 		}
 
 		/**
@@ -677,8 +686,9 @@ public class Fingerpaint implements EntryPoint {
 		sizeSpinner = new NumberSpinner(MixingStep.STEP_DEFAULT,
 				MixingStep.STEP_UNIT, MixingStep.STEP_MIN, MixingStep.STEP_MAX,
 				true);
+		
 		sizeSpinner.getElement().setId("sizeSpinnerInput");
-		as.editStepSize(MixingStep.STEP_DEFAULT);
+		as.setStepSize(MixingStep.STEP_DEFAULT);
 
 		// set a listener for the spinner
 		sizeSpinner.setSpinnerListener(new NumberSpinnerListener() {
@@ -686,7 +696,7 @@ public class Fingerpaint implements EntryPoint {
 			@Override
 			public void onValueChange(double value) {
 				// change the current mixing step
-				as.editStepSize(value);
+				as.setStepSize(value);
 			}
 
 		});
@@ -727,6 +737,7 @@ public class Fingerpaint implements EntryPoint {
 //		resetProtocolButton.setVisible(value);
 //		resetProtocolButton.setEnabled(value);
 //		labelProtocolLabel.setVisible(value);
+
 	}
 
 	/*
@@ -761,9 +772,7 @@ public class Fingerpaint implements EntryPoint {
 
 			@Override
 			public void onValueChange(double value) {
-
-				// TODO: uncomment when setDrawingToolSize exists
-				// as.getGeometry().setDrawingToolSize(value-1);
+				as.getGeometry().setDrawingToolSize((int) value - 1);
 				// -1 because the drawingTools have a default size of 1 pixel
 				// for inputSize 0
 			}
@@ -985,8 +994,7 @@ public class Fingerpaint implements EntryPoint {
 
 	private void createViewSingleGraphButton() {
 		viewSingleGraph = new Button("View single graph");
-		// TODO: Uncomment when no longer needed for testing
-		// viewSingleGraph.setEnabled(false);
+		viewSingleGraph.setEnabled(false);
 		viewSingleGraphPopupPanel = new PopupPanel();
 		viewSingleGraphPopupPanel.setModal(true);
 		viewSingleGraphVerticalPanel = new VerticalPanel();
@@ -995,6 +1003,7 @@ public class Fingerpaint implements EntryPoint {
 		viewSingleGraphHorizontalPanel.add(exportSingleGraphButton);
 		closeSingleGraphViewButton = new Button("Close");
 		viewSingleGraphHorizontalPanel.add(closeSingleGraphViewButton);
+		viewSingleGraphGraphPanel = new SimplePanel();
 
 		exportSingleGraphButton.addClickHandler(new ClickHandler() {
 			@Override
@@ -1005,10 +1014,6 @@ public class Fingerpaint implements EntryPoint {
 		closeSingleGraphViewButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				// Clear the data of the graph and close panel
-				graphVisualisator.clearSegregationResults();
-				viewSingleGraphPopupPanel.clear();
-				viewSingleGraphVerticalPanel.clear();
 				viewSingleGraphPopupPanel.hide();
 			}
 		});
@@ -1017,38 +1022,41 @@ public class Fingerpaint implements EntryPoint {
 			@Override
 			public void onClick(ClickEvent event) {
 				ArrayList<double[]> performance = new ArrayList<double[]>();
-				// performance.add(as.getSegregation());//TODO: Implemented by
-				// Tessa
+				performance.add(as.getSegregation());
 
-				// Dummy values. Remove when above line is implemented
-				performance.add(new double[] { 0.5, 0.3, 0.9, 0.4, 0.6 });
+				// Clear old data
+				if (graphVisualisator != null) {
+					graphVisualisator.clearSegregationResults();
+				}
+				viewSingleGraphPopupPanel.clear();
+				viewSingleGraphVerticalPanel.clear();
+				viewSingleGraphGraphPanel.clear();
 
 				// Make graph and add it to viewSingleGraphVerticalPanel
-				createGraph(
-						viewSingleGraphVerticalPanel,
-						new ArrayList<String>(Arrays
-								.asList("Current mixing run")), performance);
+				 createGraph(
+						 viewSingleGraphGraphPanel,
+				 new ArrayList<String>(Arrays
+				 .asList("Current mixing run")), performance);
+
+				viewSingleGraphVerticalPanel.add(viewSingleGraphGraphPanel);
 				viewSingleGraphVerticalPanel
 						.add(viewSingleGraphHorizontalPanel);
 				viewSingleGraphPopupPanel.add(viewSingleGraphVerticalPanel);
 
 				// TODO: Inside the vert panel; Make buttons in hori-panel
-				// appear
-				// below Graph
-
+				// appear below Graph
 				viewSingleGraphPopupPanel.center();
 				viewSingleGraphPopupPanel.show();
-				
-				
-//						.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
-//							public void setPosition(int offsetWidth,
-//									int offsetHeight) {
-//								int left = (Window.getClientWidth() - offsetWidth) / 2;
-//								int top = (Window.getClientHeight() - offsetHeight) / 2;
-//								viewSingleGraphPopupPanel.setPopupPosition(
-//										left, top);
-//							}
-//						});
+
+				// .setPopupPositionAndShow(new PopupPanel.PositionCallback() {
+				// public void setPosition(int offsetWidth,
+				// int offsetHeight) {
+				// int left = (Window.getClientWidth() - offsetWidth) / 2;
+				// int top = (Window.getClientHeight() - offsetHeight) / 2;
+				// viewSingleGraphPopupPanel.setPopupPosition(
+				// left, top);
+				// }
+				// });
 			}
 		});
 
@@ -1249,13 +1257,17 @@ public class Fingerpaint implements EntryPoint {
 					GeometryNames.getShortName(as.getGeometryChoice()), name,
 					as.getProtocol(), canOverwrite);
 		} else if (lastSaveButtonClicked.equals(StorageManager.KEY_RESULTS)) {
-			ResultStorage result = new ResultStorage(as.getGeometryChoice(),
-					as.getMixerChoice(), as.getInitialDistribution(),
-					as.getProtocol(), as.getSegregation(), as.getNrSteps());
+			ResultStorage result = new ResultStorage();
+			result.setGeometry(as.getGeometryChoice());
+			result.setMixer(as.getMixerChoice());
+			result.setDistribution(as.getInitialDistribution());
+			result.setMixingProtocol(as.getProtocol());
+			result.setSegregation(as.getSegregation());
+			result.setNrSteps(as.getNrSteps());
+
 			return StorageManager.INSTANCE
 					.putResult(name, result, canOverwrite);
 		}
-
 		return false;
 	}
 
@@ -1284,16 +1296,9 @@ public class Fingerpaint implements EntryPoint {
 					}
 				});
 
-				// TODO: un-comment when StorageManager is implemented.
-				// Get all protocols for the current geometry
-				 List<String> geometryProtocols = StorageManager.INSTANCE
-				 .getProtocols(GeometryNames.getShortName(as.getGeometryChoice()));
-
-				// TODO: Replace with geometryProtocols after StorageManager
-				// is implemented.
-				//final List<String> NAMES = Arrays.asList("Load Protocol list",
-					//	"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday",
-					//	"Friday", "Saturday");
+				List<String> geometryProtocols = StorageManager.INSTANCE
+						.getProtocols(GeometryNames.getShortName(as
+								.getGeometryChoice()));
 
 				// Create a cell to render each value.
 				TextCell textCell = new TextCell();
@@ -1312,16 +1317,15 @@ public class Fingerpaint implements EntryPoint {
 								String selected = selectionModel
 										.getSelectedObject();
 
-								// TODO: un-comment after StorageManager
-								// is implemented.
-								// get the selected protocol, and set it in the
-								// AS
-								 as.setProtocol(StorageManager.INSTANCE.getProtocol(GeometryNames.getShortName(as.getGeometryChoice()), selected));
-								 labelProtocolRepresentation.setText(as.getProtocol().toString());
-								 
-								// TODO: Remove this substitute functionality
-							//	Window.alert("Dummy functionality: \n Look, it works! You selected "
-							//			+ selected);
+								as.setProtocol(StorageManager.INSTANCE
+										.getProtocol(GeometryNames
+												.getShortName(as
+														.getGeometryChoice()),
+												selected));
+								labelProtocolRepresentation.setText(as
+										.getProtocol().toString());
+								mixNowButton.setEnabled(true);
+
 								loadPanel.hide();
 							}
 						});
@@ -1470,14 +1474,14 @@ public class Fingerpaint implements EntryPoint {
 				}
 
 				removeResultsPanel.center();
-//						.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
-//							public void setPosition(int offsetWidth,
-//									int offsetHeight) {
-//								int left = (Window.getClientWidth() - offsetWidth) / 2;
-//								int top = (Window.getClientHeight() - offsetHeight) / 2;
-//								removeResultsPanel.setPopupPosition(left, top);
-//							}
-//						});
+				// .setPopupPositionAndShow(new PopupPanel.PositionCallback() {
+				// public void setPosition(int offsetWidth,
+				// int offsetHeight) {
+				// int left = (Window.getClientWidth() - offsetWidth) / 2;
+				// int top = (Window.getClientHeight() - offsetHeight) / 2;
+				// removeResultsPanel.setPopupPosition(left, top);
+				// }
+				// });
 			}
 		});
 
@@ -1573,6 +1577,7 @@ public class Fingerpaint implements EntryPoint {
 		compareSelectPopupPanel.setModal(true);
 		comparePopupPanel = new PopupPanel();
 		comparePopupPanel.setModal(true);
+		compareGraphPanel = new SimplePanel();
 
 		// Initialise the cellList to contain all the mixing runs
 		TextCell textCell = new TextCell();
@@ -1598,8 +1603,6 @@ public class Fingerpaint implements EntryPoint {
 			}
 		});
 
-		
-
 		// ----------------------------------------------------------
 
 		// Initialise all components of the second popup panel
@@ -1608,6 +1611,8 @@ public class Fingerpaint implements EntryPoint {
 		horPanel.add(closeCompareButton);
 		horPanel.add(newCompareButton);
 		comparePopupPanel.add(vertPanel);
+		vertPanel.add(compareGraphPanel);
+		vertPanel.add(horPanel);
 
 		closeCompareButton.addClickHandler(new ClickHandler() {
 			@Override
@@ -1655,11 +1660,14 @@ public class Fingerpaint implements EntryPoint {
 					if (rs == null) {
 						System.out.println("Ik ben null");
 					}
-				//	System.out.println(StorageManager.INSTANCE.getResult(s));
-					graphs.add(StorageManager.INSTANCE.getResult(s).getSegregation());
+					// System.out.println(StorageManager.INSTANCE.getResult(s));
+					graphs.add(StorageManager.INSTANCE.getResult(s)
+							.getSegregation());
 				}
 
-				createGraph(vertPanel, names, graphs);
+				compareGraphPanel.clear();
+				createGraph(compareGraphPanel, names, graphs);
+				
 				compareSelectPopupPanel.hide();
 				comparePopupPanel
 						.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
@@ -1669,7 +1677,6 @@ public class Fingerpaint implements EntryPoint {
 							}
 						});
 			}
-
 		});
 
 		cancelCompareButton.addClickHandler(new ClickHandler() {
@@ -1696,7 +1703,7 @@ public class Fingerpaint implements EntryPoint {
 
 				// Push the data into the widget.
 				cellList.setRowData(0, resultNames);
-				
+
 				compareSelectPopupPanel
 						.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
 							public void setPosition(int offsetWidth,
@@ -1731,6 +1738,7 @@ public class Fingerpaint implements EntryPoint {
 					LineChart.PACKAGE);
 		} catch (Exception e) {
 			Window.alert("Loading graph failed.");
+			e.printStackTrace();
 		}
 	}
 

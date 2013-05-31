@@ -33,7 +33,7 @@ public class NumberSpinner extends Composite {
 	// ----Constructors--------------------------------------------
 
 	/**
-	 * Initialises a numberspinner with defaultvalue 1, increase-rate 1 and
+	 * Initialises a number spinner with default value 1, increase-rate 1 and
 	 * without limits
 	 */
 	public NumberSpinner() {
@@ -41,16 +41,19 @@ public class NumberSpinner extends Composite {
 	}
 
 	/**
-	 * Initialises a numberspinner with defaultvalue {@code defaultValue},
+	 * Initialises a number spinner with default value {@code defaultValue},
 	 * increase-rate 1 and without limits
+	 * 
+	 * @param defaultValue
+	 *            The value that is initially displayed on this number spinner
 	 */
 	public NumberSpinner(double defaultValue) {
 		this(defaultValue, 1, 0, 0, false);
 	}
 
 	/**
-	 * Initialises a numberspinner with defaultvalue {@code min}, increase-rate
-	 * 1 and limits {@code min} and {@code max}
+	 * Initialises a number spinner with default value {@code min},
+	 * increase-rate 1 and limits {@code min} and {@code max}
 	 * 
 	 * @param min
 	 *            The minimum value this spinner can take
@@ -66,10 +69,10 @@ public class NumberSpinner extends Composite {
 	}
 
 	/**
-	 * Initialises a numberspinner with defaultvalue {@code defaultValue},
+	 * Initialises a number spinner with default value {@code defaultValue},
 	 * increase-rate {@code rate} and limits {@code min} and {@code max}
 	 * 
-	 * @param defaultvalue
+	 * @param defaultValue
 	 *            The default value of this spinner
 	 * @param rate
 	 *            The amount with which the value if the spinner is
@@ -80,7 +83,7 @@ public class NumberSpinner extends Composite {
 	 *            The maximum value this spinner can take
 	 * 
 	 * @throws IllegalArgumentException
-	 *             if {@code defaultvalue} < {@code min} || {@code defaultvalue}
+	 *             if {@code defaultvalue} < {@code min} || {@code defaultValue}
 	 *             > {@code max} || {@code min} > {@code max}
 	 * 
 	 */
@@ -90,11 +93,11 @@ public class NumberSpinner extends Composite {
 	}
 
 	/**
-	 * Initialises a numberspinner with defaultvalue {@code defaultValue},
+	 * Initialises a number spinner with default value {@code defaultValue},
 	 * increase-rate {@code rate} and limits {@code min} and {@code max} if
 	 * {@code limits} == {@code true}
 	 * 
-	 * @param defaultvalue
+	 * @param defaultValue
 	 *            The default value of this spinner
 	 * @param rate
 	 *            The amount with which the value if the spinner is
@@ -198,25 +201,27 @@ public class NumberSpinner extends Composite {
 	public void setValue(double d) {
 		setValue(d, false);
 	}
-	
+
 	/**
-	 * Sets the value to the control and possibly performs rounding
-	 * of the given {@param d}.
+	 * Sets the value to the control and possibly performs rounding of the given
 	 * 
 	 * @param d
-	 * 			Value to be set
+	 *            .
+	 * 
+	 * @param d
+	 *            Value to be set
 	 * @param round
-	 * 			Boolean to indicate whether rounding should be performed.
+	 *            Boolean to indicate whether rounding should be performed.
 	 */
-	public void setValue(double d, boolean round){
+	public void setValue(double d, boolean round) {
 		numberBox.setValue(d);
 		if (spinnerListener != null) {
 			spinnerListener.onValueChange(d);
 		}
-		
-		if(round){
+
+		if (round) {
 			roundValue();
-		}	
+		}
 	}
 
 	/**
@@ -232,14 +237,15 @@ public class NumberSpinner extends Composite {
 	/**
 	 * Change or set the listener attached to this NumberSpinner.
 	 * 
-	 * @param spinnerListener The (new) listener that will be attached to this spinner.
+	 * @param spinnerListener
+	 *            The (new) listener that will be attached to this spinner.
 	 */
 	public void setSpinnerListener(NumberSpinnerListener spinnerListener) {
 		this.spinnerListener = spinnerListener;
 	}
 
 	/**
-	 * Rounds the current value of this numberspinner. 
+	 * Rounds the current value of this numberspinner.
 	 */
 	private void roundValue() {
 		if (hasLimits) {

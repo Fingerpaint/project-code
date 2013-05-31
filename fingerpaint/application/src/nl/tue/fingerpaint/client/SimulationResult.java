@@ -2,27 +2,25 @@ package nl.tue.fingerpaint.client;
 
 import java.io.Serializable;
 
-import org.jsonmaker.gwt.client.Jsonizer;
-
 /**
  * Represents a the results of a {@link Simulation}.
  * 
  * @author Group Fingerpaint
- *
  */
 public class SimulationResult implements Serializable {
 	
-	/**
-	 * Randomly generated serial version uid
-	 */
+	/** Randomly generated serial version UID */
 	private static final long serialVersionUID = -3437263386499901097L;
-	
+	/** The resulting concentration vector(s) */
 	private double[][] concentrationVectors;
-	
+	/** The array with segregation values */
 	private double[] segregationPoints;
 	
+	/**
+	 * Default constructor.
+	 */
 	public SimulationResult() {
-		
+		// Needed to implement Serializable
 	}
 
 	/**
@@ -60,21 +58,4 @@ public class SimulationResult implements Serializable {
 	public double[] getSegregationPoints() {
 		return segregationPoints;
 	}
-	
-//	private void writeObject(ObjectOutputStream o) throws IOException {
-//
-//		o.writeObject(simulation);
-//		o.writeObject(concentrationVectors);
-//		o.writeObject(segregationPoints);
-//	}
-//
-//	private void readObject(ObjectInputStream o) throws IOException,
-//			ClassNotFoundException {
-//
-//		simulation = (Simulation) o.readObject();
-//		concentrationVectors = (double[][]) o.readObject();
-//		segregationPoints = (double[]) o.readObject();
-//	}
-	
-	public static interface SimulationResultJsonizer extends Jsonizer {}
 }
