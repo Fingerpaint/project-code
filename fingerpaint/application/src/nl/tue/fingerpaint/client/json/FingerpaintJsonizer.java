@@ -5,8 +5,11 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.jsonmaker.gwt.client.JsonizerParser;
+
 import nl.tue.fingerpaint.client.MixingProtocol;
 import nl.tue.fingerpaint.client.MixingProtocol.MixingProtocolJsonizer;
+import nl.tue.fingerpaint.client.SimulationResult;
 import nl.tue.fingerpaint.client.storage.ResultStorage;
 import nl.tue.fingerpaint.client.storage.ResultStorage.ResultStorageJsonizer;
 
@@ -213,6 +216,12 @@ public class FingerpaintJsonizer {
 		}
 
 		return null;
+	}
+	
+	public static SimulationResult fromString(String jsonString) {
+		ResultStorageJsonizer json = (ResultStorageJsonizer) GWT
+				.create(ResultStorageJsonizer.class);
+		return (SimulationResult) JsonizerParser.parse(json, jsonString);
 	}
 
 	/**

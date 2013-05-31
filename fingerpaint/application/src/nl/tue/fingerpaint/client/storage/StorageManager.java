@@ -288,10 +288,9 @@ public class StorageManager {
 		for (String firstLevelKey : firstLevel.keySet()) {
 			if (firstLevelKey.equals(key)) {
 				String result = (String) firstLevel.get(key);
-				// TODO:Deserialize result and return it
+				return FingerpaintJsonizer.fromString(result);
 			}
 		}
-
 		return null;
 	}
 
