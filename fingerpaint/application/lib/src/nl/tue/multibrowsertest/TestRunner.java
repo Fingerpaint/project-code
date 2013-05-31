@@ -156,6 +156,8 @@ public class TestRunner<ResultObject> implements Runnable {
 			master.notifyTestComplete(browserDimension, browser, result);
 		} catch (MultiBrowserTesterException e) {
 			master.notifyTestException(e, browserDimension, browser);
+		} finally {
+			driver.close();
 		}
 	}
 
