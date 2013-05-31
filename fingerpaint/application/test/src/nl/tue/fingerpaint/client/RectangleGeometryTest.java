@@ -8,9 +8,9 @@ import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.junit.client.GWTTestCase;
 import com.google.gwt.touch.client.Point;
 
-/*
- * GWT jUnit test for the class RectangleGeometry in the package 
- * com.google.gwt.fingerpaint.paintingcanvas.client.
+/**
+ * GWT jUnit tests for the class {@link RectangleGeometry}.
+ * TODO: all tests fail in this class, so it needs some serious rework!
  * 
  * @author Group Fingerpaint
  */
@@ -30,30 +30,33 @@ public class RectangleGeometryTest extends GWTTestCase {
 	 * IMPORTANT!
 	 */
 
-	@Override
-	public String getModuleName() {
-		return "nl.tue.fingerpaint.Fingerpaint";
-	}
-
 	// The instance of the RectangleGeometry class to test.
-	RectangleGeometry geom;
+	private RectangleGeometry geom;
 
 	// Points to test on the borders of the geometry
-	Point[] borderTests = new Point[] { new Point(1, 1), new Point(1, 240),
+	private Point[] borderTests = new Point[] { new Point(1, 1), new Point(1, 240),
 			new Point(400, 1), new Point(400, 240) };
 
 	// Places in the internalRepresentationVector that correspond to the points
 	// in the borderTests array.
-	int[] borderResults = new int[] { 400 * 239, 0, 400 * 240 - 1, 399 };
+	private int[] borderResults = new int[] { 400 * 239, 0, 400 * 240 - 1, 399 };
 
 	// Points to test within the geometry
-	Point[] innerTests = new Point[] { new Point(2, 2), new Point(36, 66),
+	private Point[] innerTests = new Point[] { new Point(2, 2), new Point(36, 66),
 			new Point(73, 136), new Point(276, 97) };
 
 	// Places in the internalRepresentationVector that correspond to the points
 	// in the innerTests array.
-	int[] innerResults = new int[] { 238 * 400 + 1, 174 * 400 + 35,
+	private int[] innerResults = new int[] { 238 * 400 + 1, 174 * 400 + 35,
 			104 * 400 + 72, 143 * 400 + 275 };
+	
+	private final int clientHeight = 400;
+	private final int clientWidth = 600;
+	
+	/**
+	 * Ugly hack courtesy of Femke and Thom
+	 */
+	private boolean mixingStepAdded = false;
 
 	@Test
 	public void testTest() {
@@ -77,9 +80,6 @@ public class RectangleGeometryTest extends GWTTestCase {
 		assertEquals("Initial drawing color",
 				CssColor.make("black").toString(), geom.getColor().toString());
 	}
-
-	private final int clientHeight = 400;
-	private final int clientWidth = 600;
 
 	@Test
 	public void testStopDefineMixingStep() {
@@ -125,11 +125,6 @@ public class RectangleGeometryTest extends GWTTestCase {
 	}
 
 	/**
-	 * Ugly hack courtesy of Femke and Thom
-	 */
-	private boolean mixingStepAdded = false;
-
-	/**
 	 * Tests whether implementation is correct.
 	 * 
 	 * @param message
@@ -150,7 +145,7 @@ public class RectangleGeometryTest extends GWTTestCase {
 	 * @param stepSize
 	 *            Desired step size for the {@code Step}.
 	 */
-	private void testStopDefineMixingStep(String message,
+	public void testStopDefineMixingStep(String message,
 			boolean shouldBeCalled, boolean top, boolean clockwise, int startX,
 			int endX, int endY, double stepSize) {
 		geom = new RectangleGeometry(clientHeight, clientWidth);
@@ -170,7 +165,7 @@ public class RectangleGeometryTest extends GWTTestCase {
 	 * 
 	 */
 	@Test
-	private void testDetermineSwipe() {
+	public void testDetermineSwipe() {
 		geom = new RectangleGeometry(clientHeight, clientWidth);
 
 		// simulate a horizontal swipe to the right, just barely over the
@@ -188,7 +183,7 @@ public class RectangleGeometryTest extends GWTTestCase {
 	 * representation)
 	 */
 	@Test
-	private void testResetDist() {
+	public void testResetDist() {
 		geom = new RectangleGeometry(clientHeight, clientWidth);
 		// make the canvas black
 		geom.setDistribution(new double[96000]);// using the initialisation
@@ -221,4 +216,10 @@ public class RectangleGeometryTest extends GWTTestCase {
 
 		return stl;
 	}
+	
+	@Override
+	public String getModuleName() {
+		return "nl.tue.fingerpaint.Fingerpaint";
+	}
+	
 }
