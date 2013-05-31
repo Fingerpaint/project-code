@@ -1,8 +1,6 @@
 
 package nl.tue.fingerpaint.client;
 
-import org.jsonmaker.gwt.client.Jsonizer;
-
 import com.google.gwt.canvas.dom.client.CanvasPixelArray;
 import com.google.gwt.canvas.dom.client.ImageData;
 import com.google.gwt.touch.client.Point;
@@ -135,7 +133,5 @@ public abstract class Distribution {
 	public double[] getDistribution() {
 		return getVector();
 	}
-	
-	public interface DistributionJsonizer extends Jsonizer{}
 
 }

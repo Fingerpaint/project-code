@@ -149,9 +149,6 @@ public class MixingProtocol implements Serializable {
 		return "Rectangle400x240";
 	}
 
-	public interface MixingProtocolJsonizer extends Jsonizer {
-	}
-	
 	@Override
 	public String toString() {
 		String result = "";
@@ -159,5 +156,8 @@ public class MixingProtocol implements Serializable {
 			result += ms.toString() +", ";
 			}
 		return result.substring(0, result.length() - 2);
+	}
+	
+	public interface MixingProtocolJsonizer extends Jsonizer {
 	}
 }

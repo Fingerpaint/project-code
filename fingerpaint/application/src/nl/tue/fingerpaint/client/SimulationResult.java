@@ -60,21 +60,4 @@ public class SimulationResult implements Serializable {
 	public double[] getSegregationPoints() {
 		return segregationPoints;
 	}
-	
-//	private void writeObject(ObjectOutputStream o) throws IOException {
-//
-//		o.writeObject(simulation);
-//		o.writeObject(concentrationVectors);
-//		o.writeObject(segregationPoints);
-//	}
-//
-//	private void readObject(ObjectInputStream o) throws IOException,
-//			ClassNotFoundException {
-//
-//		simulation = (Simulation) o.readObject();
-//		concentrationVectors = (double[][]) o.readObject();
-//		segregationPoints = (double[]) o.readObject();
-//	}
-	
-	public static interface SimulationResultJsonizer extends Jsonizer {}
 }

@@ -13,6 +13,8 @@ import org.jsonmaker.gwt.client.Jsonizer;
  */
 public class MixingStep implements Serializable {
 
+	/** Randomly generated serialVersionUID */
+	private static final long serialVersionUID = -4628728115890489404L;
 	/** the minimum step size, all step sizes should be a multiple of this */
 	public static final double STEP_UNIT = 0.25;
 	/** lowest allowed step size */
@@ -167,7 +169,7 @@ public class MixingStep implements Serializable {
 			stepString = "-T";
 		} else if (!wall && direction) {
 			stepString = "B";
-		} else { // (!step.isTopWall() && !step.movesForward()) {
+		} else { // (!wall && !direction) {
 			stepString = "-B";
 		}
 
@@ -175,7 +177,6 @@ public class MixingStep implements Serializable {
 		return stepString;
 	}
 
-	public interface MixingStepJsonizer extends Jsonizer {
-	}
+	public interface MixingStepJsonizer extends Jsonizer {}
 
 }
