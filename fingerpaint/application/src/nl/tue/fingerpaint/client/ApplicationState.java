@@ -12,9 +12,14 @@ public class ApplicationState {
 	private String geoChoice = null;
 	/** The chosen matrix. */
 	private String mixChoice = null;
-
 	/** the current mixing protocol */
 	private MixingProtocol protocol = new MixingProtocol();
+	/** Geometry to draw on */
+	private Geometry geom;
+	/** The segregation array belonging to this state */
+	private double[] segregation;
+	/** Stores the current value for the Step size spinner. */
+	private double stepsize;
 
 	/**
 	 * Stores the initial distribution, and not the current distribution as
@@ -22,21 +27,13 @@ public class ApplicationState {
 	 */
 	private double[] initialDistribution = null;
 
-	/** Geometry to draw on */
-	private Geometry geom;
-
-	/** The segregation array belonging to this state */
-	private double[] segregation;
-
 	/**
 	 * The number of times (#steps) that the defined protocol will be applied.
 	 * Initially set to 0, to indicate that the spinner has not been loaded yet.
 	 */
 	private int nrSteps = 0;
 
-	/** Stores the current value for the Step size spinner. */
-	private double stepsize;
-
+	// --Getters and Setters------------------------------------------------
 	/**
 	 * Returns the current value of number of steps.
 	 * 
@@ -65,23 +62,23 @@ public class ApplicationState {
 	}
 
 	/**
+	 * Returns the long name of the chosen geometry.
+	 * 
+	 * @return the long name of the chosen geometry
+	 */
+	public String getGeometryChoice() {
+		return geoChoice;
+	}
+
+	/**
 	 * Change the chosen geometry. Note that it should be compatible with the
 	 * chosen mixer!
 	 * 
 	 * @param g
 	 *            The value to be set
 	 */
-	public void setGeometry(String g) {
+	public void setGeometryChoice(String g) {
 		geoChoice = g;
-	}
-
-	/**
-	 * Returns the name of the chosen geometry.
-	 * 
-	 * @return the name of the chosen geometry
-	 */
-	public String getGeometryChoice() {
-		return geoChoice;
 	}
 
 	/**
@@ -114,26 +111,7 @@ public class ApplicationState {
 	}
 
 	/**
-	 * Returns the segregation
-	 * 
-	 * @return the segregation vector
-	 */
-	public double[] getSegregation() {
-		return segregation;
-	}
-
-	/**
-	 * Sets the segregation
-	 * 
-	 * @param segregation
-	 *            The vector to be set
-	 */
-	public void setSegregation(double[] segregation) {
-		this.segregation = segregation;
-	}
-
-	/**
-	 * sets the current mixing protocol
+	 * Sets the current mixing protocol
 	 * 
 	 * @param mixingProtocol
 	 *            , the new mixing protocol
@@ -148,13 +126,79 @@ public class ApplicationState {
 	}
 
 	/**
+	 * Returns the segregation points
+	 * 
+	 * @return double array containing the segregation points
+	 */
+	public double[] getSegregation() {
+		return segregation;
+	}
+
+	/**
+	 * Sets the segregation points
+	 * 
+	 * @param segregation
+	 *            The array containing the points to be set
+	 */
+	public void setSegregation(double[] segregation) {
+		this.segregation = segregation;
+	}
+
+	/**
+	 * Gives the current step size
+	 * 
+	 * @return The current step size
+	 */
+	public double getStepSize() {
+		return stepsize;
+	}
+
+	/**
 	 * Updates the current mixing step with a new value
 	 * 
 	 * @param value
 	 *            the new StepSize for the current mixing step
 	 */
-	public void editStepSize(double value) {
+	public void setStepSize(double value) {
 		stepsize = value;
+	}
+
+	/**
+	 * Gives the initial concentration distribution
+	 * 
+	 * @return The current initial concentration distribution
+	 */
+	public double[] getInitialDistribution() {
+		return initialDistribution;
+	}
+
+	/**
+	 * Sets the initial concentration distribution
+	 * 
+	 * @param distribution
+	 *            The distribution to set
+	 */
+	public void setInitialDistribution(double[] distribution) {
+		this.initialDistribution = distribution;
+	}
+
+	/**
+	 * Gives the current geometry object
+	 * 
+	 * @return The geometry object
+	 */
+	public Geometry getGeometry() {
+		return geom;
+	}
+
+	/**
+	 * Sets the current geometry object
+	 * 
+	 * @param geometry
+	 *            The geometry object to set
+	 */
+	public void setGeometry(Geometry geometry) {
+		geom = geometry;
 	}
 
 	/**
@@ -167,30 +211,9 @@ public class ApplicationState {
 		protocol.addStep(step);
 	}
 
-	public double getStepSize() {
-		return stepsize;
-	}
-
-	public void setInitialDistribution(double[] distribution) {
-		this.initialDistribution = distribution;
-	}
-
-	public double[] getInitialDistribution() {
-		return initialDistribution;
-	}
-
-	public double getStepsize() {
-		return stepsize;
-	}
-
-	public Geometry getGeometry() {
-		return geom;
-	}
-
-	public void setGegeom(Geometry geometry) {
-		geom = geometry;
-	}
-
+	/**
+	 * Draws the initial concentration distribution on the canvas
+	 */
 	public void drawDistribution() {
 		geom.drawDistribution(initialDistribution);
 	}

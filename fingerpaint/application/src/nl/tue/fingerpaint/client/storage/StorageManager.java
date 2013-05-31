@@ -494,15 +494,13 @@ public class StorageManager {
 	}
 
 	/**
-	 * Save a mixing protocol to the local storage. If the name already exists,
-	 * do not attempt to overwrite.
+	 * Save a mixing result to the local storage. If the name already exists, do
+	 * not attempt to overwrite.
 	 * 
-	 * @param geometry
-	 *            The geometry to store the distribution under.
 	 * @param key
-	 *            The name of the protocol.
-	 * @param protocol
-	 *            The protocol to be saved.
+	 *            The name of the result.
+	 * @param result
+	 *            The result to be saved.
 	 * @param overwrite
 	 *            If the value should be overwritten if the name is already in
 	 *            use.

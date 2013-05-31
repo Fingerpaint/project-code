@@ -443,7 +443,7 @@ public class Fingerpaint implements EntryPoint {
 		private final ValueUpdater<String> valueGeometryUpdater = new ValueUpdater<String>() {
 			@Override
 			public void update(String value) {
-				as.setGeometry(value);
+				as.setGeometryChoice(value);
 				lastClickedLevel = 0;
 			}
 		};
@@ -463,7 +463,7 @@ public class Fingerpaint implements EntryPoint {
 		private void setUserChoiceValues(String selectedMixer) {
 			// TODO: Actually create a different geometry depending on the
 			// chosen geometry...
-			as.setGegeom(new RectangleGeometry(Window.getClientHeight()
+			as.setGeometry(new RectangleGeometry(Window.getClientHeight()
 					- topBarHeight, Window.getClientWidth() - menuWidth));
 		}
 
@@ -680,7 +680,7 @@ public class Fingerpaint implements EntryPoint {
 		sizeSpinner = new NumberSpinner(MixingStep.STEP_DEFAULT,
 				MixingStep.STEP_UNIT, MixingStep.STEP_MIN, MixingStep.STEP_MAX,
 				true);
-		as.editStepSize(MixingStep.STEP_DEFAULT);
+		as.setStepSize(MixingStep.STEP_DEFAULT);
 
 		// set a listener for the spinner
 		sizeSpinner.setSpinnerListener(new NumberSpinnerListener() {
@@ -688,7 +688,7 @@ public class Fingerpaint implements EntryPoint {
 			@Override
 			public void onValueChange(double value) {
 				// change the current mixing step
-				as.editStepSize(value);
+				as.setStepSize(value);
 			}
 
 		});

@@ -30,7 +30,7 @@ public class ApplicationStateTest extends GWTTestCase{
 	public void testSetGeometry() {
 		init();
 		String testValue = "Rectangle";
-		as.setGeometry(testValue);
+		as.setGeometryChoice(testValue);
 		assertEquals(as.getGeometryChoice(), testValue); 
 	}
 	
