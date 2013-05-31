@@ -1,6 +1,7 @@
 package nl.tue.fingerpaint.client.storage;
 
 import org.jsonmaker.gwt.client.Jsonizer;
+import org.jsonmaker.gwt.client.annotation.Transient;
 
 import nl.tue.fingerpaint.client.MixingProtocol;
 
@@ -12,7 +13,7 @@ public class ResultStorage {
 
 	private double[] distribution;
 
-	private MixingProtocol protocol;
+	private String protocol;
 
 	private double[] segregation;
 	
@@ -42,12 +43,22 @@ public class ResultStorage {
 		this.distribution = distribution;
 	}
 
-	public MixingProtocol getProtocol() {
+	public String getProtocol() {
 		return protocol;
 	}
 
-	public void setProtocol(MixingProtocol protocol) {
+	public void setProtocol(String protocol) {
 		this.protocol = protocol;
+	}
+	
+	@Transient
+	public MixingProtocol getMixingProtocol() {
+		return MixingProtocol.fromString(protocol);
+	}
+	
+	@Transient
+	public void setMixingProtocol(MixingProtocol prot) {
+		protocol = prot.toString();
 	}
 
 	public double[] getSegregation() {

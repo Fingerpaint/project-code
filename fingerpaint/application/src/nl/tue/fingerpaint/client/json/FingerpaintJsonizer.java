@@ -289,6 +289,7 @@ public class FingerpaintJsonizer {
 		ResultStorageJsonizer json = (ResultStorageJsonizer) GWT
 				.create(ResultStorageJsonizer.class);
 		return json.asString(result);
+
 	}
 
 	/**

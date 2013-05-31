@@ -176,6 +176,20 @@ public class MixingStep implements Serializable {
 		stepString += "[" + (double) nrUnits / 4 + "]";
 		return stepString;
 	}
+	
+	public static MixingStep fromString(String step) {
+		MixingStep result = new MixingStep();
+		if (step.startsWith("-")) {
+			result.setDirection(false);
+			step = step.substring(1);
+		} else {
+			result.setDirection(true);
+		}
+		result.setWall(step.startsWith("T"));
+		step = step.substring(2, step.length() - 1);
+		result.setStepSize(Double.parseDouble(step));
+		return result;
+	}
 
 	public interface MixingStepJsonizer extends Jsonizer {}
 

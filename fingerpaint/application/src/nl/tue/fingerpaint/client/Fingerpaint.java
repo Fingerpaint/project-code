@@ -759,7 +759,7 @@ public class Fingerpaint implements EntryPoint {
 
 			@Override
 			public void onValueChange(double value) {
-				 as.getGeometry().setDrawingToolSize((int) value-1);
+				as.getGeometry().setDrawingToolSize((int) value - 1);
 				// -1 because the drawingTools have a default size of 1 pixel
 				// for inputSize 0
 			}
@@ -1015,11 +1015,7 @@ public class Fingerpaint implements EntryPoint {
 			@Override
 			public void onClick(ClickEvent event) {
 				ArrayList<double[]> performance = new ArrayList<double[]>();
-				// performance.add(as.getSegregation());//TODO: Implemented by
-				// Tessa
-
-				// Dummy values. Remove when above line is implemented
-				performance.add(new double[] { 0.5, 0.3, 0.9, 0.4, 0.6 });
+				performance.add(as.getSegregation());
 
 				// Make graph and add it to viewSingleGraphVerticalPanel
 				createGraph(
@@ -1031,22 +1027,19 @@ public class Fingerpaint implements EntryPoint {
 				viewSingleGraphPopupPanel.add(viewSingleGraphVerticalPanel);
 
 				// TODO: Inside the vert panel; Make buttons in hori-panel
-				// appear
-				// below Graph
-
+				// appear below Graph
 				viewSingleGraphPopupPanel.center();
 				viewSingleGraphPopupPanel.show();
-				
-				
-//						.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
-//							public void setPosition(int offsetWidth,
-//									int offsetHeight) {
-//								int left = (Window.getClientWidth() - offsetWidth) / 2;
-//								int top = (Window.getClientHeight() - offsetHeight) / 2;
-//								viewSingleGraphPopupPanel.setPopupPosition(
-//										left, top);
-//							}
-//						});
+
+				// .setPopupPositionAndShow(new PopupPanel.PositionCallback() {
+				// public void setPosition(int offsetWidth,
+				// int offsetHeight) {
+				// int left = (Window.getClientWidth() - offsetWidth) / 2;
+				// int top = (Window.getClientHeight() - offsetHeight) / 2;
+				// viewSingleGraphPopupPanel.setPopupPosition(
+				// left, top);
+				// }
+				// });
 			}
 		});
 
@@ -1251,14 +1244,13 @@ public class Fingerpaint implements EntryPoint {
 			result.setGeometry(as.getGeometryChoice());
 			result.setMixer(as.getMixerChoice());
 			result.setDistribution(as.getInitialDistribution());
-			result.setProtocol(as.getProtocol());
+			result.setMixingProtocol(as.getProtocol());
 			result.setSegregation(as.getSegregation());
 			result.setNrSteps(as.getNrSteps());
 
 			return StorageManager.INSTANCE
 					.putResult(name, result, canOverwrite);
 		}
-
 		return false;
 	}
 
@@ -1465,14 +1457,14 @@ public class Fingerpaint implements EntryPoint {
 				}
 
 				removeResultsPanel.center();
-//						.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
-//							public void setPosition(int offsetWidth,
-//									int offsetHeight) {
-//								int left = (Window.getClientWidth() - offsetWidth) / 2;
-//								int top = (Window.getClientHeight() - offsetHeight) / 2;
-//								removeResultsPanel.setPopupPosition(left, top);
-//							}
-//						});
+				// .setPopupPositionAndShow(new PopupPanel.PositionCallback() {
+				// public void setPosition(int offsetWidth,
+				// int offsetHeight) {
+				// int left = (Window.getClientWidth() - offsetWidth) / 2;
+				// int top = (Window.getClientHeight() - offsetHeight) / 2;
+				// removeResultsPanel.setPopupPosition(left, top);
+				// }
+				// });
 			}
 		});
 
@@ -1495,19 +1487,6 @@ public class Fingerpaint implements EntryPoint {
 	private void updateProtocolLabel(MixingStep step) {
 		String oldProtocol = taProtocolRepresentation.getText();
 		String stepString = step.toString();
-
-		// if (step.isTopWall() && step.movesForward()) {
-		// stepString = "T";
-		// } else if (step.isTopWall() && !step.movesForward()) {
-		// stepString = "-T";
-		// } else if (!step.isTopWall() && step.movesForward()) {
-		// stepString = "B";
-		// } else { // (!step.isTopWall() && !step.movesForward()) {
-		// stepString = "-B";
-		// }
-
-		// stepString += "[" + step.getStepSize() + "]";
-
 		taProtocolRepresentation.setText(oldProtocol + stepString + " ");
 	}
 
