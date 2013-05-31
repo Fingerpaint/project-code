@@ -11,13 +11,6 @@ body {
 /* background-color:#84D200; /* light-green */
 /* background-color:#FFDD00; /* yellow */
 }
-
-/* only TOP: Auto-aanvul voor alle richtingen
-   TOP & RIGHT = TOP/BOTTOM & RIGHT/LEFT are equal */
-   
-   /* . is een class; Kan je aan meerdere hangen
-   #is alles met een ID; Is voor 1 element */
-   
    
 .gwt-PopupPanel.popupContent {
 	border: 1px solid black;

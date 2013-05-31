@@ -4,34 +4,37 @@ import org.junit.Test;
 
 import com.google.gwt.junit.client.GWTTestCase;
 
+/**
+ * GWT jUnit tests for the class {@link MixingProtocol}.
+ * 
+ * @author Group Fingerpaint
+ */
 public class MixingProtocolTest extends GWTTestCase {
+	/** The mixing protocol to be tested in this test class. */
+	private MixingProtocol program;
 
-	MixingProtocol program;
-	MixingStep step0;
-	MixingStep step1;
-	MixingStep step2;
+	/** First mixing step of the above mixing protocol. */
+	private MixingStep step0;
 
-	/*
-	 * Setup method
+	/** Second mixing step of the above mixing protocol. */
+	private MixingStep step1;
+
+	/** Third mixing step of the above mixing protocol. */
+	private MixingStep step2;
+
+	/**
+	 * A test to check whether a new mixing protocol is initialised correctly.
+	 * That is, the mixing protocol should be empty after initialisation.
 	 */
-	private void init() {
-		program = new MixingProtocol();
-		step0 = new MixingStep(0.5, true, false);
-		step1 = new MixingStep(1.75, true, true);
-		step2 = new MixingStep(1.0, false, false);
-		program.addStep(step0);
-		program.addStep(step1);
-		program.addStep(step2);
-	}
-	
 	@Test
 	public void testConstructor() {
 		program = new MixingProtocol();
 		assertEquals("Size of new program", 0, program.getProgramSize());
 	}
 
-	/*
-	 * Tests if the addStep function correctly appends a given step
+	/**
+	 * A test to check whether the addStep function correctly appends a given
+	 * mixing step.
 	 */
 	@Test
 	public void testAddStep() {
@@ -46,8 +49,9 @@ public class MixingProtocolTest extends GWTTestCase {
 		assertEquals(step2, program.getStep(2));
 	}
 
-	/*
-	 * Tests if the removeStep function correctly removes a certain step
+	/**
+	 * A test to check whether the removeStep function correctly removes a
+	 * certain mixing step.
 	 */
 	@Test
 	public void testRemoveStep() {
@@ -62,32 +66,35 @@ public class MixingProtocolTest extends GWTTestCase {
 		assertEquals(step2, program.getStep(1));
 	}
 
-	/*
-	 * Tests if the stepSize is correctly edited for the given MixingStep
+	/**
+	 * A test to check whether the step size is correctly edited for the given
+	 * mixing step.
 	 */
 	@Test
 	public void testEditStepSize() {
 		init();
 		MixingStep edited = program.getStep(1);
-		// should change the stepsize of step1 to 2.25
-		program.editStep(1, 2.25, edited.movesForward(),edited.isTopWall());
+		// should change the step size of step1 to 2.25
+		program.editStep(1, 2.25, edited.movesForward(), edited.isTopWall());
 		assertEquals(2.25, program.getStep(1).getStepSize());
 	}
 
-	/*
-	 * Tests if the stepDirection is correctly edited for the given MixingStep
+	/**
+	 * A test to check whether the step direction is correctly edited for the
+	 * given mixing step.
 	 */
 	@Test
 	public void testEditStepDirection() {
 		init();
 		MixingStep edited = program.getStep(0);
 		// should change the stepDirection of step0 equal to false
-		program.editStep(0, edited.getStepSize(), false,edited.isTopWall());
+		program.editStep(0, edited.getStepSize(), false, edited.isTopWall());
 		assertEquals(false, program.getStep(0).movesForward());
 	}
 
-	/*
-	 * Tests if the stepWall is correctly edited for the given MixingStep
+	/**
+	 * A test to check whether the step wall is correctly edited for the given
+	 * mixing step.
 	 */
 	@Test
 	public void testEditStepWall() {
@@ -98,8 +105,9 @@ public class MixingProtocolTest extends GWTTestCase {
 		assertEquals(true, program.getStep(2).movesForward());
 	}
 
-	/*
-	 * Tests if a step can be moved to a lower index correctly
+	/**
+	 * A test to check whether a mixing step can be moved to a lower index
+	 * correctly.
 	 */
 	@Test
 	public void testMoveStepForward() {
@@ -112,8 +120,9 @@ public class MixingProtocolTest extends GWTTestCase {
 		assertEquals(step2, program.getStep(2));
 	}
 
-	/*
-	 * Tests if a step can be moved to a higher index correctly
+	/**
+	 * A test to check whether a mixing step can be moved to a higher index
+	 * correctly.
 	 */
 	@Test
 	public void testMoveStepBack() {
@@ -126,10 +135,10 @@ public class MixingProtocolTest extends GWTTestCase {
 		assertEquals(step1, program.getStep(2));
 	}
 
-	// exception tests----------------------------------------------------------
-
-	/*
-	 * Tests if the getStep throws a correct IndexOutOfBoundsException
+	// Exception tests----------------------------------------------
+	/**
+	 * A test to check whether the getStep function throws a correct
+	 * IndexOutOfBoundsException, for an out of bounds retrieve index.
 	 */
 	@Test
 	public void testGetStepException() {
@@ -145,8 +154,9 @@ public class MixingProtocolTest extends GWTTestCase {
 		}
 	}
 
-	/*
-	 * Tests if the addStep throws a correct NullPointerException
+	/**
+	 * A test to check whether the addStep function throws a correct
+	 * NullPointerException, for a mixing step that is null.
 	 */
 	@Test
 	public void testAddStepException() {
@@ -161,8 +171,9 @@ public class MixingProtocolTest extends GWTTestCase {
 		}
 	}
 
-	/*
-	 * Tests if the EditStep throws a correct IndexOutOfBoundsException
+	/**
+	 * A test to check whether the editStep function throws a correct
+	 * IndexOutOfBoundsException, for an out of bounds retrieve index.
 	 */
 	@Test
 	public void testEditStepException() {
@@ -178,9 +189,9 @@ public class MixingProtocolTest extends GWTTestCase {
 		}
 	}
 
-	/*
-	 * Tests if the MoveStep throws a correct IndexOutOfBoundsException 
-	 * for an out of bounds initialIndex
+	/**
+	 * A test to check whether the moveStep function throws a correct
+	 * IndexOutOfBoundsException, for an out of bounds initialIndex.
 	 */
 	@Test
 	public void testMoveStepException1() {
@@ -195,10 +206,10 @@ public class MixingProtocolTest extends GWTTestCase {
 			fail(e.toString());
 		}
 	}
-	
-	/*
-	 * Tests if the MoveStep throws a correct IndexOutOfBoundsException 
-	 * for an out of bounds newIndex
+
+	/**
+	 * A test to check whether the moveStep function throws a correct
+	 * IndexOutOfBoundsException, for an out of bounds newIndex.
 	 */
 	@Test
 	public void testMoveStepException2() {
@@ -214,8 +225,9 @@ public class MixingProtocolTest extends GWTTestCase {
 		}
 	}
 
-	/*
-	 * Tests if the RemoveStep throws a correct IndexOutOfBoundsException
+	/**
+	 * A test to check whether the removeStep function throws a correct
+	 * IndexOutOfBoundsException, for an out of bounds retrieve index.
 	 */
 	@Test
 	public void testRemoveStepException() {
@@ -234,6 +246,20 @@ public class MixingProtocolTest extends GWTTestCase {
 	@Override
 	public String getModuleName() {
 		return "nl.tue.fingerpaint.Fingerpaint";
+	}
+
+	// --- PRIVATE PART --------------------------------------------------
+	/*
+	 * Setup method for the mixing protocol tested in this test class.
+	 */
+	private void init() {
+		program = new MixingProtocol();
+		step0 = new MixingStep(0.5, true, false);
+		step1 = new MixingStep(1.75, true, true);
+		step2 = new MixingStep(1.0, false, false);
+		program.addStep(step0);
+		program.addStep(step1);
+		program.addStep(step2);
 	}
 
 }
