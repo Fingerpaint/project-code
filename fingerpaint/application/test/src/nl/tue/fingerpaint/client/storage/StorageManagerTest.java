@@ -12,6 +12,8 @@ import org.junit.Test;
 import com.google.gwt.junit.client.GWTTestCase;
 
 public class StorageManagerTest extends GWTTestCase {
+	
+	private final static double accuracy = 0.0000000001;
 
 	@Test
 	public void testSaveInitialDistribution() {
@@ -23,7 +25,6 @@ public class StorageManagerTest extends GWTTestCase {
 		final int x2 = 50;
 		final int y2 = 30;
 		final double v2 = 0.34817;
-		
 		final String key = "testdist1";
 		final String geometry = GeometryNames.RECT_SHORT;
 		
@@ -38,11 +39,11 @@ public class StorageManagerTest extends GWTTestCase {
 		RectangleDistribution receivedDist = new RectangleDistribution(received);
 		for (int i = 0; i < received.length; i++) {
 			if (receivedDist.getIndex(x1, y1) == i) {
-				assertEquals("Non-standard value number 1", v1, received[i], 0.000000001);
+				assertEquals("Non-standard value number 1", v1, received[i], accuracy);
 			} else if (receivedDist.getIndex(x2, y2) == i) {
-				assertEquals("Non-standard value number 2", v2, received[i], 0.000000001);
+				assertEquals("Non-standard value number 2", v2, received[i], accuracy);
 			} else {
-				assertEquals("Standard value", 1.0, received[i], 0.0000000001);
+				assertEquals("Standard value", 1.0, received[i], accuracy);
 			}
 		}
 	}
@@ -50,7 +51,7 @@ public class StorageManagerTest extends GWTTestCase {
 	@Test
 	public void testSaveProtocol() {
 		// Create and save a protocol
-		final String key = "testdist1";
+		final String key = "testprot1";
 		final String geometry = GeometryNames.RECT_SHORT;
 		
 		final MixingProtocol protocol = new MixingProtocol();
