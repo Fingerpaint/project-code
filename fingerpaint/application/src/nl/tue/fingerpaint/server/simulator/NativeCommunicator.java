@@ -11,9 +11,19 @@ import nl.tue.fingerpaint.client.simulator.SimulatorService;
  */
 class NativeCommunicator {
 	
+	private static NativeCommunicator instance = new NativeCommunicator();
+	
 	static {
 		System.loadLibrary("NativeCommunicator");  
-    }  
+    }
+	
+	private NativeCommunicator() {
+		
+	}
+	
+	public static NativeCommunicator getInstance() {
+		return instance;
+	}
 	
 	/**
 	 * Communicates with the native simulation-service code to simulate a
@@ -29,7 +39,7 @@ class NativeCommunicator {
 	 * @param stepName The name of the step to simulate
 	 * @return The segregation of the simulation
 	 */
-	public native double simulate(String geometry, 
+	public native synchronized double simulate(String geometry, 
 								String mixer, 
 								double[] concentrationVector, 
 								double stepSize, 

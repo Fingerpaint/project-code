@@ -13,10 +13,6 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
  *
  */
 public class SimulatorServiceImpl extends RemoteServiceServlet implements SimulatorService {
-	
-	private static final NativeCommunicator nativeCommunicator = 
-			new NativeCommunicator();
-
 
 	/**
 	 * Random serial version uid
@@ -37,7 +33,7 @@ public class SimulatorServiceImpl extends RemoteServiceServlet implements Simula
 		
 		for (int i = 0; i < request.getProtocolRuns(); i++) {
 			for (int j = 0; j < request.getProtocol().getProgramSize(); j++) {
-				segregationPoint = nativeCommunicator.simulate(
+				segregationPoint = NativeCommunicator.getInstance().simulate(
 						request.getProtocol().getGeometry(), request.getMixer(), 
 						vector,
 						request.getProtocol().getStep(j).getStepSize(), 

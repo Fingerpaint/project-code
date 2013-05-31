@@ -17,7 +17,7 @@ public class NativeCommunicatorTest {
 				concentrationVector[i] = 0;
 			}
 		}
-		NativeCommunicator c = new NativeCommunicator();
+		NativeCommunicator c = NativeCommunicator.getInstance();
 		double segregation = c.simulate(
 				"Rectangle400x240", "Default", concentrationVector, 40, "TL");
 		
