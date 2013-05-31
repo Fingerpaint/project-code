@@ -5,13 +5,12 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.jsonmaker.gwt.client.JsonizerParser;
-
 import nl.tue.fingerpaint.client.MixingProtocol;
 import nl.tue.fingerpaint.client.MixingProtocol.MixingProtocolJsonizer;
-import nl.tue.fingerpaint.client.SimulationResult;
 import nl.tue.fingerpaint.client.storage.ResultStorage;
 import nl.tue.fingerpaint.client.storage.ResultStorage.ResultStorageJsonizer;
+
+import org.jsonmaker.gwt.client.JsonizerParser;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JsonUtils;
@@ -54,7 +53,8 @@ public class FingerpaintJsonizer {
 			} else if ((valStr = val.isString()) != null) {
 				result[i] = valStr.stringValue();
 			} else if ((valObj = val.isObject()) != null) {
-				result[i] = FingerpaintJsonizer.hashMapFromJSONObject(valObj, true);
+				result[i] = FingerpaintJsonizer.hashMapFromJSONObject(valObj,
+						true);
 			} else if ((valArr = val.isArray()) != null) {
 				result[i] = FingerpaintJsonizer.arrayFromJSONArray(valArr);
 			} else if ((valBool = val.isBoolean()) != null) {
@@ -145,7 +145,8 @@ public class FingerpaintJsonizer {
 				} else if ((tmpValObj = tmpVal.isObject()) != null) {
 					hm.put(key, hashMapFromJSONObject(tmpValObj, deep));
 				} else if ((tmpValArr = tmpVal.isArray()) != null) {
-					hm.put(key, FingerpaintJsonizer.arrayFromJSONArray(tmpValArr));
+					hm.put(key,
+							FingerpaintJsonizer.arrayFromJSONArray(tmpValArr));
 				} else if ((tmpValNr = tmpVal.isNumber()) != null) {
 					hm.put(key, tmpValNr.doubleValue());
 				} else if ((tmpValBool = tmpVal.isBoolean()) != null) {
@@ -185,7 +186,7 @@ public class FingerpaintJsonizer {
 	public static HashMap<String, Object> hashMapFromString(String jsonHashMap) {
 		return hashMapFromString(jsonHashMap, true);
 	}
-	
+
 	/**
 	 * Create a hash map that is represented by the given JSON string.
 	 * 
@@ -199,7 +200,8 @@ public class FingerpaintJsonizer {
 	 *         is malformed or does not represent an object, {@code null} is
 	 *         returned.
 	 */
-	public static HashMap<String, Object> hashMapFromString(String jsonHashMap, boolean deep) {
+	public static HashMap<String, Object> hashMapFromString(String jsonHashMap,
+			boolean deep) {
 		JSONValue val;
 		try {
 			val = JSONParser.parseStrict(jsonHashMap);
@@ -217,11 +219,21 @@ public class FingerpaintJsonizer {
 
 		return null;
 	}
-	
-	public static SimulationResult fromString(String jsonString) {
+
+	public static ResultStorage resultFromString(String jsonString) {
+		//System.out.println(jsonString);
 		ResultStorageJsonizer json = (ResultStorageJsonizer) GWT
 				.create(ResultStorageJsonizer.class);
-		return (SimulationResult) JsonizerParser.parse(json, jsonString);
+		//System.out.println(json == null ? "null" : "niet null");
+		return (ResultStorage) JsonizerParser.parse(json, jsonString);
+	}
+	
+	public static MixingProtocol protocolFromString(String jsonString) {
+		//System.out.println(jsonString);
+		MixingProtocolJsonizer json = (MixingProtocolJsonizer) GWT
+				.create(MixingProtocolJsonizer.class);
+		//System.out.println(json == null ? "null" : "niet null");
+		return (MixingProtocol) JsonizerParser.parse(json, jsonString);
 	}
 
 	/**
@@ -265,7 +277,7 @@ public class FingerpaintJsonizer {
 				.create(MixingProtocolJsonizer.class);
 		return ja.asString(protocol);
 	}
-	
+
 	/**
 	 * Creates a JSON string that is a representation of the given result.
 	 * 
@@ -329,13 +341,13 @@ public class FingerpaintJsonizer {
 		} else if (object instanceof Object[]) {
 			return toString((Object[]) object);
 		}
-		
+
 		return object.toString();
 	}
 
 	/**
-	 * Creates a JSON string that is a representation of the given array of objects, as
-	 * good as possible, by looking at the type of the objects.
+	 * Creates a JSON string that is a representation of the given array of
+	 * objects, as good as possible, by looking at the type of the objects.
 	 * 
 	 * @param objects
 	 *            The array of objects to be converted to a JSON string.
@@ -344,18 +356,18 @@ public class FingerpaintJsonizer {
 	public static String toString(Object[] objects) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("[");
-		
+
 		for (int i = 0; i < objects.length; i++) {
 			sb.append(toString(objects[i]));
 			if (i < objects.length - 1) {
 				sb.append(",");
 			}
 		}
-		
+
 		sb.append("]");
 		return sb.toString();
 	}
-	
+
 	/**
 	 * Return the contents of the given JSONString, but without quotes as
 	 * opposed to the standard {@link JSONString#toString()}.
