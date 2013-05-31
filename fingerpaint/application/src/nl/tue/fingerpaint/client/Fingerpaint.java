@@ -367,6 +367,8 @@ public class Fingerpaint implements EntryPoint {
 		CellBrowser tree = (new CellBrowser.Builder<Object>(model, null))
 				.build();
 
+		// tree.setStyleName("center");
+
 		// Add the tree to the root layout panel.
 		RootLayoutPanel.get().add(tree);
 	}
@@ -1028,19 +1030,23 @@ public class Fingerpaint implements EntryPoint {
 						.add(viewSingleGraphHorizontalPanel);
 				viewSingleGraphPopupPanel.add(viewSingleGraphVerticalPanel);
 
-				// TODO: Inside vert panel; Make buttons in hori-panel appear
+				// TODO: Inside the vert panel; Make buttons in hori-panel
+				// appear
 				// below Graph
 
-				viewSingleGraphPopupPanel
-						.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
-							public void setPosition(int offsetWidth,
-									int offsetHeight) {
-								int left = (Window.getClientWidth() - offsetWidth) / 2;
-								int top = (Window.getClientHeight() - offsetHeight) / 2;
-								viewSingleGraphPopupPanel.setPopupPosition(
-										left, top);
-							}
-						});
+				viewSingleGraphPopupPanel.center();
+				viewSingleGraphPopupPanel.show();
+				
+				
+//						.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
+//							public void setPosition(int offsetWidth,
+//									int offsetHeight) {
+//								int left = (Window.getClientWidth() - offsetWidth) / 2;
+//								int top = (Window.getClientHeight() - offsetHeight) / 2;
+//								viewSingleGraphPopupPanel.setPopupPosition(
+//										left, top);
+//							}
+//						});
 			}
 		});
 
@@ -1461,15 +1467,15 @@ public class Fingerpaint implements EntryPoint {
 					resultsFlexTable.setWidget(row, 1, removeStockButton);
 				}
 
-				removeResultsPanel
-						.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
-							public void setPosition(int offsetWidth,
-									int offsetHeight) {
-								int left = (Window.getClientWidth() - offsetWidth) / 2;
-								int top = (Window.getClientHeight() - offsetHeight) / 2;
-								removeResultsPanel.setPopupPosition(left, top);
-							}
-						});
+				removeResultsPanel.center();
+//						.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
+//							public void setPosition(int offsetWidth,
+//									int offsetHeight) {
+//								int left = (Window.getClientWidth() - offsetWidth) / 2;
+//								int top = (Window.getClientHeight() - offsetHeight) / 2;
+//								removeResultsPanel.setPopupPosition(left, top);
+//							}
+//						});
 			}
 		});
 
