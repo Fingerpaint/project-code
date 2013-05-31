@@ -371,6 +371,9 @@ public class Fingerpaint implements EntryPoint {
 
 		// Add the tree to the root layout panel.
 		RootLayoutPanel.get().add(tree);
+		
+		//for debugging purposes
+		tree.ensureDebugId("cell");
 	}
 
 	/*
@@ -622,6 +625,9 @@ public class Fingerpaint implements EntryPoint {
 
 			// Add panel to RootPanel
 			RootPanel.get().add(panel);
+			
+			//for debugging
+			viewSingleGraph.ensureDebugId("viewGraph");
 		}
 
 		/**
@@ -983,8 +989,7 @@ public class Fingerpaint implements EntryPoint {
 
 	private void createViewSingleGraphButton() {
 		viewSingleGraph = new Button("View single graph");
-		// TODO: Uncomment when no longer needed for testing
-		// viewSingleGraph.setEnabled(false);
+		viewSingleGraph.setEnabled(false);
 		viewSingleGraphPopupPanel = new PopupPanel();
 		viewSingleGraphPopupPanel.setModal(true);
 		viewSingleGraphVerticalPanel = new VerticalPanel();
