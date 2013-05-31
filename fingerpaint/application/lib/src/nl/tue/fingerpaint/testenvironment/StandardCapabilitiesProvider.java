@@ -41,9 +41,9 @@ public class StandardCapabilitiesProvider implements CapabilitiesProvider {
 	 */
 	private static final DesiredCapabilities[] BROWSERS = new DesiredCapabilities[] {
 		DesiredCapabilities.firefox(),
-		DesiredCapabilities.internetExplorer(),
-		DesiredCapabilities.chrome(),
-		DesiredCapabilities.safari()
+		//DesiredCapabilities.internetExplorer(),
+		//DesiredCapabilities.chrome(),
+		//DesiredCapabilities.safari()
 	};
 	
 	/**
@@ -51,9 +51,9 @@ public class StandardCapabilitiesProvider implements CapabilitiesProvider {
 	 */
 	private static final DesiredCapabilities[] SEQUENTIAL_BROWSERS = new DesiredCapabilities[] {
 		DesiredCapabilities.firefox(),
-		DesiredCapabilities.internetExplorer(),
-		DesiredCapabilities.chrome(),
-		DesiredCapabilities.safari()
+		//DesiredCapabilities.internetExplorer(),
+		//DesiredCapabilities.chrome(),
+		//DesiredCapabilities.safari()
 	};
 	
 	/**
