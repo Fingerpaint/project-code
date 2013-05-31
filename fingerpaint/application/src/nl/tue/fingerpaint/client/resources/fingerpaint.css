@@ -1,6 +1,4 @@
-body {
-	margin: 0;
-	/* Background colors: http://w3.tue.nl/en/services/cec/corporate_identity/housestyle_guidelines/colors/ */
+/* Background colors: http://w3.tue.nl/en/services/cec/corporate_identity/housestyle_guidelines/colors/ */
 /* background-color:#FF9A00; /* orange */
 /* background-color:#D6004A; /* redish-pink */
 /* background-color:#0092B5; /* sea-blue */
@@ -10,15 +8,23 @@ body {
 /* background-color:#00AC82; /* green */
 /* background-color:#84D200; /* light-green */
 /* background-color:#FFDD00; /* yellow */
-}
+/* background-color:#D6007B; /* pink */
+
 
 /* only TOP: Auto-aanvul voor alle richtingen
    TOP & RIGHT = TOP/BOTTOM & RIGHT/LEFT are equal */
-   
-   /* . is een class; Kan je aan meerdere hangen
+/* . is een class; Kan je aan meerdere hangen
    #is alles met een ID; Is voor 1 element */
-   
-   
+
+body {
+	background-image: url("http://richrock.com/gifs/optical-illusion-wheels-circles-rotating.png"); /* insert nice picture here */
+	background-position: center top;
+	background-repeat: no-repeat; 
+	background-attachment: fixed;
+	font-family: Verdana !important;
+	font-size: 15px !important;
+}
+
 .gwt-PopupPanel.popupContent {
 	border: 1px solid black;
 }
@@ -54,6 +60,10 @@ body {
 	color: #FFF;
 }
 
+#protPanel {
+	border: 0px;
+}
+
 /* remove list header row */
 .removeListHeader {
 	background-color: #2062B8;
@@ -61,7 +71,7 @@ body {
 	font-style: italic;
 }
 
-.center{
+.center {
 	margin-top: auto;
 	margin-right: auto;
 	margin-bottom: auto;
@@ -73,4 +83,67 @@ body {
 	border: 1px solid silver;
 	padding: 2px;
 	margin-bottom: 6px;
+}
+
+#menuPanel {
+	position: absolute;
+	right: 4px;
+}
+
+.gwt-Button,
+.gwt-ToggleButton {
+	/* For some reason, the buttons do not inherit from the body */
+/* 	font-family: TUE Meta; */
+/* 	font-size: 20px; */
+	font-weight: bold;
+	border: 0px;
+	margin: 2px 2px;
+	width: 100%;
+	padding: 10px 5px;
+	background: #d6007b;
+	color: #ffffff;
+}
+
+.gwt-Button:hover,
+.gwt-ToggleButton:hover {
+	background: -prefix-linear-gradient(bottom, #d6007b, #a30049);
+	background: linear-gradient(to top, #d6007b, #a30049);
+}
+
+.gwt-Button:active,
+.gwt-ToggleButton:active {
+	background: -prefix-linear-gradient(bottom, #d6007b, #810027);
+	background: linear-gradient(to top, #d6007b, #810027);
+}
+
+/* Fixes the running off the screen of the ToggleButton that toggles the colour */
+.gwt-ToggleButton {
+	text-align: center;
+	padding-left: 0px;
+	padding-right: 0px;
+	font-size: 13px;'
+}
+
+.gwt-TextArea {
+	resize: none;
+}
+
+#protLabel {
+	font-family: monospace;
+	width: 220px;
+	border: 1px solid;
+	border-color: #d6007b;
+	padding: 2px;
+}
+
+* {
+    outline: none;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+.spinnerNumberBox {
+	height: 42px;
+	font-size: 42px;
+	width: 180px;
+	text-align: right;
 }
