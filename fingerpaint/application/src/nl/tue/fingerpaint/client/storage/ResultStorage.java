@@ -17,16 +17,6 @@ public class ResultStorage {
 	private double[] segregation;
 	
 	private int nrSteps;
-	
-	public ResultStorage(String geom, String mix, double[] dist,
-			MixingProtocol prot, double[] segr, int steps) {
-		geometry = geom;
-		mixer = mix;
-		distribution = dist;
-		protocol = prot;
-		segregation = segr;
-		nrSteps = steps;
-	}
 
 	public String getGeometry() {
 		return geometry;
@@ -68,9 +58,6 @@ public class ResultStorage {
 		this.segregation = segregation;
 	}
 
-	public interface ResultStorageJsonizer extends Jsonizer {
-	}
-
 	public int getNrSteps() {
 		return nrSteps;
 	}
@@ -79,9 +66,6 @@ public class ResultStorage {
 		this.nrSteps = nrSteps;
 	}
 	
-	
-	
-	
-	
+	public interface ResultStorageJsonizer extends Jsonizer {}
 
 }
