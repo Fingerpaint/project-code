@@ -10,25 +10,43 @@ import com.google.gwt.visualization.client.DataView;
 import com.google.gwt.visualization.client.visualizations.LineChart;
 import com.google.gwt.visualization.client.visualizations.LineChart.Options;
 
+/**
+ * Class for the creation of segregation graphs
+ * 
+ * HOW TO CALL THIS CLASS: Load the visualisation API, passing the
+ * onLoadCallback to be called when loading is done.
+ * VisualizationUtils.loadVisualizationApi(onLoadCallback, LineChart.PACKAGE);
+ * 
+ * @author Group Fingerpaint
+ */
 public class GraphVisualisator {
-	// HOW TO CALL THIS CLASS:
-	// Load the visualization api, passing the onLoadCallback to be called
-	// when loading is done.
-	// VisualizationUtils.loadVisualizationApi(onLoadCallback,
-	// LineChart.PACKAGE);
 
+	/**
+	 * ArrayList containing all the lists of segregation points that have to be
+	 * displayed in the graph.
+	 */
 	private ArrayList<double[]> segregationPoints = new ArrayList<double[]>();
+
+	/**
+	 * ArrayList containing the names of the mixing runs corresponding to the
+	 * lists of segregation points.
+	 */
 	private ArrayList<String> mixingRunNames = new ArrayList<String>();
 
+	/** The amount of points to be displayed along the x-axis */
 	private int xAxisLength = 0;
 
 	/**
-	 * Returns the runnable object to initiate drawing the graph in Fingerpaint.createGraph()
+	 * Returns the runnable object to initiate drawing the graph in
+	 * Fingerpaint.createGraph()
 	 * 
-	 * @param panel The panel the graph will be added to
-	 * @param names List of names of the different plots in the chart
-	 * @param performance Values of the different plots
-	 * @return
+	 * @param panel
+	 *            The panel the graph will be added to
+	 * @param names
+	 *            List of names of the different plots in the chart
+	 * @param performance
+	 *            Values of the different plots
+	 * @return The runnable object to initiate drawing the graph
 	 */
 	public Runnable createGraph(Panel panel, ArrayList<String> names,
 			ArrayList<double[]> performance) {
@@ -39,30 +57,52 @@ public class GraphVisualisator {
 		return getOnLoadCallBack(panel);
 	}
 
+	/**
+	 * Returns the runnable object to initiate drawing the graph.
+	 * 
+	 * @param panel
+	 *            The panel the graph will be added to
+	 * @return The runnable object to initiate drawing the graph
+	 */
 	private Runnable getOnLoadCallBack(final Panel panel) {
-		// Create a callback to be called when the visualization API
+		// Create a callback to be called when the visualisation API
 		// has been loaded.
 		return new Runnable() {
 			public void run() {
-				// Create a line chart visualization.
+				// Create a line chart visualisation.
 				LineChart lc = new LineChart(createTable(), createOptions());
 				panel.add(lc);
 			}
 		};
 	}
 
+	/**
+	 * Adds a list of segregation points to {@code segregationPoints}.
+	 * 
+	 * @param newPerformance
+	 *            The list of segregation points to be added
+	 */
 	private void addSegregationResult(double[] newPerformance) {
 		xAxisLength = Math.max(xAxisLength, newPerformance.length);
 		this.segregationPoints.add(newPerformance);
 	}
 
+	/**
+	 * Clears the list of with lists of segregation points
+	 */
 	public void clearSegregationResults() {
 		segregationPoints.clear();
 		mixingRunNames.clear();
 	}
 
+	/**
+	 * Creates and returns the options to set to the graph.
+	 * 
+	 * @return The options to be set
+	 */
 	private Options createOptions() {
 		Options options = Options.create();
+		// TODO: What happens when this is not hard-coded anymore?
 		options.setWidth(400);
 		options.setHeight(240);
 		options.setTitle("Mixing Performance");
@@ -71,31 +111,27 @@ public class GraphVisualisator {
 		return options;
 	}
 
+	/**
+	 * Returns the table to be displayed in the graph.
+	 * 
+	 * @return The AbstractDataTable containing all datapoints from
+	 *         {@code segregationPoints}
+	 */
 	private AbstractDataTable createTable() {
 		// Underlying data
 		DataTable data = DataTable.create();
 
-		// TODO: Create as many columns as #graphs when viewing multiple
-		// graphs
 		data.addColumn(ColumnType.STRING, "Number of steps");
 		for (int i = 0; i < mixingRunNames.size(); i++) {
 			data.addColumn(ColumnType.NUMBER, mixingRunNames.get(i));
 		}
 
-		// data.setValue(rowIndex, columnIndex, value)
-		// data.setValue(x-axis, mixingRun#, y-axis(value) )
 		data.addRows(xAxisLength);
-
 		for (int i = 0; i < segregationPoints.size(); i++) {
 			for (int j = 0; j < segregationPoints.get(i).length; j++) {
-				// set values x-axis
 				data.setValue(j, 0, Integer.toString(j + 1));
 				data.setValue(j, i + 1, segregationPoints.get(i)[j]);
-				// data.setValue(i, 2, segregationPoints2[i]);//2nd line in
-				// the
-				// graph
 			}
-
 		}
 
 		// Data view -- read only, and no location column

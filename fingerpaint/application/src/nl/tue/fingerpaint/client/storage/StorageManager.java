@@ -5,9 +5,11 @@ import java.util.HashMap;
 import java.util.List;
 
 import nl.tue.fingerpaint.client.MixingProtocol;
+import nl.tue.fingerpaint.client.NotificationPanel;
 import nl.tue.fingerpaint.client.json.FingerpaintJsonizer;
 import nl.tue.fingerpaint.shared.GeometryNames;
 
+import com.google.gwt.core.client.JavaScriptException;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.storage.client.Storage;
 import com.google.gwt.storage.client.StorageMap;
@@ -137,15 +139,29 @@ public class StorageManager {
 			// otherwise, we do
 			if (!sm.containsKey(firstLevelKey)) {
 				if (firstLevelKey.equals(KEY_RESULTS)) {
-					localStorage.setItem(firstLevelKey, FingerpaintJsonizer
-							.toString(new HashMap<String, Object>()));
+					try {
+						localStorage.setItem(firstLevelKey, FingerpaintJsonizer
+								.toString(new HashMap<String, Object>()));
+					} catch (JavaScriptException e) {
+						if (e.getName().equals("QUOTA_EXCEEDED_ERR")) {
+							new NotificationPanel("Storage capacity exceeded.")
+									.show(3000);
+						}
+					}
 				} else {
 					HashMap<String, Object> secondLevel = new HashMap<String, Object>();
 					for (String secondLevelKey : secondLevelKeys) {
 						secondLevel.put(secondLevelKey, "{}");
 					}
-					localStorage.setItem(firstLevelKey,
-							FingerpaintJsonizer.toString(secondLevel));
+					try {
+						localStorage.setItem(firstLevelKey,
+								FingerpaintJsonizer.toString(secondLevel));
+					} catch (JavaScriptException e) {
+						if (e.getName().equals("QUOTA_EXCEEDED_ERR")) {
+							new NotificationPanel("Storage capacity exceeded.")
+									.show(3000);
+						}
+					}
 				}
 			} else if (!firstLevelKey.equals(KEY_RESULTS)) {
 				HashMap<String, Object> secondLevel = FingerpaintJsonizer
@@ -158,8 +174,15 @@ public class StorageManager {
 					}
 				}
 				if (changed) {
-					localStorage.setItem(firstLevelKey,
-							FingerpaintJsonizer.toString(secondLevel));
+					try {
+						localStorage.setItem(firstLevelKey,
+								FingerpaintJsonizer.toString(secondLevel));
+					} catch (JavaScriptException e) {
+						if (e.getName().equals("QUOTA_EXCEEDED_ERR")) {
+							new NotificationPanel("Storage capacity exceeded.")
+									.show(3000);
+						}
+					}
 				}
 			}
 		}
@@ -406,9 +429,15 @@ public class StorageManager {
 					.get(geometry);
 			secondLevel.put(key, FingerpaintJsonizer.toString(value));
 			firstLevel.put(geometry, FingerpaintJsonizer.toString(secondLevel));
-
-			localStorage.setItem(KEY_INITDIST,
-					FingerpaintJsonizer.toString(firstLevel));
+			try {
+				localStorage.setItem(KEY_INITDIST,
+						FingerpaintJsonizer.toString(firstLevel));
+			} catch (JavaScriptException e) {
+				if (e.getName().equals("QUOTA_EXCEEDED_ERR")) {
+					new NotificationPanel("Storage capacity exceeded.")
+							.show(3000);
+				}
+			}
 
 			return true;
 		}
@@ -470,8 +499,15 @@ public class StorageManager {
 					.get(geometry);
 			secondLevel.put(key, FingerpaintJsonizer.toString(protocol));
 			firstLevel.put(geometry, FingerpaintJsonizer.toString(secondLevel));
-			localStorage.setItem(KEY_PROTOCOLS,
-					FingerpaintJsonizer.toString(firstLevel));
+			try {
+				localStorage.setItem(KEY_PROTOCOLS,
+						FingerpaintJsonizer.toString(firstLevel));
+			} catch (JavaScriptException e) {
+				if (e.getName().equals("QUOTA_EXCEEDED_ERR")) {
+					new NotificationPanel("Storage capacity exceeded.")
+							.show(3000);
+				}
+			}
 			return true;
 		}
 
@@ -494,15 +530,13 @@ public class StorageManager {
 	}
 
 	/**
-	 * Save a mixing protocol to the local storage. If the name already exists,
-	 * do not attempt to overwrite.
+	 * Save a mixing result to the local storage. If the name already exists, do
+	 * not attempt to overwrite.
 	 * 
-	 * @param geometry
-	 *            The geometry to store the distribution under.
 	 * @param key
-	 *            The name of the protocol.
-	 * @param protocol
-	 *            The protocol to be saved.
+	 *            The name of the result.
+	 * @param result
+	 *            The result to be saved.
 	 * @param overwrite
 	 *            If the value should be overwritten if the name is already in
 	 *            use.
@@ -521,8 +555,14 @@ public class StorageManager {
 		HashMap<String, Object> firstLevel = FingerpaintJsonizer
 				.hashMapFromString(localStorage.getItem(KEY_RESULTS));
 		firstLevel.put(key, FingerpaintJsonizer.toString(result));
-		localStorage.setItem(KEY_RESULTS,
-				FingerpaintJsonizer.toString(firstLevel));
+		try {
+			localStorage.setItem(KEY_RESULTS,
+					FingerpaintJsonizer.toString(firstLevel));
+		} catch (JavaScriptException e) {
+			if (e.getName().equals("QUOTA_EXCEEDED_ERR")) {
+				new NotificationPanel("Storage capacity exceeded.").show(3000);
+			}
+		}
 		return true;
 
 	}
@@ -541,8 +581,15 @@ public class StorageManager {
 		for (String firstLevelKey : firstLevel.keySet()) {
 			if (firstLevelKey.equals(key)) {
 				firstLevel.remove(key);
-				localStorage.setItem(KEY_RESULTS,
-						FingerpaintJsonizer.toString(firstLevel));
+				try {
+					localStorage.setItem(KEY_RESULTS,
+							FingerpaintJsonizer.toString(firstLevel));
+				} catch (JavaScriptException e) {
+					if (e.getName().equals("QUOTA_EXCEEDED_ERR")) {
+						new NotificationPanel("Storage capacity exceeded.")
+								.show(3000);
+					}
+				}
 				return true;
 			}
 		}

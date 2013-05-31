@@ -37,23 +37,32 @@ import com.google.gwt.user.client.ui.RootPanel;
  */
 public abstract class Geometry {
 
-	/**
-	 * Internal representation of the geometry
-	 */
+	/** Internal representation of the geometry */
 	protected double[] distribution;
 
-	/**
-	 * The canvas and its parameters
-	 */
+	/** The canvas to draw on */
 	protected Canvas canvas;
+	/** The context belonging to the canvas */
 	protected Context2d context;
+	/** The factor by which the base dimension of the geometry are multiplied */
 	protected int factor;
 
 	/**
-	 * Parameters for the offset of the drawing area on the canvas
+	 * Distance between left border of the canvas and the left border of the
+	 * drawing area.
 	 */
 	protected static final int X_OFFSET = 5;
+
+	/**
+	 * Distance between the top border of the canvas and the top border of the
+	 * drawing area.
+	 */
 	protected static final int TOP_OFFSET = 30;
+
+	/**
+	 * Minimum distance between the bottom border of the canvas and the bottom
+	 * border of the drawing area.
+	 */
 	protected static final int BOTTOM_OFFSET = 30;
 
 	/**
@@ -62,77 +71,72 @@ public abstract class Geometry {
 	 */
 	protected final static int HEIGHT_OF_WALL = 20;
 
-	/**
-	 * The current drawing tool;
-	 */
+	/** The current drawing tool */
 	protected DrawingTool tool;
-
-	/**
-	 * The image to draw with
-	 */
+	/** The image to draw with */
 	protected ImageElement toolImage;
-
-	/**
-	 * The extra width of the drawing tool. Equal to factor * tool.radius
-	 */
+	/** The extra width of the drawing tool. Equal to factor * tool.radius */
 	protected int displacement;
-
-	/**
-	 * Reference to the current MouseMoveHandler attached to the canvas
-	 */
+	/** Reference to the current MouseMoveHandler attached to the canvas */
 	private HandlerRegistration mouseMove;
-	
-	/**
-	 * 
-	 */
+	/** Reference to the current touchMoveHandler attached to the canvas */
 	private HandlerRegistration touchMove;
 
-	/**
-	 * Parameters to handle the drawing
-	 */
+	/** X-position of the previous Mouse/TouchMoveEvent, relative to the canvas */
 	private int previousX;
+	/** Y-position of the previous Mouse/TouchMoveEvent, relative to the canvas */
 	private int previousY;
+	/** {@code true} if the user is currently drawing, {@code false} otherwise */
 	private boolean drawing;
+	/** The current colour to draw with */
 	protected CssColor currentColor;
 
 	/**
-	 * Stores the x-coordinate of the mouse event that initiates swiping.
+	 * Stores the x-coordinate of the mouse event that initiates a wall
+	 * movement.
 	 */
 	protected int swipeStartX;
 
 	/**
-	 * Stores the y-coordinate of the mouse event that initiates swiping.
+	 * Stores the y-coordinate of the mouse event that initiates a wall
+	 * movement.
 	 */
 	protected int swipeStartY;
 
 	/**
+	 * {@code true} if the user is currently defining a step, {@code false}
+	 * otherwise
+	 */
+	private boolean definingStep;
+
+	/** {@code true} if the top wall is being moved, {@code false} otherwise */
+	protected boolean topWallStep;
+
+	/**
 	 * Threshold in pixels to decide when a large enough swipe has been carried
-	 * out.
+	 * out to define a protocol step.
 	 */
 	protected final static int SWIPE_THRESHOLD = 20;
 
-	/**
-	 * Parameters for the looks of the walls
-	 */
+	/** The background colour of the walls */
 	protected static CssColor wallColor = CssColor.make("gray");
+	/** The colour of the arrows on the walls */
 	protected static CssColor wallStripeColor = CssColor.make("black");
+	/** The width of the arrows on the walls */
 	protected static int STRIPE_WIDTH = 5;
+	/** The distance between two arrows */
 	protected static int STRIPE_INTERVAL = 50;
+	/** The total width of a single arrow */
 	protected static int STRIPE_SLOPE = 5;
 
-	/**
-	 * Parameters for the wall animation
-	 */
+	/** The timer used for animating wall movement */
 	private Timer animationTimer;
+	/** The time between two 'frames' of the animation, in milliseconds */
 	private static int REFRESH_INTERVAL = 20;
+	/** The distance to move a wall in a single animation 'frame' */
 	private static int ANIMATION_DISTANCE = 3;
+	/** The amount of pixels after which the speed of the movement is increased */
 	private static int ACCELERATION_DISTANCE = 50;
-
-	/**
-	 * Parameters for defining a mixing step
-	 */
-	private boolean definingStep;
-	protected boolean topWallStep;
 
 	// ----Constructor-----------------------------------------------
 	/**
@@ -167,7 +171,7 @@ public abstract class Geometry {
 
 		// Initialise drawing colour to black
 		setColor(CssColor.make("black"));
-		
+
 		// Surrounded with try-catch for testing purposes
 		try {
 			// Initialise drawing tool to a square with radius 3
@@ -186,7 +190,13 @@ public abstract class Geometry {
 	public Canvas getCanvas() {
 		return this.canvas;
 	}
-	
+
+	/**
+	 * Sets the size of the drawing tool
+	 * 
+	 * @param size
+	 *            The size to set
+	 */
 	public void setDrawingToolSize(int size) {
 		tool.setRadius(size);
 		setDrawingTool(tool);
@@ -268,6 +278,9 @@ public abstract class Geometry {
 	/**
 	 * Sets the factor to multiply the outline of the geometry with.
 	 * 
+	 * @param factor
+	 *            The factor to set
+	 * 
 	 * @post The multiply factor has been set to @param{factor}
 	 */
 	public void setFactor(int factor) {
@@ -347,28 +360,28 @@ public abstract class Geometry {
 				Element elem = event.getRelativeElement();
 				int x = event.getRelativeX(elem);
 				int y = event.getRelativeY(elem);
-				
-				onDragStart(elem, x, y);
+
+				onDragStart(x, y);
 
 			}
 
 		});
-		
+
 		canvas.addTouchStartHandler(new TouchStartHandler() {
 
 			@Override
 			public void onTouchStart(TouchStartEvent event) {
 				event.stopPropagation();
 				event.preventDefault();
-				
+
 				Element elem = event.getRelativeElement();
 				int x = event.getTouches().get(0).getRelativeX(elem);
 				int y = event.getTouches().get(0).getRelativeY(elem);
-				
-				onDragStart(elem, x, y);
-				
+
+				onDragStart(x, y);
+
 			}
-			
+
 		});
 
 		canvas.addMouseUpHandler(new MouseUpHandler() {
@@ -381,26 +394,26 @@ public abstract class Geometry {
 				Element elem = event.getRelativeElement();
 				int x = event.getRelativeX(elem);
 				int y = event.getRelativeY(elem);
-				
-				onDragEnd(elem, x, y);
+
+				onDragEnd(x, y);
 			}
 
 		});
-		
+
 		canvas.addTouchEndHandler(new TouchEndHandler() {
 
 			@Override
 			public void onTouchEnd(TouchEndEvent event) {
 				event.stopPropagation();
 				event.preventDefault();
-				
+
 				Element elem = event.getRelativeElement();
 				int x = event.getTouches().get(0).getRelativeX(elem);
 				int y = event.getTouches().get(0).getRelativeY(elem);
-				
-				onDragEnd(elem, x, y);
+
+				onDragEnd(x, y);
 			}
-			
+
 		});
 
 		/*
@@ -412,21 +425,29 @@ public abstract class Geometry {
 				onDragOut();
 			}
 		});
-		
+
 		canvas.addTouchCancelHandler(new TouchCancelHandler() {
 
 			@Override
 			public void onTouchCancel(TouchCancelEvent event) {
 				event.stopPropagation();
 				event.preventDefault();
-				
+
 				onDragOut();
 			}
-			
+
 		});
 	}
-	
-	public void onDragStart(Element elem, int x, int y) {
+
+	/**
+	 * Code to execute on a MouseDown or TouchStart event.
+	 * 
+	 * @param x
+	 *            The x-coordinate of the event, relative to the canvas
+	 * @param y
+	 *            The y-coordinate of the event, relative to the canvas
+	 */
+	public void onDragStart(int x, int y) {
 
 		if (isInsideDrawingArea(x - X_OFFSET, y - TOP_OFFSET)) {
 			// User started drawing the concentration distribution
@@ -441,50 +462,48 @@ public abstract class Geometry {
 
 			// Draw the first image of the drawing tool
 			context.drawImage(toolImage, Math.max(x - displacement, 0)
-					+ X_OFFSET, Math.max(y - displacement, 0)
-					+ TOP_OFFSET);
-			mouseMove = canvas
-					.addMouseMoveHandler(new MouseMoveHandler() {
-						/*
-						 * Draw a line from the previous to the next
-						 * point of the mouseEvent took place within the
-						 * drawing area. Otherwise remove
-						 * MouseMoveHandler.
-						 */
-						@Override
-						public void onMouseMove(MouseMoveEvent e) {
-							Element elem = e.getRelativeElement();
-							int x = e.getRelativeX(elem) - X_OFFSET;
-							int y = e.getRelativeY(elem) - TOP_OFFSET;
-							if (isInsideDrawingArea(x, y)) {
-								drawLine(previousX, previousY, x, y);
-								previousX = x;
-								previousY = y;
-							}
-						}
-					});
-			
+					+ X_OFFSET, Math.max(y - displacement, 0) + TOP_OFFSET);
+			mouseMove = canvas.addMouseMoveHandler(new MouseMoveHandler() {
+				/*
+				 * Draw a line from the previous to the next point of the
+				 * mouseEvent took place within the drawing area. Otherwise
+				 * remove MouseMoveHandler.
+				 */
+				@Override
+				public void onMouseMove(MouseMoveEvent e) {
+					Element elem = e.getRelativeElement();
+					int x = e.getRelativeX(elem) - X_OFFSET;
+					int y = e.getRelativeY(elem) - TOP_OFFSET;
+					if (isInsideDrawingArea(x, y)) {
+						drawLine(previousX, previousY, x, y);
+						previousX = x;
+						previousY = y;
+					}
+				}
+			});
+
 			touchMove = canvas.addTouchMoveHandler(new TouchMoveHandler() {
 
 				@Override
 				public void onTouchMove(TouchMoveEvent event) {
 					event.stopPropagation();
 					event.preventDefault();
-					
+
 					Element elem = event.getRelativeElement();
-					int x = event.getTouches().get(0).getRelativeX(elem) - X_OFFSET;
-					int y = event.getTouches().get(0).getRelativeY(elem) - TOP_OFFSET;
+					int x = event.getTouches().get(0).getRelativeX(elem)
+							- X_OFFSET;
+					int y = event.getTouches().get(0).getRelativeY(elem)
+							- TOP_OFFSET;
 					if (isInsideDrawingArea(x, y)) {
 						drawLine(previousX, previousY, x, y);
 						previousX = x;
 						previousY = y;
 					}
-					
+
 				}
-				
+
 			});
-			
-			
+
 		} else if (isInsideTopWall(x, y) || isInsideBottomWall(x, y)) {
 			// User started defining a step of the protocol
 			definingStep = true;
@@ -499,50 +518,63 @@ public abstract class Geometry {
 			}
 
 			startDefineMixingStep(x, y);
-			mouseMove = canvas
-					.addMouseMoveHandler(new MouseMoveHandler() {
+			mouseMove = canvas.addMouseMoveHandler(new MouseMoveHandler() {
 
-						@Override
-						public void onMouseMove(MouseMoveEvent event) {
-							Element elem = event.getRelativeElement();
-							int currentX = event.getRelativeX(elem);
+				@Override
+				public void onMouseMove(MouseMoveEvent event) {
+					Element elem = event.getRelativeElement();
+					int currentX = event.getRelativeX(elem);
 
-							removeClippingArea();
-							fillWall(currentX - swipeStartX,
-									topWallStep);
-							clipGeometryOutline();
-						}
+					removeClippingArea();
+					fillWall(currentX - swipeStartX, topWallStep);
+					clipGeometryOutline();
+				}
 
-					});
-			
+			});
+
 			touchMove = canvas.addTouchMoveHandler(new TouchMoveHandler() {
 
 				@Override
 				public void onTouchMove(TouchMoveEvent event) {
 					event.stopPropagation();
 					event.preventDefault();
-					
+
 					Element elem = event.getRelativeElement();
 					int currentX = event.getTouches().get(0).getRelativeX(elem);
 
 					removeClippingArea();
-					fillWall(currentX - swipeStartX,
-							topWallStep);
+					fillWall(currentX - swipeStartX, topWallStep);
 					clipGeometryOutline();
-					
+
 				}
-				
+
 			});
 		}
 	}
 
-	public void onDragEnd(Element elem, int x, int y) {
+	/**
+	 * Code to execute on a MouseUp or TouchEnd event.
+	 * 
+	 * @param x
+	 *            The x-coordinate of the event, relative to the canvas
+	 * @param y
+	 *            The y-coordinate of the event, relative to the canvas
+	 */
+	public void onDragEnd(int x, int y) {
 		if (definingStep) {
 			stopDefineMixingStep(x, y);
 		}
 		removeMouseMoveHandler(x - swipeStartX);
 	}
-	
+
+	/**
+	 * Code to execute on a MouseOut or TouchCancel event.
+	 * 
+	 * @param x
+	 *            The x-coordinate of the event, relative to the canvas
+	 * @param y
+	 *            The y-coordinate of the event, relative to the canvas
+	 */
 	public void onDragOut() {
 		removeClippingArea();
 		fillWall(0, topWallStep);
@@ -550,11 +582,15 @@ public abstract class Geometry {
 
 		removeMouseMoveHandler(0);
 	}
-	
+
 	/**
 	 * Removes the mouseMoveHandler from the canvas, if it is present. If
 	 * defining a step has been ended, an animation is started to move the walls
 	 * back to their initial position.
+	 * 
+	 * @param xStop
+	 *            The x-coordinate, relative to the start coordinates of the
+	 *            mouse movement, at which the mouse movement was ended.
 	 */
 	private void removeMouseMoveHandler(final int xStop) {
 		if (drawing) {
@@ -888,18 +924,36 @@ public abstract class Geometry {
 	 */
 	abstract public void resetDistribution();
 
-	// TODO: Add javadoc to methods below
-
+	/** ArrayList of stepAddedListeners connected to this geometry */
 	protected ArrayList<StepAddedListener> stepAddedListeners = new ArrayList<StepAddedListener>();
 
+	/** Interface for a listener for protocol steps */
 	public interface StepAddedListener {
+		/**
+		 * Code to execute when a mixing step is being added to the protocol
+		 * 
+		 * @param step
+		 *            The mixing step that is being added.
+		 */
 		public void onStepAdded(MixingStep step);
 	}
 
+	/**
+	 * Adds a stepAddedListener to the list of listeners.
+	 * 
+	 * @param l
+	 *            The listener to be added
+	 */
 	public void addStepAddedListener(StepAddedListener l) {
 		stepAddedListeners.add(l);
 	}
 
+	/**
+	 * Removes a stepAddedListner from the list of listeners.
+	 * 
+	 * @param l
+	 *            The listener to be removed
+	 */
 	public void removeStepAddedListener(StepAddedListener l) {
 		stepAddedListeners.remove(l);
 	}

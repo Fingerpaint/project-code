@@ -30,6 +30,9 @@
 
 	<!--  Add neccessary inherits for gwt chart tools -->
 	<inherits name='com.google.gwt.visualization.Visualization'/>
+	
+	<!-- Enables debugging options, remove in the final version -->
+	<inherits name="com.google.gwt.user.Debug"/>
 
 	<!-- gwt-log -->
 	<inherits name="com.google.gwt.logging.Logging"/>

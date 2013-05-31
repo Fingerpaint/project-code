@@ -11,14 +11,14 @@ import com.google.gwt.canvas.dom.client.ImageData;
  */
 public abstract class DrawingTool {
 
-	// The radius of the drawing tool
+	/** The radius of the drawing tool */
 	protected int radius;
 
 	// --Constructors-------------------------------------------
 	/**
 	 * Constructs a drawing tool with radius r
 	 * 
-	 * @param r
+	 * @param radius
 	 *            The radius of the drawing tool
 	 */
 	public DrawingTool(int radius) {
@@ -26,16 +26,22 @@ public abstract class DrawingTool {
 	}
 
 	// --Getters and Setters----------------------------------------
+
+	/**
+	 * Gives the radius of this drawing tool
+	 * 
+	 * @return The radius of the drawing tool
+	 */
+	public int getRadius() {
+		return this.radius;
+	}
+
 	/**
 	 * Constructs a circle drawing tool with radius r
 	 * 
 	 * @param r
 	 *            The radius of the drawing tool
 	 */
-	public int getRadius() {
-		return this.radius;
-	}
-	
 	public void setRadius(int r) {
 		radius = r;
 	}
@@ -69,7 +75,10 @@ public abstract class DrawingTool {
 	 *            The ImageData object to draw the drawing tool on
 	 * @param colour
 	 *            The colour to create the drawing tool with
+	 * 
+	 * @return An ImageData object representing this drawing tool, with colour
+	 *         {@code colour}
 	 */
-	abstract public ImageData getTool(ImageData img, CssColor color);
+	abstract public ImageData getTool(ImageData img, CssColor colour);
 
 }
