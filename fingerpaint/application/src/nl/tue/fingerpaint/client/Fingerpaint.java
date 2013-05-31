@@ -47,6 +47,7 @@ import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.ToggleButton;
@@ -164,6 +165,8 @@ public class Fingerpaint implements EntryPoint {
 
 	private PopupPanel comparePopupPanel;
 
+	private SimplePanel compareGraphPanel;
+	
 	private Button closeCompareButton;
 
 	private Button newCompareButton;
@@ -196,6 +199,7 @@ public class Fingerpaint implements EntryPoint {
 	private PopupPanel viewSingleGraphPopupPanel;
 	private VerticalPanel viewSingleGraphVerticalPanel;
 	private HorizontalPanel viewSingleGraphHorizontalPanel;
+	private SimplePanel viewSingleGraphGraphPanel;
 	private Button viewSingleGraph;
 	private Button closeSingleGraphViewButton;
 	private Button exportSingleGraphButton;
@@ -366,8 +370,6 @@ public class Fingerpaint implements EntryPoint {
 		 */
 		CellBrowser tree = (new CellBrowser.Builder<Object>(model, null))
 				.build();
-
-		// tree.setStyleName("center");
 
 		// Add the tree to the root layout panel.
 		RootLayoutPanel.get().add(tree);
@@ -993,6 +995,7 @@ public class Fingerpaint implements EntryPoint {
 		viewSingleGraphHorizontalPanel.add(exportSingleGraphButton);
 		closeSingleGraphViewButton = new Button("Close");
 		viewSingleGraphHorizontalPanel.add(closeSingleGraphViewButton);
+		viewSingleGraphGraphPanel = new SimplePanel();
 
 		exportSingleGraphButton.addClickHandler(new ClickHandler() {
 			@Override
@@ -1003,10 +1006,6 @@ public class Fingerpaint implements EntryPoint {
 		closeSingleGraphViewButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				// Clear the data of the graph and close panel
-				graphVisualisator.clearSegregationResults();
-				viewSingleGraphPopupPanel.clear();
-				viewSingleGraphVerticalPanel.clear();
 				viewSingleGraphPopupPanel.hide();
 			}
 		});
@@ -1017,11 +1016,21 @@ public class Fingerpaint implements EntryPoint {
 				ArrayList<double[]> performance = new ArrayList<double[]>();
 				performance.add(as.getSegregation());
 
+				// Clear old data
+				if (graphVisualisator != null) {
+					graphVisualisator.clearSegregationResults();
+				}
+				viewSingleGraphPopupPanel.clear();
+				viewSingleGraphVerticalPanel.clear();
+				viewSingleGraphGraphPanel.clear();
+
 				// Make graph and add it to viewSingleGraphVerticalPanel
-				createGraph(
-						viewSingleGraphVerticalPanel,
-						new ArrayList<String>(Arrays
-								.asList("Current mixing run")), performance);
+				 createGraph(
+						 viewSingleGraphGraphPanel,
+				 new ArrayList<String>(Arrays
+				 .asList("Current mixing run")), performance);
+
+				viewSingleGraphVerticalPanel.add(viewSingleGraphGraphPanel);
 				viewSingleGraphVerticalPanel
 						.add(viewSingleGraphHorizontalPanel);
 				viewSingleGraphPopupPanel.add(viewSingleGraphVerticalPanel);
@@ -1555,6 +1564,7 @@ public class Fingerpaint implements EntryPoint {
 		compareSelectPopupPanel.setModal(true);
 		comparePopupPanel = new PopupPanel();
 		comparePopupPanel.setModal(true);
+		compareGraphPanel = new SimplePanel();
 
 		// Initialise the cellList to contain all the mixing runs
 		TextCell textCell = new TextCell();
@@ -1588,6 +1598,8 @@ public class Fingerpaint implements EntryPoint {
 		horPanel.add(closeCompareButton);
 		horPanel.add(newCompareButton);
 		comparePopupPanel.add(vertPanel);
+		vertPanel.add(compareGraphPanel);
+		vertPanel.add(horPanel);
 
 		closeCompareButton.addClickHandler(new ClickHandler() {
 			@Override
@@ -1640,7 +1652,9 @@ public class Fingerpaint implements EntryPoint {
 							.getSegregation());
 				}
 
-				createGraph(vertPanel, names, graphs);
+				compareGraphPanel.clear();
+				createGraph(compareGraphPanel, names, graphs);
+				
 				compareSelectPopupPanel.hide();
 				comparePopupPanel
 						.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
@@ -1650,7 +1664,6 @@ public class Fingerpaint implements EntryPoint {
 							}
 						});
 			}
-
 		});
 
 		cancelCompareButton.addClickHandler(new ClickHandler() {
@@ -1712,6 +1725,7 @@ public class Fingerpaint implements EntryPoint {
 					LineChart.PACKAGE);
 		} catch (Exception e) {
 			Window.alert("Loading graph failed.");
+			e.printStackTrace();
 		}
 	}
 

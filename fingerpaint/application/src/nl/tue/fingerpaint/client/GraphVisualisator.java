@@ -23,11 +23,15 @@ public class GraphVisualisator {
 	private int xAxisLength = 0;
 
 	/**
-	 * Returns the runnable object to initiate drawing the graph in Fingerpaint.createGraph()
+	 * Returns the runnable object to initiate drawing the graph in
+	 * Fingerpaint.createGraph()
 	 * 
-	 * @param panel The panel the graph will be added to
-	 * @param names List of names of the different plots in the chart
-	 * @param performance Values of the different plots
+	 * @param panel
+	 *            The panel the graph will be added to
+	 * @param names
+	 *            List of names of the different plots in the chart
+	 * @param performance
+	 *            Values of the different plots
 	 * @return
 	 */
 	public Runnable createGraph(Panel panel, ArrayList<String> names,
