@@ -69,7 +69,7 @@ public class StorageManagerTest extends GWTTestCase {
 	@Test
 	public void testSaveProtocol() {
 		// Create and save a protocol
-		final String key = "testdist1";
+		final String key = "testprot1";
 		final String geometry = GeometryNames.RECT_SHORT;
 		initProtocol();
 		StorageManager.INSTANCE.putProtocol(geometry, key, protocol);

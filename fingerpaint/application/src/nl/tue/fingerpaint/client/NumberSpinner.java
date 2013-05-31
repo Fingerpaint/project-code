@@ -4,10 +4,11 @@ import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DoubleBox;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
  * NumberSpinner Custom Control
@@ -26,6 +27,8 @@ public class NumberSpinner extends Composite {
 	private double MIN;
 	private boolean hasLimits;
 	private NumberSpinnerListener spinnerListener;
+	private HorizontalPanel horPanel;
+	private VerticalPanel vertPanel;
 
 	// ----Constructors--------------------------------------------
 
@@ -133,14 +136,8 @@ public class NumberSpinner extends Composite {
 		}
 		this.RATE = rate;
 		this.hasLimits = limits;
-
-		AbsolutePanel absolutePanel = new AbsolutePanel();
-		initWidget(absolutePanel);
-		absolutePanel.setSize("55px", "23px");
-
+		
 		numberBox = new DoubleBox();
-		absolutePanel.add(numberBox, 0, 0);
-		numberBox.setSize("30px", "16px");
 		numberBox.setValue(defaultValue);
 		numberBox.addChangeHandler(new ChangeHandler() {
 
@@ -151,7 +148,7 @@ public class NumberSpinner extends Composite {
 
 		});
 
-		Button upButton = new Button();
+		Button upButton = new Button("▲");
 		upButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				if (!hasLimits || getValue() <= MAX - RATE) {
@@ -161,10 +158,7 @@ public class NumberSpinner extends Composite {
 		});
 		upButton.setStyleName("dp-spinner-upbutton");
 
-		absolutePanel.add(upButton, 34, 1);
-		upButton.setSize("12px", "10px");
-
-		Button downButton = new Button();
+		Button downButton = new Button("‭▼");
 		downButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				if (!hasLimits || getValue() >= MIN + RATE) {
@@ -172,10 +166,19 @@ public class NumberSpinner extends Composite {
 				}
 			}
 		});
+		
+		numberBox.setStyleName("spinnerNumberBox");
 
 		downButton.setStyleName("dp-spinner-downbutton");
-		absolutePanel.add(downButton, 34, 11);
-		downButton.setSize("12px", "10px");
+
+		horPanel = new HorizontalPanel();
+		vertPanel = new VerticalPanel();
+		horPanel.add(numberBox);
+		vertPanel.add(upButton);
+		vertPanel.add(downButton);
+		horPanel.add(vertPanel);
+		
+		initWidget(horPanel);
 	}
 
 	// ----Getters and Setters--------------------------------------------
