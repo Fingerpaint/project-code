@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import nl.tue.fingerpaint.client.ApplicationState;
 import nl.tue.fingerpaint.client.MixingProtocol;
-import nl.tue.fingerpaint.client.SimulationResult;
 import nl.tue.fingerpaint.client.json.FingerpaintJsonizer;
 import nl.tue.fingerpaint.shared.GeometryNames;
 
@@ -244,8 +242,68 @@ public class StorageManager {
 		return null;
 	}
 
+	/**
+	 * Return a list of all protocols stored under the given geometry.
+	 * 
+	 * @param geometry
+	 *            The geometry under which saved protocols need to be found.
+	 * @return A list of all saved protocols (may be an empty list), or
+	 *         {@code null} if the given geometry is not at all present in the
+	 *         storage. When the latter happens, you probably asked for a
+	 *         non-existent geometry, because all default geometries are loaded
+	 *         in the storage on initialisation. This function will also return
+	 *         {@code null} if the storage cannot be used.
+	 */
+	public ArrayList<String> getProtocols(String geometry) {
+		if (state != INITIALISED) {
+			return null;
+		}
+
+		HashMap<String, Object> firstLevel = FingerpaintJsonizer
+				.hashMapFromString(localStorage.getItem(KEY_PROTOCOLS), false);
+		if (firstLevel.containsKey(geometry)) {
+			HashMap<String, Object> secondLevel = FingerpaintJsonizer
+					.hashMapFromJSONObject(
+							((JSONValue) firstLevel.get(geometry)).isObject(),
+							false);
+
+			ArrayList<String> result = new ArrayList<String>();
+			result.addAll(secondLevel.keySet());
+			return result;
+		}
+		return null;
+	}
+
+	/**
+	 * Return the protocol that is stored with given name, or {@code null} if
+	 * such a protocol does not exist.
+	 * 
+	 * @param geometry
+	 *            The geometry in which the protocol is stored.
+	 * @param key
+	 *            The name of the saved protocol.
+	 * @return The saved protocol, or {@code null} if no protocol with the given
+	 *         name was saved. This function will also return {@code null} if
+	 *         the storage cannot be used.
+	 */
 	public MixingProtocol getProtocol(String geometry, String key) {
-		// TODO: Load a protocol
+		if (state != INITIALISED) {
+			return null;
+		}
+
+		HashMap<String, Object> firstLevel = FingerpaintJsonizer
+				.hashMapFromString(localStorage.getItem(KEY_PROTOCOLS), false);
+		if (firstLevel.containsKey(geometry)) {
+			HashMap<String, Object> secondLevel = FingerpaintJsonizer
+					.hashMapFromString(firstLevel.get(geometry).toString(),
+							false);
+			for (String secondLevelKey : secondLevel.keySet()) {
+				if (secondLevelKey.equals(key)) {
+					return FingerpaintJsonizer.protocolFromString(secondLevel
+							.get(key).toString());
+				}
+			}
+		}
 		return null;
 	}
 
@@ -278,20 +336,19 @@ public class StorageManager {
 	 *         name was saved. This function will also return {@code null} if
 	 *         the storage cannot be used.
 	 * */
-	public SimulationResult getResult(String key) {
+	public ResultStorage getResult(String key) {
 		if (state != INITIALISED) {
 			return null;
 		}
 
 		HashMap<String, Object> firstLevel = FingerpaintJsonizer
-				.hashMapFromString(localStorage.getItem(KEY_RESULTS));
+				.hashMapFromString(localStorage.getItem(KEY_RESULTS), false);
 		for (String firstLevelKey : firstLevel.keySet()) {
 			if (firstLevelKey.equals(key)) {
-				String result = (String) firstLevel.get(key);
-				// TODO:Deserialize result and return it
+				String result = firstLevel.get(key).toString();
+				return FingerpaintJsonizer.resultFromString(result);
 			}
 		}
-
 		return null;
 	}
 
@@ -349,8 +406,10 @@ public class StorageManager {
 					.get(geometry);
 			secondLevel.put(key, FingerpaintJsonizer.toString(value));
 			firstLevel.put(geometry, FingerpaintJsonizer.toString(secondLevel));
+
 			localStorage.setItem(KEY_INITDIST,
 					FingerpaintJsonizer.toString(firstLevel));
+
 			return true;
 		}
 
@@ -380,7 +439,8 @@ public class StorageManager {
 	 * do not attempt to overwrite.
 	 * 
 	 * @param geometry
-	 *            The short name of the geometry to store the distribution under.
+	 *            The short name of the geometry to store the distribution
+	 *            under.
 	 * @param key
 	 *            The name of the protocol.
 	 * @param protocol

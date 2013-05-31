@@ -1,6 +1,7 @@
 package nl.tue.fingerpaint.client.storage;
 
 import org.jsonmaker.gwt.client.Jsonizer;
+import org.jsonmaker.gwt.client.annotation.Transient;
 
 import nl.tue.fingerpaint.client.MixingProtocol;
 
@@ -12,21 +13,11 @@ public class ResultStorage {
 
 	private double[] distribution;
 
-	private MixingProtocol protocol;
+	private String protocol;
 
 	private double[] segregation;
 	
 	private int nrSteps;
-	
-	public ResultStorage(String geom, String mix, double[] dist,
-			MixingProtocol prot, double[] segr, int steps) {
-		geometry = geom;
-		mixer = mix;
-		distribution = dist;
-		protocol = prot;
-		segregation = segr;
-		nrSteps = steps;
-	}
 
 	public String getGeometry() {
 		return geometry;
@@ -52,12 +43,22 @@ public class ResultStorage {
 		this.distribution = distribution;
 	}
 
-	public MixingProtocol getProtocol() {
+	public String getProtocol() {
 		return protocol;
 	}
 
-	public void setProtocol(MixingProtocol protocol) {
+	public void setProtocol(String protocol) {
 		this.protocol = protocol;
+	}
+	
+	@Transient
+	public MixingProtocol getMixingProtocol() {
+		return MixingProtocol.fromString(protocol);
+	}
+	
+	@Transient
+	public void setMixingProtocol(MixingProtocol prot) {
+		protocol = prot.toString();
 	}
 
 	public double[] getSegregation() {
@@ -68,9 +69,6 @@ public class ResultStorage {
 		this.segregation = segregation;
 	}
 
-	public interface ResultStorageJsonizer extends Jsonizer {
-	}
-
 	public int getNrSteps() {
 		return nrSteps;
 	}
@@ -79,9 +77,6 @@ public class ResultStorage {
 		this.nrSteps = nrSteps;
 	}
 	
-	
-	
-	
-	
+	public interface ResultStorageJsonizer extends Jsonizer {}
 
 }

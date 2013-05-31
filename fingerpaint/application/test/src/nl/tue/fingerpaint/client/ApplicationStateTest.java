@@ -38,7 +38,7 @@ public class ApplicationStateTest extends GWTTestCase{
 	public void testSetMixer() {
 		init();
 		String testValue = "Just some mixer";
-		as.setMixer(testValue);
+		as.setMixerChoice(testValue);
 		assertEquals(as.getMixerChoice(), testValue);
 	}	
 	

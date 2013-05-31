@@ -832,23 +832,6 @@ public abstract class Geometry {
 	}
 
 	/**
-	 * clears the canvas between locationX and locationX + sizeX, and locationY
-	 * and locationY + sizeY
-	 * 
-	 * @param locationX
-	 *            the minimum x-value of the data that needs to be cleared
-	 * @param locationY
-	 *            the minimum y-value of the data that needs to be cleared
-	 * @param sizeX
-	 *            the width of the to be cleared section
-	 * @param sizeY
-	 *            the height of the to be cleared section
-	 */
-	protected void clear(int locationX, int locationY, int sizeX, int sizeY) {
-
-	}
-
-	/**
 	 * Creates and returns an image element with the image data belonging to the
 	 * drawing tool.
 	 * 

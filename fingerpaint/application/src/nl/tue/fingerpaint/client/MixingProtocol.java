@@ -149,6 +149,25 @@ public class MixingProtocol implements Serializable {
 		return "Rectangle400x240";
 	}
 
+	@Override
+	public String toString() {
+		String result = "";
+		for (MixingStep ms : program) {
+			result += ms.toString() +", ";
+			}
+		return result.substring(0, result.length() - 2);
+	}
+	
+	public static MixingProtocol fromString(String protocol) {
+		MixingProtocol result = new MixingProtocol();
+		String[] steps = protocol.split(", ");
+		for (int i = 0; i < steps.length; i++) {
+			result.addStep(MixingStep.fromString(steps[i]));
+		}
+		
+		return result;
+	}
+	
 	public interface MixingProtocolJsonizer extends Jsonizer {
 	}
 }

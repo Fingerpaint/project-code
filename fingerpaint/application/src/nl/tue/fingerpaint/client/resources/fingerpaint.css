@@ -1,7 +1,24 @@
 body {
 	margin: 0;
+	/* Background colors: http://w3.tue.nl/en/services/cec/corporate_identity/housestyle_guidelines/colors/ */
+/* background-color:#FF9A00; /* orange */
+/* background-color:#D6004A; /* redish-pink */
+/* background-color:#0092B5; /* sea-blue */
+/* background-color:#101073; /* dark-blue */
+/* background-color:#0066CC; /* blue */
+/* background-color:#00A2DE; /* light-blue */
+/* background-color:#00AC82; /* green */
+/* background-color:#84D200; /* light-green */
+/* background-color:#FFDD00; /* yellow */
 }
 
+/* only TOP: Auto-aanvul voor alle richtingen
+   TOP & RIGHT = TOP/BOTTOM & RIGHT/LEFT are equal */
+   
+   /* . is een class; Kan je aan meerdere hangen
+   #is alles met een ID; Is voor 1 element */
+   
+   
 .gwt-PopupPanel.popupContent {
 	border: 1px solid black;
 }
@@ -29,7 +46,8 @@ body {
 	top: 50%;
 	left: 0;
 	right: 0;
-	margin-top: 42px; /* half the size of the loading image, plus extra margin (15px) */
+	margin-top: 42px;
+	/* half the size of the loading image, plus extra margin (15px) */
 	width: 100%;
 	text-align: center;
 	font-weight: bold;
@@ -38,14 +56,21 @@ body {
 
 /* remove list header row */
 .removeListHeader {
-  background-color: #2062B8;
-  color: white;
-  font-style: italic;
+	background-color: #2062B8;
+	color: white;
+	font-style: italic;
+}
+
+.center{
+	margin-top: auto;
+	margin-right: auto;
+	margin-bottom: auto;
+	margin-left: auto;
 }
 
 /* remove list flex table */
 .removeList {
-  border: 1px solid silver;
-  padding: 2px;
-  margin-bottom:6px;
+	border: 1px solid silver;
+	padding: 2px;
+	margin-bottom: 6px;
 }
