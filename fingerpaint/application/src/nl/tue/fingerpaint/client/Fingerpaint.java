@@ -1278,14 +1278,14 @@ public class Fingerpaint implements EntryPoint {
 
 				// TODO: un-comment when StorageManager is implemented.
 				// Get all protocols for the current geometry
-				// List<String> geometryProtocols = StorageManager.INSTANCE
-				// .getProtocols(as.getGeometryChoice());
+				 List<String> geometryProtocols = StorageManager.INSTANCE
+				 .getProtocols(GeometryNames.getShortName(as.getGeometryChoice()));
 
 				// TODO: Replace with geometryProtocols after StorageManager
 				// is implemented.
-				final List<String> NAMES = Arrays.asList("Load Protocol list",
-						"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday",
-						"Friday", "Saturday");
+				//final List<String> NAMES = Arrays.asList("Load Protocol list",
+					//	"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday",
+					//	"Friday", "Saturday");
 
 				// Create a cell to render each value.
 				TextCell textCell = new TextCell();
@@ -1308,12 +1308,13 @@ public class Fingerpaint implements EntryPoint {
 								// is implemented.
 								// get the selected protocol, and set it in the
 								// AS
-								// as.setProtocol(StorageManager.INSTANCE.getProtocol(selected));
-
+								 as.setProtocol(StorageManager.INSTANCE.getProtocol(GeometryNames.getShortName(as.getGeometryChoice()), selected));
+								 taProtocolRepresentation.setText(as.getProtocol().toString());
+								 
 								// TODO: Remove this substitute functionality
-								Window.alert("Dummy functionality: \n Look, it works! You selected "
-										+ selected);
-								loadPanel.removeFromParent();
+							//	Window.alert("Dummy functionality: \n Look, it works! You selected "
+							//			+ selected);
+								loadPanel.hide();
 							}
 						});
 
@@ -1321,10 +1322,10 @@ public class Fingerpaint implements EntryPoint {
 				// it affects
 				// paging calculations, so its good habit to keep the row count
 				// up to date.
-				cellList.setRowCount(NAMES.size(), true);
+				cellList.setRowCount(geometryProtocols.size(), true);
 
 				// Push the data into the widget.
-				cellList.setRowData(0, NAMES);
+				cellList.setRowData(0, geometryProtocols);
 
 				loadVerticalPanel.add(cellList);
 				loadVerticalPanel.add(closeLoadButton);
@@ -1490,19 +1491,19 @@ public class Fingerpaint implements EntryPoint {
 	 */
 	private void updateProtocolLabel(MixingStep step) {
 		String oldProtocol = taProtocolRepresentation.getText();
-		String stepString;
+		String stepString = step.toString();
 
-		if (step.isTopWall() && step.movesForward()) {
-			stepString = "T";
-		} else if (step.isTopWall() && !step.movesForward()) {
-			stepString = "-T";
-		} else if (!step.isTopWall() && step.movesForward()) {
-			stepString = "B";
-		} else { // (!step.isTopWall() && !step.movesForward()) {
-			stepString = "-B";
-		}
+//		if (step.isTopWall() && step.movesForward()) {
+//			stepString = "T";
+//		} else if (step.isTopWall() && !step.movesForward()) {
+//			stepString = "-T";
+//		} else if (!step.isTopWall() && step.movesForward()) {
+//			stepString = "B";
+//		} else { // (!step.isTopWall() && !step.movesForward()) {
+//			stepString = "-B";
+//		}
 
-		stepString += "[" + step.getStepSize() + "]";
+//		stepString += "[" + step.getStepSize() + "]";
 
 		taProtocolRepresentation.setText(oldProtocol + stepString + " ");
 	}
@@ -1575,7 +1576,7 @@ public class Fingerpaint implements EntryPoint {
 
 		// Initialise the cellList to contain all the mixing runs
 		TextCell textCell = new TextCell();
-		CellList<String> cellList = new CellList<String>(textCell);
+		final CellList<String> cellList = new CellList<String>(textCell);
 		final MultiSelectionModel<String> selectionModel = new MultiSelectionModel<String>();
 		final Handler<String> selectionEventManager = DefaultSelectionEventManager
 				.createCheckboxManager();
@@ -1597,13 +1598,7 @@ public class Fingerpaint implements EntryPoint {
 			}
 		});
 
-		ArrayList<String> resultNames = (ArrayList<String>) StorageManager.INSTANCE
-				.getResults();
-
-		cellList.setRowCount(resultNames.size());
-
-		// Push the data into the widget.
-		cellList.setRowData(0, resultNames);
+		
 
 		// ----------------------------------------------------------
 
@@ -1656,8 +1651,12 @@ public class Fingerpaint implements EntryPoint {
 				Set<String> chosenNames = selectionModel.getSelectedSet();
 				for (String s : chosenNames) {
 					names.add(s);
-					graphs.add(StorageManager.INSTANCE.getResult(s)
-							.getSegregationPoints());
+					ResultStorage rs = StorageManager.INSTANCE.getResult(s);
+					if (rs == null) {
+						System.out.println("Ik ben null");
+					}
+				//	System.out.println(StorageManager.INSTANCE.getResult(s));
+					graphs.add(StorageManager.INSTANCE.getResult(s).getSegregation());
 				}
 
 				createGraph(vertPanel, names, graphs);
@@ -1690,6 +1689,14 @@ public class Fingerpaint implements EntryPoint {
 
 			@Override
 			public void onClick(ClickEvent event) {
+				ArrayList<String> resultNames = (ArrayList<String>) StorageManager.INSTANCE
+						.getResults();
+
+				cellList.setRowCount(resultNames.size());
+
+				// Push the data into the widget.
+				cellList.setRowData(0, resultNames);
+				
 				compareSelectPopupPanel
 						.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
 							public void setPosition(int offsetWidth,

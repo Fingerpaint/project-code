@@ -151,4 +151,13 @@ public class MixingProtocol implements Serializable {
 
 	public interface MixingProtocolJsonizer extends Jsonizer {
 	}
+	
+	@Override
+	public String toString() {
+		String result = "";
+		for (MixingStep ms : program) {
+			result += ms.toString() +", ";
+			}
+		return result.substring(0, result.length() - 2);
+	}
 }
