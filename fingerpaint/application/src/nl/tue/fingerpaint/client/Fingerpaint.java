@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import nl.tue.fingerpaint.client.Geometry.StepAddedListener;
+import nl.tue.fingerpaint.client.gui.MenuToggleButton;
 import nl.tue.fingerpaint.client.resources.FingerpaintConstants;
 import nl.tue.fingerpaint.client.resources.FingerpaintResources;
 import nl.tue.fingerpaint.client.serverdata.ServerDataCache;
@@ -48,7 +49,6 @@ import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
-import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -225,11 +225,11 @@ public class Fingerpaint implements EntryPoint {
 	// TODO: Change this to a button on which a circle is drawn
 	private ToggleButton circleDrawingTool;
 
-	// Horizontal panel to contain drawing canvas and menu bar
-	private HorizontalPanel panel = new HorizontalPanel();
-
 	// Vertical panel to contain all menu items
 	private VerticalPanel menuPanel = new VerticalPanel();
+	
+	// Button to toggle if the menu is visible or not
+	private MenuToggleButton menuToggleButton;
 
 	// Panel for loading stuff
 	private static PopupPanel loadPanel = new PopupPanel();
@@ -292,15 +292,6 @@ public class Fingerpaint implements EntryPoint {
 	 * The message that is shown to the user upon a successful save.
 	 */
 	private static final String SAVE_SUCCESS_MESSAGE = "Save successful.";
-
-	// Width of the menu in which buttons are displayed
-	// on the right side of the window in pixels
-	private final int menuWidth = 200;
-
-	// Height of address-bar / tabs / menu-bar in the
-	// browser in pixels. If this is not taken into account,
-	// a vertical scroll bar appears.
-	private final int topBarHeight = 65;
 
 	// Holds the mixingPerformance of the last run.
 	private GraphVisualisator graphVisualisator;
@@ -469,8 +460,7 @@ public class Fingerpaint implements EntryPoint {
 		private void setUserChoiceValues(String selectedMixer) {
 			// TODO: Actually create a different geometry depending on the
 			// chosen geometry...
-			as.setGeometry(new RectangleGeometry(Window.getClientHeight()
-					- topBarHeight, Window.getClientWidth() - menuWidth));
+			as.setGeometry(new RectangleGeometry(Window.getClientHeight(), Window.getClientWidth()));
 		}
 
 		public CustomTreeModel() {
@@ -504,7 +494,7 @@ public class Fingerpaint implements EntryPoint {
 		/**
 		 * Helper method that initialises the widgets for the mixing interface
 		 */
-		private void createMixingWidgets() {
+		private void createMixingWidgets() {		
 			menuPanel.getElement().setId("menuPanel");
 
 			// Initialise a listener for when a new step is entered to the
@@ -612,19 +602,15 @@ public class Fingerpaint implements EntryPoint {
 			protocolPanelContainer.getElement().setId("protPanel");
 			protocolPanelContainer.setAnimationEnabled(true);
 			protocolPanelContainer.add(protocolPanel);
+			protocolPanelContainer.setVisible(false);
 			
 			toggleProtocolWidgets(false);
 			
-			// Add canvas and menuPanel to the panel
-			// Make the canvas the entire width of the
-			// screen except for the
-			// menuWidth
-			panel.add(as.getGeometry().getCanvas());
-			panel.add(menuPanel);
-			panel.add(protocolPanelContainer);
-
-			// Add panel to RootPanel
-			RootPanel.get().add(panel);
+			// Add canvas and menuPanel to the page
+			RootPanel.get().add(as.getGeometry().getCanvas());
+			RootPanel.get().add(menuPanel);
+			menuToggleButton = new MenuToggleButton(menuPanel);
+			RootPanel.get().add(menuToggleButton);
 			
 			//for debugging
 			viewSingleGraph.ensureDebugId("viewGraph");
