@@ -48,7 +48,6 @@ import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
-import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -612,6 +611,7 @@ public class Fingerpaint implements EntryPoint {
 			protocolPanelContainer.getElement().setId("protPanel");
 			protocolPanelContainer.setAnimationEnabled(true);
 			protocolPanelContainer.add(protocolPanel);
+			protocolPanelContainer.setVisible(false);
 			
 			toggleProtocolWidgets(false);
 			
@@ -687,7 +687,7 @@ public class Fingerpaint implements EntryPoint {
 				MixingStep.STEP_UNIT, MixingStep.STEP_MIN, MixingStep.STEP_MAX,
 				true);
 		
-		sizeSpinner.getElement().setId("sizeSpinnerInput");
+		sizeSpinner.addStyleName("sizeSpinnerInput");
 		as.setStepSize(MixingStep.STEP_DEFAULT);
 
 		// set a listener for the spinner

@@ -208,7 +208,7 @@ public class RectangleGeometryTest extends GWTTestCase {
 				mixingStepAdded = true;
 				assertEquals(message + " is top", top, step.isTopWall());
 				assertEquals(message + " is clockwise", clockwise,
-						step.movesForward());
+						step.isClockwise());
 				assertEquals(message + " has stepsize " + stepSize, stepSize,
 						step.getStepSize());
 			}
