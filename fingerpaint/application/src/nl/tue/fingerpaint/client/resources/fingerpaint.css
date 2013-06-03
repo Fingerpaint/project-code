@@ -144,7 +144,7 @@ button {
 	border: 0; /* disable some weird Google styling */
 }
 
-/* Fixes the running off the screen of the ToggleButton that toggles the colour */
+/* Fixes the running off the screen of the ToggleButton that toggles the colour */cleacdr
 .gwt-ToggleButton {
 	text-align: center;
 	padding-left: 0px;
@@ -164,9 +164,20 @@ button {
 }
 
 .spinnerNumberBox {
-	height: 42px;
+	height: 45px;
 	font-size: 32px;
 /* 	width: 180px; */
 	width: 100%;
 	text-align: right;
+}
+
+.dp-spinner-upbutton,
+.dp-spinner-downbutton {
+	padding: 0px 5px;
+	margin-right: 6px;
+	margin-left: 6px;
+}
+
+.dp-spinner-horizontalpanel {
+	padding: 0px 3px;
 }
