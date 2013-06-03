@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import nl.tue.fingerpaint.client.Geometry.StepAddedListener;
+import nl.tue.fingerpaint.client.gui.MenuToggleButton;
 import nl.tue.fingerpaint.client.resources.FingerpaintConstants;
 import nl.tue.fingerpaint.client.resources.FingerpaintResources;
 import nl.tue.fingerpaint.client.serverdata.ServerDataCache;
@@ -48,7 +49,6 @@ import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
-import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -71,9 +71,6 @@ import com.google.gwt.visualization.client.visualizations.LineChart;
 public class Fingerpaint implements EntryPoint {
 	/** Class to keep track of everything the user has selected */
 	protected ApplicationState as;
-
-	// Label that displays the userChoice values
-	private Label mixingDetails = new Label();
 
 	// Button to toggle between black and white drawing colour
 	private ToggleButton toggleColor;
@@ -104,6 +101,8 @@ public class Fingerpaint implements EntryPoint {
 
 	// close Button inside the save popup menu
 	private Button closeLoadButton;
+	
+	private PopupPanel protocolPanelContainer;
 
 	// --------------------------------------------------------------------------------------
 
@@ -226,11 +225,11 @@ public class Fingerpaint implements EntryPoint {
 	// TODO: Change this to a button on which a circle is drawn
 	private ToggleButton circleDrawingTool;
 
-	// Horizontal panel to contain drawing canvas and menu bar
-	private HorizontalPanel panel = new HorizontalPanel();
-
 	// Vertical panel to contain all menu items
 	private VerticalPanel menuPanel = new VerticalPanel();
+	
+	// Button to toggle if the menu is visible or not
+	private MenuToggleButton menuToggleButton;
 
 	// Panel for loading stuff
 	private static PopupPanel loadPanel = new PopupPanel();
@@ -292,16 +291,7 @@ public class Fingerpaint implements EntryPoint {
 	/**
 	 * The message that is shown to the user upon a successful save.
 	 */
-	private static final String SAVE_SUCCESS_MESSAGE = "Save has been successful.";
-
-	// Width of the menu in which buttons are displayed
-	// on the right side of the window in pixels
-	private final int menuWidth = 200;
-
-	// Height of address-bar / tabs / menu-bar in the
-	// browser in pixels. If this is not taken into account,
-	// a vertical scroll bar appears.
-	private final int topBarHeight = 65;
+	private static final String SAVE_SUCCESS_MESSAGE = "Save successful.";
 
 	// Holds the mixingPerformance of the last run.
 	private GraphVisualisator graphVisualisator;
@@ -309,9 +299,11 @@ public class Fingerpaint implements EntryPoint {
 	/**
 	 * Shows the textual representation of the mixing protocol.
 	 */
-	private TextArea taProtocolRepresentation = new TextArea();
+	private Label labelProtocolRepresentation = new Label();
 
 	private String lastSaveButtonClicked;
+
+	private Label labelProtocolLabel;
 
 	/**
 	 * This is the entry point method.
@@ -468,8 +460,7 @@ public class Fingerpaint implements EntryPoint {
 		private void setUserChoiceValues(String selectedMixer) {
 			// TODO: Actually create a different geometry depending on the
 			// chosen geometry...
-			as.setGeometry(new RectangleGeometry(Window.getClientHeight()
-					- topBarHeight, Window.getClientWidth() - menuWidth));
+			as.setGeometry(new RectangleGeometry(Window.getClientHeight(), Window.getClientWidth()));
 		}
 
 		public CustomTreeModel() {
@@ -492,19 +483,8 @@ public class Fingerpaint implements EntryPoint {
 
 								if (as.getGeometryChoice() != null
 										&& as.getMixerChoice() != null) {
-									mixingDetails.setText("Geometry: "
-											+ as.getGeometryChoice().toString()
-											+ ", Mixer: "
-											+ as.getMixerChoice().toString());
-								} else {// This should never happen. Just to be
-										// safe i made this msg so fails are
-										// visible
-									mixingDetails
-											.setText("Geometry and/or Mixer was not selected successfully");
 								}
-
-								RootPanel.get().add(mixingDetails);
-
+								
 								createMixingWidgets();
 							}
 						}
@@ -514,7 +494,8 @@ public class Fingerpaint implements EntryPoint {
 		/**
 		 * Helper method that initialises the widgets for the mixing interface
 		 */
-		private void createMixingWidgets() {
+		private void createMixingWidgets() {		
+			menuPanel.getElement().setId("menuPanel");
 
 			// Initialise a listener for when a new step is entered to the
 			// protocol
@@ -607,26 +588,29 @@ public class Fingerpaint implements EntryPoint {
 			// TODO: Initialise other menu items and add them to menuPanel
 			// Add all the protocol widgets to the menuPanel and hide them
 			// initially.
-			menuPanel.add(nrStepsLabel);
-			menuPanel.add(nrStepsSpinner);
-			menuPanel.add(taProtocolRepresentation);
-			menuPanel.add(mixNowButton);
-			menuPanel.add(resetProtocolButton);
-			menuPanel.add(saveProtocolButton);
-			menuPanel.add(loadProtocolButton);
+			VerticalPanel protocolPanel = new VerticalPanel();
+			protocolPanel.add(nrStepsLabel);
+			protocolPanel.add(nrStepsSpinner);
+			protocolPanel.add(labelProtocolLabel);
+			protocolPanel.add(labelProtocolRepresentation);
+			protocolPanel.add(mixNowButton);
+			protocolPanel.add(resetProtocolButton);
+			protocolPanel.add(saveProtocolButton);
+			protocolPanel.add(loadProtocolButton);
+			
+			protocolPanelContainer = new PopupPanel();
+			protocolPanelContainer.getElement().setId("protPanel");
+			protocolPanelContainer.setAnimationEnabled(true);
+			protocolPanelContainer.add(protocolPanel);
+			protocolPanelContainer.setVisible(false);
+			
 			toggleProtocolWidgets(false);
-
-			// Add canvas and menuPanel to the panel
-			// Make the canvas the entire width of the
-			// screen except for the
-			// menuWidth
-			panel.setWidth("100%");
-			panel.add(as.getGeometry().getCanvas());
-			panel.add(menuPanel);
-			panel.setCellWidth(menuPanel, Integer.toString(menuWidth) + "px");
-
-			// Add panel to RootPanel
-			RootPanel.get().add(panel);
+			
+			// Add canvas and menuPanel to the page
+			RootPanel.get().add(as.getGeometry().getCanvas());
+			RootPanel.get().add(menuPanel);
+			menuToggleButton = new MenuToggleButton(menuPanel);
+			RootPanel.get().add(menuToggleButton);
 			
 			//for debugging
 			viewSingleGraph.ensureDebugId("viewGraph");
@@ -688,6 +672,8 @@ public class Fingerpaint implements EntryPoint {
 		sizeSpinner = new NumberSpinner(MixingStep.STEP_DEFAULT,
 				MixingStep.STEP_UNIT, MixingStep.STEP_MIN, MixingStep.STEP_MAX,
 				true);
+		
+		sizeSpinner.getElement().setId("sizeSpinnerInput");
 		as.setStepSize(MixingStep.STEP_DEFAULT);
 
 		// set a listener for the spinner
@@ -722,17 +708,22 @@ public class Fingerpaint implements EntryPoint {
 	 * Toggles the visibility and availability of all the protocol widgets.
 	 */
 	private void toggleProtocolWidgets(boolean value) {
+		if (value) {
+			protocolPanelContainer.showRelativeTo(menuPanel);
+		} else {
+			protocolPanelContainer.hide();
+		}
 		// TODO: make a setEnabled for the numberspinner
-		nrStepsLabel.setVisible(value);
-		nrStepsSpinner.setVisible(value);
-		taProtocolRepresentation.setVisible(value);
-		mixNowButton.setVisible(value);
-		saveProtocolButton.setVisible(value);
-		saveProtocolButton.setEnabled(value);
-		resetProtocolButton.setVisible(value);
-		resetProtocolButton.setEnabled(value);
-		loadProtocolButton.setVisible(value);
-		loadProtocolButton.setEnabled(value);
+//		nrStepsLabel.setVisible(value);
+//		nrStepsSpinner.setVisible(value);
+//		labelProtocolRepresentation.setVisible(value);
+//		mixNowButton.setVisible(value);
+//		saveProtocolButton.setVisible(value);
+//		saveProtocolButton.setEnabled(value);
+//		resetProtocolButton.setVisible(value);
+//		resetProtocolButton.setEnabled(value);
+//		labelProtocolLabel.setVisible(value);
+
 	}
 
 	/*
@@ -791,7 +782,6 @@ public class Fingerpaint implements EntryPoint {
 
 			}
 		});
-		toggleColor.setWidth("100px");
 	}
 
 	/*
@@ -799,11 +789,10 @@ public class Fingerpaint implements EntryPoint {
 	 * be removed!
 	 */
 	private void createProtocolRepresentationTextArea() {
-		taProtocolRepresentation.setText("");
-		taProtocolRepresentation.setWidth(String.valueOf(menuWidth) + "px");
-		taProtocolRepresentation
-				.setWidth(String.valueOf(menuWidth - 10) + "px");
-		taProtocolRepresentation.setEnabled(false);
+		labelProtocolLabel = new Label("Protocol:");
+		
+		labelProtocolRepresentation.setVisible(false);
+		labelProtocolRepresentation.getElement().setId("protLabel");
 	}
 
 	/*
@@ -1319,7 +1308,7 @@ public class Fingerpaint implements EntryPoint {
 												.getShortName(as
 														.getGeometryChoice()),
 												selected));
-								taProtocolRepresentation.setText(as
+								labelProtocolRepresentation.setText(as
 										.getProtocol().toString());
 								mixNowButton.setEnabled(true);
 
@@ -1499,9 +1488,14 @@ public class Fingerpaint implements EntryPoint {
 	 *            should be added.
 	 */
 	private void updateProtocolLabel(MixingStep step) {
-		String oldProtocol = taProtocolRepresentation.getText();
+		String oldProtocol = labelProtocolRepresentation.getText();
 		String stepString = step.toString();
-		taProtocolRepresentation.setText(oldProtocol + stepString + " ");
+		if (stepString.charAt(0) == 'B' || stepString.charAt(0) == 'T') {
+			stepString = "&nbsp;" + stepString;
+		}
+
+		labelProtocolRepresentation.setVisible(true);
+		labelProtocolRepresentation.getElement().setInnerHTML(oldProtocol + stepString + " ");
 	}
 
 	/**
@@ -1760,7 +1754,7 @@ public class Fingerpaint implements EntryPoint {
 	 */
 	private void resetProtocol() {
 		as.setProtocol(new MixingProtocol());
-		taProtocolRepresentation.setText("");
+		labelProtocolRepresentation.setText("");
 		as.setNrSteps(NRSTEPS_DEFAULT);
 		nrStepsSpinner.setValue(NRSTEPS_DEFAULT);
 		mixNowButton.setEnabled(false);
