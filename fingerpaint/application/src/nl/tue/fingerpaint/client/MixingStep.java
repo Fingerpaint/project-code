@@ -92,7 +92,7 @@ public class MixingStep implements Serializable {
 	 * @return {@code true} if the wall is moving clockwise, {@code false}
 	 *         otherwise
 	 */
-	public boolean movesForward() {
+	public boolean isClockwise() {
 		return direction;
 	}
 
@@ -170,8 +170,8 @@ public class MixingStep implements Serializable {
 	 * @return The name of the mixing step
 	 */
 	public String getName() {
-		return (isTopWall() ? (movesForward() ? "TR" : "TL")
-				: (movesForward() ? "BL" : "BR"));
+		return (isTopWall() ? (isClockwise() ? "TR" : "TL")
+				: (isClockwise() ? "BL" : "BR"));
 	}
 
 	/**
