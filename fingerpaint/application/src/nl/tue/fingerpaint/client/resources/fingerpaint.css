@@ -16,13 +16,24 @@
 /* . is een class; Kan je aan meerdere hangen
    #is alles met een ID; Is voor 1 element */
 
+* {
+    outline: none;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    margin: 0;
+    padding: 0;
+}
+
 body {
 /* 	background-image: url("http://richrock.com/gifs/optical-illusion-wheels-circles-rotating.png"); */
-	background-position: center top;
+/* 	background-position: center top; */
+	background-image: url("http://www.gravatar.com/avatar/c88dd72da6a28c7afaf3301bac80d929?s=210"); /* insert nice picture here */
+	background-position: center center;
 	background-repeat: no-repeat; 
 	background-attachment: fixed;
 	font-family: sans !important;
 	font-size: 15px !important;
+	margin: 0;
+	overflow: hidden; /* kinda ugly hack to prevent scrollbars from occuring... */
 }
 .gwt-PopupPanel.popupContent {
 	border: 1px solid black;
@@ -89,6 +100,21 @@ body {
 	position: absolute;
 	right: 4px;
 	width: 15%;
+	top: 28px;
+}
+
+#menuToggleButton {
+	border-radius: 10px 10px 10px 10px;
+	font-size: 20px;
+	font-weight: bold;
+	line-height: 18px;
+	margin: 0;
+	padding: 0;
+	position: absolute;
+	right: 4px;
+	text-align: center;
+	top: 4px;
+	width: 20px;
 }
 
 .gwt-Button,
@@ -115,10 +141,10 @@ button {
 }
 
 .gwt-Button[disabled]:hover {
-	border: 0px;
+	border: 0; /* disable some weird Google styling */
 }
 
-/* Fixes the running off the screen of the ToggleButton */
+/* Fixes the running off the screen of the ToggleButton that toggles the colour */
 .gwt-ToggleButton {
 	text-align: center;
 	padding-left: 0px;
@@ -135,11 +161,6 @@ button {
 	border: 1px solid;
 	border-color: #d6007b;
 	padding: 2px;
-}
-
-* {
-    outline: none;
-    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
 .spinnerNumberBox {

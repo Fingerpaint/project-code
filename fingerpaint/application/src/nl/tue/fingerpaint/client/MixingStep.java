@@ -170,18 +170,8 @@ public class MixingStep implements Serializable {
 	 * @return The name of the mixing step
 	 */
 	public String getName() {
-		StringBuilder builder = new StringBuilder();
-		if (isTopWall()) {
-			builder.append('T');
-		} else {
-			builder.append('B');
-		}
-		if (isClockwise()) {
-			builder.append('R');
-		} else {
-			builder.append('L');
-		}
-		return builder.toString();
+		return (isTopWall() ? (isClockwise() ? "TR" : "TL")
+				: (isClockwise() ? "BL" : "BR"));
 	}
 
 	/**

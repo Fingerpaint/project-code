@@ -51,19 +51,19 @@ public abstract class Geometry {
 	 * Distance between left border of the canvas and the left border of the
 	 * drawing area.
 	 */
-	protected static final int X_OFFSET = 5;
+	protected static final int X_OFFSET = 4;
 
 	/**
 	 * Distance between the top border of the canvas and the top border of the
 	 * drawing area.
 	 */
-	protected static final int TOP_OFFSET = 30;
+	protected static final int TOP_OFFSET = 24;
 
 	/**
 	 * Minimum distance between the bottom border of the canvas and the bottom
 	 * border of the drawing area.
 	 */
-	protected static final int BOTTOM_OFFSET = 30;
+	protected static final int BOTTOM_OFFSET = 24;
 
 	/**
 	 * The height of the wall in the same distance unit as the
