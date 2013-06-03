@@ -374,7 +374,12 @@ public class FingerpaintJsonizer {
 		} else if (object instanceof Object[]) {
 			return toString((Object[]) object);
 		} else if (object instanceof String) {
-			return JsonUtils.escapeValue((String) object);
+			// Ugly check to see if a string is escaped already...
+			String strObject = (String) object;
+			return ((strObject.charAt(0) == '"' && strObject.charAt(strObject.length() - 1) == '"') ||
+					(strObject.charAt(0) == '{' && strObject.charAt(strObject.length() - 1) == '}') ||
+					(strObject.charAt(0) == '[' && strObject.charAt(strObject.length() - 1) == ']')
+					? strObject : JsonUtils.escapeValue(strObject));
 		}
 
 		return object.toString();
