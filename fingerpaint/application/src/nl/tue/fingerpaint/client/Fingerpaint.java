@@ -444,7 +444,7 @@ public class Fingerpaint implements EntryPoint {
 		private void setUserChoiceValues(String selectedMixer) {
 			// TODO: Actually create a different geometry depending on the
 			// chosen geometry...
-			as.setGeometry(new RectangleGeometry(Window.getClientHeight(), Window.getClientWidth()));
+			as.setGeometry(new RectangleGeometry(Window.getClientHeight() - 20, Window.getClientWidth() - 20));
 		}
 
 		public CustomTreeModel() {
@@ -1002,17 +1002,21 @@ public class Fingerpaint implements EntryPoint {
 				 createGraph(
 						 viewSingleGraphGraphPanel,
 				 new ArrayList<String>(Arrays
-				 .asList("Current mixing run")), performance);
+				 .asList("Current mixing run")), performance, new AsyncCallback<Boolean>() {
+					@Override
+					public void onFailure(Throwable caught) {
+						caught.printStackTrace();
+					}
 
-				viewSingleGraphVerticalPanel.add(viewSingleGraphGraphPanel);
-				viewSingleGraphVerticalPanel
-						.add(viewSingleGraphHorizontalPanel);
-				viewSingleGraphPopupPanel.add(viewSingleGraphVerticalPanel);
-
-				// TODO: Inside the vert panel; Make buttons in hori-panel
-				// appear below Graph
-				viewSingleGraphPopupPanel.center();
-				viewSingleGraphPopupPanel.show();
+					@Override
+					public void onSuccess(Boolean result) {
+						viewSingleGraphVerticalPanel.add(viewSingleGraphGraphPanel);
+						viewSingleGraphVerticalPanel
+								.add(viewSingleGraphHorizontalPanel);
+						viewSingleGraphPopupPanel.add(viewSingleGraphVerticalPanel);
+						viewSingleGraphPopupPanel.center();
+					}	 
+				});
 
 				// .setPopupPositionAndShow(new PopupPanel.PositionCallback() {
 				// public void setPosition(int offsetWidth,
@@ -1610,16 +1614,18 @@ public class Fingerpaint implements EntryPoint {
 				}
 
 				compareGraphPanel.clear();
-				createGraph(compareGraphPanel, names, graphs);
-				
-				compareSelectPopupPanel.hide();
-				comparePopupPanel
-						.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
-							public void setPosition(int offsetWidth,
-									int offsetHeight) {
-								comparePopupPanel.center();
-							}
-						});
+				createGraph(compareGraphPanel, names, graphs, new AsyncCallback<Boolean>() {
+					@Override
+					public void onFailure(Throwable caught) {
+						caught.printStackTrace();
+					}
+
+					@Override
+					public void onSuccess(Boolean result) {
+						compareSelectPopupPanel.hide();
+						comparePopupPanel.center();
+					}
+				});
 			}
 		});
 
@@ -1671,14 +1677,14 @@ public class Fingerpaint implements EntryPoint {
 	 *            Values of the different plots
 	 */
 	private void createGraph(Panel panel, ArrayList<String> names,
-			ArrayList<double[]> performance) {
+			ArrayList<double[]> performance, AsyncCallback<Boolean> onLoad) {
 
 		graphVisualisator = new GraphVisualisator();
 		// Adds the graph to the Panel-parameter of
 		// visualisator.getOnLoadCallBack()
 		try {
 			VisualizationUtils.loadVisualizationApi(
-					graphVisualisator.createGraph(panel, names, performance),
+					graphVisualisator.createGraph(panel, names, performance, onLoad),
 					LineChart.PACKAGE);
 		} catch (Exception e) {
 			Window.alert("Loading graph failed.");
