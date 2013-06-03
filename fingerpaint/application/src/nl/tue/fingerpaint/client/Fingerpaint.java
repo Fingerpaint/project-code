@@ -75,10 +75,6 @@ public class Fingerpaint implements EntryPoint {
 	// Button to toggle between black and white drawing colour
 	private ToggleButton toggleColor;
 
-	// Button to load predefined distribution half black, half white
-	// Needed for testing purposes for story 32
-	private Button loadDistButton;
-
 	// Button to reset the distribution to all white
 	private Button resetDistButton;
 
@@ -370,18 +366,6 @@ public class Fingerpaint implements EntryPoint {
 		tree.ensureDebugId("cell");
 	}
 
-	/*
-	 * TODO : Call this when a new state has been loaded
-	 */
-	private void refreshWidgets() {
-		nrStepsSpinner.setValue(as.getNrSteps());
-		sizeSpinner.setValue(as.getStepSize());
-
-		for (MixingStep step : as.getProtocol().getProgram()) {
-			updateProtocolLabel(step);
-		}
-	}
-
 	/**
 	 * Show a pop-up with given message that indicates an error has occurred.
 	 * 
@@ -480,10 +464,6 @@ public class Fingerpaint implements EntryPoint {
 								// rootpanel)
 								// TODO: Make decent close-code
 								RootPanel.get().clear();
-
-								if (as.getGeometryChoice() != null
-										&& as.getMixerChoice() != null) {
-								}
 								
 								createMixingWidgets();
 							}
@@ -1232,6 +1212,11 @@ public class Fingerpaint implements EntryPoint {
 	/**
 	 * Saves the current protocol, distribution or mixing results, depending on
 	 * which save-button was pressed last.
+	 * 
+	 * @param name Name of save "file".
+	 * @param canOverwrite If we can overwrite an already-exisiting "file" with
+	 *                     the given name or not.
+	 * @return {@code true} if "file" was saved, {@code false} otherwise
 	 */
 	public boolean save(String name, boolean canOverwrite) {
 		if (lastSaveButtonClicked.equals(StorageManager.KEY_INITDIST)) {
@@ -1496,33 +1481,6 @@ public class Fingerpaint implements EntryPoint {
 
 		labelProtocolRepresentation.setVisible(true);
 		labelProtocolRepresentation.getElement().setInnerHTML(oldProtocol + stepString + " ");
-	}
-
-	/**
-	 * Initialises the Load Distribution button. This button only exists for
-	 * testing purposes. When it is pressed, the distribution of the geometry is
-	 * set to a colour bar from black to white, from left to right. This
-	 * distribution is then drawn on the canvas, to demonstrate we can load an
-	 * arbitrary distribution, with 256 gray scale colours. TODO: Can (and
-	 * should) be removed when the communication is functional
-	 */
-	private void createLoadDistButton() {
-		loadDistButton = new Button("Load Dist");
-		loadDistButton.addClickHandler(new ClickHandler() {
-
-			@Override
-			public void onClick(ClickEvent event) {
-				// RectangleDistribution dist = new RectangleDistribution();
-				double[] dist = new double[96000];
-				for (int x = 0; x < 400; x++) {
-					for (int y = 0; y < 240; y++) {
-						// dist.setValue(x, y, (double) x / 400);
-						dist[x + 400 * (239 - y)] = (double) x / 400;
-					}
-				}
-				as.getGeometry().drawDistribution(dist);
-			}
-		});
 	}
 
 	/**
