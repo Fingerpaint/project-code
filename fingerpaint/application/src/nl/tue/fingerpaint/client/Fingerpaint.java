@@ -733,6 +733,7 @@ public class Fingerpaint implements EntryPoint {
 		// Initialise the spinner with the required settings.
 		nrStepsSpinner = new NumberSpinner(NRSTEPS_DEFAULT, NRSTEPS_RATE,
 				NRSTEPS_MIN, NRSTEPS_MAX, true);
+		nrStepsSpinner.ensureDebugId("nrStepsSpinner");
 		// Also initialise the initial value in the ApplicationState class.
 		as.setNrSteps(NRSTEPS_DEFAULT);
 
@@ -1735,6 +1736,7 @@ public class Fingerpaint implements EntryPoint {
 	private void createDefineProtocolCheckBox() {
 		// TODO: The text 'Define Protocol' should be translated later on
 		defineProtocolCheckBox = new CheckBox("Define Protocol");
+		defineProtocolCheckBox.ensureDebugId("defineProtocolCheckbox");
 		defineProtocolCheckBox.addClickHandler(new ClickHandler() {
 
 			@Override
@@ -1768,6 +1770,7 @@ public class Fingerpaint implements EntryPoint {
 	private void createMixNowButton() {
 		// TODO: The text 'Mix Now' should be translated later on
 		mixNowButton = new Button("Mix Now");
+		mixNowButton.ensureDebugId("mixNowButton");
 		mixNowButton.setEnabled(false);
 		mixNowButton.addClickHandler(new ClickHandler() {
 

@@ -166,6 +166,16 @@ public class MultiBrowserTester<ResultObject> {
 	private ScreenshotComparator screenshotComparator;
 	
 	/**
+	 * Specifies wheter or not the tester should run browsers multithreaded.
+	 */
+	private boolean multiThreaded;
+	
+	/**
+	 * If in single thread mode, this holds the last added thread
+	 */
+	private Thread singleThreadLastAdded = null;
+	
+	/**
 	 * Creates a new MultiBrowserTester instance given a test to be run, the
 	 * {@link URL} to the remote server and a {@link CapabilitiesProvider}.
 	 * 
@@ -181,7 +191,30 @@ public class MultiBrowserTester<ResultObject> {
 	 */
 	public MultiBrowserTester(CrossBrowserTest<ResultObject> test,
 			URL seleniumServer, CapabilitiesProvider browserProvider) {
-		this(test, seleniumServer, browserProvider, new ScreenshotComparator());
+		this(test, seleniumServer, browserProvider, new ScreenshotComparator(), false);
+	}
+	
+	/**
+	 * Creates a new MultiBrowserTester instance given a test to be run, the
+	 * {@link URL} to the remote server and a {@link CapabilitiesProvider}.
+	 * 
+	 * A standard screenshot comparator will be used when this constructor is called.
+	 * 
+	 * @param test
+	 *            The test to be run
+	 * @param seleniumServer
+	 *            The remote host
+	 * @param browserProvider
+	 *            Provides capabilities for different browsers and dimensions of
+	 *            these browsers
+	 * @param multiThreaded Whether or not browser should be run multithreaded
+	 */
+	public MultiBrowserTester(
+			CrossBrowserTest<ResultObject> test, URL seleniumServer, 
+			CapabilitiesProvider browserProvider, boolean multiThreaded) {
+		this(
+				test, seleniumServer, browserProvider, 
+				new ScreenshotComparator(), multiThreaded);
 	}
 
 	/**
@@ -196,9 +229,12 @@ public class MultiBrowserTester<ResultObject> {
 	 *            Provides capabilities for different browsers and dimensions of
 	 *            these browsers
 	 * @param screenshotComparator The comparator for the screenshots the test takes
+	 * @param multiThreaded Specifies whether or not the browsers should be run multithreaded
 	 */
-	public MultiBrowserTester(CrossBrowserTest<ResultObject> test,
-			URL seleniumServer, CapabilitiesProvider browserProvider, ScreenshotComparator screenshotComparator) {
+	public MultiBrowserTester(
+			CrossBrowserTest<ResultObject> test, URL seleniumServer, 
+			CapabilitiesProvider browserProvider, 
+			ScreenshotComparator screenshotComparator, boolean multiThreaded) {
 
 		if (test == null) {
 			throw new NullPointerException("Agrument test cannot be null");
@@ -220,6 +256,7 @@ public class MultiBrowserTester<ResultObject> {
 		this.seleniumServer = seleniumServer;
 		this.browserProvider = browserProvider;
 		this.screenshotComparator = screenshotComparator;
+		this.multiThreaded = multiThreaded;
 	}
 
 	/**
@@ -455,15 +492,22 @@ public class MultiBrowserTester<ResultObject> {
 	private synchronized Thread testSpecificAsync(Dimension dimension,
 			DesiredCapabilities browser) {
 		TestRunner<ResultObject> runner;
-		if (isSequentialBrowser(browser) && lastAddedTest.containsKey(browser)) {
-			runner = new TestRunner<>(seleniumServer, browser, test, this,
-					dimension, lastAddedTest.get(browser));
+		if (multiThreaded) {
+			if (isSequentialBrowser(browser) && lastAddedTest.containsKey(browser)) {
+				runner = new TestRunner<>(seleniumServer, browser, test, this,
+						dimension, lastAddedTest.get(browser));
+			} else {
+				runner = new TestRunner<>(seleniumServer, browser, test, this,
+						dimension, null);
+			}
 		} else {
 			runner = new TestRunner<>(seleniumServer, browser, test, this,
-					dimension, null);
+					dimension, singleThreadLastAdded);
 		}
+		
 		Thread thread = new Thread(runner);
 		lastAddedTest.put(browser, thread);
+		singleThreadLastAdded = thread;
 		thread.start();
 		return thread;
 	}
