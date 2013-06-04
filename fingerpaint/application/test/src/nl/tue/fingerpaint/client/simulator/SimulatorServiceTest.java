@@ -13,7 +13,7 @@ import com.google.gwt.junit.client.GWTTestCase;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**
- * GWT jUnit tests for the class {@link }.
+ * GWT jUnit tests for the class {@link SimulatorService}.
  * 
  * @author Group Fingerpaint
  */

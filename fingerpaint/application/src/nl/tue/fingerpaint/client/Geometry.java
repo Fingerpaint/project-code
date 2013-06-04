@@ -16,14 +16,6 @@ import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
-import com.google.gwt.event.dom.client.TouchCancelEvent;
-import com.google.gwt.event.dom.client.TouchCancelHandler;
-import com.google.gwt.event.dom.client.TouchEndEvent;
-import com.google.gwt.event.dom.client.TouchEndHandler;
-import com.google.gwt.event.dom.client.TouchMoveEvent;
-import com.google.gwt.event.dom.client.TouchMoveHandler;
-import com.google.gwt.event.dom.client.TouchStartEvent;
-import com.google.gwt.event.dom.client.TouchStartHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Image;
@@ -79,12 +71,10 @@ public abstract class Geometry {
 	protected int displacement;
 	/** Reference to the current MouseMoveHandler attached to the canvas */
 	private HandlerRegistration mouseMove;
-	/** Reference to the current touchMoveHandler attached to the canvas */
-	private HandlerRegistration touchMove;
 
-	/** X-position of the previous Mouse/TouchMoveEvent, relative to the canvas */
+	/** X-position of the previous MouseMoveEvent, relative to the canvas */
 	private int previousX;
-	/** Y-position of the previous Mouse/TouchMoveEvent, relative to the canvas */
+	/** Y-position of the previous MouseMoveEvent, relative to the canvas */
 	private int previousY;
 	/** {@code true} if the user is currently drawing, {@code false} otherwise */
 	private boolean drawing;
@@ -367,23 +357,6 @@ public abstract class Geometry {
 
 		});
 
-		canvas.addTouchStartHandler(new TouchStartHandler() {
-
-			@Override
-			public void onTouchStart(TouchStartEvent event) {
-				event.stopPropagation();
-				event.preventDefault();
-
-				Element elem = event.getRelativeElement();
-				int x = event.getTouches().get(0).getRelativeX(elem);
-				int y = event.getTouches().get(0).getRelativeY(elem);
-
-				onDragStart(x, y);
-
-			}
-
-		});
-
 		canvas.addMouseUpHandler(new MouseUpHandler() {
 
 			/*
@@ -400,22 +373,6 @@ public abstract class Geometry {
 
 		});
 
-		canvas.addTouchEndHandler(new TouchEndHandler() {
-
-			@Override
-			public void onTouchEnd(TouchEndEvent event) {
-				event.stopPropagation();
-				event.preventDefault();
-
-				Element elem = event.getRelativeElement();
-				int x = event.getTouches().get(0).getRelativeX(elem);
-				int y = event.getTouches().get(0).getRelativeY(elem);
-
-				onDragEnd(x, y);
-			}
-
-		});
-
 		/*
 		 * When the mouse leaves the canvas area, defining a step is ended
 		 */
@@ -425,22 +382,10 @@ public abstract class Geometry {
 				onDragOut();
 			}
 		});
-
-		canvas.addTouchCancelHandler(new TouchCancelHandler() {
-
-			@Override
-			public void onTouchCancel(TouchCancelEvent event) {
-				event.stopPropagation();
-				event.preventDefault();
-
-				onDragOut();
-			}
-
-		});
 	}
 
 	/**
-	 * Code to execute on a MouseDown or TouchStart event.
+	 * Code to execute on a MouseDown event.
 	 * 
 	 * @param x
 	 *            The x-coordinate of the event, relative to the canvas
@@ -482,28 +427,6 @@ public abstract class Geometry {
 				}
 			});
 
-			touchMove = canvas.addTouchMoveHandler(new TouchMoveHandler() {
-
-				@Override
-				public void onTouchMove(TouchMoveEvent event) {
-					event.stopPropagation();
-					event.preventDefault();
-
-					Element elem = event.getRelativeElement();
-					int x = event.getTouches().get(0).getRelativeX(elem)
-							- X_OFFSET;
-					int y = event.getTouches().get(0).getRelativeY(elem)
-							- TOP_OFFSET;
-					if (isInsideDrawingArea(x, y)) {
-						drawLine(previousX, previousY, x, y);
-						previousX = x;
-						previousY = y;
-					}
-
-				}
-
-			});
-
 		} else if (isInsideTopWall(x, y) || isInsideBottomWall(x, y)) {
 			// User started defining a step of the protocol
 			definingStep = true;
@@ -531,29 +454,11 @@ public abstract class Geometry {
 				}
 
 			});
-
-			touchMove = canvas.addTouchMoveHandler(new TouchMoveHandler() {
-
-				@Override
-				public void onTouchMove(TouchMoveEvent event) {
-					event.stopPropagation();
-					event.preventDefault();
-
-					Element elem = event.getRelativeElement();
-					int currentX = event.getTouches().get(0).getRelativeX(elem);
-
-					removeClippingArea();
-					fillWall(currentX - swipeStartX, topWallStep);
-					clipGeometryOutline();
-
-				}
-
-			});
 		}
 	}
 
 	/**
-	 * Code to execute on a MouseUp or TouchEnd event.
+	 * Code to execute on a MouseUp event.
 	 * 
 	 * @param x
 	 *            The x-coordinate of the event, relative to the canvas
@@ -568,7 +473,7 @@ public abstract class Geometry {
 	}
 
 	/**
-	 * Code to execute on a MouseOut or TouchCancel event.
+	 * Code to execute on a MouseOut event.
 	 * 
 	 * @param x
 	 *            The x-coordinate of the event, relative to the canvas
@@ -596,12 +501,10 @@ public abstract class Geometry {
 		if (drawing) {
 			drawing = false;
 			mouseMove.removeHandler();
-			touchMove.removeHandler();
 		}
 		if (definingStep) {
 			definingStep = false;
 			mouseMove.removeHandler();
-			touchMove.removeHandler();
 
 			animationTimer = new Timer() {
 				private int x = xStop;
