@@ -65,7 +65,6 @@ public class GraphVisualisatorTest {
 //				
 //			}
 		} catch (MalformedURLException | MultiBrowserTesterException e) {
-			// TODO Auto-generated catch block
 			throw new Error(e);
 		}
 	}
@@ -90,6 +89,8 @@ public class GraphVisualisatorTest {
 				"> div:first-child > div:first-child > div:first-child" +
 				" > div:first-child > div:first-child > div:nth-child(4)")).click();
 //		driver.findElement(By.linkText("Default")).click();
+		
+		
 		
 		//clicking the View single graph button
 		driver.findElement(By.cssSelector("#gwt-debug-viewGraph")).click();
