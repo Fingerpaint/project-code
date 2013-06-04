@@ -5,8 +5,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import nl.tue.fingerpaint.client.MixingProtocol;
-import nl.tue.fingerpaint.client.MixingProtocol.MixingProtocolJsonizer;
+import nl.tue.fingerpaint.client.model.MixingProtocol;
 import nl.tue.fingerpaint.client.storage.ResultStorage;
 import nl.tue.fingerpaint.client.storage.ResultStorage.ResultStorageJsonizer;
 

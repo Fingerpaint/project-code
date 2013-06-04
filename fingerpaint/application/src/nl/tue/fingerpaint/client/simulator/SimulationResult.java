@@ -1,4 +1,4 @@
-package nl.tue.fingerpaint.client;
+package nl.tue.fingerpaint.client.simulator;
 
 import java.io.Serializable;
 
@@ -26,7 +26,6 @@ public class SimulationResult implements Serializable {
 	/**
 	 * Constructs a new SimulationResults of a {@link Simulation}.
 	 * 
-	 * @param simulation The simulation that has been run
 	 * @param concentrationVectors The resulting concentration vectors
 	 * @param segregationPoints The resulting segregation values
 	 */

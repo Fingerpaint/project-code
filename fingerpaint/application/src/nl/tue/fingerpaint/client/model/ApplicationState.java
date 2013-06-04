@@ -1,4 +1,5 @@
-package nl.tue.fingerpaint.client;
+package nl.tue.fingerpaint.client.model;
+
 
 /**
  * Class that keeps track of the Geometry and Mixer the user has selected. Used

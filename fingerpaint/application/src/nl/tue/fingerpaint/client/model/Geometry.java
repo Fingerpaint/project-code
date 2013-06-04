@@ -1,6 +1,9 @@
-package nl.tue.fingerpaint.client;
+package nl.tue.fingerpaint.client.model;
 
 import java.util.ArrayList;
+
+import nl.tue.fingerpaint.client.gui.drawingtool.DrawingTool;
+import nl.tue.fingerpaint.client.gui.drawingtool.SquareDrawingTool;
 
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
@@ -474,11 +477,6 @@ public abstract class Geometry {
 
 	/**
 	 * Code to execute on a MouseOut event.
-	 * 
-	 * @param x
-	 *            The x-coordinate of the event, relative to the canvas
-	 * @param y
-	 *            The y-coordinate of the event, relative to the canvas
 	 */
 	public void onDragOut() {
 		removeClippingArea();
@@ -722,6 +720,8 @@ public abstract class Geometry {
 	 * 
 	 * @param mouseX
 	 *            x-coordinate of the mouseEvent.
+	 * @param mouseY
+	 *            y-coordinate of the mouseEvent.
 	 */
 	protected void startDefineMixingStep(int mouseX, int mouseY) {
 		swipeStartX = mouseX;
@@ -752,6 +752,8 @@ public abstract class Geometry {
 	 *            The x-coordinate of the current mouse position.
 	 * @param mouseY
 	 *            The y-coordinate of the current mouse position.
+	 * @return The direction and wall of the current swiping movement, or
+	 *         {@code null} if the swipe is not valid.
 	 */
 	protected abstract MixingStep determineSwipe(int mouseX, int mouseY);
 

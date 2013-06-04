@@ -5,18 +5,30 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
-import nl.tue.fingerpaint.client.Geometry.StepAddedListener;
+import nl.tue.fingerpaint.client.gui.GraphVisualisator;
 import nl.tue.fingerpaint.client.gui.MenuToggleButton;
+import nl.tue.fingerpaint.client.gui.NotificationPanel;
+import nl.tue.fingerpaint.client.gui.NumberSpinner;
+import nl.tue.fingerpaint.client.gui.NumberSpinnerListener;
+import nl.tue.fingerpaint.client.gui.ToggleColourButton;
+import nl.tue.fingerpaint.client.gui.drawingtool.CircleDrawingTool;
+import nl.tue.fingerpaint.client.gui.drawingtool.SquareDrawingTool;
+import nl.tue.fingerpaint.client.model.ApplicationState;
+import nl.tue.fingerpaint.client.model.Geometry.StepAddedListener;
+import nl.tue.fingerpaint.client.model.MixingProtocol;
+import nl.tue.fingerpaint.client.model.MixingStep;
+import nl.tue.fingerpaint.client.model.RectangleGeometry;
 import nl.tue.fingerpaint.client.resources.FingerpaintConstants;
 import nl.tue.fingerpaint.client.resources.FingerpaintResources;
 import nl.tue.fingerpaint.client.serverdata.ServerDataCache;
+import nl.tue.fingerpaint.client.simulator.Simulation;
+import nl.tue.fingerpaint.client.simulator.SimulationResult;
 import nl.tue.fingerpaint.client.simulator.SimulatorService;
 import nl.tue.fingerpaint.client.simulator.SimulatorServiceAsync;
 import nl.tue.fingerpaint.client.storage.ResultStorage;
 import nl.tue.fingerpaint.client.storage.StorageManager;
 import nl.tue.fingerpaint.shared.GeometryNames;
 
-import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.cell.client.ClickableTextCell;
 import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.cell.client.ValueUpdater;
@@ -73,7 +85,7 @@ public class Fingerpaint implements EntryPoint {
 	protected ApplicationState as;
 
 	// Button to toggle between black and white drawing colour
-	private ToggleButton toggleColor;
+	private ToggleColourButton toggleColor;
 
 	// Button to reset the distribution to all white
 	private Button resetDistButton;
@@ -497,7 +509,7 @@ public class Fingerpaint implements EntryPoint {
 
 			// Initialise toggleButton and add to
 			// menuPanel
-			createToggleButton();
+			toggleColor = new ToggleColourButton(as);
 			menuPanel.add(toggleColor);
 
 			// Initialise the loadDistButton and add to
@@ -747,25 +759,6 @@ public class Fingerpaint implements EntryPoint {
 	}
 
 	/*
-	 * Initialises the toggleColor button. TODO: Use pictures instead of text on
-	 * the button.
-	 * 
-	 * Note: If the button shows "black" it means the current drawing colour is
-	 * black. Not 'toggle to black'.
-	 */
-	private void createToggleButton() {
-		toggleColor = new ToggleButton("black", "white");
-		toggleColor.addClickHandler(new ClickHandler() {
-
-			@Override
-			public void onClick(ClickEvent event) {
-				toggleColor();
-
-			}
-		});
-	}
-
-	/*
 	 * Initialises the protocol representation text area. TODO: this code has to
 	 * be removed!
 	 */
@@ -774,18 +767,6 @@ public class Fingerpaint implements EntryPoint {
 		
 		labelProtocolRepresentation.setVisible(false);
 		labelProtocolRepresentation.getElement().setId("protLabel");
-	}
-
-	/*
-	 * Changes the current drawing colour from black to white, and from white to
-	 * black.
-	 */
-	private void toggleColor() {
-		if (toggleColor.isDown()) {
-			as.getGeometry().setColor(CssColor.make("white"));
-		} else {
-			as.getGeometry().setColor(CssColor.make("black"));
-		}
 	}
 
 	/*

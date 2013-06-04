@@ -1,6 +1,6 @@
 package nl.tue.fingerpaint.client.storage;
 
-import nl.tue.fingerpaint.client.MixingProtocol;
+import nl.tue.fingerpaint.client.model.MixingProtocol;
 
 import org.jsonmaker.gwt.client.Jsonizer;
 import org.jsonmaker.gwt.client.annotation.Transient;

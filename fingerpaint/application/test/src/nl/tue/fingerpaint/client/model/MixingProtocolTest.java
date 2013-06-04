@@ -1,4 +1,7 @@
-package nl.tue.fingerpaint.client;
+package nl.tue.fingerpaint.client.model;
+
+import nl.tue.fingerpaint.client.model.MixingProtocol;
+import nl.tue.fingerpaint.client.model.MixingStep;
 
 import org.junit.Test;
 

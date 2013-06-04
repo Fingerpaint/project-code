@@ -1,4 +1,5 @@
-package nl.tue.fingerpaint.client;
+package nl.tue.fingerpaint.client.gui.drawingtool;
+
 
 import com.google.gwt.canvas.dom.client.CanvasPixelArray;
 import com.google.gwt.canvas.dom.client.CssColor;

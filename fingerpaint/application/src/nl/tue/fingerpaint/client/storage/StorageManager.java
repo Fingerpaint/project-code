@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import nl.tue.fingerpaint.client.MixingProtocol;
-import nl.tue.fingerpaint.client.NotificationPanel;
+import nl.tue.fingerpaint.client.gui.NotificationPanel;
 import nl.tue.fingerpaint.client.json.FingerpaintJsonizer;
+import nl.tue.fingerpaint.client.model.MixingProtocol;
 import nl.tue.fingerpaint.shared.GeometryNames;
 
 import com.google.gwt.core.client.JavaScriptException;

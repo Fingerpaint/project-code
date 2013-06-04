@@ -1,4 +1,4 @@
-package nl.tue.fingerpaint.client;
+package nl.tue.fingerpaint.client.gui;
 
 import static org.junit.Assert.*;
 

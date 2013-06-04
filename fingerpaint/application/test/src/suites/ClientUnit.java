@@ -1,10 +1,10 @@
 package suites;
 
-import nl.tue.fingerpaint.client.ApplicationStateTest;
-import nl.tue.fingerpaint.client.MixingProtocolTest;
-import nl.tue.fingerpaint.client.MixingStepTest;
-import nl.tue.fingerpaint.client.NumberSpinnerTest;
-import nl.tue.fingerpaint.client.RectangleGeometryTest;
+import nl.tue.fingerpaint.client.gui.NumberSpinnerTest;
+import nl.tue.fingerpaint.client.model.ApplicationStateTest;
+import nl.tue.fingerpaint.client.model.MixingProtocolTest;
+import nl.tue.fingerpaint.client.model.MixingStepTest;
+import nl.tue.fingerpaint.client.model.RectangleGeometryTest;
 import nl.tue.fingerpaint.client.simulator.SimulatorServiceTest;
 import nl.tue.fingerpaint.client.storage.StorageManagerTest;
 

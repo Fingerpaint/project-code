@@ -1,4 +1,6 @@
-package nl.tue.fingerpaint.client;
+package nl.tue.fingerpaint.client.model;
+
+import nl.tue.fingerpaint.client.model.ApplicationState;
 
 import org.junit.Test;
 

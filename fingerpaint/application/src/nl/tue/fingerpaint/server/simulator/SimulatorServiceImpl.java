@@ -1,7 +1,7 @@
 package nl.tue.fingerpaint.server.simulator;
 
-import nl.tue.fingerpaint.client.Simulation;
-import nl.tue.fingerpaint.client.SimulationResult;
+import nl.tue.fingerpaint.client.simulator.Simulation;
+import nl.tue.fingerpaint.client.simulator.SimulationResult;
 import nl.tue.fingerpaint.client.simulator.SimulatorService;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;

@@ -1,6 +1,8 @@
-package nl.tue.fingerpaint.client;
+package nl.tue.fingerpaint.client.simulator;
 
 import java.io.Serializable;
+
+import nl.tue.fingerpaint.client.model.MixingProtocol;
 
 /**
  * Defines all information necessary for a simulation run. Results are saved

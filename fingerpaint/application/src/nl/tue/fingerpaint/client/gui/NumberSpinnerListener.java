@@ -1,4 +1,4 @@
-package nl.tue.fingerpaint.client;
+package nl.tue.fingerpaint.client.gui;
 
 /**
  * This listener can be attached to a {@link NumberSpinner}. It is notified when

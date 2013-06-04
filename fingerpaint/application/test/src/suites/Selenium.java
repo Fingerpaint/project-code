@@ -1,7 +1,7 @@
 package suites;
 
 
-import nl.tue.fingerpaint.client.GraphVisualisatorTest;
+import nl.tue.fingerpaint.client.gui.GraphVisualisatorTest;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;

@@ -1,7 +1,5 @@
 package nl.tue.fingerpaint.client.simulator;
 
-import nl.tue.fingerpaint.client.Simulation;
-import nl.tue.fingerpaint.client.SimulationResult;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;

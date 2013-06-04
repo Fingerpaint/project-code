@@ -1,13 +1,9 @@
-package nl.tue.fingerpaint.client;
+package nl.tue.fingerpaint.client.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.jsonmaker.gwt.client.Jsonizer;
-
-import com.google.gwt.core.shared.GWT;
 
 /**
  * This class symbolises a mixing program consisting of a number of mixing steps

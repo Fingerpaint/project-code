@@ -1,4 +1,4 @@
-package nl.tue.fingerpaint.client;
+package nl.tue.fingerpaint.client.gui;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
@@ -203,10 +203,7 @@ public class NumberSpinner extends Composite {
 	}
 
 	/**
-	 * Sets the value to the control and possibly performs rounding of the given
-	 * 
-	 * @param d
-	 *            .
+	 * Sets the value to the control and possibly performs rounding of the given         .
 	 * 
 	 * @param d
 	 *            Value to be set

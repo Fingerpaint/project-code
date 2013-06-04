@@ -1,4 +1,5 @@
-package nl.tue.fingerpaint.client;
+package nl.tue.fingerpaint.client.gui.drawingtool;
+
 
 import com.google.gwt.canvas.dom.client.CanvasPixelArray;
 import com.google.gwt.canvas.dom.client.CssColor;
@@ -62,13 +63,13 @@ public class CircleDrawingTool extends DrawingTool {
 	 *            The colour to create the drawing tool with
 	 */
 	@Override
-	public ImageData getTool(ImageData img, CssColor color) {
+	public ImageData getTool(ImageData img, CssColor colour) {
 		int width = img.getWidth();
 		int factor = width / (radius * 2 + 1);
 		int x = radius;
 		int y = radius;
 		CanvasPixelArray data = img.getData();
-		int col = color.value().equals("black") ? 0 : 255;
+		int col = colour.value().equals("black") ? 0 : 255;
 
 		int i = 0, j = radius;
 		while (i <= j) {

@@ -1,8 +1,6 @@
 package nl.tue.fingerpaint.client.simulator;
 
-import nl.tue.fingerpaint.client.MixingProtocol;
-import nl.tue.fingerpaint.client.Simulation;
-import nl.tue.fingerpaint.client.SimulationResult;
+import nl.tue.fingerpaint.client.model.MixingProtocol;
 import nl.tue.fingerpaint.client.simulator.SimulatorService;
 import nl.tue.fingerpaint.client.simulator.SimulatorServiceAsync;
 

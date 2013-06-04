@@ -1,6 +1,9 @@
-package nl.tue.fingerpaint.client;
+package nl.tue.fingerpaint.client.model;
 
-import nl.tue.fingerpaint.client.Geometry.StepAddedListener;
+import nl.tue.fingerpaint.client.model.Geometry;
+import nl.tue.fingerpaint.client.model.MixingStep;
+import nl.tue.fingerpaint.client.model.RectangleGeometry;
+import nl.tue.fingerpaint.client.model.Geometry.StepAddedListener;
 
 import org.junit.Test;
 
