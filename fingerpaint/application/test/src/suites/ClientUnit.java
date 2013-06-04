@@ -1,4 +1,4 @@
-package suits;
+package suites;
 
 import nl.tue.fingerpaint.client.ApplicationStateTest;
 import nl.tue.fingerpaint.client.MixingProtocolTest;
