@@ -75,10 +75,6 @@ public class Fingerpaint implements EntryPoint {
 	// Button to toggle between black and white drawing colour
 	private ToggleButton toggleColor;
 
-	// Button to load predefined distribution half black, half white
-	// Needed for testing purposes for story 32
-	private Button loadDistButton;
-
 	// Button to reset the distribution to all white
 	private Button resetDistButton;
 
@@ -370,18 +366,6 @@ public class Fingerpaint implements EntryPoint {
 		tree.ensureDebugId("cell");
 	}
 
-	/*
-	 * TODO : Call this when a new state has been loaded
-	 */
-	private void refreshWidgets() {
-		nrStepsSpinner.setValue(as.getNrSteps());
-		sizeSpinner.setValue(as.getStepSize());
-
-		for (MixingStep step : as.getProtocol().getProgram()) {
-			updateProtocolLabel(step);
-		}
-	}
-
 	/**
 	 * Show a pop-up with given message that indicates an error has occurred.
 	 * 
@@ -460,7 +444,7 @@ public class Fingerpaint implements EntryPoint {
 		private void setUserChoiceValues(String selectedMixer) {
 			// TODO: Actually create a different geometry depending on the
 			// chosen geometry...
-			as.setGeometry(new RectangleGeometry(Window.getClientHeight(), Window.getClientWidth()));
+			as.setGeometry(new RectangleGeometry(Window.getClientHeight() - 20, Window.getClientWidth() - 20));
 		}
 
 		public CustomTreeModel() {
@@ -480,10 +464,6 @@ public class Fingerpaint implements EntryPoint {
 								// rootpanel)
 								// TODO: Make decent close-code
 								RootPanel.get().clear();
-
-								if (as.getGeometryChoice() != null
-										&& as.getMixerChoice() != null) {
-								}
 								
 								createMixingWidgets();
 							}
@@ -673,7 +653,7 @@ public class Fingerpaint implements EntryPoint {
 				MixingStep.STEP_UNIT, MixingStep.STEP_MIN, MixingStep.STEP_MAX,
 				true);
 		
-		sizeSpinner.getElement().setId("sizeSpinnerInput");
+		sizeSpinner.addStyleName("sizeSpinnerInput");
 		as.setStepSize(MixingStep.STEP_DEFAULT);
 
 		// set a listener for the spinner
@@ -733,6 +713,7 @@ public class Fingerpaint implements EntryPoint {
 		// Initialise the spinner with the required settings.
 		nrStepsSpinner = new NumberSpinner(NRSTEPS_DEFAULT, NRSTEPS_RATE,
 				NRSTEPS_MIN, NRSTEPS_MAX, true);
+		nrStepsSpinner.ensureDebugId("nrStepsSpinner");
 		// Also initialise the initial value in the ApplicationState class.
 		as.setNrSteps(NRSTEPS_DEFAULT);
 
@@ -1022,17 +1003,21 @@ public class Fingerpaint implements EntryPoint {
 				 createGraph(
 						 viewSingleGraphGraphPanel,
 				 new ArrayList<String>(Arrays
-				 .asList("Current mixing run")), performance);
+				 .asList("Current mixing run")), performance, new AsyncCallback<Boolean>() {
+					@Override
+					public void onFailure(Throwable caught) {
+						caught.printStackTrace();
+					}
 
-				viewSingleGraphVerticalPanel.add(viewSingleGraphGraphPanel);
-				viewSingleGraphVerticalPanel
-						.add(viewSingleGraphHorizontalPanel);
-				viewSingleGraphPopupPanel.add(viewSingleGraphVerticalPanel);
-
-				// TODO: Inside the vert panel; Make buttons in hori-panel
-				// appear below Graph
-				viewSingleGraphPopupPanel.center();
-				viewSingleGraphPopupPanel.show();
+					@Override
+					public void onSuccess(Boolean result) {
+						viewSingleGraphVerticalPanel.add(viewSingleGraphGraphPanel);
+						viewSingleGraphVerticalPanel
+								.add(viewSingleGraphHorizontalPanel);
+						viewSingleGraphPopupPanel.add(viewSingleGraphVerticalPanel);
+						viewSingleGraphPopupPanel.center();
+					}	 
+				});
 
 				// .setPopupPositionAndShow(new PopupPanel.PositionCallback() {
 				// public void setPosition(int offsetWidth,
@@ -1232,6 +1217,11 @@ public class Fingerpaint implements EntryPoint {
 	/**
 	 * Saves the current protocol, distribution or mixing results, depending on
 	 * which save-button was pressed last.
+	 * 
+	 * @param name Name of save "file".
+	 * @param canOverwrite If we can overwrite an already-exisiting "file" with
+	 *                     the given name or not.
+	 * @return {@code true} if "file" was saved, {@code false} otherwise
 	 */
 	public boolean save(String name, boolean canOverwrite) {
 		if (lastSaveButtonClicked.equals(StorageManager.KEY_INITDIST)) {
@@ -1499,33 +1489,6 @@ public class Fingerpaint implements EntryPoint {
 	}
 
 	/**
-	 * Initialises the Load Distribution button. This button only exists for
-	 * testing purposes. When it is pressed, the distribution of the geometry is
-	 * set to a colour bar from black to white, from left to right. This
-	 * distribution is then drawn on the canvas, to demonstrate we can load an
-	 * arbitrary distribution, with 256 gray scale colours. TODO: Can (and
-	 * should) be removed when the communication is functional
-	 */
-	private void createLoadDistButton() {
-		loadDistButton = new Button("Load Dist");
-		loadDistButton.addClickHandler(new ClickHandler() {
-
-			@Override
-			public void onClick(ClickEvent event) {
-				// RectangleDistribution dist = new RectangleDistribution();
-				double[] dist = new double[96000];
-				for (int x = 0; x < 400; x++) {
-					for (int y = 0; y < 240; y++) {
-						// dist.setValue(x, y, (double) x / 400);
-						dist[x + 400 * (239 - y)] = (double) x / 400;
-					}
-				}
-				as.getGeometry().drawDistribution(dist);
-			}
-		});
-	}
-
-	/**
 	 * <p>
 	 * Show or hide an overlay with a loading animation in the centre. Making
 	 * this panel visible will make it impossible for the user to give input.
@@ -1652,16 +1615,18 @@ public class Fingerpaint implements EntryPoint {
 				}
 
 				compareGraphPanel.clear();
-				createGraph(compareGraphPanel, names, graphs);
-				
-				compareSelectPopupPanel.hide();
-				comparePopupPanel
-						.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
-							public void setPosition(int offsetWidth,
-									int offsetHeight) {
-								comparePopupPanel.center();
-							}
-						});
+				createGraph(compareGraphPanel, names, graphs, new AsyncCallback<Boolean>() {
+					@Override
+					public void onFailure(Throwable caught) {
+						caught.printStackTrace();
+					}
+
+					@Override
+					public void onSuccess(Boolean result) {
+						compareSelectPopupPanel.hide();
+						comparePopupPanel.center();
+					}
+				});
 			}
 		});
 
@@ -1713,14 +1678,14 @@ public class Fingerpaint implements EntryPoint {
 	 *            Values of the different plots
 	 */
 	private void createGraph(Panel panel, ArrayList<String> names,
-			ArrayList<double[]> performance) {
+			ArrayList<double[]> performance, AsyncCallback<Boolean> onLoad) {
 
 		graphVisualisator = new GraphVisualisator();
 		// Adds the graph to the Panel-parameter of
 		// visualisator.getOnLoadCallBack()
 		try {
 			VisualizationUtils.loadVisualizationApi(
-					graphVisualisator.createGraph(panel, names, performance),
+					graphVisualisator.createGraph(panel, names, performance, onLoad),
 					LineChart.PACKAGE);
 		} catch (Exception e) {
 			Window.alert("Loading graph failed.");
@@ -1735,6 +1700,7 @@ public class Fingerpaint implements EntryPoint {
 	private void createDefineProtocolCheckBox() {
 		// TODO: The text 'Define Protocol' should be translated later on
 		defineProtocolCheckBox = new CheckBox("Define Protocol");
+		defineProtocolCheckBox.ensureDebugId("defineProtocolCheckbox");
 		defineProtocolCheckBox.addClickHandler(new ClickHandler() {
 
 			@Override
@@ -1768,6 +1734,7 @@ public class Fingerpaint implements EntryPoint {
 	private void createMixNowButton() {
 		// TODO: The text 'Mix Now' should be translated later on
 		mixNowButton = new Button("Mix Now");
+		mixNowButton.ensureDebugId("mixNowButton");
 		mixNowButton.setEnabled(false);
 		mixNowButton.addClickHandler(new ClickHandler() {
 

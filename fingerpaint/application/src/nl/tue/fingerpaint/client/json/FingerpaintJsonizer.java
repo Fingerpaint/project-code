@@ -141,7 +141,7 @@ public class FingerpaintJsonizer {
 
 			if (deep) {
 				if ((tmpValStr = tmpVal.isString()) != null) {
-					hm.put(key, FingerpaintJsonizer.toUnquotedString(tmpValStr));
+					hm.put(key, tmpValStr.stringValue());
 				} else if ((tmpValObj = tmpVal.isObject()) != null) {
 					hm.put(key, hashMapFromJSONObject(tmpValObj, deep));
 				} else if ((tmpValArr = tmpVal.isArray()) != null) {
@@ -256,16 +256,17 @@ public class FingerpaintJsonizer {
 	 *         {@code null} is returned.
 	 */
 	public static MixingProtocol protocolFromString(String jsonString) {
-		MixingProtocolJsonizer json = (MixingProtocolJsonizer) GWT
-				.create(MixingProtocolJsonizer.class);
-		try {
-			return (MixingProtocol) JsonizerParser.parse(json, jsonString);
-		} catch (Exception e) {
-			// When the value is null or empty, return an empty hash map
-			Logger.getLogger("").log(Level.SEVERE,
-					"[resultFromString] Could not parse value...");
-			return null;
-		}
+		return MixingProtocol.fromString(jsonString);
+//		MixingProtocolJsonizer json = (MixingProtocolJsonizer) GWT
+//				.create(MixingProtocolJsonizer.class);
+//		try {
+//			return (MixingProtocol) JsonizerParser.parse(json, jsonString);
+//		} catch (Exception e) {
+//			// When the value is null or empty, return an empty hash map
+//			Logger.getLogger("").log(Level.SEVERE,
+//					"[resultFromString] Could not parse value...");
+//			return null;
+//		}
 	}
 
 	/**
@@ -305,9 +306,10 @@ public class FingerpaintJsonizer {
 	 * @return The JSON string that represents the given mixing protocol.
 	 */
 	public static String toString(MixingProtocol protocol) {
-		MixingProtocolJsonizer ja = (MixingProtocolJsonizer) GWT
-				.create(MixingProtocolJsonizer.class);
-		return ja.asString(protocol);
+		return protocol.toString();
+//		MixingProtocolJsonizer ja = (MixingProtocolJsonizer) GWT
+//				.create(MixingProtocolJsonizer.class);
+//		return ja.asString(protocol);
 	}
 
 	/**
@@ -366,13 +368,20 @@ public class FingerpaintJsonizer {
 		} else if (object instanceof int[]) {
 			return toString((int[]) object);
 		} else if (object instanceof JSONString) {
-			return toUnquotedString((JSONString) object);
+			return ((JSONString) object).toString();
 		} else if (object instanceof HashMap) {
 			return toString((HashMap<String, Object>) object);
 		} else if (object instanceof MixingProtocol) {
 			return toString((MixingProtocol) object);
 		} else if (object instanceof Object[]) {
 			return toString((Object[]) object);
+		} else if (object instanceof String) {
+			// Ugly check to see if a string is escaped already...
+			String strObject = (String) object;
+			return ((strObject.charAt(0) == '"' && strObject.charAt(strObject.length() - 1) == '"') ||
+					(strObject.charAt(0) == '{' && strObject.charAt(strObject.length() - 1) == '}') ||
+					(strObject.charAt(0) == '[' && strObject.charAt(strObject.length() - 1) == ']')
+					? strObject : JsonUtils.escapeValue(strObject));
 		}
 
 		return object.toString();
@@ -399,18 +408,5 @@ public class FingerpaintJsonizer {
 
 		sb.append("]");
 		return sb.toString();
-	}
-
-	/**
-	 * Return the contents of the given JSONString, but without quotes as
-	 * opposed to the standard {@link JSONString#toString()}.
-	 * 
-	 * @param jsonString
-	 *            The JSONString of which a String representation is needed.
-	 * @return The unquoted value of the JSONString.
-	 */
-	public static String toUnquotedString(JSONString jsonString) {
-		String str = jsonString.toString();
-		return str.substring(1, str.length() - 1);
 	}
 }

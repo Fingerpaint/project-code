@@ -16,7 +16,6 @@ extern void __subs_m_MOD_simulate(const char *geometry, size_t *len_geometry,
 JNIEXPORT jdouble JNICALL Java_nl_tue_fingerpaint_server_simulator_NativeCommunicator_simulate
   (JNIEnv *env, jobject this, jstring geometry, jstring mixer,
 		  jdoubleArray distribution, jdouble step_size, jstring step_name) {
-
 	const char *geometry_chars = (*env)->GetStringUTFChars(env, geometry, 0);
 	size_t geometry_chars_size = strlen(geometry_chars);
 

@@ -75,7 +75,7 @@ public class MixingProtocolTest extends GWTTestCase {
 		init();
 		MixingStep edited = program.getStep(1);
 		// should change the step size of step1 to 2.25
-		program.editStep(1, 2.25, edited.movesForward(), edited.isTopWall());
+		program.editStep(1, 2.25, edited.isClockwise(), edited.isTopWall());
 		assertEquals(2.25, program.getStep(1).getStepSize());
 	}
 
@@ -89,7 +89,7 @@ public class MixingProtocolTest extends GWTTestCase {
 		MixingStep edited = program.getStep(0);
 		// should change the stepDirection of step0 equal to false
 		program.editStep(0, edited.getStepSize(), false, edited.isTopWall());
-		assertEquals(false, program.getStep(0).movesForward());
+		assertEquals(false, program.getStep(0).isClockwise());
 	}
 
 	/**
@@ -102,7 +102,7 @@ public class MixingProtocolTest extends GWTTestCase {
 		MixingStep edited = program.getStep(2);
 		// should change the stepWall of step2 equal to true
 		program.editStep(2, edited.getStepSize(), true, edited.isTopWall());
-		assertEquals(true, program.getStep(2).movesForward());
+		assertEquals(true, program.getStep(2).isClockwise());
 	}
 
 	/**

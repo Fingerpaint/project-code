@@ -85,7 +85,7 @@ public class StorageManagerTest extends GWTTestCase {
 			assertEquals("Top wall of step " + i, program.get(i).isTopWall(),
 					receivedProtocol.getStep(i).isTopWall());
 			assertEquals("Direction of step " + i, program.get(i)
-					.movesForward(), receivedProtocol.getStep(i).movesForward());
+					.isClockwise(), receivedProtocol.getStep(i).isClockwise());
 		}
 	}
 
@@ -144,7 +144,7 @@ public class StorageManagerTest extends GWTTestCase {
 			assertEquals("Top wall of step " + i, program.get(i).isTopWall(),
 					receivedProtocol.getStep(i).isTopWall());
 			assertEquals("Direction of step " + i, program.get(i)
-					.movesForward(), receivedProtocol.getStep(i).movesForward());
+					.isClockwise(), receivedProtocol.getStep(i).isClockwise());
 		}
 
 		double[] receivedSegregation = receivedResult.getSegregation();
