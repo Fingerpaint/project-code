@@ -72,7 +72,7 @@ public class GraphVisualisatorTest {
 			MultiBrowserTester<Boolean> multitester = new MultiBrowserTester<Boolean>(
 					browsertester, 
 					new URL("http://fingerpaint.campus.tue.nl:4444/wd/hub"), 
-					new StandardCapabilitiesProvider(), false);
+					new StandardCapabilitiesProvider());
 			List<ResultTriple<Boolean>> results = multitester.testAll();
 			//ResultTriple<Boolean> results = multitester.testSpecific(new Dimension(800, 1280), DesiredCapabilities.firefox());
 			
@@ -93,9 +93,35 @@ public class GraphVisualisatorTest {
 //				
 //			}
 		} catch (MalformedURLException | MultiBrowserTesterException e) {
-			// TODO Auto-generated catch block
 			throw new Error(e);
 		}
+	}
+
+	/**
+	 * navigates the browser to the graph popup
+	 * 
+	 * @param the WebDriver that needs to be navigated
+	 */
+	protected void navigateToGraph(WebDriver driver) {
+		//load the page
+		driver.get("http://145.116.41.225:8888");
+		
+		//selecting the rectangle geometry in the cellBrowser
+		driver.findElement(By.cssSelector("#gwt-debug-cell > div:nth-child(3) " +
+				"> div:first-child > div:first-child > div:first-child" +
+				" > div:first-child > div:first-child > div:nth-child(2)")).click();
+//		driver.findElement(By.linkText("Rectangle 400x240")).click();
+		
+		//selecting the default mixer for the rectangle geometry in the cellBrowser
+		driver.findElement(By.cssSelector("#gwt-debug-cell > div:nth-child(5) " +
+				"> div:first-child > div:first-child > div:first-child" +
+				" > div:first-child > div:first-child > div:nth-child(4)")).click();
+//		driver.findElement(By.linkText("Default")).click();
+		
+		
+		
+		//clicking the View single graph button
+		driver.findElement(By.cssSelector("#gwt-debug-viewGraph")).click();
 	}
 
 }
