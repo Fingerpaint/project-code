@@ -2,6 +2,7 @@ package nl.tue.fingerpaint.client;
 
 import java.util.ArrayList;
 
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.visualization.client.AbstractDataTable;
 import com.google.gwt.visualization.client.AbstractDataTable.ColumnType;
@@ -46,15 +47,16 @@ public class GraphVisualisator {
 	 *            List of names of the different plots in the chart
 	 * @param performance
 	 *            Values of the different plots
+	 * @param onLoad A callback to execute when the graph has been loaded.
 	 * @return The runnable object to initiate drawing the graph
 	 */
 	public Runnable createGraph(Panel panel, ArrayList<String> names,
-			ArrayList<double[]> performance) {
+			ArrayList<double[]> performance, AsyncCallback<Boolean> onLoad) {
 		for (int i = 0; i < names.size(); i++) {
 			addSegregationResult(performance.get(i));
 		}
 		mixingRunNames = names;
-		return getOnLoadCallBack(panel);
+		return getOnLoadCallBack(panel, onLoad);
 	}
 
 	/**
@@ -64,7 +66,7 @@ public class GraphVisualisator {
 	 *            The panel the graph will be added to
 	 * @return The runnable object to initiate drawing the graph
 	 */
-	private Runnable getOnLoadCallBack(final Panel panel) {
+	private Runnable getOnLoadCallBack(final Panel panel, final AsyncCallback<Boolean> onLoad) {
 		// Create a callback to be called when the visualisation API
 		// has been loaded.
 		return new Runnable() {
@@ -72,6 +74,7 @@ public class GraphVisualisator {
 				// Create a line chart visualisation.
 				LineChart lc = new LineChart(createTable(), createOptions());
 				panel.add(lc);
+				onLoad.onSuccess(true);
 			}
 		};
 	}

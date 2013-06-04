@@ -24,17 +24,20 @@
 }
 
 body {
+/* 	background-image: url("http://richrock.com/gifs/optical-illusion-wheels-circles-rotating.png"); */
+/* 	background-position: center top; */
 	background-image: url("http://www.gravatar.com/avatar/c88dd72da6a28c7afaf3301bac80d929?s=210"); /* insert nice picture here */
 	background-position: center center;
 	background-repeat: no-repeat; 
 	background-attachment: fixed;
-	font-family: Verdana !important;
+	font-family: sans !important;
 	font-size: 15px !important;
 	margin: 0;
-	overflow: hidden; /* kinda ugly hack to prevent scrollbars from occuring... */
 }
-.gwt-PopupPanel.popupContent {
-	border: 1px solid black;
+
+.gwt-PopupPanel {
+	border: 2px solid #D6007B;
+	padding: 4px 8px 4px 4px;
 }
 
 #loading-overlay {
@@ -70,6 +73,7 @@ body {
 
 #protPanel {
 	border: 0px;
+	width: 15%;
 }
 
 /* remove list header row */
@@ -96,6 +100,7 @@ body {
 #menuPanel {
 	position: absolute;
 	right: 4px;
+	width: 15%;
 	top: 28px;
 }
 
@@ -114,12 +119,9 @@ body {
 }
 
 .gwt-Button,
-.gwt-ToggleButton {
-	/* For some reason, the buttons do not inherit from the body */
-/* 	font-family: TUE Meta; */
-/* 	font-size: 20px; */
-	font-weight: bold;
-	border: 0px;
+.gwt-ToggleButton,
+button {
+	border: 0;
 	margin: 2px 2px;
 	width: 100%;
 	padding: 10px 5px;
@@ -127,23 +129,36 @@ body {
 	color: #ffffff;
 }
 
+.gwt-ToggleButton {
+	padding: 10px 0;
+}
+
+.gwt-ToggleButton .html-face {
+	text-align: center;
+}
+
 .gwt-Button:hover,
 .gwt-ToggleButton:hover {
-	background: -prefix-linear-gradient(bottom, #d6007b, #a30049);
-	background: linear-gradient(to top, #d6007b, #a30049);
+	background: #810027;
+	border: 0; /* disable some weird Google styling */
 }
 
 .gwt-Button:active,
 .gwt-ToggleButton:active {
 	background: -prefix-linear-gradient(bottom, #d6007b, #810027);
 	background: linear-gradient(to top, #d6007b, #810027);
-}
-
-.gwt-Button[disabled]:hover {
 	border: 0; /* disable some weird Google styling */
 }
 
-/* Fixes the running off the screen of the ToggleButton that toggles the colour */
+.gwt-Button[disabled]:hover,
+.gwt-ToggleButton[disabled]:hover,
+.gwt-Button[disabled]:active,
+.gwt-ToggleButton[disabled]:active {
+	background: #d6007b;
+	border: 0; /* disable some weird Google styling */
+}
+
+/* Fixes the running off the screen of the ToggleButton that toggles the colour */cleacdr
 .gwt-ToggleButton {
 	text-align: center;
 	padding-left: 0px;
@@ -156,15 +171,37 @@ body {
 
 #protLabel {
 	font-family: monospace;
-	width: 220px;
+	width: 100%;
 	border: 1px solid;
 	border-color: #d6007b;
 	padding: 2px;
 }
 
 .spinnerNumberBox {
-	height: 42px;
-	font-size: 42px;
-	width: 180px;
+	background: none repeat scroll 0 0 #FFFFFF;
+	border: 1px solid #D6007B;
+	font-size: 32px;
+	height: 45px;
 	text-align: right;
+	width: 100%;
+}
+
+.dp-spinner-upbutton,
+.dp-spinner-downbutton {
+	padding: 1px 5px 2px 0;
+}
+
+.dp-spinner-horizontalpanel {
+	padding: 0px 3px;
+}
+
+.removeListHeader {
+	background: none;
+	color: #000;
+	font-style: normal;
+	font-weight: bold;
+}
+
+.removeListHeader td {
+	padding: 4px;
 }

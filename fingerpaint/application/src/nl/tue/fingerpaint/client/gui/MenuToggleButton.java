@@ -42,10 +42,9 @@ public class MenuToggleButton extends Button implements ClickHandler {
 		super();
 		
 		this.menuPanel = menuPanel;
-		
+		addClickHandler(this);
 		setText(HIDE_TEXT);
 		getElement().setId(ELEMENT_ID);
-		addClickHandler(this);
 		menuAnimation = new SlideAnimation(menuPanel.getElement(), Direction.RIGHT);
 	}
 
