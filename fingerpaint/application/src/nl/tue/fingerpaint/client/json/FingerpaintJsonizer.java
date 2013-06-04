@@ -256,16 +256,17 @@ public class FingerpaintJsonizer {
 	 *         {@code null} is returned.
 	 */
 	public static MixingProtocol protocolFromString(String jsonString) {
-		MixingProtocolJsonizer json = (MixingProtocolJsonizer) GWT
-				.create(MixingProtocolJsonizer.class);
-		try {
-			return (MixingProtocol) JsonizerParser.parse(json, jsonString);
-		} catch (Exception e) {
-			// When the value is null or empty, return an empty hash map
-			Logger.getLogger("").log(Level.SEVERE,
-					"[resultFromString] Could not parse value...");
-			return null;
-		}
+		return MixingProtocol.fromString(jsonString);
+//		MixingProtocolJsonizer json = (MixingProtocolJsonizer) GWT
+//				.create(MixingProtocolJsonizer.class);
+//		try {
+//			return (MixingProtocol) JsonizerParser.parse(json, jsonString);
+//		} catch (Exception e) {
+//			// When the value is null or empty, return an empty hash map
+//			Logger.getLogger("").log(Level.SEVERE,
+//					"[resultFromString] Could not parse value...");
+//			return null;
+//		}
 	}
 
 	/**
@@ -305,9 +306,10 @@ public class FingerpaintJsonizer {
 	 * @return The JSON string that represents the given mixing protocol.
 	 */
 	public static String toString(MixingProtocol protocol) {
-		MixingProtocolJsonizer ja = (MixingProtocolJsonizer) GWT
-				.create(MixingProtocolJsonizer.class);
-		return ja.asString(protocol);
+		return protocol.toString();
+//		MixingProtocolJsonizer ja = (MixingProtocolJsonizer) GWT
+//				.create(MixingProtocolJsonizer.class);
+//		return ja.asString(protocol);
 	}
 
 	/**

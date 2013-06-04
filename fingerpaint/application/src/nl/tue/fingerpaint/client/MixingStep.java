@@ -202,6 +202,7 @@ public class MixingStep implements Serializable {
 	 */
 	public static MixingStep fromString(String step) {
 		MixingStep result = new MixingStep();
+		
 		if (step.startsWith("-")) {
 			result.setDirection(false);
 			step = step.substring(1);
@@ -209,8 +210,12 @@ public class MixingStep implements Serializable {
 			result.setDirection(true);
 		}
 		result.setWall(step.startsWith("T"));
+		
+		// Remove the letter (B or T) and the brackets ([ and ]) from the string.
 		step = step.substring(2, step.length() - 1);
+		// Convert the resulting string and add it to the result.
 		result.setStepSize(Double.parseDouble(step));
+		
 		return result;
 	}
 

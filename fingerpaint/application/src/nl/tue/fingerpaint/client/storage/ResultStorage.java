@@ -1,9 +1,9 @@
 package nl.tue.fingerpaint.client.storage;
 
+import nl.tue.fingerpaint.client.MixingProtocol;
+
 import org.jsonmaker.gwt.client.Jsonizer;
 import org.jsonmaker.gwt.client.annotation.Transient;
-
-import nl.tue.fingerpaint.client.MixingProtocol;
 
 /**
  * Class that holds everything needed to store a mixing result. Can be JSONized

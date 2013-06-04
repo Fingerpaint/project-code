@@ -2,8 +2,12 @@ package nl.tue.fingerpaint.client;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.jsonmaker.gwt.client.Jsonizer;
+
+import com.google.gwt.core.shared.GWT;
 
 /**
  * This class symbolises a mixing program consisting of a number of mixing steps
@@ -184,8 +188,14 @@ public class MixingProtocol implements Serializable {
 	 * @return A mixing protocol object that matches the given input string
 	 */
 	public static MixingProtocol fromString(String protocol) {
+		if(protocol.startsWith("\"") && protocol.endsWith("\"")){
+			// Remove the leading and trailing double quotes (").		
+			protocol = protocol.substring(1, protocol.length() - 1);
+		}
+		
 		MixingProtocol result = new MixingProtocol();
 		String[] steps = protocol.split(", ");
+		
 		for (int i = 0; i < steps.length; i++) {
 			result.addStep(MixingStep.fromString(steps[i]));
 		}
