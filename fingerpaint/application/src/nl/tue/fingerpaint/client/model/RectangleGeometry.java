@@ -245,11 +245,11 @@ public class RectangleGeometry extends Geometry {
 		context.clip();
 
 		// Fill the area inside the wall
-		context.setFillStyle(wallColor);
+		context.setFillStyle(wallColor.toHexString());
 		context.fillRect(X_OFFSET + 1, y, getWidth() + 1, HEIGHT_OF_WALL - 1);
 
 		// Set the stroke style for the arrows (stripes)
-		context.setStrokeStyle(wallStripeColor);
+		context.setStrokeStyle(wallStripeColor.toHexString());
 		context.setLineWidth(STRIPE_WIDTH);
 		
 		// Set the initial x and y values for the arrows to the left

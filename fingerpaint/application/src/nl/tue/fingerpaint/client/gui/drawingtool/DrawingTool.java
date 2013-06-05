@@ -1,7 +1,8 @@
 package nl.tue.fingerpaint.client.gui.drawingtool;
 
+import nl.tue.fingerpaint.shared.utils.Colour;
+
 import com.google.gwt.canvas.dom.client.CanvasPixelArray;
-import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.canvas.dom.client.ImageData;
 
 /**
@@ -79,6 +80,6 @@ public abstract class DrawingTool {
 	 * @return An ImageData object representing this drawing tool, with colour
 	 *         {@code colour}
 	 */
-	abstract public ImageData getTool(ImageData img, CssColor colour);
+	abstract public ImageData getTool(ImageData img, Colour colour);
 
 }
