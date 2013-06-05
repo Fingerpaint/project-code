@@ -129,8 +129,8 @@ body {
 
 #menuPanelWrapper {
 	position: absolute;
-	right: 4px;
-	top: 28px;
+	right: 8px;
+	top: 56px;
 	background-color: WHITE;
 	overflow: hidden;
 	width: MENU_WIDTH;
@@ -141,17 +141,20 @@ body {
 }
 
 #menuToggleButton {
-	border-radius: 10px 10px 10px 10px;
-	font-size: 20px;
-	font-weight: bold;
-	line-height: 18px;
+	border-radius: 20px;
 	margin: 0;
 	padding: 0;
 	position: absolute;
-	right: 4px;
-	text-align: center;
-	top: 4px;
-	width: 20px;
+	right: 8px;
+	top: 8px;
+	height: 40px;
+	width: 40px;
+}
+
+#menuToggleButton img {
+	left: 0;
+    position: absolute;
+    top: 0;
 }
 
 .gwt-Button,

@@ -32,4 +32,11 @@ public interface FingerpaintResources extends ClientBundle {
 	 */
 	@Source("loading_animation.gif")
 	public ImageResource loadImage();
+	
+	/**
+	 * @return An image of a plus sign. Used in the button that can toggle
+	 *         if the menu is visible or not.
+	 */
+	@Source("plus.png")
+	public ImageResource plusImage();
 }

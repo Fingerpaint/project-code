@@ -39,10 +39,10 @@ public class SizeAnimation extends Animation {
 	protected int elOrigWidth;
 
 	/**
-	 * Construct a new object that can be used to animate the given panel.
+	 * Construct a new object that can be used to animate the given element.
 	 * 
 	 * @param animationSubject
-	 *            The element to be animated. Should be positioned absolutely.
+	 *            The element to be animated.
 	 * @param animationAxis
 	 *            Which axis to animate. Use {@link #ANIMATE_BOTH},
 	 *            {@link #ANIMATE_HEIGHT} or {@link #ANIMATE_WIDTH} here.

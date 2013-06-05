@@ -27,7 +27,7 @@ public class SlideAnimation extends Animation {
 	protected Point elPos;
 	
 	/**
-	 * Construct a new object that can be used to animate the given panel.
+	 * Construct a new object that can be used to animate the given element.
 	 * 
 	 * @param animationSubject The element to be animated. Should be positioned absolutely.
 	 * @param animationDirection The side of the window to which the panel should move

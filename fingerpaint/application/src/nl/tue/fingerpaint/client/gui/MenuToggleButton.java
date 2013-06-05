@@ -1,9 +1,13 @@
 package nl.tue.fingerpaint.client.gui;
 
+import nl.tue.fingerpaint.client.gui.animation.RotationAnimation;
 import nl.tue.fingerpaint.client.gui.animation.SizeAnimation;
+import nl.tue.fingerpaint.client.resources.FingerpaintResources;
 
+import com.google.gwt.dom.client.ImageElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.SimplePanel;
 
@@ -17,11 +21,6 @@ public class MenuToggleButton extends Button implements ClickHandler {
 	/** The ID of the button element. */
 	public static final String ELEMENT_ID = "menuToggleButton";
 	
-	/** Text that is shown in the button when the menu is visible and can be hidden. */
-	public static final String HIDE_TEXT = "-";
-	/** Text that is shown in the button when the menu is not visible and can be shown. */
-	public static final String SHOW_TEXT = "+";
-	
 	/** How long the sliding animation takes. */
 	public static final int DURATION = 1000;
 	
@@ -31,6 +30,8 @@ public class MenuToggleButton extends Button implements ClickHandler {
 	protected SimplePanel menuPanel;
 	/** Animation to hide menu panel. */
 	protected SizeAnimation menuAnimation;
+	/** Animation to rotate the button. */
+	protected RotationAnimation buttonAnimation;
 	
 	/**
 	 * Construct a new {@link MenuToggleButton}.
@@ -40,20 +41,26 @@ public class MenuToggleButton extends Button implements ClickHandler {
 	public MenuToggleButton(SimplePanel menuPanelWrapper) {
 		super();
 		
+		// Set ID and load image element in button
+		getElement().setId(ELEMENT_ID);
+		ImageElement imgEl = ImageElement.as(DOM.createElement("img"));
+		imgEl.setPropertyString("src", FingerpaintResources.INSTANCE.plusImage().getSafeUri().asString());
+		getElement().appendChild(imgEl);
+		
+		// Set variables
 		this.menuPanel = menuPanelWrapper;
 		addClickHandler(this);
-		setText(HIDE_TEXT);
-		getElement().setId(ELEMENT_ID);
-		menuAnimation = new SizeAnimation(menuPanelWrapper.getElement(), SizeAnimation.ANIMATE_WIDTH);
+		this.menuAnimation = new SizeAnimation(menuPanelWrapper.getElement(), SizeAnimation.ANIMATE_WIDTH);
+		this.buttonAnimation = new RotationAnimation(imgEl, 45);
 	}
 
 	@Override
 	public void onClick(ClickEvent event) {
 		if (shown) {
-			setText(SHOW_TEXT);
+			buttonAnimation.doRotate(DURATION, 0, true);
 			menuAnimation.doHide(DURATION);
 		} else {
-			setText(HIDE_TEXT);
+			buttonAnimation.doRotate(DURATION, 45, false);
 			menuAnimation.doShow(DURATION);
 		}
 		
