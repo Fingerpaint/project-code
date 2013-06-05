@@ -23,4 +23,8 @@ public interface FingerpaintConstants extends Constants {
 	 */
 	@DefaultStringValue("Loading geometries and mixers...")
 	public String loadingGeometries();
+	
+	
+	@DefaultStringValue("#steps")
+	public String nrSteps();
 }
