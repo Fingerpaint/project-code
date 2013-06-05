@@ -378,7 +378,9 @@ public class Fingerpaint implements EntryPoint {
 
 			// Add canvas and menuPanel to the page
 			RootPanel.get().add(as.getGeometry().getCanvas());
-			RootPanel.get().add(GuiState.menuPanel);
+			GuiState.menuPanelWrapper.add(GuiState.menuPanel);
+			GuiState.menuPanelWrapper.getElement().setId("menuPanelWrapper");
+			RootPanel.get().add(GuiState.menuPanelWrapper);
 			RootPanel.get().add(GuiState.menuToggleButton);
 
 			// for debugging

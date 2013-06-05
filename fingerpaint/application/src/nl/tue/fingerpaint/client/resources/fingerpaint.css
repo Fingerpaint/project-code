@@ -18,6 +18,8 @@
 @def LOADING_OVERLAY_Z 90;
 @def LOADING_OVERLAY_CONTENT_Z 91;
 
+@def MENU_WIDTH 240px;
+
 /* -- MORE CONSTANTS -- */
 @eval BLACK nl.tue.fingerpaint.shared.utils.Colour.BLACK.toHexString();
 @eval MAIN_LIGHT nl.tue.fingerpaint.shared.utils.Colour.TUE_LIGHT_BLUE.toHexString();
@@ -102,7 +104,7 @@ body {
 
 #protPanel {
 	border: 0px;
-	width: 15%;
+	width: MENU_WIDTH;
 }
 
 /* remove list header row */
@@ -125,27 +127,34 @@ body {
 	margin-bottom: 6px;
 }
 
-#menuPanel {
+#menuPanelWrapper {
 	position: absolute;
-	right: 4px;
-	width: 15%;
-	top: 28px;
+	right: 8px;
+	top: 56px;
 	background-color: WHITE;
 	overflow: hidden;
+	width: MENU_WIDTH;
+}
+
+#menuPanel {
+	width: MENU_WIDTH;
 }
 
 #menuToggleButton {
-	border-radius: 10px 10px 10px 10px;
-	font-size: 20px;
-	font-weight: bold;
-	line-height: 18px;
+	border-radius: 20px;
 	margin: 0;
 	padding: 0;
 	position: absolute;
-	right: 4px;
-	text-align: center;
-	top: 4px;
-	width: 20px;
+	right: 8px;
+	top: 8px;
+	height: 40px;
+	width: 40px;
+}
+
+#menuToggleButton img {
+	left: 0;
+    position: absolute;
+    top: 0;
 }
 
 .gwt-Button,
@@ -180,7 +189,8 @@ button[disabled] {
 }
 
 .gwt-Button:active,
-.gwt-ToggleButton:active {
+.gwt-ToggleButton:active,
+.gwt-ToggleButton-down {
 	background: -webkit-linear-gradient(bottom, MAIN_LIGHT, MAIN);
 	background: linear-gradient(to top, MAIN_LIGHT, MAIN);
 	border: 0; /* disable some weird Google styling */
