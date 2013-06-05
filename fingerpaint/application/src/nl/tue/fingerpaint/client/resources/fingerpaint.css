@@ -104,7 +104,7 @@ body {
 
 #protPanel {
 	border: 0px;
-	width: 15%;
+	width: MENU_WIDTH;
 }
 
 /* remove list header row */
@@ -189,7 +189,8 @@ button[disabled] {
 }
 
 .gwt-Button:active,
-.gwt-ToggleButton:active {
+.gwt-ToggleButton:active,
+.gwt-ToggleButton-down {
 	background: -webkit-linear-gradient(bottom, MAIN_LIGHT, MAIN);
 	background: linear-gradient(to top, MAIN_LIGHT, MAIN);
 	border: 0; /* disable some weird Google styling */
