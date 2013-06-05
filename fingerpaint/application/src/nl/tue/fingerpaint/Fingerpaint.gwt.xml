@@ -55,5 +55,10 @@
 	<!--  Supported languages (apart from English, which is the default language) -->
 	<extend-property name="locale" values="nl"/>
 	
+	<!-- Javascript Library to zip -->
+	<script src="scripts/jszip.js"></script>
+	<script src="scripts/jszip-deflate.js"></script>
+	<script src="scripts/jszip-inflate.js"></script>
+	<script src="scripts/jszip-load.js"></script>
 	
 </module>

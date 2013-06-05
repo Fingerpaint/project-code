@@ -13,6 +13,7 @@ import nl.tue.fingerpaint.client.gui.NumberSpinnerListener;
 import nl.tue.fingerpaint.client.gui.ToggleColourButton;
 import nl.tue.fingerpaint.client.gui.drawingtool.CircleDrawingTool;
 import nl.tue.fingerpaint.client.gui.drawingtool.SquareDrawingTool;
+import nl.tue.fingerpaint.client.json.FingerpaintJsonizer;
 import nl.tue.fingerpaint.client.model.ApplicationState;
 import nl.tue.fingerpaint.client.model.Geometry.StepAddedListener;
 import nl.tue.fingerpaint.client.model.MixingProtocol;
@@ -25,6 +26,7 @@ import nl.tue.fingerpaint.client.simulator.Simulation;
 import nl.tue.fingerpaint.client.simulator.SimulationResult;
 import nl.tue.fingerpaint.client.simulator.SimulatorService;
 import nl.tue.fingerpaint.client.simulator.SimulatorServiceAsync;
+import nl.tue.fingerpaint.client.storage.Compression;
 import nl.tue.fingerpaint.client.storage.ResultStorage;
 import nl.tue.fingerpaint.client.storage.StorageManager;
 import nl.tue.fingerpaint.shared.GeometryNames;
@@ -109,7 +111,7 @@ public class Fingerpaint implements EntryPoint {
 
 	// close Button inside the save popup menu
 	private Button closeLoadButton;
-	
+
 	private PopupPanel protocolPanelContainer;
 
 	// --------------------------------------------------------------------------------------
@@ -173,7 +175,7 @@ public class Fingerpaint implements EntryPoint {
 	private PopupPanel comparePopupPanel;
 
 	private SimplePanel compareGraphPanel;
-	
+
 	private Button closeCompareButton;
 
 	private Button newCompareButton;
@@ -235,7 +237,7 @@ public class Fingerpaint implements EntryPoint {
 
 	// Vertical panel to contain all menu items
 	private VerticalPanel menuPanel = new VerticalPanel();
-	
+
 	// Button to toggle if the menu is visible or not
 	private MenuToggleButton menuToggleButton;
 
@@ -373,8 +375,8 @@ public class Fingerpaint implements EntryPoint {
 
 		// Add the tree to the root layout panel.
 		RootLayoutPanel.get().add(tree);
-		
-		//for debugging purposes
+
+		// for debugging purposes
 		tree.ensureDebugId("cell");
 	}
 
@@ -456,7 +458,8 @@ public class Fingerpaint implements EntryPoint {
 		private void setUserChoiceValues(String selectedMixer) {
 			// TODO: Actually create a different geometry depending on the
 			// chosen geometry...
-			as.setGeometry(new RectangleGeometry(Window.getClientHeight() - 20, Window.getClientWidth() - 20));
+			as.setGeometry(new RectangleGeometry(Window.getClientHeight() - 20,
+					Window.getClientWidth() - 20));
 		}
 
 		public CustomTreeModel() {
@@ -476,7 +479,7 @@ public class Fingerpaint implements EntryPoint {
 								// rootpanel)
 								// TODO: Make decent close-code
 								RootPanel.get().clear();
-								
+
 								createMixingWidgets();
 							}
 						}
@@ -486,7 +489,7 @@ public class Fingerpaint implements EntryPoint {
 		/**
 		 * Helper method that initialises the widgets for the mixing interface
 		 */
-		private void createMixingWidgets() {		
+		private void createMixingWidgets() {
 			menuPanel.getElement().setId("menuPanel");
 
 			// Initialise a listener for when a new step is entered to the
@@ -589,22 +592,22 @@ public class Fingerpaint implements EntryPoint {
 			protocolPanel.add(resetProtocolButton);
 			protocolPanel.add(saveProtocolButton);
 			protocolPanel.add(loadProtocolButton);
-			
+
 			protocolPanelContainer = new PopupPanel();
 			protocolPanelContainer.getElement().setId("protPanel");
 			protocolPanelContainer.setAnimationEnabled(true);
 			protocolPanelContainer.add(protocolPanel);
 			protocolPanelContainer.setVisible(false);
-			
+
 			toggleProtocolWidgets(false);
-			
+
 			// Add canvas and menuPanel to the page
 			RootPanel.get().add(as.getGeometry().getCanvas());
 			RootPanel.get().add(menuPanel);
 			menuToggleButton = new MenuToggleButton(menuPanel);
 			RootPanel.get().add(menuToggleButton);
-			
-			//for debugging
+
+			// for debugging
 			viewSingleGraph.ensureDebugId("viewGraph");
 		}
 
@@ -664,7 +667,7 @@ public class Fingerpaint implements EntryPoint {
 		sizeSpinner = new NumberSpinner(MixingStep.STEP_DEFAULT,
 				MixingStep.STEP_UNIT, MixingStep.STEP_MIN, MixingStep.STEP_MAX,
 				true);
-		
+
 		sizeSpinner.addStyleName("sizeSpinnerInput");
 		as.setStepSize(MixingStep.STEP_DEFAULT);
 
@@ -706,15 +709,15 @@ public class Fingerpaint implements EntryPoint {
 			protocolPanelContainer.hide();
 		}
 		// TODO: make a setEnabled for the numberspinner
-//		nrStepsLabel.setVisible(value);
-//		nrStepsSpinner.setVisible(value);
-//		labelProtocolRepresentation.setVisible(value);
-//		mixNowButton.setVisible(value);
-//		saveProtocolButton.setVisible(value);
-//		saveProtocolButton.setEnabled(value);
-//		resetProtocolButton.setVisible(value);
-//		resetProtocolButton.setEnabled(value);
-//		labelProtocolLabel.setVisible(value);
+		// nrStepsLabel.setVisible(value);
+		// nrStepsSpinner.setVisible(value);
+		// labelProtocolRepresentation.setVisible(value);
+		// mixNowButton.setVisible(value);
+		// saveProtocolButton.setVisible(value);
+		// saveProtocolButton.setEnabled(value);
+		// resetProtocolButton.setVisible(value);
+		// resetProtocolButton.setEnabled(value);
+		// labelProtocolLabel.setVisible(value);
 
 	}
 
@@ -764,7 +767,7 @@ public class Fingerpaint implements EntryPoint {
 	 */
 	private void createProtocolRepresentationTextArea() {
 		labelProtocolLabel = new Label("Protocol:");
-		
+
 		labelProtocolRepresentation.setVisible(false);
 		labelProtocolRepresentation.getElement().setId("protLabel");
 	}
@@ -981,24 +984,25 @@ public class Fingerpaint implements EntryPoint {
 				viewSingleGraphGraphPanel.clear();
 
 				// Make graph and add it to viewSingleGraphVerticalPanel
-				 createGraph(
-						 viewSingleGraphGraphPanel,
-				 new ArrayList<String>(Arrays
-				 .asList("Current mixing run")), performance, new AsyncCallback<Boolean>() {
-					@Override
-					public void onFailure(Throwable caught) {
-						caught.printStackTrace();
-					}
+				createGraph(viewSingleGraphGraphPanel, new ArrayList<String>(
+						Arrays.asList("Current mixing run")), performance,
+						new AsyncCallback<Boolean>() {
+							@Override
+							public void onFailure(Throwable caught) {
+								caught.printStackTrace();
+							}
 
-					@Override
-					public void onSuccess(Boolean result) {
-						viewSingleGraphVerticalPanel.add(viewSingleGraphGraphPanel);
-						viewSingleGraphVerticalPanel
-								.add(viewSingleGraphHorizontalPanel);
-						viewSingleGraphPopupPanel.add(viewSingleGraphVerticalPanel);
-						viewSingleGraphPopupPanel.center();
-					}	 
-				});
+							@Override
+							public void onSuccess(Boolean result) {
+								viewSingleGraphVerticalPanel
+										.add(viewSingleGraphGraphPanel);
+								viewSingleGraphVerticalPanel
+										.add(viewSingleGraphHorizontalPanel);
+								viewSingleGraphPopupPanel
+										.add(viewSingleGraphVerticalPanel);
+								viewSingleGraphPopupPanel.center();
+							}
+						});
 
 				// .setPopupPositionAndShow(new PopupPanel.PositionCallback() {
 				// public void setPosition(int offsetWidth,
@@ -1121,6 +1125,20 @@ public class Fingerpaint implements EntryPoint {
 	private void saveDistributionButtonOnClick() {
 		lastSaveButtonClicked = StorageManager.KEY_INITDIST;
 		showSavePanel();
+		// TODO : Remove this ------------------------------
+		try {
+			String dist = FingerpaintJsonizer.toString(as.getGeometry()
+					.getDistribution());
+			String zippedDist = Compression.zip(dist);
+			System.out.println(zippedDist);
+			String unzippedDist = Compression.unzip(zippedDist);
+			System.out.println("boe");
+			System.out.println(unzippedDist);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		//	e.printStackTrace();
+		}
+		// -------------------------------------------------
 	}
 
 	private void saveProtocolButtonOnClick() {
@@ -1199,9 +1217,11 @@ public class Fingerpaint implements EntryPoint {
 	 * Saves the current protocol, distribution or mixing results, depending on
 	 * which save-button was pressed last.
 	 * 
-	 * @param name Name of save "file".
-	 * @param canOverwrite If we can overwrite an already-exisiting "file" with
-	 *                     the given name or not.
+	 * @param name
+	 *            Name of save "file".
+	 * @param canOverwrite
+	 *            If we can overwrite an already-exisiting "file" with the given
+	 *            name or not.
 	 * @return {@code true} if "file" was saved, {@code false} otherwise
 	 */
 	public boolean save(String name, boolean canOverwrite) {
@@ -1466,7 +1486,8 @@ public class Fingerpaint implements EntryPoint {
 		}
 
 		labelProtocolRepresentation.setVisible(true);
-		labelProtocolRepresentation.getElement().setInnerHTML(oldProtocol + stepString + " ");
+		labelProtocolRepresentation.getElement().setInnerHTML(
+				oldProtocol + stepString + " ");
 	}
 
 	/**
@@ -1596,18 +1617,19 @@ public class Fingerpaint implements EntryPoint {
 				}
 
 				compareGraphPanel.clear();
-				createGraph(compareGraphPanel, names, graphs, new AsyncCallback<Boolean>() {
-					@Override
-					public void onFailure(Throwable caught) {
-						caught.printStackTrace();
-					}
+				createGraph(compareGraphPanel, names, graphs,
+						new AsyncCallback<Boolean>() {
+							@Override
+							public void onFailure(Throwable caught) {
+								caught.printStackTrace();
+							}
 
-					@Override
-					public void onSuccess(Boolean result) {
-						compareSelectPopupPanel.hide();
-						comparePopupPanel.center();
-					}
-				});
+							@Override
+							public void onSuccess(Boolean result) {
+								compareSelectPopupPanel.hide();
+								comparePopupPanel.center();
+							}
+						});
 			}
 		});
 
@@ -1665,8 +1687,8 @@ public class Fingerpaint implements EntryPoint {
 		// Adds the graph to the Panel-parameter of
 		// visualisator.getOnLoadCallBack()
 		try {
-			VisualizationUtils.loadVisualizationApi(
-					graphVisualisator.createGraph(panel, names, performance, onLoad),
+			VisualizationUtils.loadVisualizationApi(graphVisualisator
+					.createGraph(panel, names, performance, onLoad),
 					LineChart.PACKAGE);
 		} catch (Exception e) {
 			Window.alert("Loading graph failed.");
