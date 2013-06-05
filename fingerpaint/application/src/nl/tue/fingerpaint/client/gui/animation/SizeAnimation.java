@@ -50,10 +50,17 @@ public class SizeAnimation extends Animation {
 	public SizeAnimation(Element animationSubject, int animationAxis) {
 		this.subject = animationSubject;
 		setAxis(animationAxis);
-		this.elOrigWidth = animationSubject.getClientWidth();
-		this.elOrigHeight = animationSubject.getClientHeight();
+		refreshSize();
 	}
 
+	/**
+	 * Internally update the size of the element that is animated.
+	 */
+	public void refreshSize() {
+		this.elOrigWidth = this.subject.getClientWidth();
+		this.elOrigHeight = this.subject.getClientHeight();
+	}
+	
 	/**
 	 * Change which axis are animated. Use {@link #ANIMATE_BOTH},
 	 * {@link #ANIMATE_HEIGHT} or {@link #ANIMATE_WIDTH} here. When not one of

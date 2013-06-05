@@ -68,4 +68,10 @@ public class MenuToggleButton extends Button implements ClickHandler {
 		shown = !shown;
 	}
 	
+	/**
+	 * Internally update the size of the menu that is animated.
+	 */
+	public void refreshMenuSize() {
+		this.menuAnimation.refreshSize();
+	}
 }
