@@ -13,6 +13,7 @@
 @def TOGGLE_COLOUR_BUTTON_Z 10;
 @def TOGGLE_COLOUR_BUTTON_Z_BG 11;
 @def TOGGLE_COLOUR_BUTTON_Z_FG 12;
+@def POPUP_PANEL_Z 20;
 
 @eval BLACK nl.tue.fingerpaint.shared.utils.Colour.BLACK.toHexString();
 @eval MAIN_LIGHT nl.tue.fingerpaint.shared.utils.Colour.TUE_LIGHT_BLUE.toHexString();
@@ -58,6 +59,7 @@ body {
 .gwt-PopupPanel {
 	border: 2px solid MAIN;
 	padding: 4px 8px 4px 4px;
+	z-index: POPUP_PANEL_Z;
 }
 
 #loading-overlay {
