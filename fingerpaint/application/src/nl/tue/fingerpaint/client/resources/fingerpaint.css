@@ -216,7 +216,15 @@ button[disabled] {
 
 .dp-spinner-upbutton,
 .dp-spinner-downbutton {
-	padding: 1px 5px 2px 0;
+	padding: 2px 5px;
+}
+
+.dp-spinner-upbutton {
+	margin-top: 0px;
+}
+
+.dp-spinner-downbutton {
+	margin-bottom: 0px;
 }
 
 .dp-spinner-horizontalpanel {
