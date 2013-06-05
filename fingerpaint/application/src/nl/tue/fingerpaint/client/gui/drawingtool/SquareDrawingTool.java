@@ -1,8 +1,9 @@
 package nl.tue.fingerpaint.client.gui.drawingtool;
 
 
+import nl.tue.fingerpaint.shared.utils.Colour;
+
 import com.google.gwt.canvas.dom.client.CanvasPixelArray;
-import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.canvas.dom.client.ImageData;
 
 /**
@@ -33,12 +34,12 @@ public class SquareDrawingTool extends DrawingTool {
 	 *            The colour to create the drawing tool with
 	 */
 	@Override
-	public ImageData getTool(ImageData img, CssColor colour) {
+	public ImageData getTool(ImageData img, Colour colour) {
 		CanvasPixelArray data = img.getData();
 
 		int width = img.getWidth();
 		int height = img.getHeight();
-		int col = colour.value().equals("black") ? 0 : 255;
+		int col = colour.getRed();
 
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {

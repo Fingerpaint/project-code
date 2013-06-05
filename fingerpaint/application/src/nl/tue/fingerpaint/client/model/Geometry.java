@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import nl.tue.fingerpaint.client.gui.drawingtool.DrawingTool;
 import nl.tue.fingerpaint.client.gui.drawingtool.SquareDrawingTool;
+import nl.tue.fingerpaint.shared.utils.Colour;
 
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
@@ -82,7 +83,7 @@ public abstract class Geometry {
 	/** {@code true} if the user is currently drawing, {@code false} otherwise */
 	private boolean drawing;
 	/** The current colour to draw with */
-	protected CssColor currentColor;
+	protected Colour currentColor;
 
 	/**
 	 * Stores the x-coordinate of the mouse event that initiates a wall
@@ -112,9 +113,9 @@ public abstract class Geometry {
 	protected final static int SWIPE_THRESHOLD = 20;
 
 	/** The background colour of the walls */
-	protected static CssColor wallColor = CssColor.make("gray");
+	protected static Colour wallColor = Colour.LIGHT_GRAY;
 	/** The colour of the arrows on the walls */
-	protected static CssColor wallStripeColor = CssColor.make("black");
+	protected static Colour wallStripeColor = Colour.BLACK;
 	/** The width of the arrows on the walls */
 	protected static int STRIPE_WIDTH = 5;
 	/** The distance between two arrows */
@@ -163,7 +164,7 @@ public abstract class Geometry {
 		clipGeometryOutline();
 
 		// Initialise drawing colour to black
-		setColor(CssColor.make("black"));
+		setColor(Colour.BLACK);
 
 		// Surrounded with try-catch for testing purposes
 		try {
@@ -200,7 +201,7 @@ public abstract class Geometry {
 	 * 
 	 * @return The current colour which is used for drawing
 	 */
-	public CssColor getColor() {
+	public Colour getColor() {
 		return this.currentColor;
 	}
 
@@ -212,7 +213,7 @@ public abstract class Geometry {
 	 * 
 	 * @post The current drawing colour is set to @param{color}
 	 */
-	public void setColor(CssColor colour) {
+	public void setColor(Colour colour) {
 		this.currentColor = colour;
 		if (this.tool != null) {
 			setDrawingTool(this.tool);

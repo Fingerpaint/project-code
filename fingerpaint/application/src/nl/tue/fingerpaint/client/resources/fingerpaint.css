@@ -10,6 +10,20 @@
 /* background-color:#FFDD00; /* yellow */
 /* background-color:#D6007B; /* pink */
 
+/* -- DEFINES -- */
+@def TOGGLE_COLOUR_BUTTON_Z 10;
+@def TOGGLE_COLOUR_BUTTON_Z_BG 11;
+@def TOGGLE_COLOUR_BUTTON_Z_FG 12;
+@def POPUP_PANEL_Z 20;
+@def LOADING_OVERLAY_Z 90;
+@def LOADING_OVERLAY_CONTENT_Z 91;
+
+/* -- MORE CONSTANTS -- */
+@eval BLACK nl.tue.fingerpaint.shared.utils.Colour.BLACK.toHexString();
+@eval MAIN_LIGHT nl.tue.fingerpaint.shared.utils.Colour.TUE_LIGHT_BLUE.toHexString();
+@eval MAIN nl.tue.fingerpaint.shared.utils.Colour.TUE_BLUE.toHexString();
+@eval MAIN_DARK nl.tue.fingerpaint.shared.utils.Colour.TUE_DARK_BLUE.toHexString();
+@eval WHITE nl.tue.fingerpaint.shared.utils.Colour.WHITE.toHexString();
 
 /* only TOP: Auto-aanvul voor alle richtingen
    TOP & RIGHT = TOP/BOTTOM & RIGHT/LEFT are equal */
@@ -21,6 +35,17 @@
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
     margin: 0;
     padding: 0;
+}
+
+a:focus, a:active,
+button,
+input[type="reset"]::-moz-focus-inner,
+input[type="button"]::-moz-focus-inner,
+input[type="submit"]::-moz-focus-inner,
+select::-moz-focus-inner,
+input[type="file"] > input[type="button"]::-moz-focus-inner {
+	border: 1px dotted transparent;
+	outline: none !important;
 }
 
 body {
@@ -36,8 +61,9 @@ body {
 }
 
 .gwt-PopupPanel {
-	border: 2px solid #D6007B;
+	border: 2px solid MAIN;
 	padding: 4px 8px 4px 4px;
+	z-index: POPUP_PANEL_Z;
 }
 
 #loading-overlay {
@@ -48,6 +74,7 @@ body {
 	left: 0;
 	background: #000;
 	background: rgba(0, 0, 0, 0.5);
+	z-index: LOADING_OVERLAY_Z;
 }
 
 #loading-overlay .gwt-Image {
@@ -56,6 +83,7 @@ body {
 	left: 50%;
 	/* actually center the image with negative margins, half the size of the image */
 	margin: -27px 0 0 -27px;
+	z-index: LOADING_OVERLAY_CONTENT_Z;
 }
 
 #loading-overlay .gwt-Label {
@@ -68,7 +96,8 @@ body {
 	width: 100%;
 	text-align: center;
 	font-weight: bold;
-	color: #FFF;
+	color: WHITE;
+	z-index: LOADING_OVERLAY_CONTENT_Z;
 }
 
 #protPanel {
@@ -78,9 +107,8 @@ body {
 
 /* remove list header row */
 .removeListHeader {
-	background-color: #2062B8;
-	color: white;
-	font-style: italic;
+	background-color: MAIN;
+	color: WHITE;
 }
 
 .center {
@@ -92,7 +120,7 @@ body {
 
 /* remove list flex table */
 .removeList {
-	border: 1px solid silver;
+	border: 1px solid MAIN;
 	padding: 2px;
 	margin-bottom: 6px;
 }
@@ -102,7 +130,7 @@ body {
 	right: 4px;
 	width: 15%;
 	top: 28px;
-	background-color: #ffffff;
+	background-color: WHITE;
 }
 
 #menuToggleButton {
@@ -126,8 +154,14 @@ button {
 	margin: 2px 2px;
 	width: 100%;
 	padding: 10px 5px;
-	background: #d6007b;
-	color: #ffffff;
+	background: MAIN;
+	color: WHITE;
+}
+
+.gwt-Button[disabled],
+.gwt-ToggleButton[disabled],
+button[disabled] {
+	color: LIGHT_GRAY;
 }
 
 .gwt-ToggleButton {
@@ -140,14 +174,14 @@ button {
 
 .gwt-Button:hover,
 .gwt-ToggleButton:hover {
-	background: #810027;
+	background: MAIN_LIGHT;
 	border: 0; /* disable some weird Google styling */
 }
 
 .gwt-Button:active,
 .gwt-ToggleButton:active {
-	background: -prefix-linear-gradient(bottom, #d6007b, #810027);
-	background: linear-gradient(to top, #d6007b, #810027);
+	background: -webkit-linear-gradient(bottom, MAIN_LIGHT, MAIN);
+	background: linear-gradient(to top, MAIN_LIGHT, MAIN);
 	border: 0; /* disable some weird Google styling */
 }
 
@@ -155,7 +189,7 @@ button {
 .gwt-ToggleButton[disabled]:hover,
 .gwt-Button[disabled]:active,
 .gwt-ToggleButton[disabled]:active {
-	background: #d6007b;
+	background: MAIN;
 	border: 0; /* disable some weird Google styling */
 }
 
@@ -174,13 +208,13 @@ button {
 	font-family: monospace;
 	width: 100%;
 	border: 1px solid;
-	border-color: #d6007b;
+	border-color: MAIN;
 	padding: 2px;
 }
 
 .spinnerNumberBox {
-	background: none repeat scroll 0 0 #FFFFFF;
-	border: 1px solid #D6007B;
+	background: none repeat scroll 0 0 WHITE;
+	border: 1px solid MAIN;
 	font-size: 32px;
 	height: 45px;
 	text-align: right;
@@ -198,11 +232,40 @@ button {
 
 .removeListHeader {
 	background: none;
-	color: #000;
+	color: BLACK;
 	font-style: normal;
 	font-weight: bold;
 }
 
 .removeListHeader td {
 	padding: 4px;
+}
+
+/* ToggleColourButton styling */
+.gwt-ToggleColourButton {
+	min-height: 50px;
+	position: relative;
+	z-index: TOGGLE_COLOUR_BUTTON_Z;
+}
+
+.gwt-ToggleColourButtonBackground {
+	border-radius: 5px;
+	height: 30px;
+	left: 50%;
+	margin-left: -10px;
+	position: absolute;
+	top: 15px;
+	width: 30px;
+	z-index: TOGGLE_COLOUR_BUTTON_Z_BG;
+}
+
+.gwt-ToggleColourButtonForeground {
+	border-radius: 5px;
+	height: 30px;
+	left: 50%;
+	margin-left: -20px;
+	position: absolute;
+	top: 5px;
+	width: 30px;
+	z-index: TOGGLE_COLOUR_BUTTON_Z_FG;
 }
