@@ -37,6 +37,8 @@ public class GuiState {
 	// --- MENU WIDGETS -------------------------------------------------------
 	/** Vertical panel to contain all menu items. */
 	public static VerticalPanel menuPanel = new VerticalPanel();
+	/** Wrapper for the {@link #menuPanel}, used in animation. */
+	public static SimplePanel menuPanelWrapper = new SimplePanel();
 
 	/** Button to toggle whether the menu is visible. */
 	public static MenuToggleButton menuToggleButton;

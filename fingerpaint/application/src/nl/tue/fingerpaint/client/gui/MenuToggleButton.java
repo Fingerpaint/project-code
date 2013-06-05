@@ -5,7 +5,7 @@ import nl.tue.fingerpaint.client.gui.animation.SizeAnimation;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.SimplePanel;
 
 /**
  * <p>This button is used to show and hide the menu panel in the application.</p>
@@ -28,23 +28,23 @@ public class MenuToggleButton extends Button implements ClickHandler {
 	/** Indicate if the menu is shown or not. */
 	protected boolean shown = true;
 	/** The MenuPanel that is shown/hidden. */
-	protected VerticalPanel menuPanel;
+	protected SimplePanel menuPanel;
 	/** Animation to hide menu panel. */
 	protected SizeAnimation menuAnimation;
 	
 	/**
 	 * Construct a new {@link MenuToggleButton}.
 	 * 
-	 * @param menuPanel The element to be animated.
+	 * @param menuPanelWrapper The element to be animated.
 	 */
-	public MenuToggleButton(VerticalPanel menuPanel) {
+	public MenuToggleButton(SimplePanel menuPanelWrapper) {
 		super();
 		
-		this.menuPanel = menuPanel;
+		this.menuPanel = menuPanelWrapper;
 		addClickHandler(this);
 		setText(HIDE_TEXT);
 		getElement().setId(ELEMENT_ID);
-		menuAnimation = new SizeAnimation(menuPanel.getElement(), SizeAnimation.ANIMATE_WIDTH);
+		menuAnimation = new SizeAnimation(menuPanelWrapper.getElement(), SizeAnimation.ANIMATE_WIDTH);
 	}
 
 	@Override

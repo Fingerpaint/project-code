@@ -18,6 +18,8 @@
 @def LOADING_OVERLAY_Z 90;
 @def LOADING_OVERLAY_CONTENT_Z 91;
 
+@def MENU_WIDTH 240px;
+
 /* -- MORE CONSTANTS -- */
 @eval BLACK nl.tue.fingerpaint.shared.utils.Colour.BLACK.toHexString();
 @eval MAIN_LIGHT nl.tue.fingerpaint.shared.utils.Colour.TUE_LIGHT_BLUE.toHexString();
@@ -125,13 +127,17 @@ body {
 	margin-bottom: 6px;
 }
 
-#menuPanel {
+#menuPanelWrapper {
 	position: absolute;
 	right: 4px;
-	width: 15%;
 	top: 28px;
 	background-color: WHITE;
 	overflow: hidden;
+	width: MENU_WIDTH;
+}
+
+#menuPanel {
+	width: MENU_WIDTH;
 }
 
 #menuToggleButton {
