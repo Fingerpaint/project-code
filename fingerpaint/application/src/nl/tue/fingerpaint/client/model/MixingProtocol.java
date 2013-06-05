@@ -184,9 +184,12 @@ public class MixingProtocol implements Serializable {
 	 * @return A mixing protocol object that matches the given input string
 	 */
 	public static MixingProtocol fromString(String protocol) {
-		if(protocol.startsWith("\"") && protocol.endsWith("\"")){
-			// Remove the leading and trailing double quotes (").		
-			protocol = protocol.substring(1, protocol.length() - 1);
+		// Remove the leading and trailing double quotes ("), if present.
+		if(protocol.startsWith("\"")){
+			protocol = protocol.substring(1, protocol.length());
+		}
+		if(protocol.endsWith("\"")){
+			protocol = protocol.substring(0, protocol.length() - 1);
 		}
 		
 		MixingProtocol result = new MixingProtocol();
