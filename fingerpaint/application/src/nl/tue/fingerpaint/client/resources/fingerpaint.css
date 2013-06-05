@@ -131,6 +131,7 @@ body {
 	width: 15%;
 	top: 28px;
 	background-color: WHITE;
+	overflow: hidden;
 }
 
 #menuToggleButton {

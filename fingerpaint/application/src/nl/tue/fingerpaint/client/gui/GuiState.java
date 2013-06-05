@@ -131,7 +131,7 @@ public class GuiState {
 	public static Button mixNowButton;
 
 	/**
-	 * Label to be displayed above the {@link nrStepsSpinner}, to explain its
+	 * Label to be displayed above the {@link #nrStepsSpinner}, to explain its
 	 * purpose.
 	 */
 	// TODO: The text '#steps' should be translated later on
@@ -172,7 +172,7 @@ public class GuiState {
 
 	/**
 	 * Button to save the item under the specified name in the
-	 * {@link saveNameTextBox}.
+	 * {@link #saveNameTextBox}.
 	 */
 	public static Button saveItemPanelButton;
 
@@ -231,7 +231,7 @@ public class GuiState {
 
 	// TODO: The text 'Step size' should be translated later on
 	/**
-	 * Label to be displayed above the {@link sizeSpinner}, to explain its
+	 * Label to be displayed above the {@link #sizeSpinner}, to explain its
 	 * purpose.
 	 */
 	public static Label sizeLabel = new Label("Step size");
@@ -239,7 +239,7 @@ public class GuiState {
 	// --- VIEW SINGLE GRAPH WIDGETS ------------------------------------------
 	/**
 	 * Pop-up menu to display the performance of a single graph. It is opened
-	 * when {@link viewSingleGraph} is clicked. It contains a vertical panel.
+	 * when {@link #viewSingleGraph} is clicked. It contains a vertical panel.
 	 */
 	public static PopupPanel viewSingleGraphPopupPanel;
 
@@ -289,7 +289,7 @@ public class GuiState {
 
 	/**
 	 * Button to compare the performance of previously saved mixing runs. When
-	 * clicked, it opens the {@link compareSelectPopupPanel} pop-up.
+	 * clicked, it opens the {@link #compareSelectPopupPanel} pop-up.
 	 */
 	public static Button comparePerformanceButton;
 
@@ -306,8 +306,8 @@ public class GuiState {
 
 	/**
 	 * Button inside the compare performance pop-up to start a new comparison.
-	 * When clicked, it closes the {@link comparePopupPanel} pop-up and opens
-	 * the {@link compareSelectPopupPanel}pop-up
+	 * When clicked, it closes the {@link #comparePopupPanel} pop-up and opens
+	 * the {@link #compareSelectPopupPanel}pop-up
 	 */
 	public static Button newCompareButton;
 

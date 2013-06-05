@@ -1,7 +1,6 @@
 package nl.tue.fingerpaint.client.gui;
 
-import nl.tue.fingerpaint.client.gui.animation.Direction;
-import nl.tue.fingerpaint.client.gui.animation.SlideAnimation;
+import nl.tue.fingerpaint.client.gui.animation.SizeAnimation;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -31,7 +30,7 @@ public class MenuToggleButton extends Button implements ClickHandler {
 	/** The MenuPanel that is shown/hidden. */
 	protected VerticalPanel menuPanel;
 	/** Animation to hide menu panel. */
-	protected SlideAnimation menuAnimation;
+	protected SizeAnimation menuAnimation;
 	
 	/**
 	 * Construct a new {@link MenuToggleButton}.
@@ -45,17 +44,17 @@ public class MenuToggleButton extends Button implements ClickHandler {
 		addClickHandler(this);
 		setText(HIDE_TEXT);
 		getElement().setId(ELEMENT_ID);
-		menuAnimation = new SlideAnimation(menuPanel.getElement(), Direction.RIGHT);
+		menuAnimation = new SizeAnimation(menuPanel.getElement(), SizeAnimation.ANIMATE_WIDTH);
 	}
 
 	@Override
 	public void onClick(ClickEvent event) {
 		if (shown) {
 			setText(SHOW_TEXT);
-			menuAnimation.doSlideOut(DURATION);
+			menuAnimation.doHide(DURATION);
 		} else {
 			setText(HIDE_TEXT);
-			menuAnimation.doSlideIn(DURATION);
+			menuAnimation.doShow(DURATION);
 		}
 		
 		// Actually toggle state
