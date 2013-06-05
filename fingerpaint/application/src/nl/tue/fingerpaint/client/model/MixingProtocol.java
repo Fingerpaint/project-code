@@ -173,6 +173,12 @@ public class MixingProtocol implements Serializable {
 		for (MixingStep ms : program) {
 			result += ms.toString() + ", ";
 		}
+		
+		// Prevent StringIndexOutOfBoundsException due to empty protocol
+		if (result.length() < 2) {
+			return "";
+		}
+		
 		return result.substring(0, result.length() - 2);
 	}
 
