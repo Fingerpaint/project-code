@@ -10,11 +10,15 @@
 /* background-color:#FFDD00; /* yellow */
 /* background-color:#D6007B; /* pink */
 
+/* -- DEFINES -- */
 @def TOGGLE_COLOUR_BUTTON_Z 10;
 @def TOGGLE_COLOUR_BUTTON_Z_BG 11;
 @def TOGGLE_COLOUR_BUTTON_Z_FG 12;
 @def POPUP_PANEL_Z 20;
+@def LOADING_OVERLAY_Z 90;
+@def LOADING_OVERLAY_CONTENT_Z 91;
 
+/* -- MORE CONSTANTS -- */
 @eval BLACK nl.tue.fingerpaint.shared.utils.Colour.BLACK.toHexString();
 @eval MAIN_LIGHT nl.tue.fingerpaint.shared.utils.Colour.TUE_LIGHT_BLUE.toHexString();
 @eval MAIN nl.tue.fingerpaint.shared.utils.Colour.TUE_BLUE.toHexString();
@@ -70,6 +74,7 @@ body {
 	left: 0;
 	background: #000;
 	background: rgba(0, 0, 0, 0.5);
+	z-index: LOADING_OVERLAY_Z;
 }
 
 #loading-overlay .gwt-Image {
@@ -78,6 +83,7 @@ body {
 	left: 50%;
 	/* actually center the image with negative margins, half the size of the image */
 	margin: -27px 0 0 -27px;
+	z-index: LOADING_OVERLAY_CONTENT_Z;
 }
 
 #loading-overlay .gwt-Label {
@@ -91,6 +97,7 @@ body {
 	text-align: center;
 	font-weight: bold;
 	color: WHITE;
+	z-index: LOADING_OVERLAY_CONTENT_Z;
 }
 
 #protPanel {
