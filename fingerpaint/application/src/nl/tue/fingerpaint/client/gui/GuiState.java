@@ -397,10 +397,12 @@ public class GuiState {
 	public static void setDebugIDs(){
 		defineProtocolCheckBox.ensureDebugId("defineProtocolCheckbox");
 		mixNowButton.ensureDebugId("mixNowButton");
-		viewSingleGraph.ensureDebugId("viewGraph");
+		viewSingleGraph.ensureDebugId("viewSingleGraph");
 		nrStepsSpinner.ensureDebugId("nrStepsSpinner");
-		saveResultsButton.ensureDebugId("saveResults");
-		comparePerformanceButton.ensureDebugId("comparePerformance");
+		saveResultsButton.ensureDebugId("saveResultsButton");
+		comparePerformanceButton.ensureDebugId("comparePerformanceButton");
+		saveNameTextBox.ensureDebugId("saveNameTextBox");
+		saveItemPanelButton.ensureDebugId("saveItemPanelButton");
 	}
 	
 }
