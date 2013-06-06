@@ -91,7 +91,7 @@ public interface FingerpaintConstants extends Constants {
 	 *         (because the name was already in use).
 	 */
 	@DefaultStringValue("This name is already in use. "
-			+ "Choose whether to overwrite existing file " + "or to cancel.")
+			+ "Choose whether to overwrite existing file or to cancel.")
 	public String nameInUse();
 
 	// --- CONSTANTS FOR BUTTONS ----------------------------------------------
