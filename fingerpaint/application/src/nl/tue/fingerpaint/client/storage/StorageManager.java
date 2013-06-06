@@ -282,7 +282,8 @@ public class StorageManager {
 		}
 
 		HashMap<String, Object> firstLevel = FingerpaintJsonizer
-				.hashMapFromString(localStorage.getItem(KEY_PROTOCOLS), false);
+				.hashMapFromString(localStorage.getItem(KEY_PROTOCOLS), false);	
+		
 		if (firstLevel.containsKey(geometry)) {
 			HashMap<String, Object> secondLevel = FingerpaintJsonizer
 					.hashMapFromJSONObject(

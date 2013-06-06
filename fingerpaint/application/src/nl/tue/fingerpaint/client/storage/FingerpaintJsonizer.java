@@ -133,8 +133,9 @@ public class FingerpaintJsonizer {
 			tmpVal = jsonObj.get(key);
 
 			if (deep) {
-				unJsonize(hm, tmpVal, key, deep);
-
+				unJsonize(hm, tmpVal, key);
+			} else {
+				hm.put(key, tmpVal);
 			}
 		}
 
@@ -142,7 +143,7 @@ public class FingerpaintJsonizer {
 	}
 
 	private static void unJsonize(HashMap<String, Object> hm, JSONValue tmpVal,
-			String key, boolean deep) {
+			String key) {
 		JSONObject tmpValObj;
 		JSONArray tmpValArr;
 		JSONString tmpValStr;
@@ -153,20 +154,18 @@ public class FingerpaintJsonizer {
 			String s = tmpValStr.stringValue();
 			if (s.charAt(0) == '#') {
 				s = FingerpaintZipper.unzip(s);
-				unJsonize(hm, JSONParser.parseStrict(s), key, deep);
+				unJsonize(hm, JSONParser.parseStrict(s), key);
 			} else {
 				hm.put(key, s);
 			}
 		} else if ((tmpValObj = tmpVal.isObject()) != null) {
-			hm.put(key, hashMapFromJSONObject(tmpValObj, deep));
+			hm.put(key, hashMapFromJSONObject(tmpValObj, true));
 		} else if ((tmpValArr = tmpVal.isArray()) != null) {
 			hm.put(key, FingerpaintJsonizer.arrayFromJSONArray(tmpValArr));
 		} else if ((tmpValNr = tmpVal.isNumber()) != null) {
 			hm.put(key, tmpValNr.doubleValue());
 		} else if ((tmpValBool = tmpVal.isBoolean()) != null) {
 			hm.put(key, tmpValBool.booleanValue());
-		} else {
-			hm.put(key, tmpVal);
 		}
 	}
 
@@ -307,9 +306,6 @@ public class FingerpaintJsonizer {
 	 */
 	public static String toString(MixingProtocol protocol) {
 		return protocol.toString();
-		// MixingProtocolJsonizer ja = (MixingProtocolJsonizer) GWT
-		// .create(MixingProtocolJsonizer.class);
-		// return ja.asString(protocol);
 	}
 
 	/**

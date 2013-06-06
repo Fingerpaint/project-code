@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import nl.tue.fingerpaint.client.gui.GraphVisualisator;
 import nl.tue.fingerpaint.client.gui.MenuToggleButton;
@@ -27,8 +25,6 @@ import nl.tue.fingerpaint.client.simulator.Simulation;
 import nl.tue.fingerpaint.client.simulator.SimulationResult;
 import nl.tue.fingerpaint.client.simulator.SimulatorService;
 import nl.tue.fingerpaint.client.simulator.SimulatorServiceAsync;
-import nl.tue.fingerpaint.client.storage.FingerpaintJsonizer;
-import nl.tue.fingerpaint.client.storage.FingerpaintZipper;
 import nl.tue.fingerpaint.client.storage.ResultStorage;
 import nl.tue.fingerpaint.client.storage.StorageManager;
 import nl.tue.fingerpaint.shared.GeometryNames;
@@ -1127,20 +1123,6 @@ public class Fingerpaint implements EntryPoint {
 	private void saveDistributionButtonOnClick() {
 		lastSaveButtonClicked = StorageManager.KEY_INITDIST;
 		showSavePanel();
-
-		try {
-			String dist = FingerpaintJsonizer.toString(as.getGeometry()
-					.getDistribution());
-			String zippedDist = FingerpaintZipper.zip(dist);
-			Logger.getLogger("").log(Level.INFO, zippedDist);
-			String unzippedDist = FingerpaintZipper.unzip(zippedDist);
-			Logger.getLogger("").log(Level.INFO, unzippedDist);
-		//	System.out.println("boe");
-		//	System.out.println(unzippedDist);
-		} catch (Exception e) {
-			System.out.println(e.toString());
-			// e.printStackTrace();
-		}
 	}
 
 	private void saveProtocolButtonOnClick() {
@@ -1610,12 +1592,7 @@ public class Fingerpaint implements EntryPoint {
 				for (String s : chosenNames) {
 					names.add(s);
 					ResultStorage rs = StorageManager.INSTANCE.getResult(s);
-					if (rs == null) {
-						System.out.println("Ik ben null");
-					}
-					// System.out.println(StorageManager.INSTANCE.getResult(s));
-					graphs.add(StorageManager.INSTANCE.getResult(s)
-							.getSegregation());
+					graphs.add(rs.getSegregation());
 				}
 
 				compareGraphPanel.clear();
