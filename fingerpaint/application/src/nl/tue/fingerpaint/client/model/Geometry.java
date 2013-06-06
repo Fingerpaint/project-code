@@ -12,15 +12,6 @@ import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.canvas.dom.client.ImageData;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.ImageElement;
-import com.google.gwt.event.dom.client.MouseDownEvent;
-import com.google.gwt.event.dom.client.MouseDownHandler;
-import com.google.gwt.event.dom.client.MouseMoveEvent;
-import com.google.gwt.event.dom.client.MouseMoveHandler;
-import com.google.gwt.event.dom.client.MouseOutEvent;
-import com.google.gwt.event.dom.client.MouseOutHandler;
-import com.google.gwt.event.dom.client.MouseUpEvent;
-import com.google.gwt.event.dom.client.MouseUpHandler;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
@@ -73,8 +64,6 @@ public abstract class Geometry {
 	protected ImageElement toolImage;
 	/** The extra width of the drawing tool. Equal to factor * tool.radius */
 	protected int displacement;
-	/** Reference to the current MouseMoveHandler attached to the canvas */
-	private HandlerRegistration mouseMove;
 
 	/** X-position of the previous MouseMoveEvent, relative to the canvas */
 	private int previousX;
@@ -173,7 +162,51 @@ public abstract class Geometry {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
+		initialiseNativeHandlers(canvas.getElement());
+
 	}
+
+	/**
+	 * Initialise the mouse/touch handlers on the canvas, using native code.
+	 * 
+	 * @param canvas The element to initialise the handlers on.
+	 */
+	private native void initialiseNativeHandlers(Element canvas) /*-{
+		var hammer = $wnd.Hammer(canvas, {
+				drag_min_distance : 50,
+				drag_horizontal : true,
+				drag_vertical : true,
+				transform : true,
+				scale_treshold : 0.1,
+				hold : true,
+				hold_timeout : 400,
+				swipe : true,
+				swipe_time : 200, // ms
+				swipe_min_distance : 3, // pixels
+				prevent_default : true
+			}),
+			that = this;
+
+		// Drag handlers
+		hammer.on('touch', function(e) {
+			that.@nl.tue.fingerpaint.client.model.Geometry::onDragStart(II)
+								(e.gesture.touches[0].pageX - e.target.offsetLeft,
+									e.gesture.touches[0].pageY - e.target.offsetTop);
+		});
+
+		hammer.on('drag', function(e) {
+			that.@nl.tue.fingerpaint.client.model.Geometry::onDragMove(II)
+								(e.gesture.touches[0].pageX - e.target.offsetLeft,
+									e.gesture.touches[0].pageY - e.target.offsetTop);
+		});
+
+		hammer.on('release', function(e) {
+			that.@nl.tue.fingerpaint.client.model.Geometry::onDragEnd(II)
+								(e.gesture.touches[0].pageX - e.target.offsetLeft,
+									e.gesture.touches[0].pageY - e.target.offsetTop);
+		});
+	}-*/;
 
 	// ----Getters and Setters---------------------------------------
 	/**
@@ -331,6 +364,7 @@ public abstract class Geometry {
 
 		// Initialise canvas
 		canvas.setStyleName("paintCanvas");
+		canvas.getElement().setId("fingerpaintCanvas");
 		canvas.setWidth(width + "px");
 		canvas.setCoordinateSpaceWidth(width);
 		canvas.setHeight(height + "px");
@@ -340,52 +374,6 @@ public abstract class Geometry {
 		// original state
 		context = canvas.getContext2d();
 		context.save();
-
-		// When the left mouse button is pressed, drawing is started
-		canvas.addMouseDownHandler(new MouseDownHandler() {
-
-			/*
-			 * Start drawing if the mouseEvent took place within the drawing
-			 * area.
-			 */
-			@Override
-			public void onMouseDown(MouseDownEvent event) {
-
-				Element elem = event.getRelativeElement();
-				int x = event.getRelativeX(elem);
-				int y = event.getRelativeY(elem);
-
-				onDragStart(x, y);
-
-			}
-
-		});
-
-		canvas.addMouseUpHandler(new MouseUpHandler() {
-
-			/*
-			 * When the left mouse button is released, drawing is ended
-			 */
-			@Override
-			public void onMouseUp(MouseUpEvent event) {
-				Element elem = event.getRelativeElement();
-				int x = event.getRelativeX(elem);
-				int y = event.getRelativeY(elem);
-
-				onDragEnd(x, y);
-			}
-
-		});
-
-		/*
-		 * When the mouse leaves the canvas area, defining a step is ended
-		 */
-		canvas.addMouseOutHandler(new MouseOutHandler() {
-			@Override
-			public void onMouseOut(MouseOutEvent event) {
-				onDragOut();
-			}
-		});
 	}
 
 	/**
@@ -397,45 +385,25 @@ public abstract class Geometry {
 	 *            The y-coordinate of the event, relative to the canvas
 	 */
 	public void onDragStart(int x, int y) {
-
-		if (isInsideDrawingArea(x - X_OFFSET, y - TOP_OFFSET)) {
+		x -= X_OFFSET;
+		y -= TOP_OFFSET;
+		
+		if (isInsideDrawingArea(x, y)) {
 			// User started drawing the concentration distribution
 			drawing = true;
 
 			// Store starting coordinates
-			previousX = x - X_OFFSET;
-			previousY = y - TOP_OFFSET;
+			previousX = x;
+			previousY = y;
 
-			x = getValidCoord(x - X_OFFSET);
-			y = getValidCoord(y - TOP_OFFSET);
+			x = getValidCoord(x);
+			y = getValidCoord(y);
 
 			// Draw the first image of the drawing tool
 			context.drawImage(toolImage, Math.max(x - displacement, 0)
 					+ X_OFFSET, Math.max(y - displacement, 0) + TOP_OFFSET);
-			mouseMove = canvas.addMouseMoveHandler(new MouseMoveHandler() {
-				/*
-				 * Draw a line from the previous to the next point of the
-				 * mouseEvent took place within the drawing area. Otherwise
-				 * remove MouseMoveHandler.
-				 */
-				@Override
-				public void onMouseMove(MouseMoveEvent e) {
-					Element elem = e.getRelativeElement();
-					int x = e.getRelativeX(elem) - X_OFFSET;
-					int y = e.getRelativeY(elem) - TOP_OFFSET;
-					if (isInsideDrawingArea(x, y)) {
-						drawLine(previousX, previousY, x, y);
-						previousX = x;
-						previousY = y;
-					}
-				}
-			});
 
 		} else if (isInsideTopWall(x, y) || isInsideBottomWall(x, y)) {
-			// User started defining a step of the protocol
-			definingStep = true;
-			topWallStep = isInsideTopWall(x, y);
-
 			// cancel current animation if there is one
 			if (animationTimer != null) {
 				animationTimer.cancel();
@@ -443,21 +411,12 @@ public abstract class Geometry {
 				fillWall(0, topWallStep);
 				clipGeometryOutline();
 			}
+			
+			// User started defining a step of the protocol
+			definingStep = true;
+			topWallStep = isInsideTopWall(x, y);
 
 			startDefineMixingStep(x, y);
-			mouseMove = canvas.addMouseMoveHandler(new MouseMoveHandler() {
-
-				@Override
-				public void onMouseMove(MouseMoveEvent event) {
-					Element elem = event.getRelativeElement();
-					int currentX = event.getRelativeX(elem);
-
-					removeClippingArea();
-					fillWall(currentX - swipeStartX, topWallStep);
-					clipGeometryOutline();
-				}
-
-			});
 		}
 	}
 
@@ -470,12 +429,38 @@ public abstract class Geometry {
 	 *            The y-coordinate of the event, relative to the canvas
 	 */
 	public void onDragEnd(int x, int y) {
+		x -= X_OFFSET;
+		y -= TOP_OFFSET;
+		
 		if (definingStep) {
 			stopDefineMixingStep(x, y);
 		}
 		removeMouseMoveHandler(x - swipeStartX);
 	}
 
+	/**
+	 * Code to execute on a MouseMove event.
+	 * 
+	 * @param x
+	 *            The x-coordinate of the event, relative to the canvas
+	 * @param y
+	 *            The y-coordinate of the event, relative to the canvas
+	 */
+	public void onDragMove(int x, int y) {
+		x -= X_OFFSET;
+		y -= TOP_OFFSET;
+		
+		if (drawing && isInsideDrawingArea(x, y)) {
+			drawLine(previousX, previousY, x, y);
+			previousX = x;
+			previousY = y;
+		} else if (definingStep && (isInsideTopWall(x, y) || isInsideBottomWall(x, y))) {
+			removeClippingArea();
+			fillWall(x - swipeStartX, topWallStep);
+			clipGeometryOutline();
+		}
+	}
+	
 	/**
 	 * Code to execute on a MouseOut event.
 	 */
@@ -499,11 +484,9 @@ public abstract class Geometry {
 	private void removeMouseMoveHandler(final int xStop) {
 		if (drawing) {
 			drawing = false;
-			mouseMove.removeHandler();
 		}
 		if (definingStep) {
 			definingStep = false;
-			mouseMove.removeHandler();
 
 			animationTimer = new Timer() {
 				private int x = xStop;
