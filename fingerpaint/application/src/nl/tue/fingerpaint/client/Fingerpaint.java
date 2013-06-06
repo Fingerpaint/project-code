@@ -95,6 +95,9 @@ public class Fingerpaint implements EntryPoint {
 	 * This is the entry point method.
 	 */
 	public void onModuleLoad() {
+		// Set IDs or debug IDs.
+		GuiState.setIDs();
+		
 		// Load CSS
 		FingerpaintResources.INSTANCE.css().ensureInjected();
 
@@ -107,10 +110,7 @@ public class Fingerpaint implements EntryPoint {
 		// Add label that may contain explanatory text
 		GuiState.loadingPanelMessage = new Label(
 				FingerpaintConstants.INSTANCE.loadingGeometries(), false);
-		GuiState.loadingPanelMessage.getElement()
-				.setId(GuiState.LOADINGPANEL_MESSAGE_ID);
 		GuiState.loadingPanel.add(GuiState.loadingPanelMessage);
-		GuiState.loadingPanel.getElement().setId(GuiState.LOADINGPANEL_ID);
 
 		// initialise the underlying model of the application
 		as = new ApplicationState();
@@ -134,9 +134,6 @@ public class Fingerpaint implements EntryPoint {
 				}
 			}
 		});
-		
-		//set debug ID's for debugging
-		GuiState.setDebugIDs();
 	}
 
 	/**
@@ -271,8 +268,6 @@ public class Fingerpaint implements EntryPoint {
 		 * Helper method that initialises the widgets for the mixing interface
 		 */
 		private void createMixingWidgets() {
-			GuiState.menuPanel.getElement().setId("menuPanel");
-
 			// Initialise a listener for when a new step is entered to the
 			// protocol
 			StepAddedListener l = new StepAddedListener() {
@@ -374,7 +369,6 @@ public class Fingerpaint implements EntryPoint {
 			protocolPanel.add(GuiState.saveProtocolButton);
 			protocolPanel.add(GuiState.loadProtocolButton);
 
-			GuiState.protocolPanelContainer.getElement().setId("protPanel");
 			GuiState.protocolPanelContainer.setAnimationEnabled(true);
 			GuiState.protocolPanelContainer.add(protocolPanel);
 			GuiState.protocolPanelContainer.setVisible(false);
@@ -384,7 +378,6 @@ public class Fingerpaint implements EntryPoint {
 			// Add canvas and menuPanel to the page
 			RootPanel.get().add(as.getGeometry().getCanvas());
 			GuiState.menuPanelWrapper.add(GuiState.menuPanel);
-			GuiState.menuPanelWrapper.getElement().setId("menuPanelWrapper");
 			RootPanel.get().add(GuiState.menuPanelWrapper);
 			GuiState.menuToggleButton.refreshMenuSize();
 			RootPanel.get().add(GuiState.menuToggleButton);
@@ -524,7 +517,6 @@ public class Fingerpaint implements EntryPoint {
 	 */
 	private void createProtocolRepresentationTextArea() {
 		GuiState.labelProtocolRepresentation.setVisible(false);
-		GuiState.labelProtocolRepresentation.getElement().setId("protLabel");
 	}
 
 	/*
