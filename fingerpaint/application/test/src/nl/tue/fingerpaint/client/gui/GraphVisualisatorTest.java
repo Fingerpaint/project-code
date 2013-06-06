@@ -62,8 +62,8 @@ public class GraphVisualisatorTest {
 				TestUtil.waitForLoadingOverlay(driver);
 				(new WebDriverWait(driver, 30)).until(
 						ExpectedConditions.elementToBeClickable(
-								By.id("gwt-debug-viewGraph")));
-				driver.findElement(By.id("gwt-debug-viewGraph")).click();
+								By.id("gwt-debug-viewSingleGraph")));
+				driver.findElement(By.id("gwt-debug-viewSingleGraph")).click();
 				tester.takeScreenshot();
 				return true;
 			}
