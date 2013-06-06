@@ -333,7 +333,6 @@ public class GuiState {
 	public static SimplePanel viewSingleGraphGraphPanel = new SimplePanel();
 
 	/** Button to view the performance of the previously executed mixing run. */
-	// TODO: viewSingleGraphButton
 	public static Button viewSingleGraphButton = new Button(
 			FingerpaintConstants.INSTANCE.btnViewSingleGraph());
 
