@@ -57,12 +57,6 @@ public class GraphVisualisatorTest {
 						ExpectedConditions.elementToBeClickable(
 								By.id("gwt-debug-viewGraph")));
 				driver.findElement(By.id("gwt-debug-viewGraph")).click();
-				try {
-					Thread.sleep(1000);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
 				tester.takeScreenshot();
 				return true;
 			}

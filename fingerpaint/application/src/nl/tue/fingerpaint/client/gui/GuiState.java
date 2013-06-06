@@ -401,6 +401,6 @@ public class GuiState {
 		nrStepsSpinner.ensureDebugId("nrStepsSpinner");
 		saveResultsButton.ensureDebugId("saveResults");
 		comparePerformanceButton.ensureDebugId("comparePerformance");
-	}
-	
+		compareSelectPopupPanel.ensureDebugId("compareSelectPopupPanel");
+	}	
 }

@@ -1209,6 +1209,7 @@ public class Fingerpaint implements EntryPoint {
 		// Initialise the cellList to contain all the mixing runs
 		TextCell textCell = new TextCell();
 		final CellList<String> cellList = new CellList<String>(textCell);
+		cellList.ensureDebugId("compareSelectPopupCellList");
 		final MultiSelectionModel<String> selectionModel = new MultiSelectionModel<String>();
 		final Handler<String> selectionEventManager = DefaultSelectionEventManager
 				.createCheckboxManager();
