@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import nl.tue.fingerpaint.client.gui.GraphVisualisator;
 import nl.tue.fingerpaint.client.gui.GuiState;
@@ -843,11 +845,12 @@ public class Fingerpaint implements EntryPoint {
 	}
 
 	private void savePanelButtonOnClick() {
+		// TODO: We need more than a boolean to indicate exit status: if something
+		// goes wrong, we return false, causing the "Name already in use"
+		// message to appear, which is incorrect in some cases.
 		boolean success = save(GuiState.saveNameTextBox.getText(), false);
 		if (success) {
-			NotificationPanel np = new NotificationPanel(
-					FingerpaintConstants.INSTANCE.saveSuccess());
-			np.show(GuiState.SAVE_SUCCESS_TIMEOUT);
+			new NotificationPanel(FingerpaintConstants.INSTANCE.saveSuccess()).show(GuiState.SAVE_SUCCESS_TIMEOUT);
 			GuiState.saveItemPanel.hide();
 		} else {
 			GuiState.saveMessageLabel.setText(FingerpaintConstants.INSTANCE.nameInUse());
@@ -938,8 +941,13 @@ public class Fingerpaint implements EntryPoint {
 			result.setSegregation(as.getSegregation());
 			result.setNrSteps(as.getNrSteps());
 
-			return StorageManager.INSTANCE
+			try {
+				return StorageManager.INSTANCE
 					.putResult(name, result, canOverwrite);
+			} catch (Exception e) {
+				GWT.log("Saving results encountered an error", e);
+				return false;
+			}
 		}
 		return false;
 	}
