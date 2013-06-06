@@ -110,6 +110,8 @@ public class Fingerpaint implements EntryPoint {
 		// Add label that may contain explanatory text
 		GuiState.loadingPanelMessage = new Label(
 				FingerpaintConstants.INSTANCE.loadingGeometries(), false);
+		GuiState.loadingPanelMessage.getElement().setId(
+				GuiState.LOADINGPANEL_MESSAGE_ID);
 		GuiState.loadingPanel.add(GuiState.loadingPanelMessage);
 
 		// initialise the underlying model of the application
@@ -380,6 +382,7 @@ public class Fingerpaint implements EntryPoint {
 			GuiState.menuPanelWrapper.add(GuiState.menuPanel);
 			RootPanel.get().add(GuiState.menuPanelWrapper);
 			GuiState.menuToggleButton.refreshMenuSize();
+
 			RootPanel.get().add(GuiState.menuToggleButton);
 		}
 
@@ -630,7 +633,7 @@ public class Fingerpaint implements EntryPoint {
 	 * Initialises the saveProtocol Button. When this button is pressed, the
 	 * currently defined protocol is saved.
 	 */
-	private void createSaveProtocolButton() { 
+	private void createSaveProtocolButton() {
 		GuiState.saveProtocolButton.setEnabled(true);
 
 		GuiState.saveProtocolButton.addClickHandler(new ClickHandler() {
@@ -845,7 +848,8 @@ public class Fingerpaint implements EntryPoint {
 			new NotificationPanel(FingerpaintConstants.INSTANCE.saveSuccess()).show(GuiState.SAVE_SUCCESS_TIMEOUT);
 			GuiState.saveItemPanel.hide();
 		} else {
-			GuiState.saveMessageLabel.setText(FingerpaintConstants.INSTANCE.nameInUse());
+			GuiState.saveMessageLabel.setText(FingerpaintConstants.INSTANCE
+					.nameInUse());
 
 			GuiState.overwriteButtonsPanel.remove(GuiState.closeSaveButton);
 			GuiState.overwriteButtonsPanel.add(GuiState.overwriteSaveButton);
@@ -1364,7 +1368,7 @@ public class Fingerpaint implements EntryPoint {
 		graphVisualisator = new GraphVisualisator();
 		// Adds the graph to the Panel-parameter of
 		// visualisator.getOnLoadCallBack()
-		try {
+		try {			
 			VisualizationUtils.loadVisualizationApi(graphVisualisator
 					.createGraph(panel, names, performance, onLoad),
 					LineChart.PACKAGE);
