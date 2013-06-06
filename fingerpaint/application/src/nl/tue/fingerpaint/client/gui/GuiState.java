@@ -394,8 +394,8 @@ public class GuiState {
 			FingerpaintConstants.INSTANCE.btnNewCompare());
 
 	/**
-	 * Sets the IDs for all widgets in this class (except the CellBrowser and
-	 * ToggleColourButton). The ID is either used in the CSS file or
+	 * Sets the IDs for all widgets in this class (except the CellBrowser, 
+	 * ToggleColourButton and MenuToggleButton). The ID is either used in the CSS file or
 	 * for debugging purposes. A widget may <b>never</b> have an ordinary ID and
 	 * a debug ID at the same time.
 	 */
@@ -406,7 +406,6 @@ public class GuiState {
 
 		menuPanel.getElement().setId("menuPanel");
 		menuPanelWrapper.getElement().setId("menuPanelWrapper");
-		menuToggleButton.ensureDebugId("menuToggleButton");
 
 		toolSelector.ensureDebugId("toolSelector");
 		popupPanelPanel.ensureDebugId("popupPanelPanel");
