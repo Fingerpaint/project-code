@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import nl.tue.fingerpaint.client.gui.NotificationPanel;
-import nl.tue.fingerpaint.client.json.FingerpaintJsonizer;
 import nl.tue.fingerpaint.client.model.MixingProtocol;
 import nl.tue.fingerpaint.shared.GeometryNames;
 
@@ -427,7 +426,7 @@ public class StorageManager {
 			@SuppressWarnings("unchecked")
 			HashMap<String, Object> secondLevel = (HashMap<String, Object>) firstLevel
 					.get(geometry);
-			secondLevel.put(key, FingerpaintJsonizer.toString(value));
+			secondLevel.put(key, FingerpaintZipper.zip(FingerpaintJsonizer.toString(value)));
 			firstLevel.put(geometry, FingerpaintJsonizer.toString(secondLevel));
 			try {
 				localStorage.setItem(KEY_INITDIST,

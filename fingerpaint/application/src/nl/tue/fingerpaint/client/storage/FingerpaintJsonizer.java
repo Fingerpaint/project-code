@@ -1,4 +1,4 @@
-package nl.tue.fingerpaint.client.json;
+package nl.tue.fingerpaint.client.storage;
 
 import java.util.HashMap;
 import java.util.Set;
@@ -6,7 +6,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import nl.tue.fingerpaint.client.model.MixingProtocol;
-import nl.tue.fingerpaint.client.storage.ResultStorage;
 import nl.tue.fingerpaint.client.storage.ResultStorage.ResultStorageJsonizer;
 
 import org.jsonmaker.gwt.client.JsonizerParser;
@@ -129,34 +128,46 @@ public class FingerpaintJsonizer {
 			JSONObject jsonObj, boolean deep) {
 		HashMap<String, Object> hm = new HashMap<String, Object>();
 		JSONValue tmpVal;
+
+		for (String key : jsonObj.keySet()) {
+			tmpVal = jsonObj.get(key);
+
+			if (deep) {
+				unJsonize(hm, tmpVal, key, deep);
+
+			}
+		}
+
+		return hm;
+	}
+
+	private static void unJsonize(HashMap<String, Object> hm, JSONValue tmpVal,
+			String key, boolean deep) {
 		JSONObject tmpValObj;
 		JSONArray tmpValArr;
 		JSONString tmpValStr;
 		JSONNumber tmpValNr;
 		JSONBoolean tmpValBool;
 
-		for (String key : jsonObj.keySet()) {
-			tmpVal = jsonObj.get(key);
-
-			if (deep) {
-				if ((tmpValStr = tmpVal.isString()) != null) {
-					hm.put(key, tmpValStr.stringValue());
-				} else if ((tmpValObj = tmpVal.isObject()) != null) {
-					hm.put(key, hashMapFromJSONObject(tmpValObj, deep));
-				} else if ((tmpValArr = tmpVal.isArray()) != null) {
-					hm.put(key,
-							FingerpaintJsonizer.arrayFromJSONArray(tmpValArr));
-				} else if ((tmpValNr = tmpVal.isNumber()) != null) {
-					hm.put(key, tmpValNr.doubleValue());
-				} else if ((tmpValBool = tmpVal.isBoolean()) != null) {
-					hm.put(key, tmpValBool.booleanValue());
-				}
+		if ((tmpValStr = tmpVal.isString()) != null) {
+			String s = tmpValStr.stringValue();
+			if (s.charAt(0) == '#') {
+				s = FingerpaintZipper.unzip(s);
+				unJsonize(hm, JSONParser.parseStrict(s), key, deep);
 			} else {
-				hm.put(key, tmpVal);
+				hm.put(key, s);
 			}
+		} else if ((tmpValObj = tmpVal.isObject()) != null) {
+			hm.put(key, hashMapFromJSONObject(tmpValObj, deep));
+		} else if ((tmpValArr = tmpVal.isArray()) != null) {
+			hm.put(key, FingerpaintJsonizer.arrayFromJSONArray(tmpValArr));
+		} else if ((tmpValNr = tmpVal.isNumber()) != null) {
+			hm.put(key, tmpValNr.doubleValue());
+		} else if ((tmpValBool = tmpVal.isBoolean()) != null) {
+			hm.put(key, tmpValBool.booleanValue());
+		} else {
+			hm.put(key, tmpVal);
 		}
-
-		return hm;
 	}
 
 	/**
@@ -256,16 +267,6 @@ public class FingerpaintJsonizer {
 	 */
 	public static MixingProtocol protocolFromString(String jsonString) {
 		return MixingProtocol.fromString(jsonString);
-//		MixingProtocolJsonizer json = (MixingProtocolJsonizer) GWT
-//				.create(MixingProtocolJsonizer.class);
-//		try {
-//			return (MixingProtocol) JsonizerParser.parse(json, jsonString);
-//		} catch (Exception e) {
-//			// When the value is null or empty, return an empty hash map
-//			Logger.getLogger("").log(Level.SEVERE,
-//					"[resultFromString] Could not parse value...");
-//			return null;
-//		}
 	}
 
 	/**
@@ -306,9 +307,9 @@ public class FingerpaintJsonizer {
 	 */
 	public static String toString(MixingProtocol protocol) {
 		return protocol.toString();
-//		MixingProtocolJsonizer ja = (MixingProtocolJsonizer) GWT
-//				.create(MixingProtocolJsonizer.class);
-//		return ja.asString(protocol);
+		// MixingProtocolJsonizer ja = (MixingProtocolJsonizer) GWT
+		// .create(MixingProtocolJsonizer.class);
+		// return ja.asString(protocol);
 	}
 
 	/**
@@ -377,10 +378,13 @@ public class FingerpaintJsonizer {
 		} else if (object instanceof String) {
 			// Ugly check to see if a string is escaped already...
 			String strObject = (String) object;
-			return ((strObject.charAt(0) == '"' && strObject.charAt(strObject.length() - 1) == '"') ||
-					(strObject.charAt(0) == '{' && strObject.charAt(strObject.length() - 1) == '}') ||
-					(strObject.charAt(0) == '[' && strObject.charAt(strObject.length() - 1) == ']')
-					? strObject : JsonUtils.escapeValue(strObject));
+			return ((strObject.charAt(0) == '"' && strObject.charAt(strObject
+					.length() - 1) == '"')
+					|| (strObject.charAt(0) == '{' && strObject
+							.charAt(strObject.length() - 1) == '}')
+					|| (strObject.charAt(0) == '[' && strObject
+							.charAt(strObject.length() - 1) == ']') ? strObject
+					: JsonUtils.escapeValue(strObject));
 		}
 
 		return object.toString();

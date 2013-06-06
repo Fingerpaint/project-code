@@ -17,6 +17,8 @@ public class ResultStorage {
 	private String geometry;
 	/** The name of the mixer used */
 	private String mixer;
+	private String zippedDist;
+
 	/** The initial distribution */
 	private double[] distribution;
 	/** String representation of the protocol used */
@@ -69,8 +71,10 @@ public class ResultStorage {
 	 * 
 	 * @return The initial concentration distribution that was used
 	 */
+	@Transient
 	public double[] getDistribution() {
-		return distribution;
+		return FingerpaintJsonizer.doubleArrayFromString(FingerpaintZipper
+				.unzip(this.zippedDist));
 	}
 
 	/**
@@ -81,6 +85,19 @@ public class ResultStorage {
 	 */
 	public void setDistribution(double[] distribution) {
 		this.distribution = distribution;
+		this.zippedDist = FingerpaintZipper.zip(FingerpaintJsonizer
+				.toString(distribution));
+	}
+
+	/**
+	 * Gives the zipped string representation of the initial concentration
+	 * distribution that was used
+	 * 
+	 * @return The zipped string representation of the initial concentration
+	 *         distribution that was used
+	 */
+	public String getZippedDistribution() {
+		return this.zippedDist;
 	}
 
 	/**

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import nl.tue.fingerpaint.client.gui.GraphVisualisator;
 import nl.tue.fingerpaint.client.gui.MenuToggleButton;
@@ -13,7 +15,6 @@ import nl.tue.fingerpaint.client.gui.NumberSpinnerListener;
 import nl.tue.fingerpaint.client.gui.ToggleColourButton;
 import nl.tue.fingerpaint.client.gui.drawingtool.CircleDrawingTool;
 import nl.tue.fingerpaint.client.gui.drawingtool.SquareDrawingTool;
-import nl.tue.fingerpaint.client.json.FingerpaintJsonizer;
 import nl.tue.fingerpaint.client.model.ApplicationState;
 import nl.tue.fingerpaint.client.model.Geometry.StepAddedListener;
 import nl.tue.fingerpaint.client.model.MixingProtocol;
@@ -26,7 +27,8 @@ import nl.tue.fingerpaint.client.simulator.Simulation;
 import nl.tue.fingerpaint.client.simulator.SimulationResult;
 import nl.tue.fingerpaint.client.simulator.SimulatorService;
 import nl.tue.fingerpaint.client.simulator.SimulatorServiceAsync;
-import nl.tue.fingerpaint.client.storage.Compression;
+import nl.tue.fingerpaint.client.storage.FingerpaintJsonizer;
+import nl.tue.fingerpaint.client.storage.FingerpaintZipper;
 import nl.tue.fingerpaint.client.storage.ResultStorage;
 import nl.tue.fingerpaint.client.storage.StorageManager;
 import nl.tue.fingerpaint.shared.GeometryNames;
@@ -1125,20 +1127,20 @@ public class Fingerpaint implements EntryPoint {
 	private void saveDistributionButtonOnClick() {
 		lastSaveButtonClicked = StorageManager.KEY_INITDIST;
 		showSavePanel();
-		// TODO : Remove this ------------------------------
+
 		try {
 			String dist = FingerpaintJsonizer.toString(as.getGeometry()
 					.getDistribution());
-			String zippedDist = Compression.zip(dist);
-			System.out.println(zippedDist);
-			String unzippedDist = Compression.unzip(zippedDist);
-			System.out.println("boe");
-			System.out.println(unzippedDist);
+			String zippedDist = FingerpaintZipper.zip(dist);
+			Logger.getLogger("").log(Level.INFO, zippedDist);
+			String unzippedDist = FingerpaintZipper.unzip(zippedDist);
+			Logger.getLogger("").log(Level.INFO, unzippedDist);
+		//	System.out.println("boe");
+		//	System.out.println(unzippedDist);
 		} catch (Exception e) {
 			System.out.println(e.toString());
-		//	e.printStackTrace();
+			// e.printStackTrace();
 		}
-		// -------------------------------------------------
 	}
 
 	private void saveProtocolButtonOnClick() {
