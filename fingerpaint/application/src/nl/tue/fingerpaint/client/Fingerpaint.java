@@ -384,6 +384,7 @@ public class Fingerpaint implements EntryPoint {
 			GuiState.menuPanelWrapper.add(GuiState.menuPanel);
 			GuiState.menuPanelWrapper.getElement().setId("menuPanelWrapper");
 			RootPanel.get().add(GuiState.menuPanelWrapper);
+			GuiState.menuToggleButton.refreshMenuSize();
 			RootPanel.get().add(GuiState.menuToggleButton);
 		}
 
