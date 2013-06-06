@@ -8,9 +8,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import nl.tue.fingerpaint.client.gui.GraphVisualisator;
-import nl.tue.fingerpaint.client.gui.MenuToggleButton;
+import nl.tue.fingerpaint.client.gui.GuiState;
 import nl.tue.fingerpaint.client.gui.NotificationPanel;
-import nl.tue.fingerpaint.client.gui.NumberSpinner;
 import nl.tue.fingerpaint.client.gui.NumberSpinnerListener;
 import nl.tue.fingerpaint.client.gui.ToggleColourButton;
 import nl.tue.fingerpaint.client.gui.drawingtool.CircleDrawingTool;
@@ -52,9 +51,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.ServiceDefTarget;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FlexTable;
-import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
@@ -62,9 +59,6 @@ import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.SimplePanel;
-import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.view.client.CellPreviewEvent;
 import com.google.gwt.view.client.CellPreviewEvent.Handler;
@@ -83,237 +77,19 @@ import com.google.gwt.visualization.client.visualizations.LineChart;
  * @author Group Fingerpaint
  */
 public class Fingerpaint implements EntryPoint {
+	// ---- PROTECTED GLOBALS
+	// ---------------------------------------------------------------------
 	/** Class to keep track of everything the user has selected */
 	protected ApplicationState as;
 
-	// Button to toggle between black and white drawing colour
-	private ToggleColourButton toggleColor;
-
-	// Button to reset the distribution to all white
-	private Button resetDistButton;
-
-	// Button to save the current results
-	private Button saveResultsButton;
-
-	// Button to load an initial distribution
-	private Button loadInitDistButton;
-
-	// Button to load a mixing protocol
-	private Button loadProtocolButton;
-
-	// --------------------------------------------------------------------------------------
-	// Popup Panel to handle the loading of an initial distribution or mixing
-	// protocol
-
-	// Vertical Panel to hold the textbar and the cancel button in the load
-	// popuppanel
-	private VerticalPanel loadVerticalPanel;
-
-	// close Button inside the save popup menu
-	private Button closeLoadButton;
-	
-	private PopupPanel protocolPanelContainer;
-
-	// --------------------------------------------------------------------------------------
-
-	// Button to remove previously saved results
-
-	// --------------------------------------------------------------------------------------
-
-	// Button to adapt the drawing tool
-	// TODO: Change this to a button on which the current tool is drawn
-
-	// Panel that covers the entire application and blocks the user from
-	// accessing other features
-	private static FlowPanel loadingPanel = new FlowPanel();
-	private Label loadingPanelMessage;
-
-	// Popup Panel to handle the saving of the current results
-	private PopupPanel saveItemPanel;
-
-	// Vertical Panel to hold the textbar and the save button in the save
-	// popuppanel
-	private VerticalPanel saveItemVerticalPanel;
-
-	// Horizontal Panel to hold the Save and Cancel buttons in the popup panel
-	private HorizontalPanel saveButtonsPanel;
-
-	// Textbox to input the name in to name the file
-	private TextBox saveNameTextBox;
-
-	// Cancel Button inside the save popup menu
-	private Button cancelSaveResultsButton;
-
-	// Popup Panel that appears after the Save button in the save popup panel
-	// has been pressed
-	private PopupPanel overwriteSavePanel;
-
-	// Vertical Panel to hold the save message and the ok/overwrite button in
-	// the confirm save popup panel
-	private VerticalPanel overwriteSaveVerticalPanel;
-
-	// Label to hold the save message
-	private Label saveMessageLabel;
-
-	// Horizontal Panel to hold the ok or overwrite/cancel button(s) in the
-	// confirm save popup panel
-	private HorizontalPanel overwriteButtonsPanel;
-
-	// Ok / Cancel button to close the save results popup panel
-	private Button closeSaveButton;
-
-	// --------------------------------------------------------------------------------------
-
-	private Button comparePerformanceButton;
-
-	private PopupPanel compareSelectPopupPanel;
-
-	private Button compareButton;
-
-	private Button cancelCompareButton;
-
-	private PopupPanel comparePopupPanel;
-
-	private SimplePanel compareGraphPanel;
-	
-	private Button closeCompareButton;
-
-	private Button newCompareButton;
-
-	// --------------------------------------------------------------------------------------
-
-	// Button to remove previously saved results
-	private Button removeSavedResultsButton;
-
-	// Popup Panel to handle the removing of results
-	private PopupPanel removeResultsPanel;
-
-	// Vertical panel to hold the flex panel and close button
-	private VerticalPanel removeResultsVerticalPanel;
-
-	// FlexTable to hold all the result entries
-	private FlexTable resultsFlexTable;
-
-	// Button to close the remove results popup panel
-	private Button closeResultsButton;
-
-	private Button saveProtocolButton;
-
-	private Button saveDistributionButton;
-
-	private Button saveItemPanelButton;
-
-	private Button overwriteSaveButton;
-
-	private PopupPanel viewSingleGraphPopupPanel;
-	private VerticalPanel viewSingleGraphVerticalPanel;
-	private HorizontalPanel viewSingleGraphHorizontalPanel;
-	private SimplePanel viewSingleGraphGraphPanel;
-	private Button viewSingleGraph;
-	private Button closeSingleGraphViewButton;
-	private Button exportSingleGraphButton;
-
-	// Button to adapt the drawing tool
-	// TODO: Change this to a button on which the current tool is drawn
-	private Button toolSelectButton;
-
-	// PopupPanel which contains options for selecting a different drawing tool
-	private PopupPanel toolSelector;
-
-	// The panel in the popup panel to seperate the toolSelector from the
-	// toolSizer
-	private HorizontalPanel popupPanelPanel;
-
-	// The panel in the popup panel that contains the different drawing tools
-	private VerticalPanel popupPanelMenu;
-
-	// Button to select the square drawing tool
-	// TODO: Change this to a button on which a square is drawn
-	private ToggleButton squareDrawingTool;
-
-	// Button to select the circle drawing tool
-	// TODO: Change this to a button on which a circle is drawn
-	private ToggleButton circleDrawingTool;
-
-	// Vertical panel to contain all menu items
-	private VerticalPanel menuPanel = new VerticalPanel();
-	
-	// Button to toggle if the menu is visible or not
-	private MenuToggleButton menuToggleButton;
-
-	// Panel for loading stuff
-	private static PopupPanel loadPanel = new PopupPanel();
-
-	// The NumberSpinner and label to define the step size
-	// TODO: The text 'Step size' should be translated later on
-	private Label sizeLabel = new Label("Step size");
-	private NumberSpinner sizeSpinner;
-
-	private NumberSpinner cursorSizeSpinner;
-
-	// Checkbox that needs to be checked to define a protocol. If it isn't
-	// checked, steps are executed directly.
-	private CheckBox defineProtocolCheckBox;
-
-	// The NumberSpinner and label to define how many times the mixing protocol
-	// is executed
-	// TODO: The text '#steps' should be translated later on
-	private Label nrStepsLabel = new Label("#steps");
-	private NumberSpinner nrStepsSpinner;
+	/** Holds the mixingPerformance of the last run. */
+	protected GraphVisualisator graphVisualisator;
 
 	/**
-	 * Shows the textual representation of the mixing protocol.
+	 * String to determine the save button (either distribution, results or
+	 * protocol) that was clicked last.
 	 */
-	// Button that executes the current mixing run when it is pressed
-	private Button mixNowButton;
-
-	// Button that resets the protocol when it is pressed
-	private Button resetProtocolButton;
-
-	/*
-	 * The NumberSpinner to set the #steps parameter. Its settings are described
-	 * via the following parameters.
-	 */
-	private final double NRSTEPS_DEFAULT = 1.0;
-	private final double NRSTEPS_RATE = 1.0;
-	private final double NRSTEPS_MIN = 1.0;
-	private final double NRSTEPS_MAX = 50.0;
-
-	/*
-	 * The initialisation parameters for the cursorSizeSpinner these sizes
-	 * represent cursor pixels
-	 */
-	private final double CURSOR_DEFAULT = 3.0;
-	private final double CURSOR_RATE = 1.0;
-	private final double CURSOR_MIN = 1.0;
-	private final double CURSOR_MAX = 50.0; // good value should be determined
-											// for performance
-
-	private static final String LOADINGPANEL_ID = "loading-overlay";
-	private static final String LOADINGPANEL_MESSAGE_ID = "loading-overlay-message";
-
-	/**
-	 * Stores how long in milliseconds a SAVE_SUCCESS_MESSAGE should be shown in
-	 * a NotificationPanel.
-	 */
-	private static final int SAVE_SUCCESS_TIMEOUT = 2000;
-
-	/**
-	 * The message that is shown to the user upon a successful save.
-	 */
-	private static final String SAVE_SUCCESS_MESSAGE = "Save successful.";
-
-	// Holds the mixingPerformance of the last run.
-	private GraphVisualisator graphVisualisator;
-
-	/**
-	 * Shows the textual representation of the mixing protocol.
-	 */
-	private Label labelProtocolRepresentation = new Label();
-
-	private String lastSaveButtonClicked;
-
-	private Label labelProtocolLabel;
+	protected String lastSaveButtonClicked;
 
 	/**
 	 * This is the entry point method.
@@ -326,14 +102,15 @@ public class Fingerpaint implements EntryPoint {
 		// Add animation image
 		Image loadImage = new Image(FingerpaintResources.INSTANCE.loadImage()
 				.getSafeUri());
-		loadingPanel.add(loadImage);
+		GuiState.loadingPanel.add(loadImage);
 
 		// Add label that may contain explanatory text
-		loadingPanelMessage = new Label(
+		GuiState.loadingPanelMessage = new Label(
 				FingerpaintConstants.INSTANCE.loadingGeometries(), false);
-		loadingPanelMessage.getElement().setId(LOADINGPANEL_MESSAGE_ID);
-		loadingPanel.add(loadingPanelMessage);
-		loadingPanel.getElement().setId(LOADINGPANEL_ID);
+		GuiState.loadingPanelMessage.getElement()
+				.setId(GuiState.LOADINGPANEL_MESSAGE_ID);
+		GuiState.loadingPanel.add(GuiState.loadingPanelMessage);
+		GuiState.loadingPanel.getElement().setId(GuiState.LOADINGPANEL_ID);
 
 		// initialise the underlying model of the application
 		as = new ApplicationState();
@@ -350,13 +127,16 @@ public class Fingerpaint implements EntryPoint {
 			public void onFailure(Throwable caught) {
 				setLoadingPanelVisible(false);
 				if (caught instanceof RequestTimeoutException) {
-					showError("The simulation server did not respond in"
-							+ " time. Try again later");
+					showError(FingerpaintConstants.INSTANCE
+							.simulationRequestTimeout());
 				} else {
 					showError(caught.getMessage());
 				}
 			}
 		});
+		
+		//set debug ID's for debugging
+		GuiState.setDebugIDs();
 	}
 
 	/**
@@ -390,16 +170,17 @@ public class Fingerpaint implements EntryPoint {
 		final PopupPanel errorPopup = new PopupPanel(false, true);
 		errorPopup.setAnimationEnabled(true);
 		VerticalPanel verPanel = new VerticalPanel();
-		verPanel.add(new Label("An error occurred!"));
+		verPanel.add(new Label(FingerpaintConstants.INSTANCE.errorOccured()));
 		if (message != null) {
 			verPanel.add(new Label(message));
 		}
-		verPanel.add(new Button("Close", new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				errorPopup.hide();
-			}
-		}));
+		verPanel.add(new Button(FingerpaintConstants.INSTANCE.btnClose(),
+				new ClickHandler() {
+					@Override
+					public void onClick(ClickEvent event) {
+						errorPopup.hide();
+					}
+				}));
 		errorPopup.add(verPanel);
 		errorPopup.center();
 	}
@@ -417,7 +198,7 @@ public class Fingerpaint implements EntryPoint {
 			message = "";
 		}
 
-		loadingPanelMessage.setText(message);
+		GuiState.loadingPanelMessage.setText(message);
 	}
 
 	/**
@@ -458,7 +239,8 @@ public class Fingerpaint implements EntryPoint {
 		private void setUserChoiceValues(String selectedMixer) {
 			// TODO: Actually create a different geometry depending on the
 			// chosen geometry...
-			as.setGeometry(new RectangleGeometry(Window.getClientHeight() - 20, Window.getClientWidth() - 20));
+			as.setGeometry(new RectangleGeometry(Window.getClientHeight() - 20,
+					Window.getClientWidth() - 20));
 		}
 
 		public CustomTreeModel() {
@@ -478,7 +260,7 @@ public class Fingerpaint implements EntryPoint {
 								// rootpanel)
 								// TODO: Make decent close-code
 								RootPanel.get().clear();
-								
+
 								createMixingWidgets();
 							}
 						}
@@ -488,8 +270,8 @@ public class Fingerpaint implements EntryPoint {
 		/**
 		 * Helper method that initialises the widgets for the mixing interface
 		 */
-		private void createMixingWidgets() {		
-			menuPanel.getElement().setId("menuPanel");
+		private void createMixingWidgets() {
+			GuiState.menuPanel.getElement().setId("menuPanel");
 
 			// Initialise a listener for when a new step is entered to the
 			// protocol
@@ -507,12 +289,12 @@ public class Fingerpaint implements EntryPoint {
 
 			// Initialise the toolSelectButton and add to menuPanel
 			createToolSelector();
-			menuPanel.add(toolSelectButton);
+			GuiState.menuPanel.add(GuiState.toolSelectButton);
 
 			// Initialise toggleButton and add to
 			// menuPanel
-			toggleColor = new ToggleColourButton(as);
-			menuPanel.add(toggleColor);
+			GuiState.toggleColor = new ToggleColourButton(as);
+			GuiState.menuPanel.add(GuiState.toggleColor);
 
 			// Initialise the loadDistButton and add to
 			// menuPanel
@@ -521,46 +303,46 @@ public class Fingerpaint implements EntryPoint {
 
 			// Initialise the resetDistButton and add to menuPanel
 			createResetDistButton();
-			menuPanel.add(resetDistButton);
+			GuiState.menuPanel.add(GuiState.resetDistButton);
 
 			// Initialise the saveProtocolButton and add it to the menuPanel
 			createSaveDistributionButton();
-			menuPanel.add(saveDistributionButton);
+			GuiState.menuPanel.add(GuiState.saveDistributionButton);
 
 			// Initialise the loadInitDistButton and add it to the menuPanel
 			createLoadInitDistButton();
-			menuPanel.add(loadInitDistButton);
+			GuiState.menuPanel.add(GuiState.loadInitDistButton);
 
 			// Initialise the saveResultsButton and add it to the menuPanel
 			createSaveResultsButton();
-			menuPanel.add(saveResultsButton);
+			GuiState.menuPanel.add(GuiState.saveResultsButton);
 
 			createSaveWidgets();
 
 			// Initialise the removeSavedResultsButton and add it to the
 			// menuPanel
 			createRemoveSavedResultsButton();
-			menuPanel.add(removeSavedResultsButton);
+			GuiState.menuPanel.add(GuiState.removeSavedResultsButton);
 
 			createViewSingleGraphButton();
-			menuPanel.add(viewSingleGraph);
+			GuiState.menuPanel.add(GuiState.viewSingleGraph);
 
 			// Initialise the comparePerformanceButton and add it to the
 			// menuPanel
 			createComparePerformanceButton();
-			menuPanel.add(comparePerformanceButton);
+			GuiState.menuPanel.add(GuiState.comparePerformanceButton);
 
 			// Initialise a spinner for changing the length of a mixing protocol
 			// step and add to menuPanel.
 			createStepSizeSpinner();
-			menuPanel.add(sizeLabel);
-			menuPanel.add(sizeSpinner);
+			GuiState.menuPanel.add(GuiState.sizeLabel);
+			GuiState.menuPanel.add(GuiState.sizeSpinner);
 
 			// Initialise the checkbox that indicates whether a protocol is
 			// being defined, or single steps have to be executed and add to
 			// menu panel
 			createDefineProtocolCheckBox();
-			menuPanel.add(defineProtocolCheckBox);
+			GuiState.menuPanel.add(GuiState.defineProtocolCheckBox);
 
 			// Initialise a spinner for #steps
 			createNrStepsSpinner();
@@ -583,31 +365,29 @@ public class Fingerpaint implements EntryPoint {
 			// Add all the protocol widgets to the menuPanel and hide them
 			// initially.
 			VerticalPanel protocolPanel = new VerticalPanel();
-			protocolPanel.add(nrStepsLabel);
-			protocolPanel.add(nrStepsSpinner);
-			protocolPanel.add(labelProtocolLabel);
-			protocolPanel.add(labelProtocolRepresentation);
-			protocolPanel.add(mixNowButton);
-			protocolPanel.add(resetProtocolButton);
-			protocolPanel.add(saveProtocolButton);
-			protocolPanel.add(loadProtocolButton);
-			
-			protocolPanelContainer = new PopupPanel();
-			protocolPanelContainer.getElement().setId("protPanel");
-			protocolPanelContainer.setAnimationEnabled(true);
-			protocolPanelContainer.add(protocolPanel);
-			protocolPanelContainer.setVisible(false);
-			
+			protocolPanel.add(GuiState.nrStepsLabel);
+			protocolPanel.add(GuiState.nrStepsSpinner);
+			protocolPanel.add(GuiState.labelProtocolLabel);
+			protocolPanel.add(GuiState.labelProtocolRepresentation);
+			protocolPanel.add(GuiState.mixNowButton);
+			protocolPanel.add(GuiState.resetProtocolButton);
+			protocolPanel.add(GuiState.saveProtocolButton);
+			protocolPanel.add(GuiState.loadProtocolButton);
+
+			GuiState.protocolPanelContainer.getElement().setId("protPanel");
+			GuiState.protocolPanelContainer.setAnimationEnabled(true);
+			GuiState.protocolPanelContainer.add(protocolPanel);
+			GuiState.protocolPanelContainer.setVisible(false);
+
 			toggleProtocolWidgets(false);
-			
+
 			// Add canvas and menuPanel to the page
 			RootPanel.get().add(as.getGeometry().getCanvas());
-			RootPanel.get().add(menuPanel);
-			menuToggleButton = new MenuToggleButton(menuPanel);
-			RootPanel.get().add(menuToggleButton);
-			
-			//for debugging
-			viewSingleGraph.ensureDebugId("viewGraph");
+			GuiState.menuPanelWrapper.add(GuiState.menuPanel);
+			GuiState.menuPanelWrapper.getElement().setId("menuPanelWrapper");
+			RootPanel.get().add(GuiState.menuPanelWrapper);
+			GuiState.menuToggleButton.refreshMenuSize();
+			RootPanel.get().add(GuiState.menuToggleButton);
 		}
 
 		/**
@@ -662,16 +442,11 @@ public class Fingerpaint implements EntryPoint {
 	 * Initialises the spinner for the stepSize
 	 */
 	private void createStepSizeSpinner() {
-		// initial initialisation of the spinner
-		sizeSpinner = new NumberSpinner(MixingStep.STEP_DEFAULT,
-				MixingStep.STEP_UNIT, MixingStep.STEP_MIN, MixingStep.STEP_MAX,
-				true);
-		
-		sizeSpinner.addStyleName("sizeSpinnerInput");
+		GuiState.sizeSpinner.addStyleName("sizeSpinnerInput");
 		as.setStepSize(MixingStep.STEP_DEFAULT);
 
 		// set a listener for the spinner
-		sizeSpinner.setSpinnerListener(new NumberSpinnerListener() {
+		GuiState.sizeSpinner.setSpinnerListener(new NumberSpinnerListener() {
 
 			@Override
 			public void onValueChange(double value) {
@@ -687,8 +462,7 @@ public class Fingerpaint implements EntryPoint {
 	 * the current canvas is reset to all white
 	 */
 	private void createResetDistButton() {
-		resetDistButton = new Button("Reset Dist");
-		resetDistButton.addClickHandler(new ClickHandler() {
+		GuiState.resetDistButton.addClickHandler(new ClickHandler() {
 
 			@Override
 			public void onClick(ClickEvent event) {
@@ -703,37 +477,22 @@ public class Fingerpaint implements EntryPoint {
 	 */
 	private void toggleProtocolWidgets(boolean value) {
 		if (value) {
-			protocolPanelContainer.showRelativeTo(menuPanel);
+			GuiState.protocolPanelContainer.showRelativeTo(GuiState.menuPanel);
 		} else {
-			protocolPanelContainer.hide();
+			GuiState.protocolPanelContainer.hide();
 		}
-		// TODO: make a setEnabled for the numberspinner
-//		nrStepsLabel.setVisible(value);
-//		nrStepsSpinner.setVisible(value);
-//		labelProtocolRepresentation.setVisible(value);
-//		mixNowButton.setVisible(value);
-//		saveProtocolButton.setVisible(value);
-//		saveProtocolButton.setEnabled(value);
-//		resetProtocolButton.setVisible(value);
-//		resetProtocolButton.setEnabled(value);
-//		labelProtocolLabel.setVisible(value);
-
 	}
 
 	/*
 	 * Initialises the spinner for the nrSteps.
 	 */
 	private void createNrStepsSpinner() {
-		// Initialise the spinner with the required settings.
-		nrStepsSpinner = new NumberSpinner(NRSTEPS_DEFAULT, NRSTEPS_RATE,
-				NRSTEPS_MIN, NRSTEPS_MAX, true);
-		nrStepsSpinner.ensureDebugId("nrStepsSpinner");
-		// Also initialise the initial value in the ApplicationState class.
-		as.setNrSteps(NRSTEPS_DEFAULT);
+		//Initialise the initial value in the ApplicationState class.
+		as.setNrSteps(GuiState.NRSTEPS_DEFAULT);
 
 		// The spinner for #steps should update the nrSteps variable whenever
 		// the value is changed.
-		nrStepsSpinner.setSpinnerListener(new NumberSpinnerListener() {
+		GuiState.nrStepsSpinner.setSpinnerListener(new NumberSpinnerListener() {
 
 			@Override
 			public void onValueChange(double value) {
@@ -746,18 +505,17 @@ public class Fingerpaint implements EntryPoint {
 	 * Initialises the spinner that edits the cursorsize
 	 */
 	private void createCursorSizeSpinner() {
-		cursorSizeSpinner = new NumberSpinner(CURSOR_DEFAULT, CURSOR_RATE,
-				CURSOR_MIN, CURSOR_MAX, true);
+		GuiState.cursorSizeSpinner
+				.setSpinnerListener(new NumberSpinnerListener() {
 
-		cursorSizeSpinner.setSpinnerListener(new NumberSpinnerListener() {
-
-			@Override
-			public void onValueChange(double value) {
-				as.getGeometry().setDrawingToolSize((int) value - 1);
-				// -1 because the drawingTools have a default size of 1 pixel
-				// for inputSize 0
-			}
-		});
+					@Override
+					public void onValueChange(double value) {
+						as.getGeometry().setDrawingToolSize((int) value - 1);
+						// -1 because the drawingTools have a default size of 1
+						// pixel
+						// for inputSize 0
+					}
+				});
 	}
 
 	/*
@@ -765,10 +523,8 @@ public class Fingerpaint implements EntryPoint {
 	 * be removed!
 	 */
 	private void createProtocolRepresentationTextArea() {
-		labelProtocolLabel = new Label("Protocol:");
-		
-		labelProtocolRepresentation.setVisible(false);
-		labelProtocolRepresentation.getElement().setId("protLabel");
+		GuiState.labelProtocolRepresentation.setVisible(false);
+		GuiState.labelProtocolRepresentation.getElement().setId("protLabel");
 	}
 
 	/*
@@ -776,35 +532,27 @@ public class Fingerpaint implements EntryPoint {
 	 * the tool, and the slider to select the size of the tool
 	 */
 	private void createToolSelector() {
-		// --Initialise all elements--------------------------------
-		toolSelector = new PopupPanel(true);
-		popupPanelPanel = new HorizontalPanel();
-		popupPanelMenu = new VerticalPanel();
-		squareDrawingTool = new ToggleButton("square", "square");
-		circleDrawingTool = new ToggleButton("circle", "circle");
-
-		squareDrawingTool.addClickHandler(new ClickHandler() {
+		GuiState.squareDrawingTool.addClickHandler(new ClickHandler() {
 
 			/*
 			 * Select the square drawing tool when this button is clicked
 			 */
 			@Override
 			public void onClick(ClickEvent event) {
-
-				if (!squareDrawingTool.isDown()) {
-					squareDrawingTool.setDown(true);
+				if (!GuiState.squareDrawingTool.isDown()) {
+					GuiState.squareDrawingTool.setDown(true);
 				} else {
 					as.getGeometry().setDrawingTool(
 							new SquareDrawingTool(getCursorSize()));
 
-					circleDrawingTool.setDown(false);
+					GuiState.circleDrawingTool.setDown(false);
 				}
 			}
 		});
 		// Initial drawing tool is square
-		squareDrawingTool.setDown(true);
+		GuiState.squareDrawingTool.setDown(true);
 
-		circleDrawingTool.addClickHandler(new ClickHandler() {
+		GuiState.circleDrawingTool.addClickHandler(new ClickHandler() {
 
 			/*
 			 * Select the square drawing tool when this button is clicked
@@ -812,46 +560,45 @@ public class Fingerpaint implements EntryPoint {
 			@Override
 			public void onClick(ClickEvent event) {
 
-				if (!circleDrawingTool.isDown()) {
-					circleDrawingTool.setDown(true);
+				if (!GuiState.circleDrawingTool.isDown()) {
+					GuiState.circleDrawingTool.setDown(true);
 				} else {
 					as.getGeometry().setDrawingTool(
 							new CircleDrawingTool(getCursorSize()));
 
-					squareDrawingTool.setDown(false);
+					GuiState.squareDrawingTool.setDown(false);
 				}
 			}
 		});
 
 		// -- Add all Drawings Tools below ---------------------
-		popupPanelMenu.add(squareDrawingTool);
-		popupPanelMenu.add(circleDrawingTool);
+		GuiState.popupPanelMenu.add(GuiState.squareDrawingTool);
+		GuiState.popupPanelMenu.add(GuiState.circleDrawingTool);
 
 		// --TODO: Add DrawingTool Size slider below ----------------
-		popupPanelPanel.add(popupPanelMenu);
-		popupPanelPanel.add(cursorSizeSpinner);
+		GuiState.popupPanelPanel.add(GuiState.popupPanelMenu);
+		GuiState.popupPanelPanel.add(GuiState.cursorSizeSpinner);
 
 		// Add everything to the popup panel
-		toolSelector.add(popupPanelPanel);
+		GuiState.toolSelector.add(GuiState.popupPanelPanel);
 
 		// Create the button the triggers the popup panel
-		// TODO: The text 'Select Tool' should be translated later on
-		toolSelectButton = new Button("Select Tool");
-		toolSelectButton.addClickHandler(new ClickHandler() {
+		GuiState.toolSelectButton.addClickHandler(new ClickHandler() {
 
 			/*
 			 * Show the popupPanel when this button is clicked
 			 */
 			@Override
 			public void onClick(ClickEvent event) {
-				toolSelector
+				GuiState.toolSelector
 						.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
 							public void setPosition(int offsetWidth,
 									int offsetHeight) {
 								int left = (Window.getClientWidth()
 										- offsetWidth - 75);
 								int top = 40;
-								toolSelector.setPopupPosition(left, top);
+								GuiState.toolSelector.setPopupPosition(left,
+										top);
 							}
 						});
 			}
@@ -865,7 +612,7 @@ public class Fingerpaint implements EntryPoint {
 	 * @return cursorSizeSpinner.getValue()-1
 	 */
 	private int getCursorSize() {
-		return (int) cursorSizeSpinner.getValue() - 1;
+		return (int) GuiState.cursorSizeSpinner.getValue() - 1;
 	}
 
 	/*
@@ -874,16 +621,14 @@ public class Fingerpaint implements EntryPoint {
 	 * protocol representation text area.
 	 */
 	private void createResetProtocolButton() {
-		// TODO: The text 'Reset Protocol' should be translated later on
-		resetProtocolButton = new Button("Reset Protocol");
-		resetProtocolButton.addClickHandler(new ClickHandler() {
+		GuiState.resetProtocolButton.addClickHandler(new ClickHandler() {
 
 			@Override
 			public void onClick(ClickEvent event) {
 				resetProtocol();
 				// When reset protocol is pressed, the save results button is
 				// also disabled.
-				saveResultsButton.setEnabled(false);
+				GuiState.saveResultsButton.setEnabled(false);
 			}
 
 		});
@@ -893,12 +638,10 @@ public class Fingerpaint implements EntryPoint {
 	 * Initialises the saveProtocol Button. When this button is pressed, the
 	 * currently defined protocol is saved.
 	 */
-	private void createSaveProtocolButton() {
-		// TODO: The text 'Save Results' should be translated later on
-		saveProtocolButton = new Button("Save Protocol");
-		saveProtocolButton.setEnabled(true);
+	private void createSaveProtocolButton() { 
+		GuiState.saveProtocolButton.setEnabled(true);
 
-		saveProtocolButton.addClickHandler(new ClickHandler() {
+		GuiState.saveProtocolButton.addClickHandler(new ClickHandler() {
 
 			@Override
 			public void onClick(ClickEvent event) {
@@ -912,11 +655,9 @@ public class Fingerpaint implements EntryPoint {
 	 * a user to save a mixing run
 	 */
 	private void createSaveResultsButton() {
-		// TODO: The text 'Save Results' should be translated later on
-		saveResultsButton = new Button("Save Results");
-		saveResultsButton.setEnabled(true);
+		GuiState.saveResultsButton.setEnabled(true);
 
-		saveResultsButton.addClickHandler(new ClickHandler() {
+		GuiState.saveResultsButton.addClickHandler(new ClickHandler() {
 
 			@Override
 			public void onClick(ClickEvent event) {
@@ -930,11 +671,9 @@ public class Fingerpaint implements EntryPoint {
 	 * to save a mixing run.
 	 */
 	private void createSaveDistributionButton() {
-		// TODO: The text 'Save Distribution' should be translated later on
-		saveDistributionButton = new Button("Save Distribution");
-		saveDistributionButton.setEnabled(true);
+		GuiState.saveDistributionButton.setEnabled(true);
 
-		saveDistributionButton.addClickHandler(new ClickHandler() {
+		GuiState.saveDistributionButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				saveDistributionButtonOnClick();
@@ -943,32 +682,27 @@ public class Fingerpaint implements EntryPoint {
 	}
 
 	private void createViewSingleGraphButton() {
-		viewSingleGraph = new Button("View single graph");
-		viewSingleGraph.setEnabled(false);
-		viewSingleGraphPopupPanel = new PopupPanel();
-		viewSingleGraphPopupPanel.setModal(true);
-		viewSingleGraphVerticalPanel = new VerticalPanel();
-		viewSingleGraphHorizontalPanel = new HorizontalPanel();
-		exportSingleGraphButton = new Button("Export graph");
-		viewSingleGraphHorizontalPanel.add(exportSingleGraphButton);
-		closeSingleGraphViewButton = new Button("Close");
-		viewSingleGraphHorizontalPanel.add(closeSingleGraphViewButton);
-		viewSingleGraphGraphPanel = new SimplePanel();
+		GuiState.viewSingleGraph.setEnabled(false);
+		GuiState.viewSingleGraphPopupPanel.setModal(true);
+		GuiState.viewSingleGraphHorizontalPanel
+				.add(GuiState.exportSingleGraphButton);
+		GuiState.viewSingleGraphHorizontalPanel
+				.add(GuiState.closeSingleGraphViewButton);
 
-		exportSingleGraphButton.addClickHandler(new ClickHandler() {
+		GuiState.exportSingleGraphButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				// TODO: Insert Method-call which exports the graph
 			}
 		});
-		closeSingleGraphViewButton.addClickHandler(new ClickHandler() {
+		GuiState.closeSingleGraphViewButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				viewSingleGraphPopupPanel.hide();
+				GuiState.viewSingleGraphPopupPanel.hide();
 			}
 		});
 
-		viewSingleGraph.addClickHandler(new ClickHandler() {
+		GuiState.viewSingleGraph.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				ArrayList<double[]> performance = new ArrayList<double[]>();
@@ -978,29 +712,32 @@ public class Fingerpaint implements EntryPoint {
 				if (graphVisualisator != null) {
 					graphVisualisator.clearSegregationResults();
 				}
-				viewSingleGraphPopupPanel.clear();
-				viewSingleGraphVerticalPanel.clear();
-				viewSingleGraphGraphPanel.clear();
+				GuiState.viewSingleGraphPopupPanel.clear();
+				GuiState.viewSingleGraphVerticalPanel.clear();
+				GuiState.viewSingleGraphGraphPanel.clear();
 
 				// Make graph and add it to viewSingleGraphVerticalPanel
-				 createGraph(
-						 viewSingleGraphGraphPanel,
-				 new ArrayList<String>(Arrays
-				 .asList("Current mixing run")), performance, new AsyncCallback<Boolean>() {
-					@Override
-					public void onFailure(Throwable caught) {
-						caught.printStackTrace();
-					}
+				createGraph(
+						GuiState.viewSingleGraphGraphPanel,
+						new ArrayList<String>(Arrays
+								.asList("Current mixing run")), performance,
+						new AsyncCallback<Boolean>() {
+							@Override
+							public void onFailure(Throwable caught) {
+								caught.printStackTrace();
+							}
 
-					@Override
-					public void onSuccess(Boolean result) {
-						viewSingleGraphVerticalPanel.add(viewSingleGraphGraphPanel);
-						viewSingleGraphVerticalPanel
-								.add(viewSingleGraphHorizontalPanel);
-						viewSingleGraphPopupPanel.add(viewSingleGraphVerticalPanel);
-						viewSingleGraphPopupPanel.center();
-					}	 
-				});
+							@Override
+							public void onSuccess(Boolean result) {
+								GuiState.viewSingleGraphVerticalPanel
+										.add(GuiState.viewSingleGraphGraphPanel);
+								GuiState.viewSingleGraphVerticalPanel
+										.add(GuiState.viewSingleGraphHorizontalPanel);
+								GuiState.viewSingleGraphPopupPanel
+										.add(GuiState.viewSingleGraphVerticalPanel);
+								GuiState.viewSingleGraphPopupPanel.center();
+							}
+						});
 
 				// .setPopupPositionAndShow(new PopupPanel.PositionCallback() {
 				// public void setPosition(int offsetWidth,
@@ -1025,94 +762,71 @@ public class Fingerpaint implements EntryPoint {
 	}
 
 	private void createOverwritePanel() {
-		overwriteSavePanel = new PopupPanel();
-		overwriteSavePanel.setModal(true);
-
-		overwriteSaveVerticalPanel = new VerticalPanel();
-
-		saveMessageLabel = new Label();
-
-		overwriteButtonsPanel = new HorizontalPanel();
-
-		overwriteSaveButton = new Button("Overwrite");
-		overwriteSaveButton.addClickHandler(new ClickHandler() {
+		GuiState.overwriteSavePanel.setModal(true);
+		GuiState.overwriteSaveButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				overwriteSaveButtonOnClick();
 			}
 		});
 
-		closeSaveButton = new Button("Cancel");
 		// Hide both popup panels if the OK button was pressed. Hide only the
 		// second panel if the cancel button was pressed.
-		closeSaveButton.addClickHandler(new ClickHandler() {
+		GuiState.closeSaveButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-
 				closeSaveButtonOnClick();
-
 			}
 		});
 
 		// add all components to second popup panel
-		overwriteSavePanel.add(overwriteSaveVerticalPanel);
-		overwriteSaveVerticalPanel.add(saveMessageLabel);
-		overwriteSaveVerticalPanel.add(overwriteButtonsPanel);
-		overwriteButtonsPanel.add(closeSaveButton);
+		GuiState.overwriteSavePanel.add(GuiState.overwriteSaveVerticalPanel);
+		GuiState.overwriteSaveVerticalPanel.add(GuiState.saveMessageLabel);
+		GuiState.overwriteSaveVerticalPanel.add(GuiState.overwriteButtonsPanel);
+		GuiState.overwriteButtonsPanel.add(GuiState.closeSaveButton);
 	}
 
 	private void createSavePanel() {
-		saveItemPanel = new PopupPanel();
-		saveItemPanel.setModal(true);
-
-		// Holds the TextBox and HorizontalPanel
-		saveItemVerticalPanel = new VerticalPanel();
+		GuiState.saveItemPanel.setModal(true);
 
 		// Sets the name to use for saving
-		saveNameTextBox = new TextBox();
-		saveNameTextBox.setMaxLength(30);
+		GuiState.saveNameTextBox.setMaxLength(30);
 
 		// Determine whether user input is valid. Enable/disable the save
 		// button. Execute save when ENTER is pressed.
-		saveNameTextBox.addKeyPressHandler(new KeyPressHandler() {
+		GuiState.saveNameTextBox.addKeyPressHandler(new KeyPressHandler() {
 			@Override
 			public void onKeyPress(KeyPressEvent event) {
 				handleKeyPress(event);
 			}
 		});
 
-		// Holds the Save and Cancel buttons
-		saveButtonsPanel = new HorizontalPanel();
-
 		// Initially, the save button is disabled; it will become available if
 		// "Mix Now" is pressed.
-		saveItemPanelButton = new Button("Save");
-		saveItemPanelButton.setEnabled(false);
-		saveItemPanelButton.addClickHandler(new ClickHandler() {
+		GuiState.saveItemPanelButton.setEnabled(false);
+		GuiState.saveItemPanelButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				savePanelButtonOnClick();
 			}
 		});
 
-		cancelSaveResultsButton = new Button("Cancel");
-
 		// Hide the first popup panel when the cancel button is pressed
-		cancelSaveResultsButton.addClickHandler(new ClickHandler() {
+		GuiState.cancelSaveResultsButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				saveItemPanel.hide();
-				saveNameTextBox.setText("");
-				saveItemPanelButton.setEnabled(false);
+				GuiState.saveItemPanel.hide();
+				GuiState.saveNameTextBox.setText("");
+				GuiState.saveItemPanelButton.setEnabled(false);
 			}
 		});
 
 		// add all components to first popuppanel
-		saveItemPanel.add(saveItemVerticalPanel);
-		saveItemVerticalPanel.add(saveNameTextBox);
-		saveItemVerticalPanel.add(saveButtonsPanel);
-		saveButtonsPanel.add(saveItemPanelButton);
-		saveButtonsPanel.add(cancelSaveResultsButton);
+		GuiState.saveItemPanel.add(GuiState.saveItemVerticalPanel);
+		GuiState.saveItemVerticalPanel.add(GuiState.saveNameTextBox);
+		GuiState.saveItemVerticalPanel.add(GuiState.saveButtonsPanel);
+		GuiState.saveButtonsPanel.add(GuiState.saveItemPanelButton);
+		GuiState.saveButtonsPanel.add(GuiState.cancelSaveResultsButton);
 	}
 
 	private void saveResultsButtonOnClick() {
@@ -1134,78 +848,79 @@ public class Fingerpaint implements EntryPoint {
 		// TODO: We need more than a boolean to indicate exit status: if something
 		// goes wrong, we return false, causing the "Name already in use"
 		// message to appear, which is incorrect in some cases.
-		boolean success = save(saveNameTextBox.getText(), false);
+		boolean success = save(GuiState.saveNameTextBox.getText(), false);
 		if (success) {
-			new NotificationPanel(SAVE_SUCCESS_MESSAGE).show(SAVE_SUCCESS_TIMEOUT);
-			saveItemPanel.hide();
+			new NotificationPanel(FingerpaintConstants.INSTANCE.saveSuccess()).show(GuiState.SAVE_SUCCESS_TIMEOUT);
+			GuiState.saveItemPanel.hide();
 		} else {
-			saveMessageLabel.setText("This name is already in use. "
-					+ "Choose whether to overwrite existing file "
-					+ "or to cancel.");
+			GuiState.saveMessageLabel.setText(FingerpaintConstants.INSTANCE.nameInUse());
 
-			overwriteButtonsPanel.remove(closeSaveButton);
-			overwriteButtonsPanel.add(overwriteSaveButton);
-			overwriteButtonsPanel.add(closeSaveButton);
+			GuiState.overwriteButtonsPanel.remove(GuiState.closeSaveButton);
+			GuiState.overwriteButtonsPanel.add(GuiState.overwriteSaveButton);
+			GuiState.overwriteButtonsPanel.add(GuiState.closeSaveButton);
 
-			overwriteSavePanel.center();
-			overwriteSavePanel.show();
-			saveItemPanel.hide();
+			GuiState.overwriteSavePanel.center();
+			GuiState.overwriteSavePanel.show();
+			GuiState.saveItemPanel.hide();
 		}
 	}
 
 	private void overwriteSaveButtonOnClick() {
-		save(saveNameTextBox.getText(), true);
+		save(GuiState.saveNameTextBox.getText(), true);
 
-		NotificationPanel np = new NotificationPanel(SAVE_SUCCESS_MESSAGE);
-		np.show(SAVE_SUCCESS_TIMEOUT);
-		overwriteSavePanel.hide();
+		NotificationPanel np = new NotificationPanel(
+				FingerpaintConstants.INSTANCE.saveSuccess());
+		np.show(GuiState.SAVE_SUCCESS_TIMEOUT);
+		GuiState.overwriteSavePanel.hide();
 	}
 
 	private void showSavePanel() {
-		saveItemPanel.center();
-		saveItemPanel.show();
-		saveNameTextBox.setText("");
-		saveNameTextBox.setFocus(true);
+		GuiState.saveItemPanel.center();
+		GuiState.saveItemPanel.show();
+		GuiState.saveNameTextBox.setText("");
+		GuiState.saveNameTextBox.setFocus(true);
 	}
 
 	private void closeSaveButtonOnClick() {
-		overwriteSavePanel.hide();
-		if (!closeSaveButton.getText().equals("OK")) {
-			overwriteSavePanel.remove(overwriteSaveButton);
-			saveItemPanel.show();
-			saveNameTextBox.setSelectionRange(0, saveNameTextBox.getText()
-					.length());
-			saveNameTextBox.setFocus(true);
+		GuiState.overwriteSavePanel.hide();
+		if (!GuiState.closeSaveButton.getText().equals("OK")) {
+			GuiState.overwriteSavePanel.remove(GuiState.overwriteSaveButton);
+			GuiState.saveItemPanel.show();
+			GuiState.saveNameTextBox.setSelectionRange(0,
+					GuiState.saveNameTextBox.getText().length());
+			GuiState.saveNameTextBox.setFocus(true);
 		} else {
-			saveNameTextBox.setText("");
-			saveItemPanelButton.setEnabled(false);
+			GuiState.saveNameTextBox.setText("");
+			GuiState.saveItemPanelButton.setEnabled(false);
 		}
 	}
 
 	private void handleKeyPress(KeyPressEvent event) {
-		String text = saveNameTextBox.getText();
+		String text = GuiState.saveNameTextBox.getText();
 		String inputCharacter = Character.toString(event.getCharCode());
 		int textlength = text.length();
 		if (inputCharacter
 				.matches("[~`!@#$%^&*()+={}\\[\\]:;\"|\'\\\\<>?,./\\s]")) {
-			saveNameTextBox.cancelKey();
+			GuiState.saveNameTextBox.cancelKey();
 		} else if (inputCharacter.matches("[A-Za-z0-9]")) {
 			textlength++;
 		} else if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_BACKSPACE) {
 			textlength--;
 		} else if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER) {
-			saveItemPanelButton.click();
+			GuiState.saveItemPanelButton.click();
 		}
-		saveItemPanelButton.setEnabled(textlength > 0);
+		GuiState.saveItemPanelButton.setEnabled(textlength > 0);
 	}
 
 	/**
 	 * Saves the current protocol, distribution or mixing results, depending on
 	 * which save-button was pressed last.
 	 * 
-	 * @param name Name of save "file".
-	 * @param canOverwrite If we can overwrite an already-exisiting "file" with
-	 *                     the given name or not.
+	 * @param name
+	 *            Name of save "file".
+	 * @param canOverwrite
+	 *            If we can overwrite an already-exisiting "file" with the given
+	 *            name or not.
 	 * @return {@code true} if "file" was saved, {@code false} otherwise
 	 */
 	public boolean save(String name, boolean canOverwrite) {
@@ -1243,22 +958,18 @@ public class Fingerpaint implements EntryPoint {
 	 * popup.
 	 */
 	private void createLoadProtocolButton() {
-		loadProtocolButton = new Button("Load Mixing Protocol");
-
-		loadProtocolButton.addClickHandler(new ClickHandler() {
+		GuiState.loadProtocolButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
+				GuiState.loadPanel = new PopupPanel();
+				GuiState.loadPanel.setModal(true);
+				GuiState.loadPanel.add(GuiState.loadVerticalPanel);
+				GuiState.closeLoadButton = new Button("Close");
 
-				loadVerticalPanel = new VerticalPanel();
-				loadPanel = new PopupPanel();
-				loadPanel.setModal(true);
-				loadPanel.add(loadVerticalPanel);
-				closeLoadButton = new Button("Close");
-
-				closeLoadButton.addClickHandler(new ClickHandler() {
+				GuiState.closeLoadButton.addClickHandler(new ClickHandler() {
 					@Override
 					public void onClick(ClickEvent event) {
-						loadPanel.removeFromParent();
+						GuiState.loadPanel.removeFromParent();
 					}
 				});
 
@@ -1288,11 +999,11 @@ public class Fingerpaint implements EntryPoint {
 												.getShortName(as
 														.getGeometryChoice()),
 												selected));
-								labelProtocolRepresentation.setText(as
+								GuiState.labelProtocolRepresentation.setText(as
 										.getProtocol().toString());
-								mixNowButton.setEnabled(true);
+								GuiState.mixNowButton.setEnabled(true);
 
-								loadPanel.hide();
+								GuiState.loadPanel.hide();
 							}
 						});
 
@@ -1305,9 +1016,9 @@ public class Fingerpaint implements EntryPoint {
 				// Push the data into the widget.
 				cellList.setRowData(0, geometryProtocols);
 
-				loadVerticalPanel.add(cellList);
-				loadVerticalPanel.add(closeLoadButton);
-				loadPanel.center();
+				GuiState.loadVerticalPanel.add(cellList);
+				GuiState.loadVerticalPanel.add(GuiState.closeLoadButton);
+				GuiState.loadPanel.center();
 			}
 		});
 	}
@@ -1318,22 +1029,18 @@ public class Fingerpaint implements EntryPoint {
 	 * corresponding loading pop up.
 	 */
 	private void createLoadInitDistButton() {
-		loadInitDistButton = new Button("Load Initial Distribution");
-
-		loadInitDistButton.addClickHandler(new ClickHandler() {
+		GuiState.loadInitDistButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 
-				loadVerticalPanel = new VerticalPanel();
-				loadPanel = new PopupPanel();
-				loadPanel.setModal(true);
-				loadPanel.add(loadVerticalPanel);
-				closeLoadButton = new Button("Close");
+				GuiState.loadVerticalPanel = new VerticalPanel();
+				GuiState.loadPanel.setModal(true);
+				GuiState.loadPanel.add(GuiState.loadVerticalPanel);
 
-				closeLoadButton.addClickHandler(new ClickHandler() {
+				GuiState.closeLoadButton.addClickHandler(new ClickHandler() {
 					@Override
 					public void onClick(ClickEvent event) {
-						loadPanel.removeFromParent();
+						GuiState.loadPanel.removeFromParent();
 					}
 				});
 
@@ -1368,7 +1075,7 @@ public class Fingerpaint implements EntryPoint {
 												selected);
 								as.setInitialDistribution(dist);
 								as.drawDistribution();
-								loadPanel.removeFromParent();
+								GuiState.loadPanel.removeFromParent();
 							}
 						});
 
@@ -1381,9 +1088,9 @@ public class Fingerpaint implements EntryPoint {
 				// Push the data into the widget.
 				cellList.setRowData(0, geometryDistributions);
 
-				loadVerticalPanel.add(cellList);
-				loadVerticalPanel.add(closeLoadButton);
-				loadPanel.center();
+				GuiState.loadVerticalPanel.add(cellList);
+				GuiState.loadVerticalPanel.add(GuiState.closeLoadButton);
+				GuiState.loadPanel.center();
 			}
 		});
 
@@ -1395,51 +1102,48 @@ public class Fingerpaint implements EntryPoint {
 	 */
 	// TODO : refactor this method so that it uses the StorageManager
 	private void createRemoveSavedResultsButton() {
-		// TODO: The text 'Remove Saved Results' should be translated later on
-		removeSavedResultsButton = new Button("Remove Saved Results");
-		removeResultsVerticalPanel = new VerticalPanel();
-		removeResultsPanel = new PopupPanel();
-		removeResultsPanel.setModal(true);
-		removeResultsPanel.add(removeResultsVerticalPanel);
+		GuiState.removeResultsPanel.setModal(true);
+		GuiState.removeResultsPanel.add(GuiState.removeResultsVerticalPanel);
 
-		closeResultsButton = new Button("Close");
-		resultsFlexTable = new FlexTable();
-
-		removeSavedResultsButton.addClickHandler(new ClickHandler() {
+		GuiState.removeSavedResultsButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				resultsFlexTable.removeFromParent();
-				closeResultsButton.removeFromParent();
-				resultsFlexTable = new FlexTable();
-				removeResultsVerticalPanel.add(resultsFlexTable);
-				removeResultsVerticalPanel.add(closeResultsButton);
+				GuiState.resultsFlexTable.removeFromParent();
+				GuiState.closeResultsButton.removeFromParent();
+				GuiState.resultsFlexTable = new FlexTable();
+				GuiState.removeResultsVerticalPanel
+						.add(GuiState.resultsFlexTable);
+				GuiState.removeResultsVerticalPanel
+						.add(GuiState.closeResultsButton);
 
-				resultsFlexTable.setText(0, 0, "File name");
-				resultsFlexTable.setText(0, 1, "Remove");
+				GuiState.resultsFlexTable.setText(0, 0, "File name");
+				GuiState.resultsFlexTable.setText(0, 1, "Remove");
 
-				resultsFlexTable.getRowFormatter().addStyleName(0,
+				GuiState.resultsFlexTable.getRowFormatter().addStyleName(0,
 						"removeListHeader");
-				resultsFlexTable.addStyleName("removeList");
+				GuiState.resultsFlexTable.addStyleName("removeList");
 
 				final ArrayList<String> names = (ArrayList<String>) StorageManager.INSTANCE
 						.getResults();
 				for (int i = 0; i < names.size(); i++) {
 					final int row = i + 1;
 					final String name = names.get(i);
-					resultsFlexTable.setText(row, 0, name);
+					GuiState.resultsFlexTable.setText(row, 0, name);
 					Button removeStockButton = new Button("x");
 					removeStockButton.addClickHandler(new ClickHandler() {
 						public void onClick(ClickEvent event) {
 							int removedIndex = names.indexOf(name);
 							names.remove(removedIndex);
 							StorageManager.INSTANCE.removeResult(name);
-							resultsFlexTable.removeRow(removedIndex + 1);
+							GuiState.resultsFlexTable
+									.removeRow(removedIndex + 1);
 						}
 					});
-					resultsFlexTable.setWidget(row, 1, removeStockButton);
+					GuiState.resultsFlexTable.setWidget(row, 1,
+							removeStockButton);
 				}
 
-				removeResultsPanel.center();
+				GuiState.removeResultsPanel.center();
 				// .setPopupPositionAndShow(new PopupPanel.PositionCallback() {
 				// public void setPosition(int offsetWidth,
 				// int offsetHeight) {
@@ -1451,10 +1155,10 @@ public class Fingerpaint implements EntryPoint {
 			}
 		});
 
-		closeResultsButton.addClickHandler(new ClickHandler() {
+		GuiState.closeResultsButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				removeResultsPanel.hide();
+				GuiState.removeResultsPanel.hide();
 			}
 		});
 	}
@@ -1468,14 +1172,15 @@ public class Fingerpaint implements EntryPoint {
 	 *            should be added.
 	 */
 	private void updateProtocolLabel(MixingStep step) {
-		String oldProtocol = labelProtocolRepresentation.getText();
+		String oldProtocol = GuiState.labelProtocolRepresentation.getText();
 		String stepString = step.toString();
 		if (stepString.charAt(0) == 'B' || stepString.charAt(0) == 'T') {
 			stepString = "&nbsp;" + stepString;
 		}
 
-		labelProtocolRepresentation.setVisible(true);
-		labelProtocolRepresentation.getElement().setInnerHTML(oldProtocol + stepString + " ");
+		GuiState.labelProtocolRepresentation.setVisible(true);
+		GuiState.labelProtocolRepresentation.getElement().setInnerHTML(
+				oldProtocol + stepString + " ");
 	}
 
 	/**
@@ -1494,29 +1199,20 @@ public class Fingerpaint implements EntryPoint {
 	 */
 	protected void setLoadingPanelVisible(boolean visible) {
 		if (visible) {
-			if (DOM.getElementById(LOADINGPANEL_ID) == null) {
-				RootPanel.get().add(loadingPanel);
+			if (DOM.getElementById(GuiState.LOADINGPANEL_ID) == null) {
+				RootPanel.get().add(GuiState.loadingPanel);
 			}
 		} else {
-			if (DOM.getElementById(LOADINGPANEL_ID) != null) {
-				loadingPanel.removeFromParent();
+			if (DOM.getElementById(GuiState.LOADINGPANEL_ID) != null) {
+				GuiState.loadingPanel.removeFromParent();
 				setLoadingPanelMessage(null);
 			}
 		}
 	}
 
 	private void createComparePerformanceButton() {
-		// TODO : translate the text on all these buttons
-		comparePerformanceButton = new Button("Compare Performance");
-		compareButton = new Button("Compare");
-		cancelCompareButton = new Button("Cancel");
-		closeCompareButton = new Button("Close");
-		newCompareButton = new Button("New Comparison");
-		compareSelectPopupPanel = new PopupPanel();
-		compareSelectPopupPanel.setModal(true);
-		comparePopupPanel = new PopupPanel();
-		comparePopupPanel.setModal(true);
-		compareGraphPanel = new SimplePanel();
+		GuiState.compareSelectPopupPanel.setModal(true);
+		GuiState.comparePopupPanel.setModal(true);
 
 		// Initialise the cellList to contain all the mixing runs
 		TextCell textCell = new TextCell();
@@ -1547,32 +1243,32 @@ public class Fingerpaint implements EntryPoint {
 		// Initialise all components of the second popup panel
 		final VerticalPanel vertPanel = new VerticalPanel();
 		HorizontalPanel horPanel = new HorizontalPanel();
-		horPanel.add(closeCompareButton);
-		horPanel.add(newCompareButton);
-		comparePopupPanel.add(vertPanel);
-		vertPanel.add(compareGraphPanel);
+		horPanel.add(GuiState.closeCompareButton);
+		horPanel.add(GuiState.newCompareButton);
+		GuiState.comparePopupPanel.add(vertPanel);
+		vertPanel.add(GuiState.compareGraphPanel);
 		vertPanel.add(horPanel);
 
-		closeCompareButton.addClickHandler(new ClickHandler() {
+		GuiState.closeCompareButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				Set<String> selected = selectionModel.getSelectedSet();
 				for (String s : selected) {
 					selectionModel.setSelected(s, false);
 				}
-				comparePopupPanel.hide();
+				GuiState.comparePopupPanel.hide();
 			}
 		});
 
-		newCompareButton.addClickHandler(new ClickHandler() {
+		GuiState.newCompareButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				Set<String> selected = selectionModel.getSelectedSet();
 				for (String s : selected) {
 					selectionModel.setSelected(s, false);
 				}
-				comparePopupPanel.hide();
-				compareSelectPopupPanel.show();
+				GuiState.comparePopupPanel.hide();
+				GuiState.compareSelectPopupPanel.show();
 			}
 		});
 
@@ -1580,14 +1276,14 @@ public class Fingerpaint implements EntryPoint {
 
 		// Initialise all components of the first popup panel
 		VerticalPanel compareVerticalPanel = new VerticalPanel();
-		compareSelectPopupPanel.add(compareVerticalPanel);
+		GuiState.compareSelectPopupPanel.add(compareVerticalPanel);
 		compareVerticalPanel.add(cellList);
 		HorizontalPanel compareHorizontalPanel = new HorizontalPanel();
 		compareVerticalPanel.add(compareHorizontalPanel);
-		compareHorizontalPanel.add(compareButton);
-		compareHorizontalPanel.add(cancelCompareButton);
+		compareHorizontalPanel.add(GuiState.compareButton);
+		compareHorizontalPanel.add(GuiState.cancelCompareButton);
 
-		compareButton.addClickHandler(new ClickHandler() {
+		GuiState.compareButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				ArrayList<String> names = new ArrayList<String>();
@@ -1604,23 +1300,24 @@ public class Fingerpaint implements EntryPoint {
 							.getSegregation());
 				}
 
-				compareGraphPanel.clear();
-				createGraph(compareGraphPanel, names, graphs, new AsyncCallback<Boolean>() {
-					@Override
-					public void onFailure(Throwable caught) {
-						caught.printStackTrace();
-					}
+				GuiState.compareGraphPanel.clear();
+				createGraph(GuiState.compareGraphPanel, names, graphs,
+						new AsyncCallback<Boolean>() {
+							@Override
+							public void onFailure(Throwable caught) {
+								caught.printStackTrace();
+							}
 
-					@Override
-					public void onSuccess(Boolean result) {
-						compareSelectPopupPanel.hide();
-						comparePopupPanel.center();
-					}
-				});
+							@Override
+							public void onSuccess(Boolean result) {
+								GuiState.compareSelectPopupPanel.hide();
+								GuiState.comparePopupPanel.center();
+							}
+						});
 			}
 		});
 
-		cancelCompareButton.addClickHandler(new ClickHandler() {
+		GuiState.cancelCompareButton.addClickHandler(new ClickHandler() {
 
 			@Override
 			public void onClick(ClickEvent event) {
@@ -1628,12 +1325,12 @@ public class Fingerpaint implements EntryPoint {
 				for (String s : selected) {
 					selectionModel.setSelected(s, false);
 				}
-				compareSelectPopupPanel.hide();
+				GuiState.compareSelectPopupPanel.hide();
 			}
 
 		});
 
-		comparePerformanceButton.addClickHandler(new ClickHandler() {
+		GuiState.comparePerformanceButton.addClickHandler(new ClickHandler() {
 
 			@Override
 			public void onClick(ClickEvent event) {
@@ -1645,11 +1342,11 @@ public class Fingerpaint implements EntryPoint {
 				// Push the data into the widget.
 				cellList.setRowData(0, resultNames);
 
-				compareSelectPopupPanel
+				GuiState.compareSelectPopupPanel
 						.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
 							public void setPosition(int offsetWidth,
 									int offsetHeight) {
-								compareSelectPopupPanel.center();
+								GuiState.compareSelectPopupPanel.center();
 							}
 						});
 			}
@@ -1674,8 +1371,8 @@ public class Fingerpaint implements EntryPoint {
 		// Adds the graph to the Panel-parameter of
 		// visualisator.getOnLoadCallBack()
 		try {
-			VisualizationUtils.loadVisualizationApi(
-					graphVisualisator.createGraph(panel, names, performance, onLoad),
+			VisualizationUtils.loadVisualizationApi(graphVisualisator
+					.createGraph(panel, names, performance, onLoad),
 					LineChart.PACKAGE);
 		} catch (Exception e) {
 			Window.alert("Loading graph failed.");
@@ -1688,14 +1385,11 @@ public class Fingerpaint implements EntryPoint {
 	 * the current protocol is reset, and the protocol widgets are shown/hidden.
 	 */
 	private void createDefineProtocolCheckBox() {
-		// TODO: The text 'Define Protocol' should be translated later on
-		defineProtocolCheckBox = new CheckBox("Define Protocol");
-		defineProtocolCheckBox.ensureDebugId("defineProtocolCheckbox");
-		defineProtocolCheckBox.addClickHandler(new ClickHandler() {
+		GuiState.defineProtocolCheckBox.addClickHandler(new ClickHandler() {
 
 			@Override
 			public void onClick(ClickEvent event) {
-				if (defineProtocolCheckBox.getValue()) {
+				if (GuiState.defineProtocolCheckBox.getValue()) {
 					toggleProtocolWidgets(true);
 				} else {
 					resetProtocol();
@@ -1710,10 +1404,10 @@ public class Fingerpaint implements EntryPoint {
 	 */
 	private void resetProtocol() {
 		as.setProtocol(new MixingProtocol());
-		labelProtocolRepresentation.setText("");
-		as.setNrSteps(NRSTEPS_DEFAULT);
-		nrStepsSpinner.setValue(NRSTEPS_DEFAULT);
-		mixNowButton.setEnabled(false);
+		GuiState.labelProtocolRepresentation.setText("");
+		as.setNrSteps(GuiState.NRSTEPS_DEFAULT);
+		GuiState.nrStepsSpinner.setValue(GuiState.NRSTEPS_DEFAULT);
+		GuiState.mixNowButton.setEnabled(false);
 	}
 
 	/*
@@ -1722,11 +1416,8 @@ public class Fingerpaint implements EntryPoint {
 	 * it appear 'active'
 	 */
 	private void createMixNowButton() {
-		// TODO: The text 'Mix Now' should be translated later on
-		mixNowButton = new Button("Mix Now");
-		mixNowButton.ensureDebugId("mixNowButton");
-		mixNowButton.setEnabled(false);
-		mixNowButton.addClickHandler(new ClickHandler() {
+		GuiState.mixNowButton.setEnabled(false);
+		GuiState.mixNowButton.addClickHandler(new ClickHandler() {
 
 			@Override
 			public void onClick(ClickEvent event) {
@@ -1745,12 +1436,12 @@ public class Fingerpaint implements EntryPoint {
 	 *            The {@code MixingStep} to be added.
 	 */
 	private void addStep(MixingStep step) {
-		if (defineProtocolCheckBox.getValue()) {
+		if (GuiState.defineProtocolCheckBox.getValue()) {
 			step.setStepSize(as.getStepSize());
 			as.addMixingStep(step);
 
 			updateProtocolLabel(step);
-			mixNowButton.setEnabled(true);
+			GuiState.mixNowButton.setEnabled(true);
 		} else {
 			MixingProtocol protocol = new MixingProtocol();
 			step.setStepSize(as.getStepSize());
@@ -1792,8 +1483,8 @@ public class Fingerpaint implements EntryPoint {
 								result.getConcentrationVectors()[result
 										.getConcentrationVectors().length - 1]);
 						as.setSegregation(result.getSegregationPoints());
-						saveResultsButton.setEnabled(true);
-						viewSingleGraph.setEnabled(true);
+						GuiState.saveResultsButton.setEnabled(true);
+						GuiState.viewSingleGraph.setEnabled(true);
 						setLoadingPanelVisible(false);
 					}
 

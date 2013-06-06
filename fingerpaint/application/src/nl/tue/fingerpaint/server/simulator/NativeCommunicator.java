@@ -6,8 +6,7 @@ import nl.tue.fingerpaint.client.simulator.SimulatorService;
  * Class that is able to communicate with the native simulation-service code.
  * Use this class only indirectly through {@link SimulatorService}
  * 
- * @author Lasse Blaauwbroek
- *
+ * @author Group Fingerpaint
  */
 class NativeCommunicator {
 	
@@ -21,6 +20,11 @@ class NativeCommunicator {
 		
 	}
 	
+	/**
+	 * Return the singleton instance of this class.
+	 * 
+	 * @return singleton instance of the {@link NativeCommunicator}
+	 */
 	public static NativeCommunicator getInstance() {
 		return instance;
 	}
