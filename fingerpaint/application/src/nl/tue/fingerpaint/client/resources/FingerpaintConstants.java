@@ -205,7 +205,7 @@ public interface FingerpaintConstants extends Constants {
 
 	/**
 	 * @return Localised string that contains the text for the
-	 *         {@link GuiState#viewSingleGraph} button.
+	 *         {@link GuiState#viewSingleGraphButton} button.
 	 */
 	@DefaultStringValue("View single graph")
 	public String btnViewSingleGraph();

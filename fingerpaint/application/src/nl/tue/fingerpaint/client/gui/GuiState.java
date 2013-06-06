@@ -80,6 +80,7 @@ public class GuiState {
 	// --- MENU WIDGETS -------------------------------------------------------
 	/** Vertical panel to contain all menu items. */
 	public static VerticalPanel menuPanel = new VerticalPanel();
+	
 	/** Wrapper for the {@link #menuPanel}, used in animation. */
 	public static SimplePanel menuPanelWrapper = new SimplePanel();
 
@@ -311,7 +312,7 @@ public class GuiState {
 	// --- VIEW SINGLE GRAPH WIDGETS ------------------------------------------
 	/**
 	 * Pop-up menu to display the performance of a single graph. It is opened
-	 * when {@link #viewSingleGraph} is clicked. It contains a vertical panel.
+	 * when {@link #viewSingleGraphButton} is clicked. It contains a vertical panel.
 	 */
 	public static PopupPanel viewSingleGraphPopupPanel = new PopupPanel();
 
@@ -332,7 +333,8 @@ public class GuiState {
 	public static SimplePanel viewSingleGraphGraphPanel = new SimplePanel();
 
 	/** Button to view the performance of the previously executed mixing run. */
-	public static Button viewSingleGraph = new Button(
+	// TODO: viewSingleGraphButton
+	public static Button viewSingleGraphButton = new Button(
 			FingerpaintConstants.INSTANCE.btnViewSingleGraph());
 
 	/** Button to close the performance pop-up. */
@@ -392,15 +394,86 @@ public class GuiState {
 			FingerpaintConstants.INSTANCE.btnNewCompare());
 
 	/**
-	 * sets all debug ID's for easier debugging (except for the CellBrowser)
+	 * Sets the debug IDs for all widgets in this class (except the CellBrowser), 
+	 * to enable easier debugging.
 	 */
 	public static void setDebugIDs(){
-		defineProtocolCheckBox.ensureDebugId("defineProtocolCheckbox");
-		mixNowButton.ensureDebugId("mixNowButton");
-		viewSingleGraph.ensureDebugId("viewGraph");
+		loadingPanel.ensureDebugId("loadingPanel");
+		loadingPanelMessage.ensureDebugId("loadingPanelMessage");
+		
+		menuPanel.ensureDebugId("menuPanel");
+		menuPanelWrapper.ensureDebugId("menuPanelWrapper");
+		menuToggleButton.ensureDebugId("menuToggleButton");
+		
+		toolSelector.ensureDebugId("toolSelector");
+		popupPanelPanel.ensureDebugId("popupPanelPanel");
+		popupPanelMenu.ensureDebugId("popupPanelMenu");
+		cursorSizeSpinner.ensureDebugId("cursorSizeSpinner");
+		toggleColor.ensureDebugId("toggleColor");
+		toolSelectButton.ensureDebugId("toolSelectButton");
+		squareDrawingTool.ensureDebugId("squareDrawingTool");
+		circleDrawingTool.ensureDebugId("circleDrawingTool");
+		
+		saveDistributionButton.ensureDebugId("saveDistributionButton");
+		loadInitDistButton.ensureDebugId("loadInitDistButton");
+		resetDistButton.ensureDebugId("resetDistButton");
+		
+		saveResultsButton.ensureDebugId("saveResultsButton");
+		
+		removeResultsPanel.ensureDebugId("removeResultsPanel");
+		removeResultsVerticalPanel.ensureDebugId("removeResultsVerticalPanel");
+		resultsFlexTable.ensureDebugId("resultsFlexTable");
+		removeSavedResultsButton.ensureDebugId("removeSavedResultsButton");
+		closeResultsButton.ensureDebugId("closeResultsButton");
+		
+		protocolPanelContainer.ensureDebugId("protocolPanelContainer");
 		nrStepsSpinner.ensureDebugId("nrStepsSpinner");
-		saveResultsButton.ensureDebugId("saveResults");
-		comparePerformanceButton.ensureDebugId("comparePerformance");
+		saveProtocolButton.ensureDebugId("saveProtocolButton");
+		loadProtocolButton.ensureDebugId("loadProtocolButton");
+		resetProtocolButton.ensureDebugId("resetProtocolButton");
+		mixNowButton.ensureDebugId("mixNowButton");
+		nrStepsLabel.ensureDebugId("nrStepsLabel");
+		labelProtocolRepresentation.ensureDebugId("labelProtocolRepresentation");
+		labelProtocolLabel.ensureDebugId("labelProtocolLabel");
+		defineProtocolCheckBox.ensureDebugId("defineProtocolCheckBox");
+		
+		saveItemPanel.ensureDebugId("saveItemPanel");
+		saveButtonsPanel.ensureDebugId("saveButtonsPanel");
+		saveItemVerticalPanel.ensureDebugId("saveItemVerticalPanel");
+		saveItemPanelButton.ensureDebugId("saveItemPanelButton");
+		cancelSaveResultsButton.ensureDebugId("cancelSaveResultsButton");
+		closeSaveButton.ensureDebugId("closeSaveButton");
+		saveNameTextBox.ensureDebugId("saveNameTextBox");
+		saveMessageLabel.ensureDebugId("saveMessageLabel");
+		
+		overwriteSavePanel.ensureDebugId("overwriteSavePanel");
+		overwriteButtonsPanel.ensureDebugId("overwriteButtonsPanel");
+		overwriteSaveVerticalPanel.ensureDebugId("overwriteSaveVerticalPanel");
+		overwriteSaveButton.ensureDebugId("overwriteSaveButton");
+		
+		loadVerticalPanel.ensureDebugId("loadVerticalPanel");
+		loadPanel.ensureDebugId("loadPanel");
+		closeLoadButton.ensureDebugId("closeLoadButton");
+		
+		sizeSpinner.ensureDebugId("sizeSpinner");
+		sizeLabel.ensureDebugId("sizeLabel");
+		
+		viewSingleGraphPopupPanel.ensureDebugId("viewSingleGraphPopupPanel");
+		viewSingleGraphHorizontalPanel.ensureDebugId("viewSingleGraphHorizontalPanel");
+		viewSingleGraphVerticalPanel.ensureDebugId("viewSingleGraphVerticalPanel");
+		viewSingleGraphGraphPanel.ensureDebugId("viewSingleGraphGraphPanel");
+		viewSingleGraphButton.ensureDebugId("viewSingleGraphButton");
+		closeSingleGraphViewButton.ensureDebugId("closeSingleGraphViewButton");
+		exportSingleGraphButton.ensureDebugId("exportSingleGraphButton");
+		
+		compareSelectPopupPanel.ensureDebugId("compareSelectPopupPanel");
+		comparePopupPanel.ensureDebugId("comparePopupPanel");
+		compareGraphPanel.ensureDebugId("compareGraphPanel");
+		comparePerformanceButton.ensureDebugId("comparePerformanceButton");
+		compareButton.ensureDebugId("compareButton");
+		cancelCompareButton.ensureDebugId("cancelCompareButton");
+		closeCompareButton.ensureDebugId("closeCompareButton");
+		newCompareButton.ensureDebugId("newCompareButton");
 	}
 	
 }

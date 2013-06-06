@@ -323,7 +323,7 @@ public class Fingerpaint implements EntryPoint {
 			GuiState.menuPanel.add(GuiState.removeSavedResultsButton);
 
 			createViewSingleGraphButton();
-			GuiState.menuPanel.add(GuiState.viewSingleGraph);
+			GuiState.menuPanel.add(GuiState.viewSingleGraphButton);
 
 			// Initialise the comparePerformanceButton and add it to the
 			// menuPanel
@@ -680,7 +680,7 @@ public class Fingerpaint implements EntryPoint {
 	}
 
 	private void createViewSingleGraphButton() {
-		GuiState.viewSingleGraph.setEnabled(false);
+		GuiState.viewSingleGraphButton.setEnabled(false);
 		GuiState.viewSingleGraphPopupPanel.setModal(true);
 		GuiState.viewSingleGraphHorizontalPanel
 				.add(GuiState.exportSingleGraphButton);
@@ -700,7 +700,7 @@ public class Fingerpaint implements EntryPoint {
 			}
 		});
 
-		GuiState.viewSingleGraph.addClickHandler(new ClickHandler() {
+		GuiState.viewSingleGraphButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				ArrayList<double[]> performance = new ArrayList<double[]>();
@@ -887,6 +887,7 @@ public class Fingerpaint implements EntryPoint {
 					GuiState.saveNameTextBox.getText().length());
 			GuiState.saveNameTextBox.setFocus(true);
 		} else {
+			
 			GuiState.saveNameTextBox.setText("");
 			GuiState.saveItemPanelButton.setEnabled(false);
 		}
@@ -916,7 +917,7 @@ public class Fingerpaint implements EntryPoint {
 	 * @param name
 	 *            Name of save "file".
 	 * @param canOverwrite
-	 *            If we can overwrite an already-exisiting "file" with the given
+	 *            If we can overwrite an already-existing "file" with the given
 	 *            name or not.
 	 * @return {@code true} if "file" was saved, {@code false} otherwise
 	 */
@@ -1476,7 +1477,7 @@ public class Fingerpaint implements EntryPoint {
 										.getConcentrationVectors().length - 1]);
 						as.setSegregation(result.getSegregationPoints());
 						GuiState.saveResultsButton.setEnabled(true);
-						GuiState.viewSingleGraph.setEnabled(true);
+						GuiState.viewSingleGraphButton.setEnabled(true);
 						setLoadingPanelVisible(false);
 					}
 
