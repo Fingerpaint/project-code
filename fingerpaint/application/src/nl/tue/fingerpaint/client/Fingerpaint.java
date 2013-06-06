@@ -132,6 +132,9 @@ public class Fingerpaint implements EntryPoint {
 				}
 			}
 		});
+		
+		//set debug ID's for debugging
+		GuiState.setDebugIDs();
 	}
 
 	/**
@@ -150,8 +153,8 @@ public class Fingerpaint implements EntryPoint {
 
 		// Add the tree to the root layout panel.
 		RootLayoutPanel.get().add(tree);
-
-		// for debugging purposes
+		
+		//for debugging purposes
 		tree.ensureDebugId("cell");
 	}
 
@@ -382,9 +385,6 @@ public class Fingerpaint implements EntryPoint {
 			GuiState.menuPanelWrapper.getElement().setId("menuPanelWrapper");
 			RootPanel.get().add(GuiState.menuPanelWrapper);
 			RootPanel.get().add(GuiState.menuToggleButton);
-
-			// for debugging
-			GuiState.viewSingleGraph.ensureDebugId("viewGraph");
 		}
 
 		/**
@@ -484,8 +484,7 @@ public class Fingerpaint implements EntryPoint {
 	 * Initialises the spinner for the nrSteps.
 	 */
 	private void createNrStepsSpinner() {
-		GuiState.nrStepsSpinner.ensureDebugId("nrStepsSpinner");
-		// Also initialise the initial value in the ApplicationState class.
+		//Initialise the initial value in the ApplicationState class.
 		as.setNrSteps(GuiState.NRSTEPS_DEFAULT);
 
 		// The spinner for #steps should update the nrSteps variable whenever
@@ -1377,7 +1376,6 @@ public class Fingerpaint implements EntryPoint {
 	 * the current protocol is reset, and the protocol widgets are shown/hidden.
 	 */
 	private void createDefineProtocolCheckBox() {
-		GuiState.defineProtocolCheckBox.ensureDebugId("defineProtocolCheckbox");
 		GuiState.defineProtocolCheckBox.addClickHandler(new ClickHandler() {
 
 			@Override
@@ -1409,7 +1407,6 @@ public class Fingerpaint implements EntryPoint {
 	 * it appear 'active'
 	 */
 	private void createMixNowButton() {
-		GuiState.mixNowButton.ensureDebugId("mixNowButton");
 		GuiState.mixNowButton.setEnabled(false);
 		GuiState.mixNowButton.addClickHandler(new ClickHandler() {
 

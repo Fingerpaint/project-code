@@ -146,7 +146,7 @@ public class GuiState {
 			FingerpaintConstants.INSTANCE.btnSaveResults());
 
 	// --- REMOVE RESULTS WIDGETS ---------------------------------------------
-	/** Pop-up panel to handle the removing of results. */
+	/** Pop-up panel to handle the removal of results. */
 	public static PopupPanel removeResultsPanel = new PopupPanel();
 
 	/** Vertical panel to hold the flextable and close button. */
@@ -391,4 +391,16 @@ public class GuiState {
 	public static Button newCompareButton = new Button(
 			FingerpaintConstants.INSTANCE.btnNewCompare());
 
+	/**
+	 * sets all debug ID's for easier debugging (except for the CellBrowser)
+	 */
+	public static void setDebugIDs(){
+		defineProtocolCheckBox.ensureDebugId("defineProtocolCheckbox");
+		mixNowButton.ensureDebugId("mixNowButton");
+		viewSingleGraph.ensureDebugId("viewGraph");
+		nrStepsSpinner.ensureDebugId("nrStepsSpinner");
+		saveResultsButton.ensureDebugId("saveResults");
+		comparePerformanceButton.ensureDebugId("comparePerformance");
+	}
+	
 }
