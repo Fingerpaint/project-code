@@ -207,7 +207,7 @@ public class StorageManager {
 	 *         the given name was saved. This function will also return
 	 *         {@code null} if the storage cannot be used.
 	 */
-	public double[] getDistribution(String geometry, String key) {
+	public int[] getDistribution(String geometry, String key) {
 		if (state != INITIALISED) {
 			return null;
 		}
@@ -221,9 +221,9 @@ public class StorageManager {
 			for (String secondLevelKey : secondLevel.keySet()) {
 				if (secondLevelKey.equals(key)) {
 					Object[] val = (Object[]) secondLevel.get(secondLevelKey);
-					double[] result = new double[val.length];
+					int[] result = new int[val.length];
 					for (int i = 0; i < val.length; i++) {
-						result[i] = ((Double) val[i]).doubleValue();
+						result[i] = ((Double) val[i]).intValue();
 					}
 					return result;
 				}
@@ -389,7 +389,7 @@ public class StorageManager {
 	 *         use (no attempt to overwrite will be made). Will also return
 	 *         false when the storage cannot be used.
 	 */
-	public boolean putDistribution(String geometry, String key, double[] value) {
+	public boolean putDistribution(String geometry, String key, int[] value) {
 		return putDistribution(geometry, key, value, false);
 	}
 
@@ -410,7 +410,7 @@ public class StorageManager {
 	 *         use (no attempt to overwrite will be made). Will also return
 	 *         false when the storage cannot be used.
 	 */
-	public boolean putDistribution(String geometry, String key, double[] value,
+	public boolean putDistribution(String geometry, String key, int[] value,
 			boolean overwrite) {
 		if (state != INITIALISED) {
 			return false;

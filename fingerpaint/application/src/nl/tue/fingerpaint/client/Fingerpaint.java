@@ -11,13 +11,13 @@ import nl.tue.fingerpaint.client.gui.NotificationPanel;
 import nl.tue.fingerpaint.client.gui.NumberSpinner;
 import nl.tue.fingerpaint.client.gui.NumberSpinnerListener;
 import nl.tue.fingerpaint.client.gui.ToggleColourButton;
-import nl.tue.fingerpaint.client.gui.drawingtool.CircleDrawingTool;
-import nl.tue.fingerpaint.client.gui.drawingtool.SquareDrawingTool;
 import nl.tue.fingerpaint.client.model.ApplicationState;
 import nl.tue.fingerpaint.client.model.Geometry.StepAddedListener;
 import nl.tue.fingerpaint.client.model.MixingProtocol;
 import nl.tue.fingerpaint.client.model.MixingStep;
 import nl.tue.fingerpaint.client.model.RectangleGeometry;
+import nl.tue.fingerpaint.client.model.drawingtool.CircleDrawingTool;
+import nl.tue.fingerpaint.client.model.drawingtool.SquareDrawingTool;
 import nl.tue.fingerpaint.client.resources.FingerpaintConstants;
 import nl.tue.fingerpaint.client.resources.FingerpaintResources;
 import nl.tue.fingerpaint.client.serverdata.ServerDataCache;
@@ -25,6 +25,8 @@ import nl.tue.fingerpaint.client.simulator.Simulation;
 import nl.tue.fingerpaint.client.simulator.SimulationResult;
 import nl.tue.fingerpaint.client.simulator.SimulatorService;
 import nl.tue.fingerpaint.client.simulator.SimulatorServiceAsync;
+import nl.tue.fingerpaint.client.storage.FingerpaintJsonizer;
+import nl.tue.fingerpaint.client.storage.FingerpaintZipper;
 import nl.tue.fingerpaint.client.storage.ResultStorage;
 import nl.tue.fingerpaint.client.storage.StorageManager;
 import nl.tue.fingerpaint.shared.GeometryNames;
@@ -1356,7 +1358,7 @@ public class Fingerpaint implements EntryPoint {
 
 								// get the selected initial distribution, and
 								// set it in the AS
-								double[] dist = StorageManager.INSTANCE
+								int[] dist = StorageManager.INSTANCE
 										.getDistribution(GeometryNames
 												.getShortName(as
 														.getGeometryChoice()),
@@ -1768,7 +1770,7 @@ public class Fingerpaint implements EntryPoint {
 			@Override
 			public void run() {
 				Simulation simulation = new Simulation(as.getMixerChoice(),
-						protocol, as.getInitialDistribution(), as.getNrSteps(),
+						protocol, FingerpaintZipper.zip(FingerpaintJsonizer.toString(as.getInitialDistribution())).substring(1), as.getNrSteps(),
 						false);
 
 				TimeoutRpcRequestBuilder timeoutRpcRequestBuilder = new TimeoutRpcRequestBuilder(

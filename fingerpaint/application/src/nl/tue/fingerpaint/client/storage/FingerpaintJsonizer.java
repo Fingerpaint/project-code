@@ -63,22 +63,22 @@ public class FingerpaintJsonizer {
 	}
 
 	/**
-	 * Create a double array that is represented by the given JSON array. When a
+	 * Create an integer array that is represented by the given JSON array. When a
 	 * value in the array is not a number, 1.0 is used as a default value.
 	 * 
 	 * @param jsonArray
-	 *            A JSON array that can be used as a double array in Java.
-	 * @return The double array that the given JSON array represents.
+	 *            A JSON array that can be used as an integer array in Java.
+	 * @return The integer array that the given JSON array represents.
 	 */
-	public static double[] doubleArrayFromJSONArray(JSONArray jsonArray) {
-		double[] result = new double[jsonArray.size()];
+	public static int[] intArrayFromJSONArray(JSONArray jsonArray) {
+		int[] result = new int[jsonArray.size()];
 		JSONValue val;
 		JSONNumber valNr;
 
 		for (int i = 0; i < jsonArray.size(); i++) {
 			val = jsonArray.get(i);
 			if ((valNr = val.isNumber()) != null) {
-				result[i] = valNr.doubleValue();
+				result[i] = (int) valNr.doubleValue();
 			} else {
 				result[i] = 1;
 			}
@@ -87,20 +87,20 @@ public class FingerpaintJsonizer {
 	}
 
 	/**
-	 * Create a double array that is represented by the given JSON string. When
+	 * Create an integer array that is represented by the given JSON string. When
 	 * the given value does not represent an array, {@code null} is returned.
-	 * When a value in the array is not a double, 1.0 is used as a default
+	 * When a value in the array is not an integer, 1.0 is used as a default
 	 * value.
 	 * 
-	 * @param jsonDoubleArray
-	 *            A JSON string that represents an array and can be used as a
-	 *            double array in Java.
-	 * @return The double array that the given JSON string represents.
+	 * @param jsonIntArray
+	 *            A JSON string that represents an array and can be used as an
+	 *            integer array in Java.
+	 * @return The integer array that the given JSON string represents.
 	 */
-	public static double[] doubleArrayFromString(String jsonDoubleArray) {
+	public static int[] intArrayFromString(String jsonIntArray) {
 		JSONValue val;
 		try {
-			val = JSONParser.parseStrict(jsonDoubleArray);
+			val = JSONParser.parseStrict(jsonIntArray);
 		} catch (Exception e) {
 			// When the value is null or empty, return null
 			return null;
@@ -108,7 +108,7 @@ public class FingerpaintJsonizer {
 		JSONArray valArr;
 
 		if ((valArr = val.isArray()) != null) {
-			return doubleArrayFromJSONArray(valArr);
+			return intArrayFromJSONArray(valArr);
 		}
 
 		return null;
@@ -269,25 +269,28 @@ public class FingerpaintJsonizer {
 	}
 
 	/**
-	 * Convert a double array to JSON string representation.
+	 * TODO: Ask Thom about this.
+	 * 
+	 * Convert an int array to JSON string representation.
 	 * 
 	 * @param array
 	 *            The array to be JSONised.
 	 * @return The JSON string that represents the given array.
 	 */
-	public static String toString(double[] array) {
+	public static String toString(int[] array) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("[");
 
-		long iPart;
-		double fPart;
+		//long iPart;
+		//double fPart;
 		for (int i = 0; i < array.length; i++) {
-			iPart = (long) array[i];
-			fPart = array[i] - iPart;
+			//iPart = (long) array[i];
+			//fPart = array[i] - iPart;
 			// below assumes (by looking at the actual code) that the toString
 			// of a double that is smaller than 1 starts with "0."
-			String fPartStr = Double.toString(fPart).substring(2);
-			sb.append(iPart + "." + (fPartStr.length() > 0 ? fPartStr : "0"));
+			String number = Integer.toString(array[i]);
+		//	sb.append(iPart + "." + (fPartStr.length() > 0 ? fPartStr : "0"));
+			sb.append(number);
 			if (i < array.length - 1) {
 				sb.append(",");
 			}
@@ -359,8 +362,8 @@ public class FingerpaintJsonizer {
 	 */
 	@SuppressWarnings("unchecked")
 	public static String toString(Object object) {
-		if (object instanceof double[]) {
-			return toString((double[]) object);
+		if (object instanceof int[]) {
+			return toString((int[]) object);
 		} else if (object instanceof int[]) {
 			return toString((int[]) object);
 		} else if (object instanceof JSONString) {

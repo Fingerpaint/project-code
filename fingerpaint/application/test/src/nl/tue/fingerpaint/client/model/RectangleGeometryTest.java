@@ -189,12 +189,12 @@ public class RectangleGeometryTest extends GWTTestCase {
 	public void testResetDist() {
 		geom = new RectangleGeometry(clientHeight, clientWidth);
 		// make the canvas black
-		geom.setDistribution(new double[96000]);// using the initialisation
+		geom.setDistribution(new int[96000]);// using the initialisation
 												// value of 0
 		// reset the canvas to white
 		geom.resetDistribution();
 		// verify the result
-		double[] dist = geom.getDistribution();
+		int[] dist = geom.getDistribution();
 		// check all indices
 		for (int i = 0; i < dist.length; i++) {
 			assertEquals(1, dist[i]);

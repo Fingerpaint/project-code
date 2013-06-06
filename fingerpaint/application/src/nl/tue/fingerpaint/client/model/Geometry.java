@@ -2,8 +2,8 @@ package nl.tue.fingerpaint.client.model;
 
 import java.util.ArrayList;
 
-import nl.tue.fingerpaint.client.gui.drawingtool.DrawingTool;
-import nl.tue.fingerpaint.client.gui.drawingtool.SquareDrawingTool;
+import nl.tue.fingerpaint.client.model.drawingtool.DrawingTool;
+import nl.tue.fingerpaint.client.model.drawingtool.SquareDrawingTool;
 
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
@@ -33,7 +33,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 public abstract class Geometry {
 
 	/** Internal representation of the geometry */
-	protected double[] distribution;
+	protected int[] distribution;
 
 	/** The canvas to draw on */
 	protected Canvas canvas;
@@ -224,7 +224,7 @@ public abstract class Geometry {
 	 * 
 	 * @return The distribution of this geometry
 	 */
-	abstract public double[] getDistribution();
+	abstract public int[] getDistribution();
 
 	/**
 	 * Sets the distribution to {@code dist}
@@ -232,7 +232,7 @@ public abstract class Geometry {
 	 * @param dist
 	 *            The distribution to set
 	 */
-	public void setDistribution(double[] dist) {
+	public void setDistribution(int[] dist) {
 		this.distribution = dist;
 	}
 
@@ -758,21 +758,6 @@ public abstract class Geometry {
 	protected abstract MixingStep determineSwipe(int mouseX, int mouseY);
 
 	/**
-	 * Returns a CssColor object with the gray scale colour corresponding to the
-	 * given value
-	 * 
-	 * @param value
-	 *            The value which determines the colour; 0 means black and 1
-	 *            means white
-	 * @return The CssColor object with the gray scale colour corresponding to
-	 *         {@code value}
-	 */
-	protected CssColor getColour(double value) {
-		int colourCode = (int) Math.round(value * 255);
-		return CssColor.make(colourCode, colourCode, colourCode);
-	}
-
-	/**
 	 * Creates and returns an image element with the image data belonging to the
 	 * drawing tool.
 	 * 
@@ -822,7 +807,7 @@ public abstract class Geometry {
 	 * @param dist
 	 *            The distribution to be set and drawn
 	 */
-	abstract public void drawDistribution(double[] dist);
+	abstract public void drawDistribution(int[] dist);
 
 	/**
 	 * Resets the current distribution to all white

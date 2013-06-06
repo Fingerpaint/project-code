@@ -3,6 +3,8 @@ package nl.tue.fingerpaint.client.simulator;
 import java.io.Serializable;
 
 import nl.tue.fingerpaint.client.model.MixingProtocol;
+import nl.tue.fingerpaint.client.storage.FingerpaintJsonizer;
+import nl.tue.fingerpaint.client.storage.FingerpaintZipper;
 
 /**
  * Defines all information necessary for a simulation run. Results are saved
@@ -20,7 +22,7 @@ public class Simulation implements Serializable {
 	/** The protocol that has to be applied */
 	private MixingProtocol protocol;
 	/** The initial concentration distribution */
-	private double[] concentrationVector;
+	private String concentrationVector;
 	/** The number of times the protocol has to be run */
 	private int protocolRuns;
 
@@ -53,7 +55,7 @@ public class Simulation implements Serializable {
 	 *            computed for each protocol run
 	 */
 	public Simulation(final String mixer, final MixingProtocol protocol,
-			final double[] concentrationVector, final int protocolRuns,
+			final String concentrationVector, final int protocolRuns,
 			final boolean intermediateVectors) {
 		if (mixer == null) {
 			throw new NullPointerException("Argument mixer cannot be null");
@@ -89,8 +91,15 @@ public class Simulation implements Serializable {
 	/**
 	 * @return the concentrationVector
 	 */
-	public double[] getConcentrationVector() {
+	public String getConcentrationVector() {
 		return concentrationVector;
+	}
+	
+	/**
+	 * @return the concentrationVector
+	 */
+	public double[] getConcentrationVector2() {
+		return new double[]{188.0};
 	}
 
 	/**
