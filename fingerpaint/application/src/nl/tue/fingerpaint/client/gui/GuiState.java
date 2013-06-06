@@ -80,7 +80,7 @@ public class GuiState {
 	// --- MENU WIDGETS -------------------------------------------------------
 	/** Vertical panel to contain all menu items. */
 	public static VerticalPanel menuPanel = new VerticalPanel();
-	
+
 	/** Wrapper for the {@link #menuPanel}, used in animation. */
 	public static SimplePanel menuPanelWrapper = new SimplePanel();
 
@@ -312,7 +312,8 @@ public class GuiState {
 	// --- VIEW SINGLE GRAPH WIDGETS ------------------------------------------
 	/**
 	 * Pop-up menu to display the performance of a single graph. It is opened
-	 * when {@link #viewSingleGraphButton} is clicked. It contains a vertical panel.
+	 * when {@link #viewSingleGraphButton} is clicked. It contains a vertical
+	 * panel.
 	 */
 	public static PopupPanel viewSingleGraphPopupPanel = new PopupPanel();
 
@@ -393,49 +394,51 @@ public class GuiState {
 			FingerpaintConstants.INSTANCE.btnNewCompare());
 
 	/**
-	 * Sets the debug IDs for all widgets in this class (except the CellBrowser), 
-	 * to enable easier debugging.
+	 * Sets the IDs for all widgets in this class (except the CellBrowser and
+	 * ToggleColourButton). The ID is either used in the CSS file or
+	 * for debugging purposes. A widget may <b>never</b> have an ordinary ID and
+	 * a debug ID at the same time.
 	 */
-	public static void setDebugIDs(){
-		loadingPanel.ensureDebugId("loadingPanel");
-		loadingPanelMessage.ensureDebugId("loadingPanelMessage");
-		
-		menuPanel.ensureDebugId("menuPanel");
-		menuPanelWrapper.ensureDebugId("menuPanelWrapper");
+	public static void setIDs() {
+		loadingPanel.getElement().setId(GuiState.LOADINGPANEL_ID);
+		loadingPanelMessage.getElement()
+				.setId(GuiState.LOADINGPANEL_MESSAGE_ID);
+
+		menuPanel.getElement().setId("menuPanel");
+		menuPanelWrapper.getElement().setId("menuPanelWrapper");
 		menuToggleButton.ensureDebugId("menuToggleButton");
-		
+
 		toolSelector.ensureDebugId("toolSelector");
 		popupPanelPanel.ensureDebugId("popupPanelPanel");
 		popupPanelMenu.ensureDebugId("popupPanelMenu");
 		cursorSizeSpinner.ensureDebugId("cursorSizeSpinner");
-		toggleColor.ensureDebugId("toggleColor");
 		toolSelectButton.ensureDebugId("toolSelectButton");
 		squareDrawingTool.ensureDebugId("squareDrawingTool");
 		circleDrawingTool.ensureDebugId("circleDrawingTool");
-		
+
 		saveDistributionButton.ensureDebugId("saveDistributionButton");
 		loadInitDistButton.ensureDebugId("loadInitDistButton");
 		resetDistButton.ensureDebugId("resetDistButton");
-		
+
 		saveResultsButton.ensureDebugId("saveResultsButton");
-		
+
 		removeResultsPanel.ensureDebugId("removeResultsPanel");
 		removeResultsVerticalPanel.ensureDebugId("removeResultsVerticalPanel");
 		resultsFlexTable.ensureDebugId("resultsFlexTable");
 		removeSavedResultsButton.ensureDebugId("removeSavedResultsButton");
 		closeResultsButton.ensureDebugId("closeResultsButton");
-		
-		protocolPanelContainer.ensureDebugId("protocolPanelContainer");
+
+		protocolPanelContainer.getElement().setId("protPanel");
 		nrStepsSpinner.ensureDebugId("nrStepsSpinner");
 		saveProtocolButton.ensureDebugId("saveProtocolButton");
 		loadProtocolButton.ensureDebugId("loadProtocolButton");
 		resetProtocolButton.ensureDebugId("resetProtocolButton");
 		mixNowButton.ensureDebugId("mixNowButton");
 		nrStepsLabel.ensureDebugId("nrStepsLabel");
-		labelProtocolRepresentation.ensureDebugId("labelProtocolRepresentation");
+		labelProtocolRepresentation.getElement().setId("protLabel");
 		labelProtocolLabel.ensureDebugId("labelProtocolLabel");
 		defineProtocolCheckBox.ensureDebugId("defineProtocolCheckBox");
-		
+
 		saveItemPanel.ensureDebugId("saveItemPanel");
 		saveButtonsPanel.ensureDebugId("saveButtonsPanel");
 		saveItemVerticalPanel.ensureDebugId("saveItemVerticalPanel");
@@ -444,27 +447,29 @@ public class GuiState {
 		closeSaveButton.ensureDebugId("closeSaveButton");
 		saveNameTextBox.ensureDebugId("saveNameTextBox");
 		saveMessageLabel.ensureDebugId("saveMessageLabel");
-		
+
 		overwriteSavePanel.ensureDebugId("overwriteSavePanel");
 		overwriteButtonsPanel.ensureDebugId("overwriteButtonsPanel");
 		overwriteSaveVerticalPanel.ensureDebugId("overwriteSaveVerticalPanel");
 		overwriteSaveButton.ensureDebugId("overwriteSaveButton");
-		
+
 		loadVerticalPanel.ensureDebugId("loadVerticalPanel");
 		loadPanel.ensureDebugId("loadPanel");
 		closeLoadButton.ensureDebugId("closeLoadButton");
-		
+
 		sizeSpinner.ensureDebugId("sizeSpinner");
 		sizeLabel.ensureDebugId("sizeLabel");
-		
+
 		viewSingleGraphPopupPanel.ensureDebugId("viewSingleGraphPopupPanel");
-		viewSingleGraphHorizontalPanel.ensureDebugId("viewSingleGraphHorizontalPanel");
-		viewSingleGraphVerticalPanel.ensureDebugId("viewSingleGraphVerticalPanel");
+		viewSingleGraphHorizontalPanel
+				.ensureDebugId("viewSingleGraphHorizontalPanel");
+		viewSingleGraphVerticalPanel
+				.ensureDebugId("viewSingleGraphVerticalPanel");
 		viewSingleGraphGraphPanel.ensureDebugId("viewSingleGraphGraphPanel");
 		viewSingleGraphButton.ensureDebugId("viewSingleGraphButton");
 		closeSingleGraphViewButton.ensureDebugId("closeSingleGraphViewButton");
 		exportSingleGraphButton.ensureDebugId("exportSingleGraphButton");
-		
+
 		compareSelectPopupPanel.ensureDebugId("compareSelectPopupPanel");
 		comparePopupPanel.ensureDebugId("comparePopupPanel");
 		compareGraphPanel.ensureDebugId("compareGraphPanel");
@@ -474,5 +479,5 @@ public class GuiState {
 		closeCompareButton.ensureDebugId("closeCompareButton");
 		newCompareButton.ensureDebugId("newCompareButton");
 	}
-	
+
 }
