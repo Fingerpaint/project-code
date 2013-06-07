@@ -282,8 +282,8 @@ public class StorageManager {
 		}
 
 		HashMap<String, Object> firstLevel = FingerpaintJsonizer
-				.hashMapFromString(localStorage.getItem(KEY_PROTOCOLS), false);	
-		
+				.hashMapFromString(localStorage.getItem(KEY_PROTOCOLS), false);
+
 		if (firstLevel.containsKey(geometry)) {
 			HashMap<String, Object> secondLevel = FingerpaintJsonizer
 					.hashMapFromJSONObject(
@@ -421,13 +421,15 @@ public class StorageManager {
 		}
 
 		HashMap<String, Object> firstLevel = FingerpaintJsonizer
-				.hashMapFromString(localStorage.getItem(KEY_INITDIST));
+				.hashMapFromString(localStorage.getItem(KEY_INITDIST), false);
 
 		if (firstLevel.containsKey(geometry)) {
-			@SuppressWarnings("unchecked")
-			HashMap<String, Object> secondLevel = (HashMap<String, Object>) firstLevel
-					.get(geometry);
-			secondLevel.put(key, FingerpaintZipper.zip(FingerpaintJsonizer.toString(value)));
+			HashMap<String, Object> secondLevel = FingerpaintJsonizer
+					.hashMapFromJSONObject(
+							((JSONValue) firstLevel.get(geometry)).isObject(),
+							false);
+			secondLevel.put(key,
+					FingerpaintZipper.zip(FingerpaintJsonizer.toString(value)));
 			firstLevel.put(geometry, FingerpaintJsonizer.toString(secondLevel));
 			try {
 				localStorage.setItem(KEY_INITDIST,
