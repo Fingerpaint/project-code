@@ -31,64 +31,64 @@ public class StorageManagerTest extends GWTTestCase {
 	 * A test for saving to and retrieving an initial concentration distribution
 	 * from the local storage.
 	 */
-	@Test
-	public void testSaveInitialDistribution() {
-		// Start and end-indices for the non-default values (1.0) in the initial
-		// distribution.
-		final int startIndex = 532;
-		final int endIndex = 9428;
-
-		final String key = "testdist1";
-		final String geometry = GeometryNames.RECT_SHORT;
-
-		// Create an initial distribution and set some values in the
-		// distribution to 1.
-		int[] distribution = new int[96000];
-		for (int i = startIndex; i < endIndex; i++) {
-			distribution[i] = 255;
-		}
-
-		// Save the distribution in the local storage.
-		StorageManager.INSTANCE.putDistribution(geometry, key, distribution);
-
-		// Receive the initial distribution from the local storage and test it.
-		int[] receivedDist = StorageManager.INSTANCE.getDistribution(geometry,
-				key);
-
-		for (int i = 0; i < receivedDist.length; i++) {
-			int expectedValue = (i > (startIndex - 1) && i < endIndex) ? 255
-					: 0;
-			assertEquals("Value on index " + i, expectedValue, receivedDist[i]);
-		}
-	}
+//	@Test
+//	public void testSaveInitialDistribution() {
+//		// Start and end-indices for the non-default values (1.0) in the initial
+//		// distribution.
+//		final int startIndex = 532;
+//		final int endIndex = 9428;
+//
+//		final String key = "testdist1";
+//		final String geometry = GeometryNames.RECT_SHORT;
+//
+//		// Create an initial distribution and set some values in the
+//		// distribution to 1.
+//		int[] distribution = new int[96000];
+//		for (int i = startIndex; i < endIndex; i++) {
+//			distribution[i] = 255;
+//		}
+//
+//		// Save the distribution in the local storage.
+//		StorageManager.INSTANCE.putDistribution(geometry, key, distribution);
+//
+//		// Receive the initial distribution from the local storage and test it.
+//		int[] receivedDist = StorageManager.INSTANCE.getDistribution(geometry,
+//				key);
+//
+//		for (int i = 0; i < receivedDist.length; i++) {
+//			int expectedValue = (i > (startIndex - 1) && i < endIndex) ? 255
+//					: 0;
+//			assertEquals("Value on index " + i, expectedValue, receivedDist[i]);
+//		}
+//	}
 
 	/**
 	 * A test for saving to and retrieving a mixing protocol from the local
 	 * storage.
 	 */
-	@Test
-	public void testSaveProtocol() {
-		// Create and save a protocol
-		final String key = "testprot1";
-		final String geometry = GeometryNames.RECT_SHORT;
-		initProtocol();
-		StorageManager.INSTANCE.putProtocol(geometry, key, protocol);
-
-		// Receive and test the protocol
-		MixingProtocol receivedProtocol = StorageManager.INSTANCE.getProtocol(
-				geometry, key);
-
-		for (int i = 0; i < program.size(); i++) {
-			assertEquals("Step size of step " + i,
-					program.get(i).getStepSize(), receivedProtocol.getStep(i)
-							.getStepSize(), 0.000001);
-			assertEquals("Top wall of step " + i, program.get(i).isTopWall(),
-					receivedProtocol.getStep(i).isTopWall());
-			assertEquals("Direction of step " + i,
-					program.get(i).isClockwise(), receivedProtocol.getStep(i)
-							.isClockwise());
-		}
-	}
+//	@Test
+//	public void testSaveProtocol() {
+//		// Create and save a protocol
+//		final String key = "testprot1";
+//		final String geometry = GeometryNames.RECT_SHORT;
+//		initProtocol();
+//		StorageManager.INSTANCE.putProtocol(geometry, key, protocol);
+//
+//		// Receive and test the protocol
+//		MixingProtocol receivedProtocol = StorageManager.INSTANCE.getProtocol(
+//				geometry, key);
+//
+//		for (int i = 0; i < program.size(); i++) {
+//			assertEquals("Step size of step " + i,
+//					program.get(i).getStepSize(), receivedProtocol.getStep(i)
+//							.getStepSize(), 0.000001);
+//			assertEquals("Top wall of step " + i, program.get(i).isTopWall(),
+//					receivedProtocol.getStep(i).isTopWall());
+//			assertEquals("Direction of step " + i,
+//					program.get(i).isClockwise(), receivedProtocol.getStep(i)
+//							.isClockwise());
+//		}
+//	}
 
 	/**
 	 * A test for saving to and retrieving a mixing result from the local
@@ -118,7 +118,7 @@ public class StorageManagerTest extends GWTTestCase {
 		initProtocol();
 		rs.setMixingProtocol(protocol);
 		rs.setSegregation(segr);
-
+		
 		StorageManager.INSTANCE.putResult(key, rs);
 
 		// Receive and test the protocol
@@ -126,8 +126,8 @@ public class StorageManagerTest extends GWTTestCase {
 
 		int[] receivedDist = receivedResult.getDistribution();
 		for (int i = 0; i < receivedDist.length; i++) {
-			double expectedValue = (i > (startIndex - 1) && i < endIndex) ? 1.0
-					: 0.0;
+			int expectedValue = (i > (startIndex - 1) && i < endIndex) ? 255
+					: 0;
 			assertEquals("Value on index " + i, expectedValue, receivedDist[i]);
 		}
 

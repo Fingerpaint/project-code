@@ -81,6 +81,7 @@ public class ResultStorage {
 	 * @param distribution
 	 *            The concentration distribution to set
 	 */
+	@Transient
 	public void setDistribution(int[] distribution) {
 		this.zippedDist = FingerpaintZipper.zip(FingerpaintJsonizer
 				.toString(distribution));
@@ -95,6 +96,17 @@ public class ResultStorage {
 	 */
 	public String getZippedDistribution() {
 		return this.zippedDist;
+	}
+
+	/**
+	 * Sets the zipped string representation of the initial concentration
+	 * distribution
+	 * 
+	 * @param zippedDist
+	 *            The zipped distribution to set
+	 */
+	public void setZippedDistribution(String zippedDist) {
+		this.zippedDist = zippedDist;
 	}
 
 	/**
