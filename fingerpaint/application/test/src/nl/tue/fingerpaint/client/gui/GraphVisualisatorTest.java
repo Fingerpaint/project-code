@@ -39,7 +39,7 @@ public class GraphVisualisatorTest {
 	/**
 	 * Tests if the browsers correctly display a performance graph for a single mixing run
 	 */
-	@Test
+	//@Test
 	public void testSingleGraph() {
 		CrossBrowserTest<Boolean> browsertester = new CrossBrowserTest<Boolean>(){
 
@@ -123,10 +123,6 @@ public class GraphVisualisatorTest {
 				driver.findElement(By.cssSelector("#gwt-debug-nrStepsSpinner input")).sendKeys("0");
 				TestUtil.moveRectangularWall(driver, 100, true, true);
 				
-				(new WebDriverWait(driver, 30)).until(
-						ExpectedConditions.elementToBeClickable(
-								By.id("gwt-debug-mixNowButton")));
-				
 				driver.findElement(By.id("gwt-debug-mixNowButton")).click();
 				
 				//wait till the mixing run is done
@@ -134,11 +130,7 @@ public class GraphVisualisatorTest {
 				(new WebDriverWait(driver, 30)).until(
 						ExpectedConditions.elementToBeClickable(
 								By.id("gwt-debug-saveResultsButton")));
-				try {
-					Thread.sleep(1000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
+				pause();
 				
 				//save the results of this first run
 				driver.findElement(By.id("gwt-debug-saveResultsButton")).click();
@@ -146,9 +138,6 @@ public class GraphVisualisatorTest {
 				driver.findElement(By.id("gwt-debug-saveItemPanelButton")).click();
 				
 				//wait till the 'save was successful' popup dissapears
-				(new WebDriverWait(driver, 30)).until(
-						ExpectedConditions.elementToBeClickable(
-								By.id("gwt-debug-resetDistButton")));
 				
 				//reset the canvas
 				driver.findElement(By.id("gwt-debug-resetDistButton")).click();
@@ -156,26 +145,23 @@ public class GraphVisualisatorTest {
 				//draw six points on the canvas
 				TestUtil.drawRectangularCanvas(
 						driver, 
-						new Point(1, 1), new Point(100, 100), 
+						new Point(50, 0), new Point(100, 100), 
 						new Point(0, 100), new Point(100, 0),  
 						new Point(0, -100), new Point(-100, 0));
 				
-				//add a second step to the existing protocol
+				//add a second step to the existing protocol, and mix again
 				TestUtil.moveRectangularWall(driver, 100, false, false);
 				
-				//wait for the mixing step to be processed
+				driver.findElement(By.id("gwt-debug-mixNowButton")).click();
+				
+				//wait for the mixing to finish
 				(new WebDriverWait(driver, 30)).until(
 						ExpectedConditions.elementToBeClickable(
 								By.id("gwt-debug-saveResultsButton")));
+				pause();
 				
 				//save the second run
 				driver.findElement(By.id("gwt-debug-saveResultsButton")).click();
-				try {
-					Thread.sleep(3000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				//wait for the save menu to close
 				driver.findElement(By.id("gwt-debug-saveNameTextBox")).sendKeys("longProt");
 				driver.findElement(By.id("gwt-debug-saveItemPanelButton")).click();
 				
@@ -199,7 +185,7 @@ public class GraphVisualisatorTest {
 					new URL("http://fingerpaint.campus.tue.nl:4444/wd/hub"), 
 					new StandardCapabilitiesProvider());
 			List<ResultTriple<Boolean>> results = multitester.testAll();
-			//ResultTriple<Boolean> results = multitester.testSpecific(new Dimension(800, 1280), DesiredCapabilities.firefox());
+			//ResultTriple<Boolean> results = multitester.testSpecific(new Dimension(1200, 800), DesiredCapabilities.firefox());
 			
 			List<Map<Dimension,Boolean>> screenieResults = multitester.compareLastScreenshots();
 			
@@ -219,6 +205,30 @@ public class GraphVisualisatorTest {
 //			}
 		} catch (MalformedURLException | MultiBrowserTesterException e) {
 			throw new Error(e);
+		}
+	}
+	
+	/**
+	 * helper function purely to wait
+	 */
+	private void pause(){
+		try {
+			Thread.sleep(1500);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * helper function purely to wait, waits t milliseconds
+	 * 
+	 * @param t the waiting time in milliseconds
+	 */
+	private void pause(int t){
+		try {
+			Thread.sleep(t);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
 		}
 	}
 }
