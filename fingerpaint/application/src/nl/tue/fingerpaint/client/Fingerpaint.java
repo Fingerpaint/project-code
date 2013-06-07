@@ -755,9 +755,11 @@ public class Fingerpaint implements EntryPoint {
 	 * Save the currently shown graph to disk in svg format.
 	 */
 	private void exportGraph() {
-		String svg = IFrameElement.as(
-			DOM.getElementById("GChart_Frame_0")).getContentDocument()
-			.getElementById("chartArea").getInnerHTML();
+		// TODO: change id to correct id and greet the easter bunny
+		String svg = IFrameElement.as(DOM.getElementById(
+				"gwt-debug-compareGraphPanel").getElementsByTagName("iframe")
+				.getItem(0)).getContentDocument().getElementById("chartArea")
+				.getInnerHTML();
 	
 		FileExporter.exportGraph(svg);
 	}
@@ -1392,9 +1394,29 @@ public class Fingerpaint implements EntryPoint {
 		graphVisualisator = new GraphVisualisator();
 		// Adds the graph to the Panel-parameter of
 		// visualisator.getOnLoadCallBack()
-		try {			
+		
+		float windowHeight = Window.getClientHeight();
+		float windowWidth = Window.getClientWidth();
+		
+		int graphHeight;
+		int graphWidth;
+		
+		final float ratio = 5f / 3f; // w : h
+		final float percentage = 0.6f;
+		 
+		if (windowWidth / ratio < windowHeight) { // portrait
+			Logger.getLogger("").log(Level.INFO, "Portrait");
+			graphHeight = (int) (windowWidth * percentage / ratio);
+			graphWidth = (int) (windowWidth * percentage);
+		} else { // landschaap
+			Logger.getLogger("").log(Level.INFO, "Landscape");
+			graphHeight = (int) (windowHeight * percentage);
+			graphWidth = (int) (windowHeight * percentage * ratio);
+		}
+		
+		try {
 			VisualizationUtils.loadVisualizationApi(graphVisualisator
-					.createGraph(panel, names, performance, onLoad),
+					.createGraph(panel, names, performance, onLoad, graphHeight, graphWidth),
 					LineChart.PACKAGE);
 		} catch (Exception e) {
 			Window.alert("Loading graph failed.");

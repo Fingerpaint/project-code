@@ -54,12 +54,12 @@ public class GraphVisualisator {
 	 * @return The runnable object to initiate drawing the graph
 	 */
 	public Runnable createGraph(Panel panel, ArrayList<String> names,
-			ArrayList<double[]> performance, AsyncCallback<Boolean> onLoad) {
+			ArrayList<double[]> performance, AsyncCallback<Boolean> onLoad, int height, int width) {
 		for (int i = 0; i < names.size(); i++) {
 			addSegregationResult(performance.get(i));
 		}
 		mixingRunNames = names;
-		return getOnLoadCallBack(panel, onLoad);
+		return getOnLoadCallBack(panel, onLoad, height, width);
 	}
 
 	/**
@@ -69,13 +69,13 @@ public class GraphVisualisator {
 	 *            The panel the graph will be added to
 	 * @return The runnable object to initiate drawing the graph
 	 */
-	private Runnable getOnLoadCallBack(final Panel panel, final AsyncCallback<Boolean> onLoad) {
+	private Runnable getOnLoadCallBack(final Panel panel, final AsyncCallback<Boolean> onLoad, final int height, final int width) {
 		// Create a callback to be called when the visualisation API
 		// has been loaded.
 		return new Runnable() {
 			public void run() {
 				// Create a line chart visualisation.
-				lineChart = new LineChart(createTable(), createOptions());
+				lineChart = new LineChart(createTable(), createOptions(height, width));
 				panel.add(lineChart);
 				onLoad.onSuccess(true);
 			}
@@ -106,11 +106,11 @@ public class GraphVisualisator {
 	 * 
 	 * @return The options to be set
 	 */
-	private Options createOptions() {
+	private Options createOptions(int height, int width) {
 		Options options = Options.create();
 		// TODO: What happens when this is not hard-coded anymore?
-		options.setWidth(400);
-		options.setHeight(240);
+		options.setHeight(height);
+		options.setWidth(width);
 		options.setTitle("Mixing Performance");
 		options.setTitleX("Number of steps");
 		options.setTitleY("Mixing performance");
