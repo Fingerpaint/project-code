@@ -3,8 +3,6 @@ package nl.tue.fingerpaint.client.simulator;
 import java.io.Serializable;
 
 import nl.tue.fingerpaint.client.model.MixingProtocol;
-import nl.tue.fingerpaint.client.storage.FingerpaintJsonizer;
-import nl.tue.fingerpaint.client.storage.FingerpaintZipper;
 
 /**
  * Defines all information necessary for a simulation run. Results are saved
@@ -93,13 +91,6 @@ public class Simulation implements Serializable {
 	 */
 	public String getConcentrationVector() {
 		return concentrationVector;
-	}
-	
-	/**
-	 * @return the concentrationVector
-	 */
-	public double[] getConcentrationVector2() {
-		return new double[]{188.0};
 	}
 
 	/**

@@ -4,8 +4,6 @@ import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.zip.ZipInputStream;
 
 import javax.xml.bind.DatatypeConverter;
@@ -38,11 +36,9 @@ public class SimulatorServiceImpl extends RemoteServiceServlet implements
 		double[] segregationPoints = new double[request.getProtocolRuns()];
 
 		double segregationPoint = 0;
-		System.out.println(request.getConcentrationVector2()[0]);
-		Logger.getLogger("").log(Level.INFO, "" +request.getConcentrationVector2()[0]);
+
 		String zippedVector = request.getConcentrationVector();
-		// TODO: Unzip zippedVector and store in intVector
-		
+
 		double[] doubleVector = doubleArrayFromString(unzip(zippedVector));
 
 		int[][] vectorResults = new int[numVectorResults][doubleVector.length];
@@ -67,15 +63,29 @@ public class SimulatorServiceImpl extends RemoteServiceServlet implements
 		return new SimulationResult(vectorResults, segregationPoints);
 	}
 
-	private int[] toIntVector(double[] doubleVector) {
+	/**
+	 * Returns the integer vector representation of the given double vector
+	 * 
+	 * @param doubleVector
+	 *            The vector to convert
+	 * @return The integer vector represented by the given double vector
+	 */
+	private static int[] toIntVector(double[] doubleVector) {
 		int[] result = new int[doubleVector.length];
 		for (int i = 0; i < result.length; i++) {
-			result[i] = (int) doubleVector[i] * 255;
+			result[i] = (int) Math.round(doubleVector[i] * 255);
 		}
 		return result;
 	}
 
-	private String unzip(String zippedString) {
+	/**
+	 * Returns the unzipped version of a zipped string
+	 * 
+	 * @param zippedString
+	 *            The string in zip format
+	 * @return The string represented by the zipped string
+	 */
+	private static String unzip(String zippedString) {
 		try {
 			byte[] bytes = DatatypeConverter.parseBase64Binary(zippedString);
 			ByteArrayInputStream byteIS = new ByteArrayInputStream(bytes);
@@ -95,14 +105,20 @@ public class SimulatorServiceImpl extends RemoteServiceServlet implements
 			throw new Error(e);
 		}
 	}
-	
-	
-	public static double[] doubleArrayFromString(String jsonIntArray) {
-		String s = jsonIntArray.substring(1, jsonIntArray.length() - 1);
+
+	/**
+	 * Returns the double array represented by the given string
+	 * 
+	 * @param array
+	 *            The string representation of the array
+	 * @return The double array represented by the given string
+	 */
+	private static double[] doubleArrayFromString(String array) {
+		String s = array.substring(1, array.length() - 1);
 		String[] ints = s.split(",");
 		double[] result = new double[ints.length];
 		for (int i = 0; i < result.length; i++) {
-			result[i] = Double.parseDouble(ints[i]) / 255;
+			result[i] = Double.parseDouble(ints[i]) / 255.0;
 		}
 		return result;
 	}
