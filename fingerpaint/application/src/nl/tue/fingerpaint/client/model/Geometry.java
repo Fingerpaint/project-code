@@ -577,24 +577,6 @@ public abstract class Geometry {
 		context.save();
 	}
 
-	/**
-	 * Colours the pixel(s) corresponding to coordinates ({@code x}, {@code y}).
-	 * Also updates the internal representation accordingly.
-	 * 
-	 * @param x
-	 *            The horizontal position of the mouse click relative to the
-	 *            top-left corner of the {@code canvas}
-	 * @param y
-	 *            The vertical position of the mouse click relative to the
-	 *            top-left corner of the {@code canvas}
-	 * @param colour
-	 *            The colour to fill the pixel with
-	 * 
-	 * @post The cell of the {@code internalRepresenationVector} corresponding
-	 *       to the coordinates ({@code x}, {@code y}) has been updated, and the
-	 *       corresponding pixels on the canvas have been coloured
-	 */
-	abstract protected void fillPixel(int x, int y, CssColor colour);
 
 	/**
 	 * Returns whether the position ({@code x}, {@code y}) is inside the drawing

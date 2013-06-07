@@ -84,37 +84,6 @@ public class RectangleGeometry extends Geometry {
 	// ----Implemented abstract methods from superclass----------------
 
 	/**
-	 * Fills a single pixel of the canvas with the current colour. Also updates
-	 * internal representation vector accordingly.
-	 * 
-	 * <pre>
-	 * 0 <=
-	 * {@code x} < 400
-	 * 
-	 * <pre>
-	 * 0 <= {@code y} < 240
-	 * 
-	 * @param x
-	 *            x-coordinate, relative to the canvas element, of the pixel to
-	 *            be filled
-	 * @param y
-	 *            y-coordinate, relative to the canvas element, of the pixel to
-	 * be filled
-	 * @param colour The colour to fill the pixel with
-	 */
-	@Override
-	public void fillPixel(int x, int y, CssColor colour) {
-		if (isInsideDrawingArea(x, y)) {
-			// Fill a rectangle with the currentColor. Change to valid
-			// coordinates to find upper left corner of the 'pixel'.
-			// Make the 'pixel' the size of the multiplying factor.
-			context.setFillStyle(colour);
-			context.fillRect(getValidCoord(x) + X_OFFSET, getValidCoord(y)
-					+ TOP_OFFSET, factor, factor);
-		}
-	}
-
-	/**
 	 * Returns whether the position ({@code x}, {@code y}) is inside the drawing
 	 * area on the {@code canvas}. Note: The border around the drawing area
 	 * counts as 'outside'.
