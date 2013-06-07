@@ -1,17 +1,54 @@
 package nl.tue.fingerpaint.client.gui;
 
-import nl.tue.fingerpaint.client.model.MixingStep;
+import nl.tue.fingerpaint.client.gui.buttons.CancelCompareButton;
+import nl.tue.fingerpaint.client.gui.buttons.CancelSaveResultsButton;
+import nl.tue.fingerpaint.client.gui.buttons.CloseCompareButton;
+import nl.tue.fingerpaint.client.gui.buttons.CloseLoadButton;
+import nl.tue.fingerpaint.client.gui.buttons.CloseResultsButton;
+import nl.tue.fingerpaint.client.gui.buttons.CloseSaveButton;
+import nl.tue.fingerpaint.client.gui.buttons.CloseSingleGraphViewButton;
+import nl.tue.fingerpaint.client.gui.buttons.CompareButton;
+import nl.tue.fingerpaint.client.gui.buttons.ComparePerformanceButton;
+import nl.tue.fingerpaint.client.gui.buttons.ExportSingleGraphButton;
+import nl.tue.fingerpaint.client.gui.buttons.LoadInitDistButton;
+import nl.tue.fingerpaint.client.gui.buttons.LoadProtocolButton;
+import nl.tue.fingerpaint.client.gui.buttons.MenuToggleButton;
+import nl.tue.fingerpaint.client.gui.buttons.MixNowButton;
+import nl.tue.fingerpaint.client.gui.buttons.NewCompareButton;
+import nl.tue.fingerpaint.client.gui.buttons.OverwriteSaveButton;
+import nl.tue.fingerpaint.client.gui.buttons.RemoveSavedResultsButton;
+import nl.tue.fingerpaint.client.gui.buttons.ResetDistButton;
+import nl.tue.fingerpaint.client.gui.buttons.ResetProtocolButton;
+import nl.tue.fingerpaint.client.gui.buttons.SaveDistributionButton;
+import nl.tue.fingerpaint.client.gui.buttons.SaveItemPanelButton;
+import nl.tue.fingerpaint.client.gui.buttons.SaveProtocolButton;
+import nl.tue.fingerpaint.client.gui.buttons.SaveResultsButton;
+import nl.tue.fingerpaint.client.gui.buttons.SquareDrawingToolToggleButton;
+import nl.tue.fingerpaint.client.gui.buttons.ToggleColourButton;
+import nl.tue.fingerpaint.client.gui.buttons.ToolSelectButton;
+import nl.tue.fingerpaint.client.gui.buttons.ViewSingleGraphButton;
+import nl.tue.fingerpaint.client.gui.celllists.CompareSelectPopupCellList;
+import nl.tue.fingerpaint.client.gui.celllists.LoadProtocolCellList;
+import nl.tue.fingerpaint.client.gui.checkboxes.DefineProtocolCheckBox;
+import nl.tue.fingerpaint.client.gui.flextables.ResultsFlexTable;
+import nl.tue.fingerpaint.client.gui.labels.ProtocolRepresentationLabel;
+import nl.tue.fingerpaint.client.gui.labels.SaveMessageLabel;
+import nl.tue.fingerpaint.client.gui.panels.LoadPopupPanel;
+import nl.tue.fingerpaint.client.gui.panels.ProtocolPanelContainer;
+import nl.tue.fingerpaint.client.gui.panels.RemoveResultsPopupPanel;
+import nl.tue.fingerpaint.client.gui.panels.SaveItemPopupPanel;
+import nl.tue.fingerpaint.client.gui.panels.ViewSingleGraphPopupPanel;
+import nl.tue.fingerpaint.client.gui.spinners.CursorSizeSpinner;
+import nl.tue.fingerpaint.client.gui.spinners.NrStepsSpinner;
+import nl.tue.fingerpaint.client.gui.spinners.StepSizeSpinner;
+import nl.tue.fingerpaint.client.gui.textboxes.SaveNameTextBox;
 import nl.tue.fingerpaint.client.resources.FingerpaintConstants;
 
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.CheckBox;
-import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
-import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
@@ -33,15 +70,6 @@ public class GuiState {
 
 	/** The ID for the message to be displayed in the loading panel. */
 	public static final String LOADINGPANEL_MESSAGE_ID = "loading-overlay-message";
-
-	/** The default value of {@link #nrStepsSpinner}. */
-	public static final double NRSTEPS_DEFAULT = 1.0;
-	/** The rate of {@link #nrStepsSpinner}. */
-	public static final double NRSTEPS_RATE = 1.0;
-	/** The minimum value of {@link #nrStepsSpinner}. */
-	public static final double NRSTEPS_MIN = 1.0;
-	/** The maximum value of {@link #nrStepsSpinner}. */
-	public static final double NRSTEPS_MAX = 50.0;
 
 	/**
 	 * Stores how long in milliseconds a SAVE_SUCCESS_MESSAGE should be shown in
@@ -104,22 +132,18 @@ public class GuiState {
 	public static VerticalPanel popupPanelMenu = new VerticalPanel();
 
 	/** Numberspinner to change the size of the drawing tool. */
-	public static NumberSpinner cursorSizeSpinner = new NumberSpinner(
-			CURSOR_DEFAULT, CURSOR_RATE, CURSOR_MIN, CURSOR_MAX, true);
+	public static CursorSizeSpinner cursorSizeSpinner;
 
 	/** Button to toggle between black and white drawing colour. */
 	public static ToggleColourButton toggleColor;
 
 	/** Button to change the shape of the selected drawing tool. */
 	// TODO: Change this to a button on which the current tool is drawn
-	public static Button toolSelectButton = new Button(
-			FingerpaintConstants.INSTANCE.btnSelectTool());
+	public static ToolSelectButton toolSelectButton = new ToolSelectButton();
 
 	/** Button to select the square-shaped drawing tool. */
 	// TODO: Change this to a button on which a square is drawn
-	public static ToggleButton squareDrawingTool = new ToggleButton(
-			FingerpaintConstants.INSTANCE.btnSquareDraw(),
-			FingerpaintConstants.INSTANCE.btnSquareDraw());
+	public static SquareDrawingToolToggleButton squareDrawingTool;
 
 	/** Button to select the circle-shaped drawing tool. */
 	// TODO: Change this to a button on which a circle is drawn
@@ -129,69 +153,63 @@ public class GuiState {
 
 	// --- INITIAL DISTRIBUTION WIDGETS ---------------------------------------
 	/** Button to save an initial concentration distribution. */
-	public static Button saveDistributionButton = new Button(
-			FingerpaintConstants.INSTANCE.btnSaveDist());
+	public static SaveDistributionButton saveDistributionButton;
 
 	/** Button to load an initial concentration distribution. */
-	public static Button loadInitDistButton = new Button(
-			FingerpaintConstants.INSTANCE.btnLoadDist());
+	public static LoadInitDistButton loadInitDistButton;
 
 	/** Button to reset the current distribution to completely white. */
-	public static Button resetDistButton = new Button(
-			FingerpaintConstants.INSTANCE.btnResetDist());
+	public static ResetDistButton resetDistButton;
 
 	// -- SAVE MIXING RESULTS WIDGETS -----------------------------------------
 	/** Button to save the current mixing result. */
-	public static Button saveResultsButton = new Button(
-			FingerpaintConstants.INSTANCE.btnSaveResults());
+	public static SaveResultsButton saveResultsButton;
 
 	// --- REMOVE RESULTS WIDGETS ---------------------------------------------
 	/** Pop-up panel to handle the removal of results. */
-	public static PopupPanel removeResultsPanel = new PopupPanel();
+	public static RemoveResultsPopupPanel removeResultsPanel = new RemoveResultsPopupPanel();
 
 	/** Vertical panel to hold the flextable and close button. */
 	public static VerticalPanel removeResultsVerticalPanel = new VerticalPanel();
 
 	/** Flextable to hold all the result entries. */
-	public static FlexTable resultsFlexTable = new FlexTable();
+	public static ResultsFlexTable resultsFlexTable = new ResultsFlexTable();
 
 	/** Button to remove previously saved mixing results. */
-	public static Button removeSavedResultsButton = new Button(
-			FingerpaintConstants.INSTANCE.btnRemoveResults());
+	public static RemoveSavedResultsButton removeSavedResultsButton = new RemoveSavedResultsButton();
 
 	/** Button to close the remove results pop-up panel. */
-	public static Button closeResultsButton = new Button(
-			FingerpaintConstants.INSTANCE.btnClose());
+	public static CloseResultsButton closeResultsButton = new CloseResultsButton();
 
 	// --- MIXING PROTOCOL WIDGETS --------------------------------------------
+	/**
+	 * CellList that can be used to load a previously saved mixing protocol.
+	 */
+	public static LoadProtocolCellList loadProtocolCellList;
+	
 	/** Container to hold all the widgets related to a mixing protocol. */
-	public static PopupPanel protocolPanelContainer = new PopupPanel();
+	public static ProtocolPanelContainer protocolPanelContainer = new ProtocolPanelContainer();
 
 	/**
 	 * The numberspinner to define how many times the mixing protocol is
 	 * executed.
 	 */
-	public static NumberSpinner nrStepsSpinner = new NumberSpinner(
-			NRSTEPS_DEFAULT, NRSTEPS_RATE, NRSTEPS_MIN, NRSTEPS_MAX, true);
+	public static NrStepsSpinner nrStepsSpinner;
 
 	/** Button to save the current mixing protocol. */
-	public static Button saveProtocolButton = new Button(
-			FingerpaintConstants.INSTANCE.btnSaveProt());
+	public static SaveProtocolButton saveProtocolButton;
 
 	/** Button to load a mixing protocol. */
-	public static Button loadProtocolButton = new Button(
-			FingerpaintConstants.INSTANCE.btnLoadProt());
+	public static LoadProtocolButton loadProtocolButton;
 
 	/** Button that resets the current mixing protocol when pressed. */
-	public static Button resetProtocolButton = new Button(
-			FingerpaintConstants.INSTANCE.btnResetProt());
+	public static ResetProtocolButton resetProtocolButton;
 
 	/**
 	 * Button that executes the current mixing run (initial distribution and
 	 * mixing protocol) when pressed.
 	 */
-	public static Button mixNowButton = new Button(
-			FingerpaintConstants.INSTANCE.btnMixNow());
+	public static MixNowButton mixNowButton;
 
 	/**
 	 * Label to be displayed above the {@link #nrStepsSpinner}, to explain its
@@ -204,7 +222,7 @@ public class GuiState {
 	 * Label that shows the textual representation of the current mixing
 	 * protocol.
 	 */
-	public static Label labelProtocolRepresentation = new Label();
+	public static ProtocolRepresentationLabel labelProtocolRepresentation = new ProtocolRepresentationLabel();
 
 	/**
 	 * Label to be displayed above the protocol-related buttons, to explain
@@ -217,12 +235,11 @@ public class GuiState {
 	 * Checkbox that needs to be checked to define a protocol. If it isn't
 	 * checked, steps (wall movements) are executed directly.
 	 */
-	public static CheckBox defineProtocolCheckBox = new CheckBox(
-			FingerpaintConstants.INSTANCE.cbDefProt());
+	public static DefineProtocolCheckBox defineProtocolCheckBox;
 
 	// --- SAVE POP-UP MENU WIDGETS -------------------------------------------
 	/** Pop-up panel to handle the saving of the current results. */
-	public static PopupPanel saveItemPanel = new PopupPanel();
+	public static SaveItemPopupPanel saveItemPanel = new SaveItemPopupPanel();
 
 	/**
 	 * Horizontal panel to hold the Save and Cancel buttons in the pop-up panel.
@@ -239,22 +256,19 @@ public class GuiState {
 	 * Button to save the item under the specified name in the
 	 * {@link #saveNameTextBox}.
 	 */
-	public static Button saveItemPanelButton = new Button(
-			FingerpaintConstants.INSTANCE.btnSave());
+	public static SaveItemPanelButton saveItemPanelButton;
 
 	/** Cancel button inside the save pop-up menu. */
-	public static Button cancelSaveResultsButton = new Button(
-			FingerpaintConstants.INSTANCE.btnCancel());
+	public static CancelSaveResultsButton cancelSaveResultsButton = new CancelSaveResultsButton();
 
 	/** Ok / Cancel button to close the save results or overwrite pop-up panel. */
-	public static Button closeSaveButton = new Button(
-			FingerpaintConstants.INSTANCE.btnClose());
+	public static CloseSaveButton closeSaveButton = new CloseSaveButton();
 
 	/** Textbox to input the name in to name the file. */
-	public static TextBox saveNameTextBox = new TextBox();
+	public static SaveNameTextBox saveNameTextBox = new SaveNameTextBox();
 
 	/** Label to indicate that the chosen name is already in use. */
-	public static Label saveMessageLabel = new Label();
+	public static SaveMessageLabel saveMessageLabel = new SaveMessageLabel();
 
 	// --- OVERWRITE POP-UP MENU WIDGETS --------------------------------------
 	/**
@@ -276,8 +290,7 @@ public class GuiState {
 	public static VerticalPanel overwriteSaveVerticalPanel = new VerticalPanel();
 
 	/** Button to overwrite the item that is currently being saved. */
-	public static Button overwriteSaveButton = new Button(
-			FingerpaintConstants.INSTANCE.btnOverwrite());
+	public static OverwriteSaveButton overwriteSaveButton;
 
 	// --- LOAD POP-UP MENU WIDGETS -------------------------------------------
 	/**
@@ -287,19 +300,16 @@ public class GuiState {
 	public static VerticalPanel loadVerticalPanel = new VerticalPanel();
 
 	/** Pop-up panel to handle the loading of previously saved items. */
-	public static PopupPanel loadPanel = new PopupPanel();
+	public static LoadPopupPanel loadPanel = new LoadPopupPanel();
 
 	/** Button to close the load pop-up menu. */
-	public static Button closeLoadButton = new Button(
-			FingerpaintConstants.INSTANCE.btnClose());
+	public static CloseLoadButton closeLoadButton = new CloseLoadButton();
 
 	// --- STEP SIZE WIDGETS --------------------------------------------------
 	/**
 	 * The numberspinner to define the step size of a single wall movement.
 	 */
-	public static NumberSpinner sizeSpinner = new NumberSpinner(
-			MixingStep.STEP_DEFAULT, MixingStep.STEP_UNIT, MixingStep.STEP_MIN,
-			MixingStep.STEP_MAX, true);
+	public static StepSizeSpinner sizeSpinner;
 
 	/**
 	 * Label to be displayed above the {@link #sizeSpinner}, to explain its
@@ -311,9 +321,9 @@ public class GuiState {
 	// --- VIEW SINGLE GRAPH WIDGETS ------------------------------------------
 	/**
 	 * Pop-up menu to display the performance of a single graph. It is opened
-	 * when {@link #viewSingleGraph} is clicked. It contains a vertical panel.
+	 * when {@link #viewSingleGraphButton} is clicked. It contains a vertical panel.
 	 */
-	public static PopupPanel viewSingleGraphPopupPanel = new PopupPanel();
+	public static ViewSingleGraphPopupPanel viewSingleGraphPopupPanel = new ViewSingleGraphPopupPanel();
 
 	/**
 	 * Horizontal panel to contain the Close and Export buttons.
@@ -332,18 +342,21 @@ public class GuiState {
 	public static SimplePanel viewSingleGraphGraphPanel = new SimplePanel();
 
 	/** Button to view the performance of the previously executed mixing run. */
-	public static Button viewSingleGraph = new Button(
-			FingerpaintConstants.INSTANCE.btnViewSingleGraph());
+	public static ViewSingleGraphButton viewSingleGraphButton;
 
 	/** Button to close the performance pop-up. */
-	public static Button closeSingleGraphViewButton = new Button(
-			FingerpaintConstants.INSTANCE.btnClose());
+	public static CloseSingleGraphViewButton closeSingleGraphViewButton = new CloseSingleGraphViewButton();
 
 	/** Button to export the image of the current mixing performance. */
-	public static Button exportSingleGraphButton = new Button(
-			FingerpaintConstants.INSTANCE.btnExportGraph());
+	public static ExportSingleGraphButton exportSingleGraphButton;
 
 	// --- COMPARE PERFORMANCE WIDGETS ----------------------------------------
+	/**
+	 * CellList that can be used to select multiple mixing runs from all
+	 * available saved mixing runs.
+	 */
+	public static CompareSelectPopupCellList compareSelectPopupCellList = new CompareSelectPopupCellList();
+	
 	/**
 	 * Pop-up panel to display all the previously stored mixing runs with
 	 * performance. It also contains the Compare and Close buttons.
@@ -366,41 +379,69 @@ public class GuiState {
 	 * Button to compare the performance of previously saved mixing runs. When
 	 * clicked, it opens the {@link #compareSelectPopupPanel} pop-up.
 	 */
-	public static Button comparePerformanceButton = new Button(
-			FingerpaintConstants.INSTANCE.btnComparePerfomance());
+	public static ComparePerformanceButton comparePerformanceButton = new ComparePerformanceButton();
 
 	/**
 	 * Button to compare the performance of the selected mixing runs.
 	 */
-	public static Button compareButton = new Button(
-			FingerpaintConstants.INSTANCE.btnCompare());
+	public static CompareButton compareButton;
 
 	/** Cancel button inside the compare performance pop-up. */
-	public static Button cancelCompareButton = new Button(
-			FingerpaintConstants.INSTANCE.btnCancel());
+	public static CancelCompareButton cancelCompareButton;
 
 	/** Close button inside the compare performance pop-up. */
-	public static Button closeCompareButton = new Button(
-			FingerpaintConstants.INSTANCE.btnClose());
+	public static CloseCompareButton closeCompareButton;
 
 	/**
 	 * Button inside the compare performance pop-up to start a new comparison.
 	 * When clicked, it closes the {@link #comparePopupPanel} pop-up and opens
 	 * the {@link #compareSelectPopupPanel}pop-up
 	 */
-	public static Button newCompareButton = new Button(
-			FingerpaintConstants.INSTANCE.btnNewCompare());
+	public static NewCompareButton newCompareButton = new NewCompareButton();
 
 	/**
-	 * sets all debug ID's for easier debugging (except for the CellBrowser)
+	 * Sets the IDs for all widgets in this class (except the CellBrowser,
+	 * ToggleColourButton and MenuToggleButton). The ID is either used in the
+	 * CSS file or for debugging purposes. A widget may <b>never</b> have an
+	 * ordinary ID and a debug ID at the same time.
 	 */
-	public static void setDebugIDs(){
-		defineProtocolCheckBox.ensureDebugId("defineProtocolCheckbox");
-		mixNowButton.ensureDebugId("mixNowButton");
-		viewSingleGraph.ensureDebugId("viewGraph");
-		nrStepsSpinner.ensureDebugId("nrStepsSpinner");
-		saveResultsButton.ensureDebugId("saveResults");
-		comparePerformanceButton.ensureDebugId("comparePerformance");
+	public static void setIDs() {
+		loadingPanel.getElement().setId(GuiState.LOADINGPANEL_ID);
+		loadingPanelMessage.getElement()
+				.setId(GuiState.LOADINGPANEL_MESSAGE_ID);
+
+		menuPanel.getElement().setId("menuPanel");
+		menuPanelWrapper.getElement().setId("menuPanelWrapper");
+
+		toolSelector.ensureDebugId("toolSelector");
+		popupPanelPanel.ensureDebugId("popupPanelPanel");
+		popupPanelMenu.ensureDebugId("popupPanelMenu");		
+
+		removeResultsVerticalPanel.ensureDebugId("removeResultsVerticalPanel");
+
+		nrStepsLabel.ensureDebugId("nrStepsLabel");
+		labelProtocolLabel.ensureDebugId("labelProtocolLabel");
+
+		saveButtonsPanel.ensureDebugId("saveButtonsPanel");
+		saveItemVerticalPanel.ensureDebugId("saveItemVerticalPanel");
+
+		overwriteSavePanel.ensureDebugId("overwriteSavePanel");
+		overwriteButtonsPanel.ensureDebugId("overwriteButtonsPanel");
+		overwriteSaveVerticalPanel.ensureDebugId("overwriteSaveVerticalPanel");
+
+		loadVerticalPanel.ensureDebugId("loadVerticalPanel");
+
+		sizeLabel.ensureDebugId("sizeLabel");
+
+		viewSingleGraphHorizontalPanel
+				.ensureDebugId("viewSingleGraphHorizontalPanel");
+		viewSingleGraphVerticalPanel
+				.ensureDebugId("viewSingleGraphVerticalPanel");
+		viewSingleGraphGraphPanel.ensureDebugId("viewSingleGraphGraphPanel");
+
+		compareSelectPopupPanel.ensureDebugId("compareSelectPopupPanel");
+		comparePopupPanel.ensureDebugId("comparePopupPanel");
+		compareGraphPanel.getElement().setId("compareGraphPanel");
 	}
-	
+
 }

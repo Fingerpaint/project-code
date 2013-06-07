@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import nl.tue.fingerpaint.client.gui.NotificationPanel;
+import nl.tue.fingerpaint.client.gui.panels.NotificationPopupPanel;
 import nl.tue.fingerpaint.client.json.FingerpaintJsonizer;
 import nl.tue.fingerpaint.client.model.MixingProtocol;
 import nl.tue.fingerpaint.shared.GeometryNames;
@@ -144,7 +144,7 @@ public class StorageManager {
 								.toString(new HashMap<String, Object>()));
 					} catch (JavaScriptException e) {
 						if (e.getName().equals("QUOTA_EXCEEDED_ERR")) {
-							new NotificationPanel("Storage capacity exceeded.")
+							new NotificationPopupPanel("Storage capacity exceeded.")
 									.show(3000);
 						}
 					}
@@ -158,7 +158,7 @@ public class StorageManager {
 								FingerpaintJsonizer.toString(secondLevel));
 					} catch (JavaScriptException e) {
 						if (e.getName().equals("QUOTA_EXCEEDED_ERR")) {
-							new NotificationPanel("Storage capacity exceeded.")
+							new NotificationPopupPanel("Storage capacity exceeded.")
 									.show(3000);
 						}
 					}
@@ -179,7 +179,7 @@ public class StorageManager {
 								FingerpaintJsonizer.toString(secondLevel));
 					} catch (JavaScriptException e) {
 						if (e.getName().equals("QUOTA_EXCEEDED_ERR")) {
-							new NotificationPanel("Storage capacity exceeded.")
+							new NotificationPopupPanel("Storage capacity exceeded.")
 									.show(3000);
 						}
 					}
@@ -434,7 +434,7 @@ public class StorageManager {
 						FingerpaintJsonizer.toString(firstLevel));
 			} catch (JavaScriptException e) {
 				if (e.getName().equals("QUOTA_EXCEEDED_ERR")) {
-					new NotificationPanel("Storage capacity exceeded.")
+					new NotificationPopupPanel("Storage capacity exceeded.")
 							.show(3000);
 				}
 			}
@@ -504,7 +504,7 @@ public class StorageManager {
 						FingerpaintJsonizer.toString(firstLevel));
 			} catch (JavaScriptException e) {
 				if (e.getName().equals("QUOTA_EXCEEDED_ERR")) {
-					new NotificationPanel("Storage capacity exceeded.")
+					new NotificationPopupPanel("Storage capacity exceeded.")
 							.show(3000);
 				}
 			}
@@ -560,7 +560,7 @@ public class StorageManager {
 					FingerpaintJsonizer.toString(firstLevel));
 		} catch (JavaScriptException e) {
 			if (e.getName().equals("QUOTA_EXCEEDED_ERR")) {
-				new NotificationPanel("Storage capacity exceeded.").show(3000);
+				new NotificationPopupPanel("Storage capacity exceeded.").show(3000);
 			}
 		}
 		return true;
@@ -586,7 +586,7 @@ public class StorageManager {
 							FingerpaintJsonizer.toString(firstLevel));
 				} catch (JavaScriptException e) {
 					if (e.getName().equals("QUOTA_EXCEEDED_ERR")) {
-						new NotificationPanel("Storage capacity exceeded.")
+						new NotificationPopupPanel("Storage capacity exceeded.")
 								.show(3000);
 					}
 				}

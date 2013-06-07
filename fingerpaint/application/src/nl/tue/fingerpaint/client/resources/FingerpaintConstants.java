@@ -27,6 +27,35 @@ public interface FingerpaintConstants extends Constants {
 	@DefaultStringValue("Loading geometries and mixers...")
 	public String loadingGeometries();
 
+	/**
+	 * @return Localised string that indicates that the application is preparing
+	 *         the data to be send to the server.
+	 */
+	@DefaultStringValue("Preparing data...")
+	public String prepareData();
+
+	/**
+	 * @return Localised string that indicates that the application is busy
+	 *         running the simulation.
+	 */
+	@DefaultStringValue("Running the simulation. Please wait...")
+	public String runSimulation();
+
+	// --- CONSTANTS FOR FLEX TABLE -------------------------------------------
+	/**
+	 * @return Localised string that contains the text for the first row of the
+	 *         flextable {@link GuiState#resultsFlexTable}.
+	 */
+	@DefaultStringValue("File name")
+	public String flexFileName();
+
+	/**
+	 * @return Localised string that contains the text for the second row of the
+	 *         flextable {@link GuiState#resultsFlexTable}.
+	 */
+	@DefaultStringValue("Remove")
+	public String flexRemove();
+
 	// --- CONSTANTS FOR LABELS -----------------------------------------------
 	/**
 	 * @return Localised string that contains the text for the
@@ -79,7 +108,7 @@ public interface FingerpaintConstants extends Constants {
 	 */
 	@DefaultStringValue("circle")
 	public String btnCircleDraw();
-	
+
 	/**
 	 * @return Localised string that contains the text for a save button.
 	 */
@@ -176,7 +205,7 @@ public interface FingerpaintConstants extends Constants {
 
 	/**
 	 * @return Localised string that contains the text for the
-	 *         {@link GuiState#viewSingleGraph} button.
+	 *         {@link GuiState#viewSingleGraphButton} button.
 	 */
 	@DefaultStringValue("View single graph")
 	public String btnViewSingleGraph();
@@ -219,16 +248,31 @@ public interface FingerpaintConstants extends Constants {
 
 	// --- CONSTANTS FOR ERRORS -----------------------------------------------
 	/**
-	 * @return Localised string to indicate that a request timeout occurred.
+	 * @return Localised string to indicate that a request timeout occurred on
+	 *         the simulation server.
 	 */
 	@DefaultStringValue("The simulation server did not respond in"
 			+ " time. Try again later.")
 	public String simulationRequestTimeout();
 
 	/**
+	 * @return Localised string to indicate that the server could not be
+	 *         reached.
+	 */
+	@DefaultStringValue("Could not reach the server, try again later.")
+	public String notReachServer();
+
+	/**
 	 * @return Localised string to indicate that an error has occurred.
 	 */
 	@DefaultStringValue("An error occurred!")
 	public String errorOccured();
+
+	/**
+	 * @return Localised string to indicate that the mixing performance graph
+	 *         could not be loaded.
+	 */
+	@DefaultStringValue("Loading graph failed.")
+	public String loadingGraphFailed();
 
 }

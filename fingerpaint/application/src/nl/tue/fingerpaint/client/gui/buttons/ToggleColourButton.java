@@ -1,4 +1,4 @@
-package nl.tue.fingerpaint.client.gui;
+package nl.tue.fingerpaint.client.gui.buttons;
 
 import nl.tue.fingerpaint.client.model.ApplicationState;
 import nl.tue.fingerpaint.shared.utils.Colour;

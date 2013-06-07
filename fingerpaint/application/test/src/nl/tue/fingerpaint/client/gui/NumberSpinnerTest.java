@@ -1,7 +1,7 @@
 package nl.tue.fingerpaint.client.gui;
 
-import nl.tue.fingerpaint.client.gui.NumberSpinner;
-import nl.tue.fingerpaint.client.gui.NumberSpinnerListener;
+import nl.tue.fingerpaint.client.gui.spinners.NumberSpinner;
+import nl.tue.fingerpaint.client.gui.spinners.NumberSpinnerListener;
 
 import org.junit.Test;
 

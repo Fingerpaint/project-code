@@ -53,7 +53,7 @@
 	<source path='shared' />
 	
 	<!--  Supported languages (apart from English, which is the default language) -->
-	<extend-property name="locale" values="nl"/>
+<!-- 	<extend-property name="locale" values="nl"/> -->
 	
 	
 </module>

@@ -1,4 +1,4 @@
-package nl.tue.fingerpaint.client.gui;
+package nl.tue.fingerpaint.client.gui.spinners;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;

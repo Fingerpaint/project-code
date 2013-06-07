@@ -1,4 +1,4 @@
-package nl.tue.fingerpaint.client.gui;
+package nl.tue.fingerpaint.client.gui.panels;
 
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Label;
@@ -9,7 +9,7 @@ import com.google.gwt.user.client.ui.PopupPanel;
  * 
  * @author Group Fingerpaint
  */
-public class NotificationPanel {
+public class NotificationPopupPanel {
 	/**
 	 * How long the notification panel will be visible.
 	 */
@@ -24,12 +24,12 @@ public class NotificationPanel {
 	protected PopupPanel panel;
 
 	/**
-	 * Creates a NotificationPanel with the message {@code message}.
+	 * Creates a {@link NotificationPopupPanel} with the message {@code message}.
 	 * 
 	 * @param message
 	 *            The message to show in the notification.
 	 */
-	public NotificationPanel(String message) {
+	public NotificationPopupPanel(String message) {
 		messageLabel = new Label(message);
 
 		panel = new PopupPanel();
