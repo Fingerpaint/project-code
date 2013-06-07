@@ -14,7 +14,6 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
 
@@ -49,17 +48,6 @@ public class LoadInitDistButton extends Button implements ClickHandler {
 
 	@Override
 	public void onClick(ClickEvent event) {
-		GuiState.loadVerticalPanel = new VerticalPanel();
-		GuiState.loadPanel.setModal(true);
-		GuiState.loadPanel.add(GuiState.loadVerticalPanel);
-
-		GuiState.closeLoadButton.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				GuiState.loadPanel.removeFromParent();
-			}
-		});
-
 		// Get all initial distributions for current geometry
 		List<String> geometryDistributions = StorageManager.INSTANCE
 				.getDistributions(GeometryNames.getShortName(as
