@@ -570,6 +570,76 @@ public class StorageManager {
 	}
 
 	/**
+	 * Remove a distribution with the given name from the local storage.
+	 * 
+	 * @param geometry
+	 *            The short name of the geometry the distribution resides under.
+	 * @param key
+	 *            The name of the distribution to remove.
+	 * @return True if a distribution with the given name is removed from the
+	 *         storage, false if no distribution with the given name is present
+	 *         in the storage.
+	 */
+	public boolean removeDistribution(String key, String geometry) {
+		HashMap<String, Object> firstLevel = FingerpaintJsonizer
+				.hashMapFromString(localStorage.getItem(KEY_INITDIST));
+		if (firstLevel.containsKey(geometry)) {
+			@SuppressWarnings("unchecked")
+			HashMap<String, Object> secondLevel = (HashMap<String, Object>) firstLevel
+					.get(geometry);
+			for (String secondLevelKey : secondLevel.keySet()) {
+				if (secondLevelKey.equals(key)) {
+					secondLevel.remove(key);
+					try {
+						localStorage.setItem(KEY_INITDIST,
+								FingerpaintJsonizer.toString(firstLevel));
+					} catch (JavaScriptException e) {
+						new NotificationPanel("Storage capacity exceeded.")
+								.show(3000);
+					}
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Remove a protocol with the given name from the local storage.
+	 * 
+	 * @param geometry
+	 *            The short name of the geometry the protocol resides under.
+	 * @param key
+	 *            The name of the protocol to remove.
+	 * @return True if a protocol with the given name is removed from the
+	 *         storage, false if no protocol with the given name is present in
+	 *         the storage.
+	 */
+	public boolean removeProtocol(String key, String geometry) {
+		HashMap<String, Object> firstLevel = FingerpaintJsonizer
+				.hashMapFromString(localStorage.getItem(KEY_PROTOCOLS));
+		if (firstLevel.containsKey(geometry)) {
+			@SuppressWarnings("unchecked")
+			HashMap<String, Object> secondLevel = (HashMap<String, Object>) firstLevel
+					.get(geometry);
+			for (String secondLevelKey : secondLevel.keySet()) {
+				if (secondLevelKey.equals(key)) {
+					secondLevel.remove(key);
+					try {
+						localStorage.setItem(KEY_PROTOCOLS,
+								FingerpaintJsonizer.toString(firstLevel));
+					} catch (JavaScriptException e) {
+						new NotificationPanel("Storage capacity exceeded.")
+								.show(3000);
+					}
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	/**
 	 * Remove a result with the given name from the local storage.
 	 * 
 	 * @param key
