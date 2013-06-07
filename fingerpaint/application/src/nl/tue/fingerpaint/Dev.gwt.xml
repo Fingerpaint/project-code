@@ -43,7 +43,7 @@
 	<set-property name="gwt.logging.hasWidgetsHandler" value="DISABLED" />
 	<set-property name="gwt.logging.popupHandler" value="DISABLED" />
 	<set-property name="gwt.logging.systemHandler" value="DISABLED" />
-	<set-property name="gwt.logging.simpleRemoteHandler" value="DISABLED" />	
+	<set-property name="gwt.logging.simpleRemoteHandler" value="DISABLED" />
 
 	<!-- Specify the app entry point class. -->
 	<entry-point class='nl.tue.fingerpaint.client.Fingerpaint' />
