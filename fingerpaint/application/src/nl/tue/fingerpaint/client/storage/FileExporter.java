@@ -4,7 +4,9 @@ public class FileExporter {
 
 	/**
 	 * Exports the line chart that is currently shown on screen as an svg
-	 * image.
+	 * image. " xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\"" is 
+	 * automatically added to the resulting svg, so it should not already
+	 * be present.
 	 */
 	public static void exportGraph(String svg) {
 		// Add tags to indicate that this should be an svg image
