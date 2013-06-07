@@ -37,8 +37,7 @@ public class ExportSingleGraphButton extends Button implements ClickHandler {
 
 	@Override
 	public void onClick(ClickEvent event) {
-		// TODO: Insert Method-call which exports the graph, possibly with
-		// fp.something()
+		fp.exportGraph();
 	}
 
 }

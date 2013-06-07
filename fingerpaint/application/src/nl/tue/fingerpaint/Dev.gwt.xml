@@ -22,7 +22,7 @@
 	<inherits name="com.google.gwt.resources.Resources" />
 	
 	<!-- use I18N -->
-	<inherits name="com.google.gwt.i18n.I18N"/>
+<!-- 	<inherits name="com.google.gwt.i18n.I18N"/> -->
 	
 	<!-- use JSON -->
 	<inherits name="com.google.gwt.json.JSON" />
@@ -43,7 +43,7 @@
 	<set-property name="gwt.logging.hasWidgetsHandler" value="DISABLED" />
 	<set-property name="gwt.logging.popupHandler" value="DISABLED" />
 	<set-property name="gwt.logging.systemHandler" value="DISABLED" />
-	<set-property name="gwt.logging.simpleRemoteHandler" value="DISABLED" />	
+	<set-property name="gwt.logging.simpleRemoteHandler" value="DISABLED" />
 
 	<!-- Specify the app entry point class. -->
 	<entry-point class='nl.tue.fingerpaint.client.Fingerpaint' />
@@ -54,4 +54,6 @@
 	
 	<!--  Supported languages (apart from English, which is the default language) -->
 <!-- 	<extend-property name="locale" values="nl"/> -->
+	
+	<set-property name="user.agent" value="gecko1_8" />
 </module>

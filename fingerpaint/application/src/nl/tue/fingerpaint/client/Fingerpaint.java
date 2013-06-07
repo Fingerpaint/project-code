@@ -15,12 +15,14 @@ import nl.tue.fingerpaint.client.simulator.Simulation;
 import nl.tue.fingerpaint.client.simulator.SimulationResult;
 import nl.tue.fingerpaint.client.simulator.SimulatorService;
 import nl.tue.fingerpaint.client.simulator.SimulatorServiceAsync;
+import nl.tue.fingerpaint.client.storage.FileExporter;
 import nl.tue.fingerpaint.client.storage.ResultStorage;
 import nl.tue.fingerpaint.client.storage.StorageManager;
 import nl.tue.fingerpaint.shared.GeometryNames;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.IFrameElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.http.client.RequestTimeoutException;
@@ -66,6 +68,9 @@ public class Fingerpaint implements EntryPoint {
 	 * This is the entry point method.
 	 */
 	public void onModuleLoad() {
+		// Set IDs or debug IDs.
+		GuiState.setIDs();
+		
 		// Load CSS
 		FingerpaintResources.INSTANCE.css().ensureInjected();
 
@@ -77,11 +82,10 @@ public class Fingerpaint implements EntryPoint {
 
 		// Add label that may contain explanatory text
 		GuiState.loadingPanelMessage = new Label(
-				FingerpaintConstants.INSTANCE.loadingGeometries(), false);
+		FingerpaintConstants.INSTANCE.loadingGeometries(), false);
 		GuiState.loadingPanelMessage.getElement().setId(
 				GuiState.LOADINGPANEL_MESSAGE_ID);
 		GuiState.loadingPanel.add(GuiState.loadingPanelMessage);
-		GuiState.loadingPanel.getElement().setId(GuiState.LOADINGPANEL_ID);
 
 		// initialise the underlying model of the application
 		as = new ApplicationState();
@@ -189,6 +193,17 @@ public class Fingerpaint implements EntryPoint {
 	}
 
 	/**
+	 * Save the currently shown graph to disk in svg format.
+	 */
+	public void exportGraph() {
+		String svg = IFrameElement.as(DOM.getElementById("GChart_Frame_0"))
+				.getContentDocument().getElementById("chartArea")
+				.getInnerHTML();
+
+		FileExporter.exportGraph(svg); 
+	}
+	
+	/**
 	 * Change the message that is displayed in the load panel below the loading
 	 * animation.
 	 * 
@@ -218,6 +233,7 @@ public class Fingerpaint implements EntryPoint {
 		}
 	}
 
+
 	/**
 	 * this method is used to acquire the size of the current cursor in pixels
 	 * 
@@ -227,8 +243,9 @@ public class Fingerpaint implements EntryPoint {
 		return (int) GuiState.cursorSizeSpinner.getValue() - 1;
 	}
 
+
 	/**
-	 * Show the panel in which
+	 * Shows {@link GuiState#saveItemPanel} and clears {@link GuiState#saveNameTextBox}. Also gives focus to the textbox.
 	 */
 	public void showSavePanel() {
 		GuiState.saveItemPanel.center();
@@ -243,7 +260,7 @@ public class Fingerpaint implements EntryPoint {
 	 * @param name
 	 *            Name of save "file".
 	 * @param canOverwrite
-	 *            If we can overwrite an already-exisiting "file" with the given
+	 *            If we can overwrite an already-existing "file" with the given
 	 *            name or not.
 	 * @return {@code true} if "file" was saved, {@code false} otherwise
 	 */
@@ -265,8 +282,13 @@ public class Fingerpaint implements EntryPoint {
 			result.setSegregation(as.getSegregation());
 			result.setNrSteps(as.getNrSteps());
 
-			return StorageManager.INSTANCE
+			try {
+				return StorageManager.INSTANCE
 					.putResult(name, result, canOverwrite);
+			} catch (Exception e) {
+				GWT.log("Saving results encountered an error", e);
+				return false;
+			}
 		}
 		return false;
 	}
@@ -317,7 +339,7 @@ public class Fingerpaint implements EntryPoint {
 		graphVisualisator = new GraphVisualisator();
 		// Adds the graph to the Panel-parameter of
 		// visualisator.getOnLoadCallBack()
-		try {
+		try {			
 			VisualizationUtils.loadVisualizationApi(graphVisualisator
 					.createGraph(panel, names, performance, onLoad),
 					LineChart.PACKAGE);

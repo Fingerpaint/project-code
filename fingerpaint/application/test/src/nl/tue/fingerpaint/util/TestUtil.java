@@ -52,42 +52,20 @@ public class TestUtil {
 	public static void navigateCellBrowser(WebDriver driver, int firstTab, int secondTab) {
 		
 		//selecting the rectangle geometry in the cellBrowser
-//		driver.findElement(By.cssSelector("#gwt-debug-cell > div:nth-child(3) " +
-//				"> div:first-child > div:first-child > div:first-child" +
-//				" > div:first-child > div:first-child > div:nth-child(" + firstTab + ")")).click();
-//		
-//		//selecting the default mixer for the rectangle geometry in the cellBrowser
-//		driver.findElement(By.cssSelector("#gwt-debug-cell > div:nth-child(5) " +
-//				"> div:first-child > div:first-child > div:first-child " +
-//				"> div:first-child > div:first-child > div:nth-child(" + secondTab + ")")).click();
-		
-		try {
-			Thread.sleep(5000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		driver.findElement(By.xpath("//*[@id='gwt-debug-cell']/div[3]" +
-				"/div[1]/div[1]/div[1]/div[1]/div[1]/div[" + firstTab + "]")).click();
-		
-		try {
-			Thread.sleep(5000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		driver.findElement(
+				By.cssSelector("#gwt-debug-cell > div:nth-child(3) " +
+				"> div:first-child > div:first-child > div:first-child" +
+				" > div:first-child > div:first-child > " +
+				"div:nth-child(" + firstTab + ")")
+		).click();
 		
 		//selecting the default mixer for the rectangle geometry in the cellBrowser
-		driver.findElement(By.xpath("//*[@id='gwt-debug-cell']/div[5]" +
-				"/div[1]/div[1]/div[1]/div[1]/div[1]/div[" + secondTab + "]")).click();
-		
-		try {
-			Thread.sleep(5000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		driver.findElement(
+				By.cssSelector("#gwt-debug-cell > div:nth-child(5) " +
+				"> div:first-child > div:first-child > div:first-child " +
+				"> div:first-child > div:first-child > " +
+				"div:nth-child(" + secondTab + ")")
+		).click();
 	}
 
 	public static void drawRectangularCanvas(
@@ -124,5 +102,14 @@ public class TestUtil {
 		builder = builder.moveByOffset(left ? length : -length, 0);
 		builder = builder.release();
 		builder.build().perform();
+	}
+	
+	public static void selectSavedResultsForPerformance(
+			WebDriver driver, int... results) {
+		for (int result : results) {
+			driver.findElement(By.cssSelector(
+					"#gwt-debug-compareSelectPopupCellList > div " +
+					"> div:nth-child(" + result + ")")).click();
+		}
 	}
 }

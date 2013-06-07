@@ -3,10 +3,13 @@ package nl.tue.fingerpaint.client.storage;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import nl.tue.fingerpaint.client.gui.panels.NotificationPopupPanel;
 import nl.tue.fingerpaint.client.json.FingerpaintJsonizer;
 import nl.tue.fingerpaint.client.model.MixingProtocol;
+import nl.tue.fingerpaint.client.resources.FingerpaintConstants;
 import nl.tue.fingerpaint.shared.GeometryNames;
 
 import com.google.gwt.core.client.JavaScriptException;
@@ -545,13 +548,14 @@ public class StorageManager {
 	 */
 	public boolean putResult(String key, ResultStorage result, boolean overwrite) {
 		if (state != INITIALISED) {
+			Logger.getLogger("").log(Level.INFO, "Not initialized");
 			return false;
 		}
 
 		if (isNameInUse(KEY_RESULTS, key, null) && !overwrite) {
+			Logger.getLogger("").log(Level.INFO, "Name in use.");
 			return false;
 		}
-
 		HashMap<String, Object> firstLevel = FingerpaintJsonizer
 				.hashMapFromString(localStorage.getItem(KEY_RESULTS));
 		firstLevel.put(key, FingerpaintJsonizer.toString(result));
@@ -560,7 +564,9 @@ public class StorageManager {
 					FingerpaintJsonizer.toString(firstLevel));
 		} catch (JavaScriptException e) {
 			if (e.getName().equals("QUOTA_EXCEEDED_ERR")) {
-				new NotificationPopupPanel("Storage capacity exceeded.").show(3000);
+				new NotificationPopupPanel(FingerpaintConstants.INSTANCE.capacityExceeded()).show(3000);
+			} else {
+				Logger.getLogger("").log(Level.INFO, "Unknown error during saving.");
 			}
 		}
 		return true;

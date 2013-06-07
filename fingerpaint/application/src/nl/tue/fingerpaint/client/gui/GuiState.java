@@ -9,6 +9,7 @@ import nl.tue.fingerpaint.client.gui.buttons.CloseSaveButton;
 import nl.tue.fingerpaint.client.gui.buttons.CloseSingleGraphViewButton;
 import nl.tue.fingerpaint.client.gui.buttons.CompareButton;
 import nl.tue.fingerpaint.client.gui.buttons.ComparePerformanceButton;
+import nl.tue.fingerpaint.client.gui.buttons.ExportMultipleGraphsButton;
 import nl.tue.fingerpaint.client.gui.buttons.ExportSingleGraphButton;
 import nl.tue.fingerpaint.client.gui.buttons.LoadInitDistButton;
 import nl.tue.fingerpaint.client.gui.buttons.LoadProtocolButton;
@@ -108,6 +109,7 @@ public class GuiState {
 	// --- MENU WIDGETS -------------------------------------------------------
 	/** Vertical panel to contain all menu items. */
 	public static VerticalPanel menuPanel = new VerticalPanel();
+
 	/** Wrapper for the {@link #menuPanel}, used in animation. */
 	public static SimplePanel menuPanelWrapper = new SimplePanel();
 
@@ -321,7 +323,12 @@ public class GuiState {
 	// --- VIEW SINGLE GRAPH WIDGETS ------------------------------------------
 	/**
 	 * Pop-up menu to display the performance of a single graph. It is opened
+<<<<<<< HEAD
 	 * when {@link #viewSingleGraphButton} is clicked. It contains a vertical panel.
+=======
+	 * when {@link #viewSingleGraphButton} is clicked. It contains a vertical
+	 * panel.
+>>>>>>> fd27f4c764dcd4ede95113e34e4ac353d0bcf50f
 	 */
 	public static ViewSingleGraphPopupPanel viewSingleGraphPopupPanel = new ViewSingleGraphPopupPanel();
 
@@ -350,6 +357,9 @@ public class GuiState {
 	/** Button to export the image of the current mixing performance. */
 	public static ExportSingleGraphButton exportSingleGraphButton;
 
+	/** Button to export the image of multiple mixing performances. */
+	public static ExportMultipleGraphsButton exportMultipleGraphButton;
+	
 	// --- COMPARE PERFORMANCE WIDGETS ----------------------------------------
 	/**
 	 * CellList that can be used to select multiple mixing runs from all

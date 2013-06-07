@@ -7,6 +7,7 @@ import nl.tue.fingerpaint.client.gui.buttons.CancelCompareButton;
 import nl.tue.fingerpaint.client.gui.buttons.CircleDrawingToolToggleButton;
 import nl.tue.fingerpaint.client.gui.buttons.CloseCompareButton;
 import nl.tue.fingerpaint.client.gui.buttons.CompareButton;
+import nl.tue.fingerpaint.client.gui.buttons.ExportMultipleGraphsButton;
 import nl.tue.fingerpaint.client.gui.buttons.ExportSingleGraphButton;
 import nl.tue.fingerpaint.client.gui.buttons.LoadInitDistButton;
 import nl.tue.fingerpaint.client.gui.buttons.LoadProtocolButton;
@@ -357,8 +358,10 @@ public class CustomTreeModel implements TreeViewModel {
 		HorizontalPanel horPanel = new HorizontalPanel();
 		GuiState.closeCompareButton = new CloseCompareButton(
 				cellList.getSelectionModel());
-		horPanel.add(GuiState.closeCompareButton);
 		horPanel.add(GuiState.newCompareButton);
+		GuiState.exportMultipleGraphButton = new ExportMultipleGraphsButton(fp);
+		horPanel.add(GuiState.exportMultipleGraphButton);
+		horPanel.add(GuiState.closeCompareButton);
 		GuiState.comparePopupPanel.add(vertPanel);
 		vertPanel.add(GuiState.compareGraphPanel);
 		vertPanel.add(horPanel);

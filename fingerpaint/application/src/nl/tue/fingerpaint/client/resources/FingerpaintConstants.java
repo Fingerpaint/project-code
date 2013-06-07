@@ -216,6 +216,13 @@ public interface FingerpaintConstants extends Constants {
 	 */
 	@DefaultStringValue("Export graph")
 	public String btnExportGraph();
+	
+	/**
+	 * @return Localised string that contains the text for the
+	 *         {@link GuiState#exportSingleGraphButton} button.
+	 */
+	@DefaultStringValue("Export graphs")
+	public String btnExportGraphs();
 
 	/**
 	 * @return Localised string that contains the text for the
@@ -274,5 +281,12 @@ public interface FingerpaintConstants extends Constants {
 	 */
 	@DefaultStringValue("Loading graph failed.")
 	public String loadingGraphFailed();
+
+	/**
+	 * @return Localised string to indicate that saving an item was not
+	 *         successful because the local storage is full.
+	 */
+	@DefaultStringValue("Storage capacity exceeded.")
+	public String capacityExceeded();
 
 }

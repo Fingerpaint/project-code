@@ -143,8 +143,8 @@ public class RectangleGeometry extends Geometry {
 	 */
 	@Override
 	protected boolean isInsideTopWall(int x, int y) {
-		return (x > X_OFFSET && x < X_OFFSET + getWidth()
-				&& y > TOP_OFFSET - HEIGHT_OF_WALL && y < TOP_OFFSET);
+		return (x > 0 && x < getWidth()
+				&& y > -HEIGHT_OF_WALL && y < 0);
 	}
 
 	/**
@@ -163,9 +163,8 @@ public class RectangleGeometry extends Geometry {
 	 */
 	@Override
 	protected boolean isInsideBottomWall(int x, int y) {
-		return (x > X_OFFSET && x < X_OFFSET + getWidth()
-				&& y > TOP_OFFSET + getHeight() && y < TOP_OFFSET + getHeight()
-				+ HEIGHT_OF_WALL);
+		return (x > 0 && x < getWidth()
+				&& y > getHeight() && y < getHeight() + HEIGHT_OF_WALL);
 	}
 
 	/**
