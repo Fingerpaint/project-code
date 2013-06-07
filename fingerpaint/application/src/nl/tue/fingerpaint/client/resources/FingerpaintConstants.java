@@ -219,6 +219,13 @@ public interface FingerpaintConstants extends Constants {
 
 	/**
 	 * @return Localised string that contains the text for the
+	 *         {@link GuiState#exportMultipleGraphButton} button.
+	 */
+	@DefaultStringValue("Export graph")
+	public String btnExportGraphs();
+	
+	/**
+	 * @return Localised string that contains the text for the
 	 *         {@link GuiState#comparePerformanceButton} button.
 	 */
 	@DefaultStringValue("Compare Performance")

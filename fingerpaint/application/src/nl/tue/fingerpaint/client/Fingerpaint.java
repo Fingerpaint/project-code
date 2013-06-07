@@ -26,6 +26,7 @@ import nl.tue.fingerpaint.client.simulator.Simulation;
 import nl.tue.fingerpaint.client.simulator.SimulationResult;
 import nl.tue.fingerpaint.client.simulator.SimulatorService;
 import nl.tue.fingerpaint.client.simulator.SimulatorServiceAsync;
+import nl.tue.fingerpaint.client.storage.FileExporter;
 import nl.tue.fingerpaint.client.storage.ResultStorage;
 import nl.tue.fingerpaint.client.storage.StorageManager;
 import nl.tue.fingerpaint.shared.GeometryNames;
@@ -36,6 +37,7 @@ import com.google.gwt.cell.client.ValueUpdater;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.BrowserEvents;
+import com.google.gwt.dom.client.IFrameElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
@@ -687,7 +689,7 @@ public class Fingerpaint implements EntryPoint {
 		GuiState.exportSingleGraphButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				// TODO: Insert Method-call which exports the graph
+				exportGraph();
 			}
 		});
 		GuiState.closeSingleGraphViewButton.addClickHandler(new ClickHandler() {
@@ -700,6 +702,7 @@ public class Fingerpaint implements EntryPoint {
 		GuiState.viewSingleGraphButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
+				// TODO: This dialog is modal, so all other widgets should be visibly inactive
 				ArrayList<double[]> performance = new ArrayList<double[]>();
 				performance.add(as.getSegregation());
 
@@ -746,6 +749,17 @@ public class Fingerpaint implements EntryPoint {
 			}
 		});
 
+	}
+	
+	/** 
+	 * Save the currently shown graph to disk in svg format.
+	 */
+	private void exportGraph() {
+		String svg = IFrameElement.as(
+			DOM.getElementById("GChart_Frame_0")).getContentDocument()
+			.getElementById("chartArea").getInnerHTML();
+	
+		FileExporter.exportGraph(svg);
 	}
 
 	/**
@@ -1241,8 +1255,9 @@ public class Fingerpaint implements EntryPoint {
 		// Initialise all components of the second popup panel
 		final VerticalPanel vertPanel = new VerticalPanel();
 		HorizontalPanel horPanel = new HorizontalPanel();
-		horPanel.add(GuiState.closeCompareButton);
 		horPanel.add(GuiState.newCompareButton);
+		horPanel.add(GuiState.exportMultipleGraphButton);
+		horPanel.add(GuiState.closeCompareButton);
 		GuiState.comparePopupPanel.add(vertPanel);
 		vertPanel.add(GuiState.compareGraphPanel);
 		vertPanel.add(horPanel);
@@ -1258,6 +1273,14 @@ public class Fingerpaint implements EntryPoint {
 			}
 		});
 
+		GuiState.exportMultipleGraphButton.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				exportGraph();
+			}
+		});
+
+
 		GuiState.newCompareButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -1265,6 +1288,7 @@ public class Fingerpaint implements EntryPoint {
 				for (String s : selected) {
 					selectionModel.setSelected(s, false);
 				}
+				// TODO: These panels are modal, so other widgets should be visibly inactive
 				GuiState.comparePopupPanel.hide();
 				GuiState.compareSelectPopupPanel.show();
 			}
@@ -1348,8 +1372,8 @@ public class Fingerpaint implements EntryPoint {
 							}
 						});
 			}
+
 		});
-		// ---------------------------------------------------------
 	}
 
 	/**

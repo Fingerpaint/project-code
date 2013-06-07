@@ -37,6 +37,9 @@ public class GraphVisualisator {
 	/** The amount of points to be displayed along the x-axis */
 	private int xAxisLength = 0;
 
+	/** Stores the chart. */
+	private LineChart lineChart;	
+	
 	/**
 	 * Returns the runnable object to initiate drawing the graph in
 	 * Fingerpaint.createGraph()
@@ -72,8 +75,8 @@ public class GraphVisualisator {
 		return new Runnable() {
 			public void run() {
 				// Create a line chart visualisation.
-				LineChart lc = new LineChart(createTable(), createOptions());
-				panel.add(lc);
+				lineChart = new LineChart(createTable(), createOptions());
+				panel.add(lineChart);
 				onLoad.onSuccess(true);
 			}
 		};

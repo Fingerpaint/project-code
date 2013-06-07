@@ -345,6 +345,10 @@ public class GuiState {
 	public static Button exportSingleGraphButton = new Button(
 			FingerpaintConstants.INSTANCE.btnExportGraph());
 
+	/** Button to export the image of multiple mixing performances. */
+	public static Button exportMultipleGraphButton = new Button(
+			FingerpaintConstants.INSTANCE.btnExportGraphs());
+	
 	// --- COMPARE PERFORMANCE WIDGETS ----------------------------------------
 	/**
 	 * Pop-up panel to display all the previously stored mixing runs with
