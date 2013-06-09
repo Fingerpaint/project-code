@@ -33,7 +33,6 @@ public class OverwriteSaveButton extends Button implements ClickHandler {
 	public OverwriteSaveButton(Fingerpaint parent) {
 		super(FingerpaintConstants.INSTANCE.btnOverwrite());
 		this.fp = parent;
-
 		addClickHandler(this);
 		ensureDebugId("overwriteSaveButton");
 	}
@@ -46,6 +45,9 @@ public class OverwriteSaveButton extends Button implements ClickHandler {
 				FingerpaintConstants.INSTANCE.saveSuccess());
 		np.show(GuiState.SAVE_SUCCESS_TIMEOUT);
 		GuiState.overwriteSavePanel.hide();
+		
+		// Upon successful overwrite, disable the save button.
+		GuiState.saveItemPanelButton.setEnabled(false);
 	}
 
 }

@@ -38,7 +38,6 @@ import nl.tue.fingerpaint.client.serverdata.ServerDataCache;
 import com.google.gwt.cell.client.ClickableTextCell;
 import com.google.gwt.cell.client.ValueUpdater;
 import com.google.gwt.user.cellview.client.CellBrowser;
-import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -126,8 +125,8 @@ public class CustomTreeModel implements TreeViewModel {
 
 							// "closes" Cellbrowser widget (clears whole
 							// rootpanel)
-							DOM.getElementById("cell").removeFromParent();
-
+							RootPanel.get().clear();
+							
 							createMixingWidgets();
 						}
 					}

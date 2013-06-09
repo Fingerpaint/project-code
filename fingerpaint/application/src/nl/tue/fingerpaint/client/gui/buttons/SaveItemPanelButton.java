@@ -33,12 +33,9 @@ public class SaveItemPanelButton extends Button implements ClickHandler {
 	 */
 	public SaveItemPanelButton(Fingerpaint parent) {
 		super(FingerpaintConstants.INSTANCE.btnSave());
-
 		this.fp = parent;
-
-		setEnabled(false);
 		addClickHandler(this);
-
+		setEnabled(false);
 		ensureDebugId("saveItemPanelButton");
 	}
 
@@ -50,13 +47,15 @@ public class SaveItemPanelButton extends Button implements ClickHandler {
 					FingerpaintConstants.INSTANCE.saveSuccess());
 			np.show(GuiState.SAVE_SUCCESS_TIMEOUT);
 			GuiState.saveItemPanel.hide();
+			
+			// Again disable this button, when saving was successful.
+			setEnabled(false);
 		} else {
 			GuiState.overwriteButtonsPanel.remove(GuiState.closeSaveButton);
 			GuiState.overwriteButtonsPanel.add(GuiState.overwriteSaveButton);
 			GuiState.overwriteButtonsPanel.add(GuiState.closeSaveButton);
 
 			GuiState.overwriteSavePanel.center();
-			GuiState.overwriteSavePanel.show();
 			GuiState.saveItemPanel.hide();
 		}
 	}

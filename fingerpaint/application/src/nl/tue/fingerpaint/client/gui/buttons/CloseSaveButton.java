@@ -19,15 +19,12 @@ public class CloseSaveButton extends Button implements ClickHandler {
 	 */
 	public CloseSaveButton() {
 		super(FingerpaintConstants.INSTANCE.btnClose());
-
 		addClickHandler(this);
 		ensureDebugId("closeSaveButton");
 	}
 
 	@Override
 	public void onClick(ClickEvent event) {
-		// Hide both popup panels if the OK button was pressed. Hide only the
-		// second panel if the cancel button was pressed.
 		GuiState.overwriteSavePanel.hide();
 		GuiState.overwriteSavePanel.remove(GuiState.overwriteSaveButton);
 		GuiState.saveItemPanel.show();
