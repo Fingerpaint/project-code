@@ -20,7 +20,6 @@ public class CloseLoadButton extends Button implements ClickHandler {
 	 */
 	public CloseLoadButton() {
 		super(FingerpaintConstants.INSTANCE.btnClose());
-
 		addClickHandler(this);
 		ensureDebugId("closeLoadButton");
 	}

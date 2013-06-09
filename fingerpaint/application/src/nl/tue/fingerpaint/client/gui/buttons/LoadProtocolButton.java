@@ -39,7 +39,6 @@ public class LoadProtocolButton extends Button implements ClickHandler {
 	public LoadProtocolButton(ApplicationState appState) {
 		super(FingerpaintConstants.INSTANCE.btnLoadProt());
 		this.as = appState;
-
 		addClickHandler(this);
 		ensureDebugId("loadProtocolButton");
 	}

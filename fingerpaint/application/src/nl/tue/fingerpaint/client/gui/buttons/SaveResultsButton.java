@@ -33,7 +33,6 @@ public class SaveResultsButton extends Button implements ClickHandler {
 		super(FingerpaintConstants.INSTANCE.btnSaveResults());
 		this.fp = parent;
 		addClickHandler(this);
-
 		ensureDebugId("saveResultsButton");
 	}
 

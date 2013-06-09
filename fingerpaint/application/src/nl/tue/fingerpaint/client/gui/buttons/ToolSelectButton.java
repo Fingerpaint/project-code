@@ -21,7 +21,6 @@ public class ToolSelectButton extends Button implements ClickHandler {
 	 */
 	public ToolSelectButton() {
 		super(FingerpaintConstants.INSTANCE.btnSelectTool());
-
 		addClickHandler(this);
 		ensureDebugId("toolSelectButton");
 	}

@@ -25,7 +25,6 @@ public class ComparePerformanceButton extends Button implements ClickHandler {
 	 */
 	public ComparePerformanceButton() {
 		super(FingerpaintConstants.INSTANCE.btnComparePerfomance());
-
 		addClickHandler(this);
 		ensureDebugId("comparePerformanceButton");
 	}
@@ -34,7 +33,7 @@ public class ComparePerformanceButton extends Button implements ClickHandler {
 	public void onClick(ClickEvent event) {
 		ArrayList<String> resultNames = (ArrayList<String>) StorageManager.INSTANCE
 				.getResults();
-
+		
 		GuiState.compareSelectPopupCellList.setRowCount(resultNames.size());
 
 		// Push the data into the widget.

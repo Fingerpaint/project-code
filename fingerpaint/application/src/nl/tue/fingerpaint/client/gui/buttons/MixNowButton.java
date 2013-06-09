@@ -41,7 +41,6 @@ public class MixNowButton extends Button implements ClickHandler {
 		this.fp = parent;
 		this.as = appState;
 		addClickHandler(this);
-
 		setEnabled(false);
 		ensureDebugId("mixNowButton");
 	}

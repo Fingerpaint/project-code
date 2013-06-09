@@ -37,7 +37,6 @@ public class CompareButton extends Button implements ClickHandler {
 	public CompareButton(Fingerpaint parent) {
 		super(FingerpaintConstants.INSTANCE.btnCompare());
 		this.fp = parent;
-
 		addClickHandler(this);
 		ensureDebugId("compareButton");
 	}

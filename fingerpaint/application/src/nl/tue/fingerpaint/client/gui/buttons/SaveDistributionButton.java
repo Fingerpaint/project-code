@@ -33,7 +33,6 @@ public class SaveDistributionButton extends Button implements ClickHandler {
 		super(FingerpaintConstants.INSTANCE.btnSaveDist());
 		this.fp = parent;
 		addClickHandler(this);
-
 		ensureDebugId("saveDistributionButton");
 	}
 

@@ -47,7 +47,6 @@ public class ViewSingleGraphButton extends Button implements ClickHandler {
 		super(FingerpaintConstants.INSTANCE.btnViewSingleGraph());
 		this.fp = parent;
 		this.as = appState;
-
 		addClickHandler(this);
 		setEnabled(false);
 		ensureDebugId("viewSingleGraphButton");

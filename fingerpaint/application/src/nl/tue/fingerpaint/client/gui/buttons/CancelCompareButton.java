@@ -35,9 +35,7 @@ public class CancelCompareButton extends Button implements ClickHandler {
 	 */
 	public CancelCompareButton(final MultiSelectionModel<String> selectionModel) {
 		super(FingerpaintConstants.INSTANCE.btnCancel());
-
 		this.selectionModel = selectionModel;
-
 		addClickHandler(this);
 		ensureDebugId("cancelCompareButton");
 	}

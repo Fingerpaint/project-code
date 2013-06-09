@@ -29,7 +29,6 @@ public class ResetDistButton extends Button implements ClickHandler {
 		super(FingerpaintConstants.INSTANCE.btnResetDist());
 		this.as = appState;
 		addClickHandler(this);
-		
 		ensureDebugId("resetDistButton");
 	}
 

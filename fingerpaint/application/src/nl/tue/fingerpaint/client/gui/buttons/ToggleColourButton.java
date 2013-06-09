@@ -65,7 +65,7 @@ public class ToggleColourButton extends Button implements ClickHandler {
 		getElement().appendChild(bgColEl);
 		
 		// Set the debug ID for the toggle colour button.
-		this.ensureDebugId("toggleColor");
+		ensureDebugId("toggleColor");
 	}
 
 	@Override
