@@ -426,7 +426,6 @@ public class GuiState {
 		toolSelector.ensureDebugId("toolSelector");
 		popupPanelPanel.ensureDebugId("popupPanelPanel");
 		popupPanelMenu.ensureDebugId("popupPanelMenu");		
-
 		removeResultsVerticalPanel.ensureDebugId("removeResultsVerticalPanel");
 
 		nrStepsLabel.ensureDebugId("nrStepsLabel");
@@ -438,7 +437,6 @@ public class GuiState {
 		overwriteSavePanel.ensureDebugId("overwriteSavePanel");
 		overwriteButtonsPanel.ensureDebugId("overwriteButtonsPanel");
 		overwriteSaveVerticalPanel.ensureDebugId("overwriteSaveVerticalPanel");
-
 		loadVerticalPanel.ensureDebugId("loadVerticalPanel");
 
 		sizeLabel.ensureDebugId("sizeLabel");

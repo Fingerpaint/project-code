@@ -22,9 +22,7 @@ public class SaveNameTextBox extends TextBox implements KeyPressHandler {
 	 */
 	public SaveNameTextBox() {
 		setMaxLength(30);
-		
 		addKeyPressHandler(this);
-		
 		ensureDebugId("saveNameTextBox");
 	}
 
