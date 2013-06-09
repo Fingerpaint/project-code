@@ -35,10 +35,8 @@ public class NrStepsSpinner extends NumberSpinner implements
 		super(DEFAULT_VALUE, DEFAULT_RATE, DEFAULT_MIN, DEFAULT_MAX, true);
 		this.as = appState;
 		as.setNrSteps(DEFAULT_VALUE);
-
 		setSpinnerListener(this);
-
-		this.ensureDebugId("nrStepsSpinner");
+		ensureDebugId("nrStepsSpinner");
 	}
 
 	@Override

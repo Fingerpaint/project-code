@@ -32,10 +32,8 @@ public class CursorSizeSpinner extends NumberSpinner implements
 	public CursorSizeSpinner(ApplicationState appState) {
 		super(DEFAULT_VALUE, DEFAULT_RATE, DEFAULT_MIN, DEFAULT_MAX, true);
 		this.as = appState;
-
 		setSpinnerListener(this);
-		
-		this.ensureDebugId("cursorSizeSpinner");
+		ensureDebugId("cursorSizeSpinner");
 	}
 
 	@Override
