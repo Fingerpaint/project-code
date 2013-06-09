@@ -31,7 +31,6 @@ public class NotificationPopupPanel {
 	 */
 	public NotificationPopupPanel(String message) {
 		messageLabel = new Label(message);
-
 		panel = new PopupPanel();
 		panel.add(messageLabel);
 		panel.setAnimationEnabled(true);
@@ -46,7 +45,6 @@ public class NotificationPopupPanel {
 	 */
 	public void show(int timeOut) {
 		panel.center();
-		panel.show();
 
 		Timer t = new Timer() {
 			public void run() {

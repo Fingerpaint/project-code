@@ -18,7 +18,6 @@ public class RemoveResultsPopupPanel extends PopupPanel {
 	 */
 	public RemoveResultsPopupPanel() {
 		super();
-
 		setModal(true);
 		ensureDebugId("removeResultsPanel");
 	}

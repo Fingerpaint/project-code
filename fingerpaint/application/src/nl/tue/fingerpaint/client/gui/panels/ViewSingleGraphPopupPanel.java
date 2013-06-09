@@ -17,7 +17,6 @@ public class ViewSingleGraphPopupPanel extends PopupPanel {
 	 */
 	public ViewSingleGraphPopupPanel() {
 		super();
-
 		setModal(true);
 		ensureDebugId("viewSingleGraphPopupPanel");
 	}

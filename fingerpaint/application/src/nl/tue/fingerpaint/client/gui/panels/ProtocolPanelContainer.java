@@ -16,10 +16,9 @@ public class ProtocolPanelContainer extends PopupPanel {
 	 */
 	public ProtocolPanelContainer() {
 		super();
-
-		getElement().setId("protPanel");
 		setAnimationEnabled(true);
 		setVisible(false);
+		getElement().setId("protPanel");
 	}
 
 }

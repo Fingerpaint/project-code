@@ -28,7 +28,6 @@ public class LoadPopupPanel extends PopupPanel {
 	 */
 	public LoadPopupPanel() {
 		super();
-
 		setModal(true);
 		add(GuiState.loadVerticalPanel);
 		ensureDebugId("loadPanel");

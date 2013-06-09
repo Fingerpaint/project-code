@@ -17,7 +17,6 @@ public class CompareSelectPopupPanel extends PopupPanel {
 	 */
 	public CompareSelectPopupPanel() {
 		super();
-
 		setModal(true);
 	}
 
