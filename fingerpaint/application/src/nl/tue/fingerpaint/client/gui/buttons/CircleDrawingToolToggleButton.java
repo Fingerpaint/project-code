@@ -15,7 +15,7 @@ import com.google.gwt.user.client.ui.ToggleButton;
  * 
  * @author Group Fingerpaint
  */
-public class CircleDrawingToolToggleButton extends ToggleButton {
+public class CircleDrawingToolToggleButton extends ToggleButton implements ClickHandler {
 
 	/** Reference to the "parent" class. Used for executing mixing runs. */
 	private Fingerpaint fp;
@@ -35,20 +35,20 @@ public class CircleDrawingToolToggleButton extends ToggleButton {
 		this.fp = parent;
 		this.as = appState;
 
+		addClickHandler(this);
 		ensureDebugId("circleDrawingTool");
-		addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				if (!isDown()) {
-					setDown(true);
-				} else {
-					as.getGeometry().setDrawingTool(
-							new CircleDrawingTool(fp.getCursorSize()));
+	}
 
-					GuiState.squareDrawingTool.setDown(false);
-				}
-			}
-		});
+	@Override
+	public void onClick(ClickEvent event) {
+		if (!isDown()) {
+			setDown(true);
+		} else {
+			as.getGeometry().setDrawingTool(
+					new CircleDrawingTool(fp.getCursorSize()));
+
+			GuiState.squareDrawingTool.setDown(false);
+		}
 	}
 
 }

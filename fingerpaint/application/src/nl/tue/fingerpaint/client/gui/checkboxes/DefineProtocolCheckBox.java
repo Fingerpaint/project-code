@@ -33,9 +33,8 @@ public class DefineProtocolCheckBox extends CheckBox implements ClickHandler {
 	 */
 	public DefineProtocolCheckBox(Fingerpaint parent) {
 		super(FingerpaintConstants.INSTANCE.cbDefProt());
-
 		this.fp = parent;
-
+		addClickHandler(this);
 		ensureDebugId("defineProtocolCheckbox");
 	}
 

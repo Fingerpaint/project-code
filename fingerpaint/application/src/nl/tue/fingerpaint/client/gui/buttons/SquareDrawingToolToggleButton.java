@@ -15,7 +15,7 @@ import com.google.gwt.user.client.ui.ToggleButton;
  * 
  * @author Group Fingerpaint
  */
-public class SquareDrawingToolToggleButton extends ToggleButton {
+public class SquareDrawingToolToggleButton extends ToggleButton implements ClickHandler {
 
 	/** Reference to the "parent" class. Used for executing mixing runs. */
 	private Fingerpaint fp;
@@ -31,26 +31,25 @@ public class SquareDrawingToolToggleButton extends ToggleButton {
 	public SquareDrawingToolToggleButton(Fingerpaint parent,
 			ApplicationState appState) {
 		super(FingerpaintConstants.INSTANCE.btnSquareDraw(), FingerpaintConstants.INSTANCE.btnSquareDraw());
-		
 		this.fp = parent;
 		this.as = appState;
-
-		ensureDebugId("squareDrawingTool");
-		addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				if (!isDown()) {
-					setDown(true);
-				} else {
-					as.getGeometry().setDrawingTool(
-							new SquareDrawingTool(fp.getCursorSize()));
-
-					GuiState.circleDrawingTool.setDown(false);
-				}
-			}
-		});
-		// Intially, the square drawing tool is selected
+		addClickHandler(this);
+		
+		// Initially, the square drawing tool is selected
 		setDown(true);
+		ensureDebugId("squareDrawingTool");
+	}
+
+	@Override
+	public void onClick(ClickEvent event) {
+		if (!isDown()) {
+			setDown(true);
+		} else {
+			as.getGeometry().setDrawingTool(
+					new SquareDrawingTool(fp.getCursorSize()));
+
+			GuiState.circleDrawingTool.setDown(false);
+		}
 	}
 
 }
