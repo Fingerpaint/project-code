@@ -21,6 +21,7 @@ public class SaveNameTextBox extends TextBox implements KeyPressHandler {
 	 * item to save.
 	 */
 	public SaveNameTextBox() {
+		super();
 		setMaxLength(30);
 		addKeyPressHandler(this);
 		ensureDebugId("saveNameTextBox");

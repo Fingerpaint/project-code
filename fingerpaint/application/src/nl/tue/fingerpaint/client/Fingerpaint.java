@@ -70,7 +70,7 @@ public class Fingerpaint implements EntryPoint {
 	public void onModuleLoad() {
 		// Set IDs or debug IDs.
 		GuiState.setIDs();
-		
+
 		// Load CSS
 		FingerpaintResources.INSTANCE.css().ensureInjected();
 
@@ -82,7 +82,7 @@ public class Fingerpaint implements EntryPoint {
 
 		// Add label that may contain explanatory text
 		GuiState.loadingPanelMessage = new Label(
-		FingerpaintConstants.INSTANCE.loadingGeometries(), false);
+				FingerpaintConstants.INSTANCE.loadingGeometries(), false);
 		GuiState.loadingPanelMessage.getElement().setId(
 				GuiState.LOADINGPANEL_MESSAGE_ID);
 		GuiState.loadingPanel.add(GuiState.loadingPanelMessage);
@@ -196,13 +196,15 @@ public class Fingerpaint implements EntryPoint {
 	 * Save the currently shown graph to disk in svg format.
 	 */
 	public void exportGraph() {
-		String svg = IFrameElement.as(DOM.getElementById("GChart_Frame_0"))
+		String svg = IFrameElement
+				.as(DOM.getElementById("compareGraphPanel")
+						.getElementsByTagName("iframe").getItem(0))
 				.getContentDocument().getElementById("chartArea")
 				.getInnerHTML();
 
-		FileExporter.exportGraph(svg); 
+		FileExporter.exportGraph(svg);
 	}
-	
+
 	/**
 	 * Change the message that is displayed in the load panel below the loading
 	 * animation.
@@ -233,7 +235,6 @@ public class Fingerpaint implements EntryPoint {
 		}
 	}
 
-
 	/**
 	 * this method is used to acquire the size of the current cursor in pixels
 	 * 
@@ -243,9 +244,9 @@ public class Fingerpaint implements EntryPoint {
 		return (int) GuiState.cursorSizeSpinner.getValue() - 1;
 	}
 
-
 	/**
-	 * Shows {@link GuiState#saveItemPanel} and clears {@link GuiState#saveNameTextBox}. Also gives focus to the textbox.
+	 * Shows {@link GuiState#saveItemPanel} and clears
+	 * {@link GuiState#saveNameTextBox}. Also gives focus to the textbox.
 	 */
 	public void showSavePanel() {
 		GuiState.saveItemPanel.center();
@@ -283,8 +284,8 @@ public class Fingerpaint implements EntryPoint {
 			result.setNrSteps(as.getNrSteps());
 
 			try {
-				return StorageManager.INSTANCE
-					.putResult(name, result, canOverwrite);
+				return StorageManager.INSTANCE.putResult(name, result,
+						canOverwrite);
 			} catch (Exception e) {
 				GWT.log("Saving results encountered an error", e);
 				return false;
@@ -339,10 +340,28 @@ public class Fingerpaint implements EntryPoint {
 		graphVisualisator = new GraphVisualisator();
 		// Adds the graph to the Panel-parameter of
 		// visualisator.getOnLoadCallBack()
-		try {			
+
+		float windowHeight = Window.getClientHeight();
+		float windowWidth = Window.getClientWidth();
+
+		int graphHeight;
+		int graphWidth;
+
+		final float ratio = 5f / 3f; // w : h
+		final float percentage = 0.6f;
+
+		if (windowWidth / ratio < windowHeight) { // portrait
+			graphHeight = (int) (windowWidth * percentage / ratio);
+			graphWidth = (int) (windowWidth * percentage);
+		} else { // landscape
+			graphHeight = (int) (windowHeight * percentage);
+			graphWidth = (int) (windowHeight * percentage * ratio);
+		}
+
+		try {
 			VisualizationUtils.loadVisualizationApi(graphVisualisator
-					.createGraph(panel, names, performance, onLoad),
-					LineChart.PACKAGE);
+					.createGraph(panel, names, performance, onLoad,
+							graphHeight, graphWidth), LineChart.PACKAGE);
 		} catch (Exception e) {
 			Window.alert(FingerpaintConstants.INSTANCE.loadingGraphFailed());
 			e.printStackTrace();

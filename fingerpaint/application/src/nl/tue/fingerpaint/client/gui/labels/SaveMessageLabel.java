@@ -15,6 +15,7 @@ public class SaveMessageLabel extends Label {
 	 * Construct the {@link SaveMessageLabel}.
 	 */
 	public SaveMessageLabel() {
+		super();
 		setText(FingerpaintConstants.INSTANCE.nameInUse());
 		ensureDebugId("saveMessageLabel");
 	}

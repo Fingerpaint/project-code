@@ -15,6 +15,7 @@ public class ProtocolRepresentationLabel extends Label {
 	 * Initially, this label is not visible and gets a special ID.
 	 */
 	public ProtocolRepresentationLabel() {
+		super();
 		setVisible(false);
 		getElement().setId("protLabel");
 	}
