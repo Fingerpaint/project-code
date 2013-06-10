@@ -217,6 +217,15 @@ public interface FingerpaintConstants extends Constants {
 	@DefaultStringValue("Export graph")
 	public String btnExportGraph();
 	
+	
+	/**
+	 * @return Localised string that contains the text for the
+	 *         {@link GuiState#exportDistributionButton} button.
+	 */
+	@DefaultStringValue("Export image")
+	public String btnExportDist();
+
+	
 	/**
 	 * @return Localised string that contains the text for the
 	 *         {@link GuiState#exportSingleGraphButton} button.

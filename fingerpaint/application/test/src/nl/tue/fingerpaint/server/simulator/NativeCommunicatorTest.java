@@ -1,6 +1,7 @@
 package nl.tue.fingerpaint.server.simulator;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 
 /**

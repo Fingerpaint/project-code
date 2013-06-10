@@ -772,7 +772,16 @@ public abstract class Geometry {
 	 * @param dist
 	 *            The distribution to be set and drawn
 	 */
+	
 	abstract public void drawDistribution(int[] dist);
+	
+	/**
+	 * Returns the string representation of the .svg image of the canvas
+	 * 
+	 * @return The string representation of the .svg image of the canvas
+	 */
+	abstract public String getCanvasImage();
+	
 
 	/**
 	 * Resets the current distribution to all white

@@ -9,6 +9,7 @@ import nl.tue.fingerpaint.client.gui.buttons.CloseSaveButton;
 import nl.tue.fingerpaint.client.gui.buttons.CloseSingleGraphViewButton;
 import nl.tue.fingerpaint.client.gui.buttons.CompareButton;
 import nl.tue.fingerpaint.client.gui.buttons.ComparePerformanceButton;
+import nl.tue.fingerpaint.client.gui.buttons.ExportDistributionButton;
 import nl.tue.fingerpaint.client.gui.buttons.ExportMultipleGraphsButton;
 import nl.tue.fingerpaint.client.gui.buttons.ExportSingleGraphButton;
 import nl.tue.fingerpaint.client.gui.buttons.LoadInitDistButton;
@@ -326,19 +327,15 @@ public class GuiState {
 	 */
 	public static Label sizeLabel = new Label(
 			FingerpaintConstants.INSTANCE.lblStepSize());
+	// ---EXPORT CANVAS IMAGE WIDGET------------------------------------------
+
+	public static ExportDistributionButton exportDistributionButton;
 
 	// --- VIEW SINGLE GRAPH WIDGETS ------------------------------------------
 	/**
 	 * Pop-up menu to display the performance of a single graph. It is opened
-<<<<<<< HEAD
-	 * <<<<<<< HEAD when {@link #viewSingleGraphButton} is clicked. It contains
-	 * a vertical panel. ======= when {@link #viewSingleGraphButton} is clicked.
-	 * It contains a vertical panel. >>>>>>>
-	 * fd27f4c764dcd4ede95113e34e4ac353d0bcf50f
-=======
 	 * when {@link #viewSingleGraphButton} is clicked. It contains a vertical
 	 * panel.
->>>>>>> 05878625975c34e074de20c055511abff81fafed
 	 */
 	public static ViewSingleGraphPopupPanel viewSingleGraphPopupPanel = new ViewSingleGraphPopupPanel();
 

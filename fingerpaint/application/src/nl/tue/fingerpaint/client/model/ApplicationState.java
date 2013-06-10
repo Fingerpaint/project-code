@@ -1,6 +1,5 @@
 package nl.tue.fingerpaint.client.model;
 
-
 /**
  * Class that keeps track of the Geometry and Mixer the user has selected. Used
  * by the cellBrowser widget in Fingerpaint.java to store chosen variables.
@@ -218,5 +217,7 @@ public class ApplicationState {
 	public void drawDistribution() {
 		geom.drawDistribution(initialDistribution);
 	}
+
+
 
 }
