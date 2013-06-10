@@ -3,11 +3,8 @@ package nl.tue.fingerpaint.client.gui;
 import java.util.Arrays;
 
 import nl.tue.fingerpaint.client.Fingerpaint;
-import nl.tue.fingerpaint.client.gui.buttons.CancelCompareButton;
 import nl.tue.fingerpaint.client.gui.buttons.CircleDrawingToolToggleButton;
-import nl.tue.fingerpaint.client.gui.buttons.CloseCompareButton;
-import nl.tue.fingerpaint.client.gui.buttons.CompareButton;
-import nl.tue.fingerpaint.client.gui.buttons.ExportMultipleGraphsButton;
+import nl.tue.fingerpaint.client.gui.buttons.ComparePerformanceButton;
 import nl.tue.fingerpaint.client.gui.buttons.ExportSingleGraphButton;
 import nl.tue.fingerpaint.client.gui.buttons.LoadInitDistButton;
 import nl.tue.fingerpaint.client.gui.buttons.LoadProtocolButton;
@@ -22,7 +19,6 @@ import nl.tue.fingerpaint.client.gui.buttons.SaveResultsButton;
 import nl.tue.fingerpaint.client.gui.buttons.SquareDrawingToolToggleButton;
 import nl.tue.fingerpaint.client.gui.buttons.ToggleColourButton;
 import nl.tue.fingerpaint.client.gui.buttons.ViewSingleGraphButton;
-import nl.tue.fingerpaint.client.gui.celllists.ComparePerformanceCellList;
 import nl.tue.fingerpaint.client.gui.celllists.LoadInitDistCellList;
 import nl.tue.fingerpaint.client.gui.celllists.LoadProtocolCellList;
 import nl.tue.fingerpaint.client.gui.checkboxes.DefineProtocolCheckBox;
@@ -40,7 +36,6 @@ import com.google.gwt.cell.client.ClickableTextCell;
 import com.google.gwt.cell.client.ValueUpdater;
 import com.google.gwt.user.cellview.client.CellBrowser;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.view.client.ListDataProvider;
@@ -218,7 +213,8 @@ public class CustomTreeModel implements TreeViewModel {
 
 		// Initialise the comparePerformanceButton and add it to the
 		// menuPanel
-		createComparePerformanceButton();
+		//createComparePerformanceButton();
+		GuiState.comparePerformanceButton = new ComparePerformanceButton(fp);
 		GuiState.menuPanel.add(GuiState.comparePerformanceButton);
 
 		// Initialise a spinner for changing the length of a mixing protocol
@@ -341,41 +337,6 @@ public class CustomTreeModel implements TreeViewModel {
 			protocol.addStep(step);
 			fp.executeMixingRun(protocol);
 		}
-	}
-
-	/**
-	 * Initialise the panel and buttons inside it that are shown/used when the
-	 * user is going to compare some results.
-	 */
-	private void createComparePerformanceButton() {
-		GuiState.compareButton = new CompareButton(fp);
-		
-		// Initialise the cellList to contain all the mixing runs
-		final ComparePerformanceCellList cellList = new ComparePerformanceCellList();
-
-		// Initialise all components of the second popup panel
-		VerticalPanel vertPanel = new VerticalPanel();
-		HorizontalPanel horPanel = new HorizontalPanel();
-		GuiState.closeCompareButton = new CloseCompareButton(
-				cellList.getSelectionModel());
-		horPanel.add(GuiState.newCompareButton);
-		GuiState.exportMultipleGraphButton = new ExportMultipleGraphsButton(fp);
-		horPanel.add(GuiState.exportMultipleGraphButton);
-		horPanel.add(GuiState.closeCompareButton);
-		GuiState.comparePopupPanel.add(vertPanel);
-		vertPanel.add(GuiState.compareGraphPanel);
-		vertPanel.add(horPanel);
-
-		// Initialise all components of the first popup panel
-		VerticalPanel compareVerticalPanel = new VerticalPanel();
-		GuiState.compareSelectPopupPanel.add(compareVerticalPanel);
-		compareVerticalPanel.add(cellList);
-		HorizontalPanel compareHorizontalPanel = new HorizontalPanel();
-		compareVerticalPanel.add(compareHorizontalPanel);
-		compareHorizontalPanel.add(GuiState.compareButton);
-		GuiState.cancelCompareButton = new CancelCompareButton(
-				cellList.getSelectionModel());
-		compareHorizontalPanel.add(GuiState.cancelCompareButton);
 	}
 
 	/**
