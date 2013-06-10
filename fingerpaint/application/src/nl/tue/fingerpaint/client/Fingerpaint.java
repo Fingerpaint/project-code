@@ -229,9 +229,9 @@ public class Fingerpaint implements EntryPoint {
 	 */
 	public void setProtocolWidgetsVisible(boolean visible) {
 		if (visible) {
-			GuiState.protocolPanelContainer.showRelativeTo(GuiState.menuPanel);
+			GuiState.protocolPanelContainer.setVisibleAnimated(true);
 		} else {
-			GuiState.protocolPanelContainer.hide();
+			GuiState.protocolPanelContainer.setVisibleAnimated(false);
 		}
 	}
 

@@ -247,7 +247,6 @@ public class CustomTreeModel implements TreeViewModel {
 		GuiState.loadProtocolButton = new LoadProtocolButton(as);
 		GuiState.loadProtocolCellList = new LoadProtocolCellList(as);
 
-		// TODO: Initialise other menu items and add them to menuPanel
 		// Add all the protocol widgets to the menuPanel and hide them
 		// initially.
 		VerticalPanel protocolPanel = new VerticalPanel();
@@ -259,8 +258,8 @@ public class CustomTreeModel implements TreeViewModel {
 		protocolPanel.add(GuiState.resetProtocolButton);
 		protocolPanel.add(GuiState.saveProtocolButton);
 		protocolPanel.add(GuiState.loadProtocolButton);
-
 		GuiState.protocolPanelContainer.add(protocolPanel);
+		GuiState.menuPanel.add(GuiState.protocolPanelContainer);
 
 		fp.setProtocolWidgetsVisible(false);
 

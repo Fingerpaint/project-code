@@ -109,6 +109,24 @@ public class SizeAnimation extends Animation {
 		}
 	}
 
+	/**
+	 * Return the height of the element as is saved in this animation.
+	 * 
+	 * @return the (original) height of the element as internally saved
+	 */
+	public int getInternalHeight() {
+		return elOrigHeight;
+	}
+	
+	/**
+	 * Return the width of the element as is saved in this animation.
+	 * 
+	 * @return the (original) width of the element as internally saved
+	 */
+	public int getInternalWidth() {
+		return elOrigWidth;
+	}
+	
 	@Override
 	protected void onComplete() {
 		super.onComplete();
