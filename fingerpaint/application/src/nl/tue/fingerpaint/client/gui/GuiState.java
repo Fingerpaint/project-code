@@ -452,7 +452,7 @@ public class GuiState {
 				.ensureDebugId("viewSingleGraphHorizontalPanel");
 		viewSingleGraphVerticalPanel
 				.ensureDebugId("viewSingleGraphVerticalPanel");
-		viewSingleGraphGraphPanel.ensureDebugId("viewSingleGraphGraphPanel");
+		viewSingleGraphGraphPanel.getElement().setId("viewSingleGraphGraphPanel");
 
 		compareSelectPopupPanel.ensureDebugId("compareSelectPopupPanel");
 		comparePopupPanel.ensureDebugId("comparePopupPanel");
