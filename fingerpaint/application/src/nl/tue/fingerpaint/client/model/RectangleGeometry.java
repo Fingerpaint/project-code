@@ -62,8 +62,8 @@ public class RectangleGeometry extends Geometry {
 	 * 
 	 */
 	@Override
-	public double[] getDistribution() {
-		double[] dist = new double[HORIZONTAL_CELLS * VERTICAL_CELLS];
+	public int[] getDistribution() {
+		int[] dist = new int[HORIZONTAL_CELLS * VERTICAL_CELLS];
 		ImageData img = context.getImageData(X_OFFSET + 1, TOP_OFFSET + 1,
 				getWidth(), getHeight());
 		CanvasPixelArray data = img.getData();
@@ -74,45 +74,14 @@ public class RectangleGeometry extends Geometry {
 			for (int x = 0; x < width; x += factor) {
 				index = (y * width + x) * 4;
 				dist[x / factor + HORIZONTAL_CELLS
-						* (VERTICAL_CELLS - 1 - y / factor)] = (double) data
-						.get(index) / 255;
+						* (VERTICAL_CELLS - 1 - y / factor)] = data
+						.get(index);
 			}
 		}
 		return dist;
 	}
 
 	// ----Implemented abstract methods from superclass----------------
-
-	/**
-	 * Fills a single pixel of the canvas with the current colour. Also updates
-	 * internal representation vector accordingly.
-	 * 
-	 * <pre>
-	 * 0 <=
-	 * {@code x} < 400
-	 * 
-	 * <pre>
-	 * 0 <= {@code y} < 240
-	 * 
-	 * @param x
-	 *            x-coordinate, relative to the canvas element, of the pixel to
-	 *            be filled
-	 * @param y
-	 *            y-coordinate, relative to the canvas element, of the pixel to
-	 * be filled
-	 * @param colour The colour to fill the pixel with
-	 */
-	@Override
-	public void fillPixel(int x, int y, CssColor colour) {
-		if (isInsideDrawingArea(x, y)) {
-			// Fill a rectangle with the currentColor. Change to valid
-			// coordinates to find upper left corner of the 'pixel'.
-			// Make the 'pixel' the size of the multiplying factor.
-			context.setFillStyle(colour);
-			context.fillRect(getValidCoord(x) + X_OFFSET, getValidCoord(y)
-					+ TOP_OFFSET, factor, factor);
-		}
-	}
 
 	/**
 	 * Returns whether the position ({@code x}, {@code y}) is inside the drawing
@@ -175,9 +144,9 @@ public class RectangleGeometry extends Geometry {
 	 */
 	@Override
 	protected void initialiseDistribution() {
-		distribution = new double[HORIZONTAL_CELLS * VERTICAL_CELLS];
+		distribution = new int[HORIZONTAL_CELLS * VERTICAL_CELLS];
 		for (int i = 0; i < distribution.length; i++) {
-			distribution[i] = 1;
+			distribution[i] = 255;
 		}
 	}
 
@@ -395,7 +364,7 @@ public class RectangleGeometry extends Geometry {
 	 * The distribution to be set and drawn
 	 */
 	@Override
-	public void drawDistribution(double[] dist) {
+	public void drawDistribution(int[] dist) {
 		ImageData img = context.getImageData(X_OFFSET + 1, TOP_OFFSET + 1,
 				getWidth(), getHeight());
 		CanvasPixelArray data = img.getData();
@@ -406,7 +375,7 @@ public class RectangleGeometry extends Geometry {
 		for (int i = 0; i < l; i++) {
 			x = i % 400;
 			y = 239 - i / 400;
-			col = (int) (dist[i] * 255);
+			col = dist[i];
 			sw = x * factor;
 			sh = y * factor;
 			w2 = (x + 1) * factor;
@@ -425,7 +394,7 @@ public class RectangleGeometry extends Geometry {
 
 	/**
 	 * Resets the current distribution to all white. Equivalent to calling
-	 * drawDistribution with a dist parameter containing '1' at all indices (but
+	 * drawDistribution with a dist parameter containing '255' at all indices (but
 	 * faster)
 	 */
 	@Override

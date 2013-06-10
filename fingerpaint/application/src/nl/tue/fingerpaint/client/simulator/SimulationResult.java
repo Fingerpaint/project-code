@@ -12,7 +12,7 @@ public class SimulationResult implements Serializable {
 	/** Randomly generated serial version UID */
 	private static final long serialVersionUID = -3437263386499901097L;
 	/** The resulting concentration vector(s) */
-	private double[][] concentrationVectors;
+	private int[][] concentrationVectors;
 	/** The array with segregation values */
 	private double[] segregationPoints;
 	
@@ -29,7 +29,7 @@ public class SimulationResult implements Serializable {
 	 * @param concentrationVectors The resulting concentration vectors
 	 * @param segregationPoints The resulting segregation values
 	 */
-	public SimulationResult(final double[][] concentrationVectors,
+	public SimulationResult(final int[][] concentrationVectors,
 						    final double[] segregationPoints) {
 		if (concentrationVectors == null) {
 			throw new NullPointerException(
@@ -47,7 +47,7 @@ public class SimulationResult implements Serializable {
 	/**
 	 * @return the concentrationVectors
 	 */
-	public double[][] getConcentrationVectors() {
+	public int[][] getConcentrationVectors() {
 		return concentrationVectors;
 	}
 
