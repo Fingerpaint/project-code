@@ -53,7 +53,7 @@ public class TestUtil {
 		
 		//selecting the rectangle geometry in the cellBrowser
 		driver.findElement(
-				By.cssSelector("#gwt-debug-cell > div:nth-child(3) " +
+				By.cssSelector("#cell > div:nth-child(3) " +
 				"> div:first-child > div:first-child > div:first-child" +
 				" > div:first-child > div:first-child > " +
 				"div:nth-child(" + firstTab + ")")
@@ -61,7 +61,7 @@ public class TestUtil {
 		
 		//selecting the default mixer for the rectangle geometry in the cellBrowser
 		driver.findElement(
-				By.cssSelector("#gwt-debug-cell > div:nth-child(5) " +
+				By.cssSelector("#cell > div:nth-child(5) " +
 				"> div:first-child > div:first-child > div:first-child " +
 				"> div:first-child > div:first-child > " +
 				"div:nth-child(" + secondTab + ")")
@@ -108,7 +108,7 @@ public class TestUtil {
 			WebDriver driver, int... results) {
 		for (int result : results) {
 			driver.findElement(By.cssSelector(
-					"#gwt-debug-compareSelectPopupCellList > div " +
+					"#compareSelectPopupCellList > div " +
 					"> div:nth-child(" + result + ")")).click();
 		}
 	}

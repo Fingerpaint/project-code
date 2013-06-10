@@ -39,34 +39,40 @@ public class GraphVisualisatorTest {
 	/**
 	 * Tests if the browsers correctly display a performance graph for a single mixing run
 	 */
-	//@Test
+	@Test
 	public void testSingleGraph() {
 		CrossBrowserTest<Boolean> browsertester = new CrossBrowserTest<Boolean>(){
 
 			@Override
 			public Boolean test(WebDriver driver, TestRunner<Boolean> tester) {
-				TestUtil.gotoLocalServer(driver);
-				TestUtil.navigateCellBrowser(driver, 2, 4);
-				TestUtil.drawRectangularCanvas(
-						driver, 
-						new Point(1, 1), new Point(100, 100), 
-						new Point(0, 100), new Point(100, 0),  
-						new Point(0, -100), new Point(-100, 0));
-				driver.findElement(By.id("gwt-debug-defineProtocolCheckBox-input")).click();
-				driver.findElement(By.cssSelector("#gwt-debug-nrStepsSpinner input")).sendKeys("0");
-				TestUtil.moveRectangularWall(driver, 100, true, true);
-				TestUtil.moveRectangularWall(driver, 100, true, false);
-				TestUtil.moveRectangularWall(driver, 100, false, true);
-				TestUtil.moveRectangularWall(driver, 100, false, false);
-				driver.findElement(By.id("gwt-debug-mixNowButton")).click();
-				TestUtil.waitForLoadingOverlay(driver);
-				(new WebDriverWait(driver, 30)).until(
-						ExpectedConditions.elementToBeClickable(
-								By.id("gwt-debug-viewSingleGraph")));
-				driver.findElement(By.id("gwt-debug-viewSingleGraph")).click();
+				try{
+					TestUtil.gotoLocalServer(driver);
+					TestUtil.navigateCellBrowser(driver, 2, 4);
+					TestUtil.drawRectangularCanvas(
+							driver, 
+							new Point(1, 1), new Point(100, 100), 
+							new Point(0, 100), new Point(100, 0),  
+							new Point(0, -100), new Point(-100, 0));
+					driver.findElement(By.id("gwt-debug-defineProtocolCheckBox-input")).click();
+					driver.findElement(By.cssSelector("#gwt-debug-nrStepsSpinner input")).sendKeys("0");
+					TestUtil.moveRectangularWall(driver, 100, true, true);
+					TestUtil.moveRectangularWall(driver, 100, true, false);
+					TestUtil.moveRectangularWall(driver, 100, false, true);
+					TestUtil.moveRectangularWall(driver, 100, false, false);
+					driver.findElement(By.id("gwt-debug-mixNowButton")).click();
+					TestUtil.waitForLoadingOverlay(driver);
+					(new WebDriverWait(driver, 30)).until(
+							ExpectedConditions.elementToBeClickable(
+									By.id("gwt-debug-viewSingleGraph")));
+					driver.findElement(By.id("gwt-debug-viewSingleGraph")).click();
+				//in case of failure
+				}catch(Exception e){
+					e.printStackTrace();
+				return false;
+				}
 				tester.takeScreenshot();
 				return true;
-			}
+				}
 			
 		};
 		try {
@@ -107,73 +113,79 @@ public class GraphVisualisatorTest {
 
 			@Override
 			public Boolean test(WebDriver driver, TestRunner<Boolean> tester) {
-				TestUtil.gotoLocalServer(driver);
-				TestUtil.navigateCellBrowser(driver, 2, 4);
-				
-				//draw six points on the canvas
-				TestUtil.drawRectangularCanvas(
-						driver, 
-						new Point(1, 1), new Point(100, 100), 
-						new Point(0, 100), new Point(100, 0),  
-						new Point(0, -100), new Point(-100, 0));
-				
-				//define a mixing run of one mixing steps and #steps = 10
-				driver.findElement(By.id("gwt-debug-defineProtocolCheckBox-input")).click();
-				//SHOULD result in #steps = 10 with the already-present '1'
-				driver.findElement(By.cssSelector("#gwt-debug-nrStepsSpinner input")).sendKeys("0");
-				TestUtil.moveRectangularWall(driver, 100, true, true);
-				
-				driver.findElement(By.id("gwt-debug-mixNowButton")).click();
-				
-				//wait till the mixing run is done
-				TestUtil.waitForLoadingOverlay(driver);
-				(new WebDriverWait(driver, 30)).until(
-						ExpectedConditions.elementToBeClickable(
-								By.id("gwt-debug-saveResultsButton")));
-				pause();
-				
-				//save the results of this first run
-				driver.findElement(By.id("gwt-debug-saveResultsButton")).click();
-				driver.findElement(By.id("gwt-debug-saveNameTextBox")).sendKeys("shortProt");
-				driver.findElement(By.id("gwt-debug-saveItemPanelButton")).click();
-				
-				//wait till the 'save was successful' popup dissapears
-				
-				//reset the canvas
-				driver.findElement(By.id("gwt-debug-resetDistButton")).click();
-				
-				//draw six points on the canvas
-				TestUtil.drawRectangularCanvas(
-						driver, 
-						new Point(50, 0), new Point(100, 100), 
-						new Point(0, 100), new Point(100, 0),  
-						new Point(0, -100), new Point(-100, 0));
-				
-				//add a second step to the existing protocol, and mix again
-				TestUtil.moveRectangularWall(driver, 100, false, false);
-				
-				driver.findElement(By.id("gwt-debug-mixNowButton")).click();
-				
-				//wait for the mixing to finish
-				(new WebDriverWait(driver, 30)).until(
-						ExpectedConditions.elementToBeClickable(
-								By.id("gwt-debug-saveResultsButton")));
-				pause();
-				
-				//save the second run
-				driver.findElement(By.id("gwt-debug-saveResultsButton")).click();
-				driver.findElement(By.id("gwt-debug-saveNameTextBox")).sendKeys("longProt");
-				driver.findElement(By.id("gwt-debug-saveItemPanelButton")).click();
-				
-				//wait for the save menu to close
-				(new WebDriverWait(driver, 30)).until(
-						ExpectedConditions.elementToBeClickable(
-								By.id("gwt-debug-comparePerformanceButton")));
-				
-				//compare the performance
-				driver.findElement(By.id("gwt-debug-comparePerformanceButton")).click();
-				TestUtil.selectSavedResultsForPerformance(driver, 1, 2);
-				driver.findElement(By.id("gwt-debug-compareButton")).click();
+				try{
+					TestUtil.gotoLocalServer(driver);
+					TestUtil.navigateCellBrowser(driver, 2, 4);
+					
+					//draw six points on the canvas
+					TestUtil.drawRectangularCanvas(
+							driver, 
+							new Point(1, 1), new Point(100, 100), 
+							new Point(0, 100), new Point(100, 0),  
+							new Point(0, -100), new Point(-100, 0));
+					
+					//define a mixing run of one mixing steps and #steps = 10
+					driver.findElement(By.id("gwt-debug-defineProtocolCheckBox-input")).click();
+					//SHOULD result in #steps = 10 with the already-present '1'
+					driver.findElement(By.cssSelector("#gwt-debug-nrStepsSpinner input")).sendKeys("0");
+					TestUtil.moveRectangularWall(driver, 100, true, true);
+					
+					driver.findElement(By.id("gwt-debug-mixNowButton")).click();
+					
+					//wait till the mixing run is done
+					TestUtil.waitForLoadingOverlay(driver);
+					(new WebDriverWait(driver, 30)).until(
+							ExpectedConditions.elementToBeClickable(
+									By.id("gwt-debug-saveResultsButton")));
+					pause();
+					
+					//save the results of this first run
+					driver.findElement(By.id("gwt-debug-saveResultsButton")).click();
+					driver.findElement(By.id("gwt-debug-saveNameTextBox")).sendKeys("shortProt");
+					driver.findElement(By.id("gwt-debug-saveItemPanelButton")).click();
+					
+					//wait till the 'save was successful' popup dissapears
+					
+					//reset the canvas
+					driver.findElement(By.id("gwt-debug-resetDistButton")).click();
+					
+					//draw six points on the canvas
+					TestUtil.drawRectangularCanvas(
+							driver, 
+							new Point(50, 0), new Point(100, 100), 
+							new Point(0, 100), new Point(100, 0),  
+							new Point(0, -100), new Point(-100, 0));
+					
+					//add a second step to the existing protocol, and mix again
+					TestUtil.moveRectangularWall(driver, 100, false, false);
+					
+					driver.findElement(By.id("gwt-debug-mixNowButton")).click();
+					
+					//wait for the mixing to finish
+					(new WebDriverWait(driver, 30)).until(
+							ExpectedConditions.elementToBeClickable(
+									By.id("gwt-debug-saveResultsButton")));
+					pause();
+					
+					//save the second run
+					driver.findElement(By.id("gwt-debug-saveResultsButton")).click();
+					driver.findElement(By.id("gwt-debug-saveNameTextBox")).sendKeys("longProt");
+					driver.findElement(By.id("gwt-debug-saveItemPanelButton")).click();
+					
+					//wait for the save menu to close
+					(new WebDriverWait(driver, 30)).until(
+							ExpectedConditions.elementToBeClickable(
+									By.id("gwt-debug-comparePerformanceButton")));
+					
+					//compare the performance
+					driver.findElement(By.id("gwt-debug-comparePerformanceButton")).click();
+					TestUtil.selectSavedResultsForPerformance(driver, 1, 2);
+					driver.findElement(By.id("gwt-debug-compareButton")).click();
+				//if the test went wrong
+				}catch(Exception e){
+					e.printStackTrace();
+				return false;
+				}
 				tester.takeScreenshot();
 				return true;
 			}
@@ -199,10 +211,10 @@ public class GraphVisualisatorTest {
 				}
 			}
 			
-//			List<Map<Dimension, Map<DesiredCapabilities, BufferedImage>>> screenies = multitester.getLastScreenshots();
-//			for(Map<Dimension, Map<DesiredCapabilities, BufferedImage>> screenie : screenies){
-//				
-//			}
+			List<Map<Dimension, Map<DesiredCapabilities, BufferedImage>>> screenies = multitester.getLastScreenshots();
+			for(Map<Dimension, Map<DesiredCapabilities, BufferedImage>> screenie : screenies){
+				
+			}
 		} catch (MalformedURLException | MultiBrowserTesterException e) {
 			throw new Error(e);
 		}
