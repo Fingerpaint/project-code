@@ -32,8 +32,10 @@ public class SaveNameTextBox extends TextBox implements KeyPressHandler {
 		String text = GuiState.saveNameTextBox.getText();
 		String inputCharacter = Character.toString(event.getCharCode());
 		int textlength = text.length();
-		if (inputCharacter
-				.matches("[~`!@#$%^&*()+={}\\[\\]:;\"|\'\\\\<>?,./\\s]")) {
+		if (inputCharacter.matches("[~`!@#$%^&*()+={}\\[\\]:;\"|\'\\\\<>?,./]")) {
+			cancelKey();
+		} else if (inputCharacter.matches("\\s") && textlength == 0) {
+			//dont allow names to start with a space
 			cancelKey();
 		} else if (inputCharacter.matches("[A-Za-z0-9]")) {
 			textlength++;
