@@ -7,6 +7,7 @@ import nl.tue.fingerpaint.client.gui.buttons.CancelCompareButton;
 import nl.tue.fingerpaint.client.gui.buttons.CircleDrawingToolToggleButton;
 import nl.tue.fingerpaint.client.gui.buttons.CloseCompareButton;
 import nl.tue.fingerpaint.client.gui.buttons.CompareButton;
+import nl.tue.fingerpaint.client.gui.buttons.ExportDistributionButton;
 import nl.tue.fingerpaint.client.gui.buttons.ExportMultipleGraphsButton;
 import nl.tue.fingerpaint.client.gui.buttons.ExportSingleGraphButton;
 import nl.tue.fingerpaint.client.gui.buttons.LoadInitDistButton;
@@ -187,6 +188,11 @@ public class CustomTreeModel implements TreeViewModel {
 		GuiState.loadInitDistButton = new LoadInitDistButton(as);
 		GuiState.menuPanel.add(GuiState.loadInitDistButton);
 		GuiState.loadInitDistCellList = new LoadInitDistCellList(as);
+		
+		//Initialise the exportDistributionButton and add it to the menuPanel
+		GuiState.exportDistributionButton = new ExportDistributionButton(as);
+		GuiState.menuPanel.add(GuiState.exportDistributionButton);
+		
 
 		// Initialise the saveResultsButton and add it to the menuPanel
 		GuiState.saveResultsButton = new SaveResultsButton(fp);
@@ -249,7 +255,6 @@ public class CustomTreeModel implements TreeViewModel {
 		GuiState.loadProtocolButton = new LoadProtocolButton(as);
 		GuiState.loadProtocolCellList = new LoadProtocolCellList(as);
 
-		// TODO: Initialise other menu items and add them to menuPanel
 		// Add all the protocol widgets to the menuPanel and hide them
 		// initially.
 		VerticalPanel protocolPanel = new VerticalPanel();
@@ -261,8 +266,8 @@ public class CustomTreeModel implements TreeViewModel {
 		protocolPanel.add(GuiState.resetProtocolButton);
 		protocolPanel.add(GuiState.saveProtocolButton);
 		protocolPanel.add(GuiState.loadProtocolButton);
-
 		GuiState.protocolPanelContainer.add(protocolPanel);
+		GuiState.menuPanel.add(GuiState.protocolPanelContainer);
 
 		fp.setProtocolWidgetsVisible(false);
 

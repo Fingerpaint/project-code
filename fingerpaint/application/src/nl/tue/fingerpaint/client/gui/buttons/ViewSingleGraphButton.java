@@ -81,6 +81,8 @@ public class ViewSingleGraphButton extends Button implements ClickHandler {
 						GuiState.viewSingleGraphVerticalPanel
 								.add(GuiState.viewSingleGraphHorizontalPanel);
 						GuiState.viewSingleGraphHorizontalPanel
+								.add(GuiState.exportSingleGraphButton);
+						GuiState.viewSingleGraphHorizontalPanel
 								.add(GuiState.closeSingleGraphViewButton);
 						GuiState.viewSingleGraphPopupPanel
 								.add(GuiState.viewSingleGraphVerticalPanel);

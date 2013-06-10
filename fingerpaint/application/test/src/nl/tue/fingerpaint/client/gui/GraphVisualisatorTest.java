@@ -1,6 +1,12 @@
 package nl.tue.fingerpaint.client.gui;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 import nl.tue.fingerpaint.testenvironment.StandardCapabilitiesProvider;
 import nl.tue.fingerpaint.util.TestUtil;
@@ -9,30 +15,14 @@ import nl.tue.multibrowsertest.MultiBrowserTester;
 import nl.tue.multibrowsertest.MultiBrowserTester.ResultTriple;
 import nl.tue.multibrowsertest.MultiBrowserTesterException;
 import nl.tue.multibrowsertest.TestRunner;
-import nl.tue.screenshot.ScreenshotComparator;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.html5.LocalStorage;
-import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.remote.RemoteExecuteMethod;
-import org.openqa.selenium.remote.RemoteWebDriver;
-import org.openqa.selenium.remote.html5.RemoteLocalStorage;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
-import java.awt.image.BufferedImage;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
 
 public class GraphVisualisatorTest {
 
