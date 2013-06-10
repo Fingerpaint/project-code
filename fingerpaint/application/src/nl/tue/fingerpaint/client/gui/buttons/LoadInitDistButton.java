@@ -8,14 +8,9 @@ import nl.tue.fingerpaint.client.resources.FingerpaintConstants;
 import nl.tue.fingerpaint.client.storage.StorageManager;
 import nl.tue.fingerpaint.shared.GeometryNames;
 
-import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.cellview.client.CellList;
-import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.view.client.SelectionChangeEvent;
-import com.google.gwt.view.client.SingleSelectionModel;
 
 /**
  * Button that can be used to load a previously saved initial concentration
@@ -26,8 +21,8 @@ import com.google.gwt.view.client.SingleSelectionModel;
 public class LoadInitDistButton extends Button implements ClickHandler {
 
 	/**
-	 * Reference to the model. Used to set the loaded concentration
-	 * distribution.
+	 * Reference to the model. Used to to retrieve the currently selected
+	 * geometry
 	 */
 	protected ApplicationState as;
 
@@ -36,8 +31,8 @@ public class LoadInitDistButton extends Button implements ClickHandler {
 	 * initial concentration distribution.
 	 * 
 	 * @param appState
-	 *            Reference to the model, used to set the loaded initial
-	 *            concentration distribution.
+	 *            Reference to the model, used to retrieve the currently
+	 *            selected geometry.
 	 */
 	public LoadInitDistButton(ApplicationState appState) {
 		super(FingerpaintConstants.INSTANCE.btnLoadDist());
@@ -52,43 +47,10 @@ public class LoadInitDistButton extends Button implements ClickHandler {
 		List<String> geometryDistributions = StorageManager.INSTANCE
 				.getDistributions(GeometryNames.getShortName(as
 						.getGeometryChoice()));
+		GuiState.loadInitDistCellList.fillCellList(geometryDistributions);
 
-		// Create a cell to render each value.
-		TextCell textCell = new TextCell();
-
-		// Create a CellList that uses the cell.
-		CellList<String> cellList = new CellList<String>(textCell);
-		cellList.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.ENABLED);
-
-		// Add a selection model to handle user selection.
-		final SingleSelectionModel<String> selectionModel = new SingleSelectionModel<String>();
-		cellList.setSelectionModel(selectionModel);
-		selectionModel
-				.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
-					public void onSelectionChange(SelectionChangeEvent event) {
-						String selected = selectionModel.getSelectedObject();
-
-						// get the selected initial distribution, and
-						// set it in the AS
-						double[] dist = StorageManager.INSTANCE
-								.getDistribution(GeometryNames.getShortName(as
-										.getGeometryChoice()), selected);
-						as.setInitialDistribution(dist);
-						as.drawDistribution();
-						GuiState.loadPanel.removeFromParent();
-					}
-				});
-
-		// Set the total row count. This isn't strictly necessary, but
-		// it affects
-		// paging calculations, so its good habit to keep the row count
-		// up to date.
-		cellList.setRowCount(geometryDistributions.size(), true);
-
-		// Push the data into the widget.
-		cellList.setRowData(0, geometryDistributions);
-
-		GuiState.loadVerticalPanel.add(cellList);
+		GuiState.loadVerticalPanel.remove(GuiState.loadProtocolCellList);
+		GuiState.loadVerticalPanel.add(GuiState.loadInitDistCellList);
 		GuiState.loadVerticalPanel.add(GuiState.closeLoadButton);
 		GuiState.loadPanel.center();
 	}

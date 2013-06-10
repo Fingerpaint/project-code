@@ -23,6 +23,7 @@ import nl.tue.fingerpaint.client.gui.buttons.SquareDrawingToolToggleButton;
 import nl.tue.fingerpaint.client.gui.buttons.ToggleColourButton;
 import nl.tue.fingerpaint.client.gui.buttons.ViewSingleGraphButton;
 import nl.tue.fingerpaint.client.gui.celllists.ComparePerformanceCellList;
+import nl.tue.fingerpaint.client.gui.celllists.LoadInitDistCellList;
 import nl.tue.fingerpaint.client.gui.celllists.LoadProtocolCellList;
 import nl.tue.fingerpaint.client.gui.checkboxes.DefineProtocolCheckBox;
 import nl.tue.fingerpaint.client.gui.spinners.CursorSizeSpinner;
@@ -185,6 +186,7 @@ public class CustomTreeModel implements TreeViewModel {
 		// Initialise the loadInitDistButton and add it to the menuPanel
 		GuiState.loadInitDistButton = new LoadInitDistButton(as);
 		GuiState.menuPanel.add(GuiState.loadInitDistButton);
+		GuiState.loadInitDistCellList = new LoadInitDistCellList(as);
 
 		// Initialise the saveResultsButton and add it to the menuPanel
 		GuiState.saveResultsButton = new SaveResultsButton(fp);
