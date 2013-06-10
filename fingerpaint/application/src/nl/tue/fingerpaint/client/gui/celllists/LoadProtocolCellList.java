@@ -38,17 +38,20 @@ public class LoadProtocolCellList extends CellList<String> {
 	public LoadProtocolCellList(ApplicationState appState) {
 		super(new TextCell());
 		this.as = appState;
-
 		setSelectionHandler();
 		setKeyboardSelectionPolicy(KeyboardSelectionPolicy.ENABLED);
-		// Add a selection model to handle user selection
 		setSelectionModel(selectionModel);
+		ensureDebugId("loadProtocolCellList");
+	}
 
-		// Retrieve the stored protocols for the current geometry from the local
-		// storage.
-		List<String> geometryProtocols = StorageManager.INSTANCE
-				.getProtocols(GeometryNames.getShortName(as.getGeometryChoice()));
-
+	/**
+	 * Fills this CellList with the items in {@code geometryProtocols}.
+	 * 
+	 * @param geometryProtocols
+	 *            List of all mixing protocols currently stored in the local
+	 *            storage.
+	 */
+	public void fillCellList(List<String> geometryProtocols) {
 		/*
 		 * Set the total row count. This isn't strictly necessary, but it
 		 * affects paging calculations, so its good habit to keep the row count
@@ -58,8 +61,6 @@ public class LoadProtocolCellList extends CellList<String> {
 
 		// Push the data into the widget.
 		setRowData(0, geometryProtocols);
-
-		ensureDebugId("loadProtocolCellList");
 	}
 
 	/**
@@ -77,7 +78,8 @@ public class LoadProtocolCellList extends CellList<String> {
 						GuiState.labelProtocolRepresentation.setText(as
 								.getProtocol().toString());
 						GuiState.mixNowButton.setEnabled(true);
-
+						
+						selectionModel.setSelected(selected, false);
 						GuiState.loadPanel.hide();
 					}
 				});

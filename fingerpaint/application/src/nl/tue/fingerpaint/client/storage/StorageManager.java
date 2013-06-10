@@ -7,7 +7,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import nl.tue.fingerpaint.client.gui.panels.NotificationPopupPanel;
-import nl.tue.fingerpaint.client.json.FingerpaintJsonizer;
 import nl.tue.fingerpaint.client.model.MixingProtocol;
 import nl.tue.fingerpaint.client.resources.FingerpaintConstants;
 import nl.tue.fingerpaint.shared.GeometryNames;
@@ -147,8 +146,8 @@ public class StorageManager {
 								.toString(new HashMap<String, Object>()));
 					} catch (JavaScriptException e) {
 						if (e.getName().equals("QUOTA_EXCEEDED_ERR")) {
-							new NotificationPopupPanel("Storage capacity exceeded.")
-									.show(3000);
+							new NotificationPopupPanel(
+									"Storage capacity exceeded.").show(3000);
 						}
 					}
 				} else {
@@ -161,8 +160,8 @@ public class StorageManager {
 								FingerpaintJsonizer.toString(secondLevel));
 					} catch (JavaScriptException e) {
 						if (e.getName().equals("QUOTA_EXCEEDED_ERR")) {
-							new NotificationPopupPanel("Storage capacity exceeded.")
-									.show(3000);
+							new NotificationPopupPanel(
+									"Storage capacity exceeded.").show(3000);
 						}
 					}
 				}
@@ -182,8 +181,8 @@ public class StorageManager {
 								FingerpaintJsonizer.toString(secondLevel));
 					} catch (JavaScriptException e) {
 						if (e.getName().equals("QUOTA_EXCEEDED_ERR")) {
-							new NotificationPopupPanel("Storage capacity exceeded.")
-									.show(3000);
+							new NotificationPopupPanel(
+									"Storage capacity exceeded.").show(3000);
 						}
 					}
 				}
@@ -211,7 +210,7 @@ public class StorageManager {
 	 *         the given name was saved. This function will also return
 	 *         {@code null} if the storage cannot be used.
 	 */
-	public double[] getDistribution(String geometry, String key) {
+	public int[] getDistribution(String geometry, String key) {
 		if (state != INITIALISED) {
 			return null;
 		}
@@ -225,9 +224,9 @@ public class StorageManager {
 			for (String secondLevelKey : secondLevel.keySet()) {
 				if (secondLevelKey.equals(key)) {
 					Object[] val = (Object[]) secondLevel.get(secondLevelKey);
-					double[] result = new double[val.length];
+					int[] result = new int[val.length];
 					for (int i = 0; i < val.length; i++) {
-						result[i] = ((Double) val[i]).doubleValue();
+						result[i] = ((Double) val[i]).intValue();
 					}
 					return result;
 				}
@@ -287,6 +286,7 @@ public class StorageManager {
 
 		HashMap<String, Object> firstLevel = FingerpaintJsonizer
 				.hashMapFromString(localStorage.getItem(KEY_PROTOCOLS), false);
+
 		if (firstLevel.containsKey(geometry)) {
 			HashMap<String, Object> secondLevel = FingerpaintJsonizer
 					.hashMapFromJSONObject(
@@ -392,7 +392,7 @@ public class StorageManager {
 	 *         use (no attempt to overwrite will be made). Will also return
 	 *         false when the storage cannot be used.
 	 */
-	public boolean putDistribution(String geometry, String key, double[] value) {
+	public boolean putDistribution(String geometry, String key, int[] value) {
 		return putDistribution(geometry, key, value, false);
 	}
 
@@ -413,7 +413,7 @@ public class StorageManager {
 	 *         use (no attempt to overwrite will be made). Will also return
 	 *         false when the storage cannot be used.
 	 */
-	public boolean putDistribution(String geometry, String key, double[] value,
+	public boolean putDistribution(String geometry, String key, int[] value,
 			boolean overwrite) {
 		if (state != INITIALISED) {
 			return false;
@@ -424,13 +424,15 @@ public class StorageManager {
 		}
 
 		HashMap<String, Object> firstLevel = FingerpaintJsonizer
-				.hashMapFromString(localStorage.getItem(KEY_INITDIST));
+				.hashMapFromString(localStorage.getItem(KEY_INITDIST), false);
 
 		if (firstLevel.containsKey(geometry)) {
-			@SuppressWarnings("unchecked")
-			HashMap<String, Object> secondLevel = (HashMap<String, Object>) firstLevel
-					.get(geometry);
-			secondLevel.put(key, FingerpaintJsonizer.toString(value));
+			HashMap<String, Object> secondLevel = FingerpaintJsonizer
+					.hashMapFromJSONObject(
+							((JSONValue) firstLevel.get(geometry)).isObject(),
+							false);
+			secondLevel.put(key,
+					FingerpaintZipper.zip(FingerpaintJsonizer.toString(value)));
 			firstLevel.put(geometry, FingerpaintJsonizer.toString(secondLevel));
 			try {
 				localStorage.setItem(KEY_INITDIST,
@@ -564,13 +566,86 @@ public class StorageManager {
 					FingerpaintJsonizer.toString(firstLevel));
 		} catch (JavaScriptException e) {
 			if (e.getName().equals("QUOTA_EXCEEDED_ERR")) {
-				new NotificationPopupPanel(FingerpaintConstants.INSTANCE.capacityExceeded()).show(3000);
+				new NotificationPopupPanel(
+						FingerpaintConstants.INSTANCE.capacityExceeded())
+						.show(3000);
 			} else {
-				Logger.getLogger("").log(Level.INFO, "Unknown error during saving.");
+				Logger.getLogger("").log(Level.INFO,
+						"Unknown error during saving.");
 			}
 		}
 		return true;
 
+	}
+
+	/**
+	 * Remove a distribution with the given name from the local storage.
+	 * 
+	 * @param geometry
+	 *            The short name of the geometry the distribution resides under.
+	 * @param key
+	 *            The name of the distribution to remove.
+	 * @return True if a distribution with the given name is removed from the
+	 *         storage, false if no distribution with the given name is present
+	 *         in the storage.
+	 */
+	public boolean removeDistribution(String key, String geometry) {
+		HashMap<String, Object> firstLevel = FingerpaintJsonizer
+				.hashMapFromString(localStorage.getItem(KEY_INITDIST));
+		if (firstLevel.containsKey(geometry)) {
+			@SuppressWarnings("unchecked")
+			HashMap<String, Object> secondLevel = (HashMap<String, Object>) firstLevel
+					.get(geometry);
+			for (String secondLevelKey : secondLevel.keySet()) {
+				if (secondLevelKey.equals(key)) {
+					secondLevel.remove(key);
+					try {
+						localStorage.setItem(KEY_INITDIST,
+								FingerpaintJsonizer.toString(firstLevel));
+					} catch (JavaScriptException e) {
+						new NotificationPopupPanel("Storage capacity exceeded.")
+								.show(3000);
+					}
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Remove a protocol with the given name from the local storage.
+	 * 
+	 * @param geometry
+	 *            The short name of the geometry the protocol resides under.
+	 * @param key
+	 *            The name of the protocol to remove.
+	 * @return True if a protocol with the given name is removed from the
+	 *         storage, false if no protocol with the given name is present in
+	 *         the storage.
+	 */
+	public boolean removeProtocol(String key, String geometry) {
+		HashMap<String, Object> firstLevel = FingerpaintJsonizer
+				.hashMapFromString(localStorage.getItem(KEY_PROTOCOLS));
+		if (firstLevel.containsKey(geometry)) {
+			@SuppressWarnings("unchecked")
+			HashMap<String, Object> secondLevel = (HashMap<String, Object>) firstLevel
+					.get(geometry);
+			for (String secondLevelKey : secondLevel.keySet()) {
+				if (secondLevelKey.equals(key)) {
+					secondLevel.remove(key);
+					try {
+						localStorage.setItem(KEY_PROTOCOLS,
+								FingerpaintJsonizer.toString(firstLevel));
+					} catch (JavaScriptException e) {
+						new NotificationPopupPanel("Storage capacity exceeded.")
+								.show(3000);
+					}
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	/**

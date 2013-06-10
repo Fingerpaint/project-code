@@ -29,6 +29,7 @@ import nl.tue.fingerpaint.client.gui.buttons.ToggleColourButton;
 import nl.tue.fingerpaint.client.gui.buttons.ToolSelectButton;
 import nl.tue.fingerpaint.client.gui.buttons.ViewSingleGraphButton;
 import nl.tue.fingerpaint.client.gui.celllists.CompareSelectPopupCellList;
+import nl.tue.fingerpaint.client.gui.celllists.LoadInitDistCellList;
 import nl.tue.fingerpaint.client.gui.celllists.LoadProtocolCellList;
 import nl.tue.fingerpaint.client.gui.checkboxes.DefineProtocolCheckBox;
 import nl.tue.fingerpaint.client.gui.flextables.ResultsFlexTable;
@@ -154,6 +155,12 @@ public class GuiState {
 			FingerpaintConstants.INSTANCE.btnCircleDraw());
 
 	// --- INITIAL DISTRIBUTION WIDGETS ---------------------------------------
+	/**
+	 * CellList used to select and load one previously saved concentration
+	 * distribution.
+	 */
+	public static LoadInitDistCellList loadInitDistCellList;
+
 	/** Button to save an initial concentration distribution. */
 	public static SaveDistributionButton saveDistributionButton;
 
@@ -188,7 +195,7 @@ public class GuiState {
 	 * CellList that can be used to load a previously saved mixing protocol.
 	 */
 	public static LoadProtocolCellList loadProtocolCellList;
-	
+
 	/** Container to hold all the widgets related to a mixing protocol. */
 	public static ProtocolPanelContainer protocolPanelContainer = new ProtocolPanelContainer();
 
@@ -324,11 +331,14 @@ public class GuiState {
 	/**
 	 * Pop-up menu to display the performance of a single graph. It is opened
 <<<<<<< HEAD
-	 * when {@link #viewSingleGraphButton} is clicked. It contains a vertical panel.
+	 * <<<<<<< HEAD when {@link #viewSingleGraphButton} is clicked. It contains
+	 * a vertical panel. ======= when {@link #viewSingleGraphButton} is clicked.
+	 * It contains a vertical panel. >>>>>>>
+	 * fd27f4c764dcd4ede95113e34e4ac353d0bcf50f
 =======
 	 * when {@link #viewSingleGraphButton} is clicked. It contains a vertical
 	 * panel.
->>>>>>> fd27f4c764dcd4ede95113e34e4ac353d0bcf50f
+>>>>>>> 05878625975c34e074de20c055511abff81fafed
 	 */
 	public static ViewSingleGraphPopupPanel viewSingleGraphPopupPanel = new ViewSingleGraphPopupPanel();
 
@@ -359,14 +369,14 @@ public class GuiState {
 
 	/** Button to export the image of multiple mixing performances. */
 	public static ExportMultipleGraphsButton exportMultipleGraphButton;
-	
+
 	// --- COMPARE PERFORMANCE WIDGETS ----------------------------------------
 	/**
 	 * CellList that can be used to select multiple mixing runs from all
 	 * available saved mixing runs.
 	 */
 	public static CompareSelectPopupCellList compareSelectPopupCellList = new CompareSelectPopupCellList();
-	
+
 	/**
 	 * Pop-up panel to display all the previously stored mixing runs with
 	 * performance. It also contains the Compare and Close buttons.
@@ -425,7 +435,7 @@ public class GuiState {
 
 		toolSelector.ensureDebugId("toolSelector");
 		popupPanelPanel.ensureDebugId("popupPanelPanel");
-		popupPanelMenu.ensureDebugId("popupPanelMenu");		
+		popupPanelMenu.ensureDebugId("popupPanelMenu");
 		removeResultsVerticalPanel.ensureDebugId("removeResultsVerticalPanel");
 
 		nrStepsLabel.ensureDebugId("nrStepsLabel");
