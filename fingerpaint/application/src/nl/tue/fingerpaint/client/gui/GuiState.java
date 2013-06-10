@@ -329,6 +329,7 @@ public class GuiState {
 			FingerpaintConstants.INSTANCE.lblStepSize());
 	// ---EXPORT CANVAS IMAGE WIDGET------------------------------------------
 
+	/** Button to export the image of the current distribution. */
 	public static ExportDistributionButton exportDistributionButton;
 
 	// --- VIEW SINGLE GRAPH WIDGETS ------------------------------------------
@@ -396,7 +397,7 @@ public class GuiState {
 	 * Button to compare the performance of previously saved mixing runs. When
 	 * clicked, it opens the {@link #compareSelectPopupPanel} pop-up.
 	 */
-	public static ComparePerformanceButton comparePerformanceButton = new ComparePerformanceButton();
+	public static ComparePerformanceButton comparePerformanceButton;
 
 	/**
 	 * Button to compare the performance of the selected mixing runs.
