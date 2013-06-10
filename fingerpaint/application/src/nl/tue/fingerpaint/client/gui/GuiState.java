@@ -330,10 +330,15 @@ public class GuiState {
 	// --- VIEW SINGLE GRAPH WIDGETS ------------------------------------------
 	/**
 	 * Pop-up menu to display the performance of a single graph. It is opened
+<<<<<<< HEAD
 	 * <<<<<<< HEAD when {@link #viewSingleGraphButton} is clicked. It contains
 	 * a vertical panel. ======= when {@link #viewSingleGraphButton} is clicked.
 	 * It contains a vertical panel. >>>>>>>
 	 * fd27f4c764dcd4ede95113e34e4ac353d0bcf50f
+=======
+	 * when {@link #viewSingleGraphButton} is clicked. It contains a vertical
+	 * panel.
+>>>>>>> 05878625975c34e074de20c055511abff81fafed
 	 */
 	public static ViewSingleGraphPopupPanel viewSingleGraphPopupPanel = new ViewSingleGraphPopupPanel();
 
