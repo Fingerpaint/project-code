@@ -17,33 +17,35 @@
 
 	<!-- gwt-jsonmaker -->
 	<inherits name="org.jsonmaker.gwt.Gwt_jsonmaker" />
-	
+
 	<!-- use ClientBundle for CSS -->
 	<inherits name="com.google.gwt.resources.Resources" />
-	
+
 	<!-- use I18N -->
-	<inherits name="com.google.gwt.i18n.I18N"/>
-	
+	<inherits name="com.google.gwt.i18n.I18N" />
+
 	<!-- use JSON -->
 	<inherits name="com.google.gwt.json.JSON" />
 
 
-	<!--  Add neccessary inherits for gwt chart tools -->
-	<inherits name='com.google.gwt.visualization.Visualization'/>
-	
+	<!-- Add neccessary inherits for gwt chart tools -->
+	<inherits name='com.google.gwt.visualization.Visualization' />
+
 	<!-- Enables debugging options, remove in the final version -->
-	<inherits name="com.google.gwt.user.Debug"/>
+	<inherits name="com.google.gwt.user.Debug" />
 
 	<!-- gwt-log -->
-	<inherits name="com.google.gwt.logging.Logging"/>
-	<set-property name="gwt.logging.logLevel" value="INFO"/>
+	<inherits name="com.google.gwt.logging.Logging" />
+	<set-property name="gwt.logging.logLevel" value="INFO" />
 	<set-property name="gwt.logging.consoleHandler" value="ENABLED" />
-	<set-property name="gwt.logging.developmentModeHandler" value="ENABLED" />
+	<set-property name="gwt.logging.developmentModeHandler"
+		value="ENABLED" />
 	<set-property name="gwt.logging.firebugHandler" value="ENABLED" />
 	<set-property name="gwt.logging.hasWidgetsHandler" value="DISABLED" />
 	<set-property name="gwt.logging.popupHandler" value="DISABLED" />
 	<set-property name="gwt.logging.systemHandler" value="DISABLED" />
-	<set-property name="gwt.logging.simpleRemoteHandler" value="DISABLED" />	
+	<set-property name="gwt.logging.simpleRemoteHandler"
+		value="DISABLED" />
 
 	<!-- Specify the app entry point class. -->
 	<entry-point class='nl.tue.fingerpaint.client.Fingerpaint' />
@@ -51,7 +53,14 @@
 	<!-- Specify the paths for translatable code -->
 	<source path='client' />
 	<source path='shared' />
-	
-	<!--  Supported languages (apart from English, which is the default language) -->
-<!-- 	<extend-property name="locale" values="nl"/> -->
+
+	<!-- Supported languages (apart from English, which is the default language) -->
+	<!-- <extend-property name="locale" values="nl"/> -->
+
+	<!-- Javascript Library to zip -->
+	<script src="jszip.js"></script>
+	<script src="jszip-deflate.js"></script>
+	<script src="jszip-inflate.js"></script>
+	<script src="jszip-load.js"></script>
+
 </module>

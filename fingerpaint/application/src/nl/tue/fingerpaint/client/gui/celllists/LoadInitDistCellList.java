@@ -68,7 +68,7 @@ public class LoadInitDistCellList extends CellList<String> {
 
 						// get the selected initial distribution, and
 						// set it in the AS
-						double[] dist = StorageManager.INSTANCE
+						int[] dist = StorageManager.INSTANCE
 								.getDistribution(GeometryNames.getShortName(as
 										.getGeometryChoice()), selected);
 						as.setInitialDistribution(dist);

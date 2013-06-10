@@ -1,19 +1,15 @@
 package nl.tue.fingerpaint.client.model;
 
-import nl.tue.fingerpaint.client.model.Geometry;
-import nl.tue.fingerpaint.client.model.MixingStep;
-import nl.tue.fingerpaint.client.model.RectangleGeometry;
 import nl.tue.fingerpaint.client.model.Geometry.StepAddedListener;
 
 import org.junit.Test;
 
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.junit.client.GWTTestCase;
-import com.google.gwt.touch.client.Point;
 
 /**
- * GWT jUnit tests for the class {@link RectangleGeometry}.
- * TODO: all tests fail in this class, so it needs some serious rework!
+ * GWT jUnit tests for the class {@link RectangleGeometry}. TODO: all tests fail
+ * in this class, so it needs some serious rework!
  * 
  * @author Group Fingerpaint
  */
@@ -36,48 +32,28 @@ public class RectangleGeometryTest extends GWTTestCase {
 	// The instance of the RectangleGeometry class to test.
 	private RectangleGeometry geom;
 
-	// Points to test on the borders of the geometry
-	private Point[] borderTests = new Point[] { new Point(1, 1), new Point(1, 240),
-			new Point(400, 1), new Point(400, 240) };
-
-	// Places in the internalRepresentationVector that correspond to the points
-	// in the borderTests array.
-	private int[] borderResults = new int[] { 400 * 239, 0, 400 * 240 - 1, 399 };
-
-	// Points to test within the geometry
-	private Point[] innerTests = new Point[] { new Point(2, 2), new Point(36, 66),
-			new Point(73, 136), new Point(276, 97) };
-
-	// Places in the internalRepresentationVector that correspond to the points
-	// in the innerTests array.
-	private int[] innerResults = new int[] { 238 * 400 + 1, 174 * 400 + 35,
-			104 * 400 + 72, 143 * 400 + 275 };
-	
 	private final int clientHeight = 400;
 	private final int clientWidth = 600;
-	
+
 	/**
 	 * Ugly hack courtesy of Femke and Thom
 	 */
 	private boolean mixingStepAdded = false;
 
-	@Test
-	public void testTest() {
-		assertTrue(true);
-	}
-
-	/*
+	/**
 	 * Test to determine whether all variables are correctly initialised after
 	 * creating a new RectangleGeometry.
 	 */
 	@Test
 	public void testRectangleGeometry() {
-		geom = new RectangleGeometry(400, 600);
+		geom = new RectangleGeometry(clientHeight, clientWidth);
 
 		assertEquals("Length of representation vector", 240 * 400,
 				geom.getDistribution().length);
-		for (int i = 0; i < geom.getDistribution().length; i++) {
-			assertEquals("Initial distribution", 1.0, geom.getDistribution()[i]);
+		int[] dist = geom.getDistribution();
+
+		for (int i = 0; i < dist.length; i++) {
+			assertEquals("Initial distribution", 255, dist[i]);
 		}
 		assertNotNull(geom.getCanvas());
 		assertEquals("Initial drawing color",
@@ -86,6 +62,10 @@ public class RectangleGeometryTest extends GWTTestCase {
 
 	@Test
 	public void testStopDefineMixingStep() {
+		int width = new RectangleGeometry(clientHeight, clientWidth).getWidth();
+		int height = new RectangleGeometry(clientHeight, clientWidth)
+				.getHeight();
+
 		// TODO: Add factor everywhere.
 		testStopDefineMixingStep("T", true, true, true, 100, 140,
 				Geometry.TOP_OFFSET, 1.0);
@@ -98,33 +78,33 @@ public class RectangleGeometryTest extends GWTTestCase {
 		testStopDefineMixingStep("T step size 1.25", true, true, false, 100,
 				60, Geometry.TOP_OFFSET, 1.25);
 		testStopDefineMixingStep("B", true, false, true, 100, 60,
-				Geometry.TOP_OFFSET + clientHeight + 10, 1.0);
+				Geometry.TOP_OFFSET + height + 10, 1.0);
 		testStopDefineMixingStep("-B", true, false, false, 100, 140,
-				Geometry.TOP_OFFSET + clientHeight + 10, 1.0);
+				Geometry.TOP_OFFSET + height + 10, 1.0);
 		testStopDefineMixingStep("On border TR", false, true, true,
-				Geometry.X_OFFSET + clientWidth - 30, Geometry.X_OFFSET
-						+ clientWidth, Geometry.TOP_OFFSET, 1.0);
+				Geometry.X_OFFSET + width - 30, Geometry.X_OFFSET + width,
+				Geometry.TOP_OFFSET, 1.0);
 		testStopDefineMixingStep("On border BL", false, false, true,
 				Geometry.X_OFFSET - 30, Geometry.X_OFFSET, Geometry.TOP_OFFSET
-						+ clientHeight, 1.0);
+						+ height, 1.0);
 		testStopDefineMixingStep("Just inside TR", true, true, true,
-				Geometry.X_OFFSET + clientWidth - 30, Geometry.X_OFFSET
-						+ clientWidth - 1, Geometry.TOP_OFFSET + 1, 1.0);
+				Geometry.X_OFFSET + width - 30, Geometry.X_OFFSET + width - 1,
+				Geometry.TOP_OFFSET + 1, 1.0);
 		testStopDefineMixingStep("Just inside BR", true, false, false,
 				Geometry.X_OFFSET - 30, Geometry.X_OFFSET, Geometry.TOP_OFFSET
-						+ clientHeight, 1.0);
+						+ height, 1.0);
 		testStopDefineMixingStep("Just inside TL", true, true, true,
-				Geometry.X_OFFSET + 30, Geometry.X_OFFSET
-						+ 1, Geometry.TOP_OFFSET + 1, 1.0);
-		testStopDefineMixingStep("Just inside BL", true, false, false, 
-				Geometry.X_OFFSET + 30, Geometry.X_OFFSET
-				+ 1, Geometry.TOP_OFFSET + clientHeight - 1, 1.0);
+				Geometry.X_OFFSET + 30, Geometry.X_OFFSET + 1,
+				Geometry.TOP_OFFSET + 1, 1.0);
+		testStopDefineMixingStep("Just inside BL", true, false, false,
+				Geometry.X_OFFSET + 30, Geometry.X_OFFSET + 1,
+				Geometry.TOP_OFFSET + height - 1, 1.0);
 		testStopDefineMixingStep("Swipe in middle", false, true, true, 100,
-				140, clientHeight / 2, 1.0);
+				140, height / 2, 1.0);
 		testStopDefineMixingStep("Left top outside", false, true, true, 10,
 				-10, -5, 1.0);
 		testStopDefineMixingStep("Right bottom outside", false, true, true,
-				clientWidth + 10, clientWidth - 40, clientHeight + 20, 1.0);
+				width + 10, width - 40, height + 20, 1.0);
 	}
 
 	/**
@@ -141,23 +121,23 @@ public class RectangleGeometryTest extends GWTTestCase {
 	 *            Indicates whether the movement is in clockwise direction.
 	 * @param startX
 	 *            Starting x-coordinate when the swipe is initiated.
+	 * @param startY
+	 *            Starting y-coordinate when the swipe is initiated.
 	 * @param endX
 	 *            Final x-coordinate when the swipe is terminated.
-	 * @param endY
-	 *            Final y-coordinate when the swipe is terminated.
 	 * @param stepSize
 	 *            Desired step size for the {@code Step}.
 	 */
 	public void testStopDefineMixingStep(String message,
 			boolean shouldBeCalled, boolean top, boolean clockwise, int startX,
-			int endX, int endY, double stepSize) {
+			int endX, int startY, double stepSize) {
 		geom = new RectangleGeometry(clientHeight, clientWidth);
 
 		StepAddedListener stl = setUpStepAddedListener(message, top, clockwise,
 				stepSize);
 		geom.addStepAddedListener(stl);
-		geom.startDefineMixingStep(startX, 50);
-		geom.stopDefineMixingStep(endX, endY);
+		geom.startDefineMixingStep(startX, startY);
+		geom.stopDefineMixingStep(endX, startY);
 
 		assertEquals(message + " should be called", shouldBeCalled,
 				mixingStepAdded);
@@ -189,15 +169,15 @@ public class RectangleGeometryTest extends GWTTestCase {
 	public void testResetDist() {
 		geom = new RectangleGeometry(clientHeight, clientWidth);
 		// make the canvas black
-		geom.setDistribution(new double[96000]);// using the initialisation
+		geom.setDistribution(new int[96000]);// using the initialisation
 												// value of 0
 		// reset the canvas to white
 		geom.resetDistribution();
 		// verify the result
-		double[] dist = geom.getDistribution();
+		int[] dist = geom.getDistribution();
 		// check all indices
 		for (int i = 0; i < dist.length; i++) {
-			assertEquals(1, dist[i]);
+			assertEquals(255, dist[i]);
 		}
 	}
 
@@ -219,10 +199,10 @@ public class RectangleGeometryTest extends GWTTestCase {
 
 		return stl;
 	}
-	
+
 	@Override
 	public String getModuleName() {
 		return "nl.tue.fingerpaint.Fingerpaint";
 	}
-	
+
 }

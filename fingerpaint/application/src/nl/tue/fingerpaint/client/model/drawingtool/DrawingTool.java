@@ -1,4 +1,4 @@
-package nl.tue.fingerpaint.client.gui.drawingtool;
+package nl.tue.fingerpaint.client.model.drawingtool;
 
 import nl.tue.fingerpaint.shared.utils.Colour;
 
