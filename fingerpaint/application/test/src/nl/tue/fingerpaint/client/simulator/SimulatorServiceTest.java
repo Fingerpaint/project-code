@@ -6,6 +6,7 @@ import nl.tue.fingerpaint.client.simulator.SimulatorServiceAsync;
 import nl.tue.fingerpaint.client.storage.FingerpaintJsonizer;
 import nl.tue.fingerpaint.client.storage.FingerpaintZipper;
 
+
 import org.junit.Test;
 
 import com.google.gwt.core.shared.GWT;

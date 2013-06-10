@@ -9,6 +9,7 @@ import nl.tue.fingerpaint.client.gui.buttons.CloseSaveButton;
 import nl.tue.fingerpaint.client.gui.buttons.CloseSingleGraphViewButton;
 import nl.tue.fingerpaint.client.gui.buttons.CompareButton;
 import nl.tue.fingerpaint.client.gui.buttons.ComparePerformanceButton;
+import nl.tue.fingerpaint.client.gui.buttons.ExportDistributionButton;
 import nl.tue.fingerpaint.client.gui.buttons.ExportMultipleGraphsButton;
 import nl.tue.fingerpaint.client.gui.buttons.ExportSingleGraphButton;
 import nl.tue.fingerpaint.client.gui.buttons.LoadInitDistButton;
@@ -326,6 +327,10 @@ public class GuiState {
 	 */
 	public static Label sizeLabel = new Label(
 			FingerpaintConstants.INSTANCE.lblStepSize());
+	// ---EXPORT CANVAS IMAGE WIDGET------------------------------------------
+
+	/** Button to export the image of the current distribution. */
+	public static ExportDistributionButton exportDistributionButton;
 
 	// --- VIEW SINGLE GRAPH WIDGETS ------------------------------------------
 	/**
@@ -448,7 +453,7 @@ public class GuiState {
 				.ensureDebugId("viewSingleGraphHorizontalPanel");
 		viewSingleGraphVerticalPanel
 				.ensureDebugId("viewSingleGraphVerticalPanel");
-		viewSingleGraphGraphPanel.ensureDebugId("viewSingleGraphGraphPanel");
+		viewSingleGraphGraphPanel.getElement().setId("viewSingleGraphGraphPanel");
 
 		compareSelectPopupPanel.ensureDebugId("compareSelectPopupPanel");
 		comparePopupPanel.ensureDebugId("comparePopupPanel");

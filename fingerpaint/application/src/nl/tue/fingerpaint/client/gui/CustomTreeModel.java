@@ -5,6 +5,7 @@ import java.util.Arrays;
 import nl.tue.fingerpaint.client.Fingerpaint;
 import nl.tue.fingerpaint.client.gui.buttons.CircleDrawingToolToggleButton;
 import nl.tue.fingerpaint.client.gui.buttons.ComparePerformanceButton;
+import nl.tue.fingerpaint.client.gui.buttons.ExportDistributionButton;
 import nl.tue.fingerpaint.client.gui.buttons.ExportSingleGraphButton;
 import nl.tue.fingerpaint.client.gui.buttons.LoadInitDistButton;
 import nl.tue.fingerpaint.client.gui.buttons.LoadProtocolButton;
@@ -182,6 +183,11 @@ public class CustomTreeModel implements TreeViewModel {
 		GuiState.loadInitDistButton = new LoadInitDistButton(as);
 		GuiState.menuPanel.add(GuiState.loadInitDistButton);
 		GuiState.loadInitDistCellList = new LoadInitDistCellList(as);
+		
+		//Initialise the exportDistributionButton and add it to the menuPanel
+		GuiState.exportDistributionButton = new ExportDistributionButton(as);
+		GuiState.menuPanel.add(GuiState.exportDistributionButton);
+		
 
 		// Initialise the saveResultsButton and add it to the menuPanel
 		GuiState.saveResultsButton = new SaveResultsButton(fp);

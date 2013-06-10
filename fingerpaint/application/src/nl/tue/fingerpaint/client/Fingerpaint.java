@@ -78,8 +78,9 @@ public class Fingerpaint implements EntryPoint {
 
 		// Initialise the loading panel
 		// Add animation image
-		Image loadImage = new Image(FingerpaintResources.INSTANCE.loadImage()
-				.getSafeUri());
+		Image loadImage = new Image(FingerpaintResources.INSTANCE
+				.loadImageDynamic().getSafeUri());
+		loadImage.getElement().setId("loadImage");
 		GuiState.loadingPanel.add(loadImage);
 
 		// Add label that may contain explanatory text
@@ -196,15 +197,22 @@ public class Fingerpaint implements EntryPoint {
 
 	/**
 	 * Save the currently shown graph to disk in svg format.
+	 * 
+	 * @param multiple
+	 *            Indicates whether the single graph or the multiple graphs
+	 *            graph should be exported.
 	 */
-	public void exportGraph() {
-		String svg = IFrameElement
-				.as(DOM.getElementById("compareGraphPanel")
-						.getElementsByTagName("iframe").getItem(0))
-				.getContentDocument().getElementById("chartArea")
-				.getInnerHTML();
+	public void exportGraph(boolean multiple) {
+		// get the panel that contains the right graph (single or multiple)
+		String id = multiple ? "compareGraphPanel"
+				: "viewSingleGraphGraphPanel";
 
-		FileExporter.exportGraph(svg);
+		String svg = IFrameElement
+				.as(DOM.getElementById(id).getElementsByTagName("iframe")
+						.getItem(0)).getContentDocument()
+				.getElementById("chartArea").getInnerHTML();
+
+		FileExporter.exportSvgImage(svg);
 	}
 
 	/**

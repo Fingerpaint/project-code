@@ -1,7 +1,5 @@
 package nl.tue.fingerpaint.client.model;
 
-import nl.tue.fingerpaint.client.model.MixingStep;
-
 import org.junit.Test;
 
 import com.google.gwt.junit.client.GWTTestCase;
