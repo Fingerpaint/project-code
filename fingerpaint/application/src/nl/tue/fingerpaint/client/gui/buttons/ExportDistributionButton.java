@@ -8,7 +8,13 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
 
+/**
+ * Button that can be used to export a distribution.
+ * 
+ * @author Group Fingerpaint
+ */
 public class ExportDistributionButton  extends Button implements ClickHandler {
+	
 	/**
 	 * Reference to the entrypoint. Used to export the graphs.
 	 */
@@ -27,7 +33,10 @@ public class ExportDistributionButton  extends Button implements ClickHandler {
 		ensureDebugId("ExportDistributionButton");
 	}
 	
-	
+	/**
+	 * Exports the currently shown distribution to an external svg file. 
+	 * @param event The event that has fired.
+	 */
 	@Override
 	public void onClick(ClickEvent event) {
 		String svg = as.getGeometry().getCanvasImage();

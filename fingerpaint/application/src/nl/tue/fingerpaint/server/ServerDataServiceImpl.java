@@ -19,6 +19,10 @@ public class ServerDataServiceImpl extends RemoteServiceServlet implements
 	 */
 	private static final long serialVersionUID = 8671226026204731779L;
 
+	/**
+	 * Returns server data, i.e. which geometries and mixers are available.
+	 * @return server data, i.e. which geometries and mixers are available.
+	 */
 	@Override
 	public ServerDataResult getServerData() {
 		return new ServerDataResult(

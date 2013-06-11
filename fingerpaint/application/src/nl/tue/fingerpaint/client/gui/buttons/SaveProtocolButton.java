@@ -36,6 +36,10 @@ public class SaveProtocolButton extends Button implements ClickHandler {
 		ensureDebugId("saveProtocolButton");
 	}
 	
+	/**
+	 * Creates the save protocol popup panel.
+	 * @param event The event that has fired.
+	 */
 	@Override
 	public void onClick(ClickEvent event) {
 		fp.setLastClicked(StorageManager.KEY_PROTOCOLS);

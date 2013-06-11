@@ -40,6 +40,10 @@ public class SquareDrawingToolToggleButton extends ToggleButton implements Click
 		ensureDebugId("squareDrawingTool");
 	}
 
+	/**
+	 * Toggles the drawing tool to square, with the desired size.
+	 * @param event The event that has fired.
+	 */
 	@Override
 	public void onClick(ClickEvent event) {
 		if (!isDown()) {

@@ -23,6 +23,9 @@ public class CancelSaveResultsButton extends Button implements ClickHandler {
 		ensureDebugId("cancelSaveResultsButton");
 	}
 
+	/**
+	 * Clears the name, hides the panel and disables the Save button
+	 */
 	@Override
 	public void onClick(ClickEvent event) {
 		GuiState.saveItemPanel.hide();

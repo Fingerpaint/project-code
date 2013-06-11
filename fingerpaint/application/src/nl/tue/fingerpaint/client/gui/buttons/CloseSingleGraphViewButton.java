@@ -24,6 +24,10 @@ public class CloseSingleGraphViewButton extends Button implements ClickHandler {
 		ensureDebugId("closeSingleGraphViewButton");
 	}
 
+	/**
+	 * Hides the panel.
+	 * @param event The event that has fired.
+	 */
 	@Override
 	public void onClick(ClickEvent event) {
 		GuiState.viewSingleGraphPopupPanel.hide();

@@ -32,6 +32,10 @@ public class ResetDistButton extends Button implements ClickHandler {
 		ensureDebugId("resetDistButton");
 	}
 
+	/**
+	 * Resets the distribution to a completely white distribution.
+	 * @param event The event that has fired.
+	 */
 	@Override
 	public void onClick(ClickEvent event) {
 		as.getGeometry().resetDistribution();

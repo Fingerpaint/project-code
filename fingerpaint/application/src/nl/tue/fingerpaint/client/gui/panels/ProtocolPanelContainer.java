@@ -5,6 +5,7 @@ import nl.tue.fingerpaint.client.gui.animation.SizeAnimation;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 
@@ -45,13 +46,24 @@ public class ProtocolPanelContainer extends SimplePanel {
 			refreshSize();
 		}
 		
-		int heightPx = parseIntFromCss(getElement().getStyle().getHeight());
+		int heightPx = getElement().getClientHeight();
 		if (heightPx < 0) {
 			return;
 		} else if (heightPx > 0 && !visible) {
 			sizeAnimation.doHide(ANIMATION_DURATION);
 		} else if (heightPx == 0 && visible) {
-			sizeAnimation.doShow(ANIMATION_DURATION);
+			sizeAnimation.doShow(ANIMATION_DURATION, new AsyncCallback<Boolean>() {
+				@Override
+				public void onSuccess(Boolean result) {
+					getElement().getStyle().clearHeight();
+					sizeAnimation.refreshSize();
+				}
+				
+				@Override
+				public void onFailure(Throwable caught) {
+					// will not be called
+				}
+			});
 		}
 	}
 	

@@ -41,6 +41,12 @@ public class CompareButton extends Button implements ClickHandler {
 		ensureDebugId("compareButton");
 	}
 
+	/**
+	 * Plots the selected performance results in one graph. Adds the names of
+	 * the selected runs to the legend, and their results to the graph, and
+	 * finally shows the panel containing the graphs.
+	 * @param event The event that has fired.
+	 */
 	@Override
 	public void onClick(ClickEvent event) {
 		ArrayList<String> names = new ArrayList<String>();

@@ -40,6 +40,10 @@ public class CancelCompareButton extends Button implements ClickHandler {
 		ensureDebugId("cancelCompareButton");
 	}
 
+	/**
+	 * Unselects all selected items and hides the popup.
+	 * @param event The event that has fired.
+	 */
 	@Override
 	public void onClick(ClickEvent event) {
 		Set<String> selected = selectionModel.getSelectedSet();

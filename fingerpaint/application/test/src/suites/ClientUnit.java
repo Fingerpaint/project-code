@@ -74,6 +74,10 @@ public class ClientUnit extends GWTTestCase {
 	 * -------------------------------------------------------------------
 	 */
 	
+	/**
+	 * Returns the module name for the GWT test.
+	 * @return String The name of the module.
+	 */
 	@Override
 	public String getModuleName() {
 		return "nl.tue.fingerpaint.Fingerpaint";

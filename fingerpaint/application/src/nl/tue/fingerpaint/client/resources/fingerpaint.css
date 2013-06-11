@@ -217,7 +217,6 @@ button[disabled] {
 
 #protLabel {
 	font-family: monospace;
-	width: 100%;
 	border: 1px solid;
 	border-color: MAIN;
 	padding: 2px;

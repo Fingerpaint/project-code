@@ -12,11 +12,13 @@ import com.google.gwt.visualization.client.visualizations.LineChart;
 import com.google.gwt.visualization.client.visualizations.LineChart.Options;
 
 /**
- * Class for the creation of segregation graphs
+ * <p>Class for the creation of segregation graphs.</p>
  * 
+ * <p>
  * HOW TO CALL THIS CLASS: Load the visualisation API, passing the
  * onLoadCallback to be called when loading is done.
  * VisualizationUtils.loadVisualizationApi(onLoadCallback, LineChart.PACKAGE);
+ * </p>
  * 
  * @author Group Fingerpaint
  */
@@ -68,8 +70,14 @@ public class GraphVisualisator {
 	 * Returns the runnable object to initiate drawing the graph.
 	 * 
 	 * @param panel
-	 *            The panel the graph will be added to
-	 * @return The runnable object to initiate drawing the graph
+	 *            The panel the graph will be added to.
+     * @param onLoad
+     *            The function that should be called upon completion.
+     * @param height
+     *            The height of the window in which the graph will be shown.
+     * @param width
+     *            The width of the window in which the graph will be shown.
+	 * @return The runnable object to initiate drawing the graph.
 	 */
 	private Runnable getOnLoadCallBack(final Panel panel, final AsyncCallback<Boolean> onLoad, final int height, final int width) {
 		// Create a callback to be called when the visualisation API
@@ -105,7 +113,8 @@ public class GraphVisualisator {
 
 	/**
 	 * Creates and returns the options to set to the graph.
-	 * 
+	 * @param height The height of the window in which the graph will be shown.
+     * @param width The width of the window in which the graph will be shown.
 	 * @return The options to be set
 	 */
 	private Options createOptions(int height, int width) {

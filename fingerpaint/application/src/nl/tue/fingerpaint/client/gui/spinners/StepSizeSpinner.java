@@ -31,6 +31,10 @@ public class StepSizeSpinner extends NumberSpinner implements
 		ensureDebugId("sizeSpinner");
 	}
 
+	/**
+	 * Changes the value shown in the spinner to {@code value}.
+	 * @param value The new value.
+	 */
 	@Override
 	public void onValueChange(double value) {
 		as.setStepSize(value);	

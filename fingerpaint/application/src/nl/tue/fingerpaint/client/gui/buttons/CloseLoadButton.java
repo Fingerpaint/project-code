@@ -24,6 +24,10 @@ public class CloseLoadButton extends Button implements ClickHandler {
 		ensureDebugId("closeLoadButton");
 	}
 
+	/**
+	 * Removes the loading panel from the screen
+	 * @param event The event that has fired.
+	 */
 	@Override
 	public void onClick(ClickEvent event) {
 		GuiState.loadPanel.removeFromParent();

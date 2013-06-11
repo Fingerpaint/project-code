@@ -40,6 +40,10 @@ public class CloseCompareButton extends Button implements ClickHandler {
 		ensureDebugId("closeCompareButton");
 	}
 
+	/**
+	 * Unselects all selected items and hides the panel.
+	 * @param event The event that has fired.
+	 */
 	@Override
 	public void onClick(ClickEvent event) {
 		Set<String> selected = selectionModel.getSelectedSet();

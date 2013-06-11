@@ -32,6 +32,10 @@ public class ExportMultipleGraphsButton extends Button implements ClickHandler {
 		ensureDebugId("exportMultipleGraphsButton");
 	}
 	
+	/**
+	 * Exports the graph to an external svg file.
+	 * @param event The event that has fired. 
+	 */
 	@Override
 	public void onClick(ClickEvent event) {
 		fp.exportGraph(true);

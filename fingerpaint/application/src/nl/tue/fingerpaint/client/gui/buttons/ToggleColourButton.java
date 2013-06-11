@@ -68,6 +68,10 @@ public class ToggleColourButton extends Button implements ClickHandler {
 		ensureDebugId("toggleColor");
 	}
 
+	/**
+	 * Toggles the colour used for drawing.
+	 * @param event The event that has fired.
+	 */
 	@Override
 	public void onClick(ClickEvent event) {
 		toggleColour();

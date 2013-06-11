@@ -200,18 +200,19 @@ public class Fingerpaint implements EntryPoint {
 	/**
 	 * Save the currently shown graph to disk in svg format.
 	 * 
-	 * @param multiple Indicates whether the single graph or the multiple graphs
-	 * graph should be exported.
+	 * @param multiple
+	 *            Indicates whether the single graph or the multiple graphs
+	 *            graph should be exported.
 	 */
 	public void exportGraph(boolean multiple) {
-		//get the panel that contains the right graph (single or multiple)
-		String id = multiple ? "compareGraphPanel" : "viewSingleGraphGraphPanel";
-		
+		// get the panel that contains the right graph (single or multiple)
+		String id = multiple ? "compareGraphPanel"
+				: "viewSingleGraphGraphPanel";
+
 		String svg = IFrameElement
-				.as(DOM.getElementById(id)
-						.getElementsByTagName("iframe").getItem(0))
-				.getContentDocument().getElementById("chartArea")
-				.getInnerHTML();
+				.as(DOM.getElementById(id).getElementsByTagName("iframe")
+						.getItem(0)).getContentDocument()
+				.getElementById("chartArea").getInnerHTML();
 
 		FileExporter.exportSvgImage(svg);
 	}
@@ -246,7 +247,7 @@ public class Fingerpaint implements EntryPoint {
 		}
 	}
 
-	/*
+	/**
 	 * this method is used to acquire the size of the current cursor in pixels
 	 * 
 	 * @return cursorSizeSpinner.getValue()-1

@@ -38,6 +38,11 @@ public class DefineProtocolCheckBox extends CheckBox implements ClickHandler {
 		ensureDebugId("defineProtocolCheckbox");
 	}
 
+	/**
+	 * Toggles the protocol widgets as visible or invisible, and resets the
+	 * protocol if the widgets are being hidden.
+	 * @param event The event that has fired.
+	 */
 	@Override
 	public void onClick(ClickEvent event) {
 		if (GuiState.defineProtocolCheckBox.getValue()) {

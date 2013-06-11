@@ -3,6 +3,7 @@ package nl.tue.fingerpaint.client.gui.animation;
 import com.google.gwt.animation.client.Animation;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**
  * A {@code SizeAnimation} can animate the size of an element.
@@ -26,17 +27,22 @@ public class SizeAnimation extends Animation {
 	public static final int ANIMATE_WIDTH = 1;
 
 	/** Panel that is animated. */
-	protected Element subject;
+	private Element subject;
 	/** Axis to animate */
-	protected int axis;
+	private int axis;
 	/** If animation is in progress. */
-	protected boolean running = false;
+	private boolean running = false;
 	/** If element is hidden or not. */
-	protected boolean hidden = false;
+	private boolean hidden = false;
 	/** Original height of the element. */
-	protected int elOrigHeight;
+	private int elOrigHeight;
 	/** Original width of the element. */
-	protected int elOrigWidth;
+	private int elOrigWidth;
+	/**
+	 * Callback on finish of animation. {@code null} when no callback is
+	 * present.
+	 */
+	private AsyncCallback<Boolean> onCompleteCallback;
 
 	/**
 	 * Construct a new object that can be used to animate the given element.
@@ -60,7 +66,7 @@ public class SizeAnimation extends Animation {
 		this.elOrigWidth = this.subject.getClientWidth();
 		this.elOrigHeight = this.subject.getClientHeight();
 	}
-	
+
 	/**
 	 * Change which axis are animated. Use {@link #ANIMATE_BOTH},
 	 * {@link #ANIMATE_HEIGHT} or {@link #ANIMATE_WIDTH} here. When not one of
@@ -89,8 +95,27 @@ public class SizeAnimation extends Animation {
 	 *            Time the animation takes.
 	 */
 	public void doShow(int durationMillis) {
-		if (subject.getClientHeight() < elOrigHeight || subject.getClientWidth() < elOrigWidth) {
+		doShow(durationMillis, null);
+	}
+
+	/**
+	 * Perform a sliding animation to show the element, that is, restore its
+	 * position before a call to {@link #doHide(int)}. If the element is not
+	 * hidden by such a call, nothing happens.
+	 * 
+	 * @param durationMillis
+	 *            Time the animation takes.
+	 * @param onComplete
+	 *            Callback to call when animation is done. Ignored when
+	 *            {@code null}. This callback will (guaranteed) only be called
+	 *            with a {@code true} argument on the
+	 *            {@code AsyncCallback#onSuccess(Object)} callback.
+	 */
+	public void doShow(int durationMillis, AsyncCallback<Boolean> onComplete) {
+		if (subject.getClientHeight() < elOrigHeight
+				|| subject.getClientWidth() < elOrigWidth) {
 			hidden = true;
+			this.onCompleteCallback = onComplete;
 			run(durationMillis);
 		}
 	}
@@ -103,8 +128,26 @@ public class SizeAnimation extends Animation {
 	 *            Time the animation takes.
 	 */
 	public void doHide(int durationMillis) {
+		doHide(durationMillis, null);
+	}
+
+	/**
+	 * Perform a sliding animation to hide the element on the selected side of
+	 * the screen.
+	 * 
+	 * @param durationMillis
+	 *            Time the animation takes.
+	 * @param onComplete
+	 *            Callback to call when animation is done. Ignored when
+	 *            {@code null}. This callback will (guaranteed) only be called
+	 *            with a {@code true} argument on the
+	 *            {@code AsyncCallback#onSuccess(Object)} callback.
+	 */
+	public void doHide(int durationMillis, AsyncCallback<Boolean> onComplete) {
 		if (subject.getClientHeight() > 0 && subject.getClientWidth() > 0) {
+			refreshSize();
 			hidden = false;
+			this.onCompleteCallback = onComplete;
 			run(durationMillis);
 		}
 	}
@@ -117,7 +160,7 @@ public class SizeAnimation extends Animation {
 	public int getInternalHeight() {
 		return elOrigHeight;
 	}
-	
+
 	/**
 	 * Return the width of the element as is saved in this animation.
 	 * 
@@ -126,10 +169,13 @@ public class SizeAnimation extends Animation {
 	public int getInternalWidth() {
 		return elOrigWidth;
 	}
-	
+
 	@Override
 	protected void onComplete() {
 		super.onComplete();
+		if (onCompleteCallback != null) {
+			onCompleteCallback.onSuccess(true);
+		}
 		running = false;
 	}
 

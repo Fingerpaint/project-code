@@ -27,13 +27,22 @@ public class SaveNameTextBox extends TextBox implements KeyPressHandler {
 		ensureDebugId("saveNameTextBox");
 	}
 
+	/**
+	 * Adds the key that was pressed to the textbox, but only if the key is one
+	 * of A-Za-z0-9 and it is not a space at the beginning of the text. If
+	 * backspace is pressed, the last character removed, and if enter was
+	 * pressed, the panel behaves as if the Save button was clicked.	 * 
+	 * @param event The event that has fired.
+	 */
 	@Override
 	public void onKeyPress(KeyPressEvent event) {
 		String text = GuiState.saveNameTextBox.getText();
 		String inputCharacter = Character.toString(event.getCharCode());
 		int textlength = text.length();
-		if (inputCharacter
-				.matches("[~`!@#$%^&*()+={}\\[\\]:;\"|\'\\\\<>?,./\\s]")) {
+		if (inputCharacter.matches("[~`!@#$%^&*()+={}\\[\\]:;\"|\'\\\\<>?,./]")) {
+			cancelKey();
+		} else if (inputCharacter.matches("\\s") && textlength == 0) {
+			// Do not allow names to start with a space
 			cancelKey();
 		} else if (inputCharacter.matches("[A-Za-z0-9]")) {
 			textlength++;

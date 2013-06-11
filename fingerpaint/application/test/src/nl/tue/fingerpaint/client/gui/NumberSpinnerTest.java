@@ -174,6 +174,9 @@ public class NumberSpinnerTest extends GWTTestCase {
 		assertTrue("The listener was not fired.", fired);
 	}
 
+	/**
+	 * Returns the module name for the GWT test.
+	 */
 	@Override
 	public String getModuleName() {
 		return "nl.tue.fingerpaint.Fingerpaint";
@@ -190,6 +193,7 @@ public class NumberSpinnerTest extends GWTTestCase {
 
 	/**
 	 * Private method to support the test in {@code testListener}.
+	 * @param fired Whether this method has been fired.
 	 */
 	private void setFired(boolean fired) {
 		this.fired = fired;
