@@ -216,8 +216,7 @@ public interface FingerpaintConstants extends Constants {
 	 */
 	@DefaultStringValue("Export graph")
 	public String btnExportGraph();
-	
-	
+
 	/**
 	 * @return Localised string that contains the text for the
 	 *         {@link GuiState#exportDistributionButton} button.
@@ -225,7 +224,6 @@ public interface FingerpaintConstants extends Constants {
 	@DefaultStringValue("Export image")
 	public String btnExportDist();
 
-	
 	/**
 	 * @return Localised string that contains the text for the
 	 *         {@link GuiState#exportSingleGraphButton} button.
@@ -255,6 +253,7 @@ public interface FingerpaintConstants extends Constants {
 	public String btnNewCompare();
 
 	// -- CONSTANTS FOR CHECKBOXES --------------------------------------------
+	// TODO: Remove when togglebutton has been implemented.
 	/**
 	 * @return Localised string that contains the text for the
 	 *         {@link GuiState#defineProtocolCheckBox} checkbox.

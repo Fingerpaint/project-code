@@ -27,12 +27,12 @@ import nl.tue.fingerpaint.client.gui.buttons.SaveProtocolButton;
 import nl.tue.fingerpaint.client.gui.buttons.SaveResultsButton;
 import nl.tue.fingerpaint.client.gui.buttons.SquareDrawingToolToggleButton;
 import nl.tue.fingerpaint.client.gui.buttons.ToggleColourButton;
+import nl.tue.fingerpaint.client.gui.buttons.ToggleDefineProtocol;
 import nl.tue.fingerpaint.client.gui.buttons.ToolSelectButton;
 import nl.tue.fingerpaint.client.gui.buttons.ViewSingleGraphButton;
 import nl.tue.fingerpaint.client.gui.celllists.CompareSelectPopupCellList;
 import nl.tue.fingerpaint.client.gui.celllists.LoadInitDistCellList;
 import nl.tue.fingerpaint.client.gui.celllists.LoadProtocolCellList;
-import nl.tue.fingerpaint.client.gui.checkboxes.DefineProtocolCheckBox;
 import nl.tue.fingerpaint.client.gui.flextables.ResultsFlexTable;
 import nl.tue.fingerpaint.client.gui.labels.ProtocolRepresentationLabel;
 import nl.tue.fingerpaint.client.gui.labels.SaveMessageLabel;
@@ -47,7 +47,6 @@ import nl.tue.fingerpaint.client.gui.spinners.StepSizeSpinner;
 import nl.tue.fingerpaint.client.gui.textboxes.SaveNameTextBox;
 import nl.tue.fingerpaint.client.resources.FingerpaintConstants;
 
-import com.google.gwt.debug.client.DebugInfo;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -232,10 +231,10 @@ public class GuiState {
 			FingerpaintConstants.INSTANCE.lblProtocol());
 
 	/**
-	 * Checkbox that needs to be checked to define a protocol. If it isn't
-	 * checked, steps (wall movements) are executed directly.
+	 * Toggle button that needs to be clicked to define a protocol. If it isn't
+	 * in its default state, steps 9wall movements) are executed directly.
 	 */
-	public static DefineProtocolCheckBox defineProtocolCheckBox;
+	public static ToggleDefineProtocol toggleDefineProtocol;
 
 	// --- SAVE POP-UP MENU WIDGETS -------------------------------------------
 	/** Pop-up panel to handle the saving of the current results. */
@@ -443,7 +442,8 @@ public class GuiState {
 				.ensureDebugId("viewSingleGraphHorizontalPanel");
 		viewSingleGraphVerticalPanel
 				.ensureDebugId("viewSingleGraphVerticalPanel");
-		viewSingleGraphGraphPanel.getElement().setId("viewSingleGraphGraphPanel");
+		viewSingleGraphGraphPanel.getElement().setId(
+				"viewSingleGraphGraphPanel");
 
 		compareSelectPopupPanel.ensureDebugId("compareSelectPopupPanel");
 		comparePopupPanel.ensureDebugId("comparePopupPanel");
