@@ -38,7 +38,7 @@ public class ToggleDefineProtocol extends Button implements ClickHandler {
 	 * @see ToggleDefineProtocol
 	 */
 	public ToggleDefineProtocol(Fingerpaint parent) {
-		super(FingerpaintConstants.INSTANCE.cbDefProt());
+		super(FingerpaintConstants.INSTANCE.btnDefProt());
 		this.fp = parent;
 		addClickHandler(this);
 		ensureDebugId("ToggleDefineProtocol");

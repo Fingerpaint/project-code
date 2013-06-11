@@ -251,15 +251,13 @@ public interface FingerpaintConstants extends Constants {
 	 */
 	@DefaultStringValue("New Comparison")
 	public String btnNewCompare();
-
-	// -- CONSTANTS FOR CHECKBOXES --------------------------------------------
-	// TODO: Remove when togglebutton has been implemented.
+	
 	/**
 	 * @return Localised string that contains the text for the
-	 *         {@link GuiState#defineProtocolCheckBox} checkbox.
+	 *         {@link GuiState#toggleDefineProtocol} toggle button.
 	 */
 	@DefaultStringValue("Define Protocol")
-	public String cbDefProt();
+	public String btnDefProt();
 
 	// --- CONSTANTS FOR ERRORS -----------------------------------------------
 	/**
