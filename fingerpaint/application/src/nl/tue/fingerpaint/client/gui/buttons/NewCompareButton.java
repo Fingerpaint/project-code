@@ -27,6 +27,10 @@ public class NewCompareButton extends Button implements ClickHandler {
 		ensureDebugId("newCompareButton");
 	}
 
+	/**
+	 * Clears all previously selected results.
+	 * @param event The event that has fired.
+	 */
 	@Override
 	public void onClick(ClickEvent event) {
 		Set<String> selected = GuiState.compareSelectPopupCellList

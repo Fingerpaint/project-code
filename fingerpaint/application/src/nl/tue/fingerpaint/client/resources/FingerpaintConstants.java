@@ -61,7 +61,7 @@ public interface FingerpaintConstants extends Constants {
 	 * @return Localised string that contains the text for the
 	 *         {@link GuiState#nrStepsLabel} label.
 	 */
-	@DefaultStringValue("#steps")
+	@DefaultStringValue("Number of steps")
 	public String lblNrSteps();
 
 	/**

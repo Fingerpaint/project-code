@@ -26,6 +26,10 @@ public class RemoveSavedResultsButton extends Button implements ClickHandler {
 		ensureDebugId("removeSavedResultsButton");
 	}
 	
+	/**
+	 * Creates a popup panel showing all saved results.
+	 * @param event The event that has fired.
+	 */
 	@Override
 	public void onClick(ClickEvent event) {
 		GuiState.resultsFlexTable.removeFromParent();

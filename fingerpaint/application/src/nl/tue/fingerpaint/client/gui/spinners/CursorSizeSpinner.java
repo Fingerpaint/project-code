@@ -35,6 +35,10 @@ public class CursorSizeSpinner extends NumberSpinner implements
 		ensureDebugId("cursorSizeSpinner");
 	}
 
+	/**
+	 * Sets the size of the drawing tool to {@code value - 1}.
+	 * @param value The desired value plus 1 that should be set.
+	 */
 	@Override
 	public void onValueChange(double value) {
 		as.getGeometry().setDrawingToolSize((int) value - 1);

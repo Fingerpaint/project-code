@@ -35,7 +35,10 @@ public class SaveDistributionButton extends Button implements ClickHandler {
 		addClickHandler(this);
 		ensureDebugId("saveDistributionButton");
 	}
-
+	/**
+	 * Creates the save distribution popup panel.
+	 * @param event The event that has fired.
+	 */ 
 	@Override
 	public void onClick(ClickEvent event) {
 		fp.setLastClicked(StorageManager.KEY_INITDIST);

@@ -34,7 +34,10 @@ public class ResetProtocolButton extends Button implements ClickHandler {
 		addClickHandler(this);
 		ensureDebugId("resetProtocolButton");
 	}
-
+	/**
+	 * Resets the protocol to empty.
+	 * @param event The event that has fired.
+	 */ 
 	@Override
 	public void onClick(ClickEvent event) {
 		fp.resetProtocol();

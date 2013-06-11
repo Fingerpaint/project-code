@@ -24,6 +24,7 @@ import nl.tue.fingerpaint.shared.GeometryNames;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.debug.client.DebugInfo;
 import com.google.gwt.dom.client.IFrameElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -70,8 +71,9 @@ public class Fingerpaint implements EntryPoint {
 	 * This is the entry point method.
 	 */
 	public void onModuleLoad() {
-		// Set IDs or debug IDs.
-		GuiState.setIDs();
+		
+		// Set the DebugID prefix to empty
+		DebugInfo.setDebugIdPrefix("");
 
 		// Load CSS
 		FingerpaintResources.INSTANCE.css().ensureInjected();

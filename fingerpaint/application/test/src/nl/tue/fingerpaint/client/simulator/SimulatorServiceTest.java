@@ -59,6 +59,9 @@ public class SimulatorServiceTest extends GWTTestCase {
 
 	}
 
+	/**
+	 * Returns the module name for the GWT test.
+	 */
 	@Override
 	public String getModuleName() {
 		return "nl.tue.fingerpaint.Fingerpaint";

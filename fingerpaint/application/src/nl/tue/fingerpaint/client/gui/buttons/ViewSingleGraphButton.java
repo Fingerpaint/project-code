@@ -52,6 +52,10 @@ public class ViewSingleGraphButton extends Button implements ClickHandler {
 		ensureDebugId("viewSingleGraphButton");
 	}
 
+	/**
+	 * Shows a graph of the current mixing run.
+	 * @param event The event that has fired.
+	 */
 	@Override
 	public void onClick(ClickEvent event) {
 		ArrayList<double[]> performance = new ArrayList<double[]>();

@@ -33,7 +33,10 @@ public class ExportDistributionButton  extends Button implements ClickHandler {
 		ensureDebugId("ExportDistributionButton");
 	}
 	
-	
+	/**
+	 * Exports the currently shown distribution to an external svg file. 
+	 * @param event The event that has fired.
+	 */
 	@Override
 	public void onClick(ClickEvent event) {
 		String svg = as.getGeometry().getCanvasImage();

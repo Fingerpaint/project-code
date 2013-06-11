@@ -27,6 +27,13 @@ public class SimulatorServiceImpl extends RemoteServiceServlet implements
 	 */
 	private static final long serialVersionUID = 3842884820635044977L;
 
+	/**
+	 * Simulates a result.
+	 * @param request The {@code Simulation} that contains the parameters
+	 * needed to run the simulation. The concentration vector is compressed.
+	 * @return The {@code SimulationResult} achieved by running the simulation
+	 * on the {@code request}.
+	 */
 	@Override
 	public SimulationResult simulate(Simulation request) {
 

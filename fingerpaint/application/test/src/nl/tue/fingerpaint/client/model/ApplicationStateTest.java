@@ -65,6 +65,9 @@ public class ApplicationStateTest extends GWTTestCase {
 				value, as.getNrSteps());
 	}
 
+	/**
+	 * Returns the module name for the GWT test.
+	 */
 	@Override
 	public String getModuleName() {
 		return "nl.tue.fingerpaint.Fingerpaint";

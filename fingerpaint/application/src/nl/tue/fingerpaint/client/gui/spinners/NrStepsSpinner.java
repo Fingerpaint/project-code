@@ -39,6 +39,10 @@ public class NrStepsSpinner extends NumberSpinner implements
 		ensureDebugId("nrStepsSpinner");
 	}
 
+	/**
+	 * Sets the value for this spinner.
+	 * @param value The value that should be set.
+	 */
 	@Override
 	public void onValueChange(double value) {
 		as.setNrSteps(value);

@@ -37,6 +37,11 @@ public class OverwriteSaveButton extends Button implements ClickHandler {
 		ensureDebugId("overwriteSaveButton");
 	}
 
+	/**
+	 * Saves the selected item, shows a notification panel indicating success
+	 * and hides the overwite panel.
+	 * @param event The event that has fired.
+	 */
 	@Override
 	public void onClick(ClickEvent event) {
 		fp.save(GuiState.saveNameTextBox.getText(), true);
