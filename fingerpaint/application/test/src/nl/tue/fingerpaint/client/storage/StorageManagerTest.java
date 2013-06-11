@@ -43,21 +43,21 @@ public class StorageManagerTest extends GWTTestCase {
 
 		// Create an initial distribution and set some values in the
 		// distribution to 1.
-		double[] distribution = new double[96000];
+		int[] distribution = new int[96000];
 		for (int i = startIndex; i < endIndex; i++) {
-			distribution[i] = 1.0;
+			distribution[i] = 255;
 		}
 
 		// Save the distribution in the local storage.
 		StorageManager.INSTANCE.putDistribution(geometry, key, distribution);
 
 		// Receive the initial distribution from the local storage and test it.
-		double[] receivedDist = StorageManager.INSTANCE.getDistribution(
-				geometry, key);
+		int[] receivedDist = StorageManager.INSTANCE.getDistribution(geometry,
+				key);
 
 		for (int i = 0; i < receivedDist.length; i++) {
-			double expectedValue = (i > (startIndex - 1) && i < endIndex) ? 1.0
-					: 0.0;
+			int expectedValue = (i > (startIndex - 1) && i < endIndex) ? 255
+					: 0;
 			assertEquals("Value on index " + i, expectedValue, receivedDist[i]);
 		}
 	}
@@ -84,8 +84,9 @@ public class StorageManagerTest extends GWTTestCase {
 							.getStepSize(), 0.000001);
 			assertEquals("Top wall of step " + i, program.get(i).isTopWall(),
 					receivedProtocol.getStep(i).isTopWall());
-			assertEquals("Direction of step " + i, program.get(i)
-					.isClockwise(), receivedProtocol.getStep(i).isClockwise());
+			assertEquals("Direction of step " + i,
+					program.get(i).isClockwise(), receivedProtocol.getStep(i)
+							.isClockwise());
 		}
 	}
 
@@ -106,9 +107,9 @@ public class StorageManagerTest extends GWTTestCase {
 
 		final String key = "result1";
 		final ResultStorage rs = new ResultStorage();
-		double[] distribution = new double[96000];
+		int[] distribution = new int[96000];
 		for (int i = startIndex; i < endIndex; i++) {
-			distribution[i] = 1.0;
+			distribution[i] = 255;
 		}
 		rs.setDistribution(distribution);
 		rs.setGeometry(geom);
@@ -117,16 +118,16 @@ public class StorageManagerTest extends GWTTestCase {
 		initProtocol();
 		rs.setMixingProtocol(protocol);
 		rs.setSegregation(segr);
-
+		
 		StorageManager.INSTANCE.putResult(key, rs);
 
 		// Receive and test the protocol
 		ResultStorage receivedResult = StorageManager.INSTANCE.getResult(key);
 
-		double[] receivedDist = receivedResult.getDistribution();
+		int[] receivedDist = receivedResult.getDistribution();
 		for (int i = 0; i < receivedDist.length; i++) {
-			double expectedValue = (i > (startIndex - 1) && i < endIndex) ? 1.0
-					: 0.0;
+			int expectedValue = (i > (startIndex - 1) && i < endIndex) ? 255
+					: 0;
 			assertEquals("Value on index " + i, expectedValue, receivedDist[i]);
 		}
 
@@ -143,8 +144,9 @@ public class StorageManagerTest extends GWTTestCase {
 							.getStepSize(), 0.000001);
 			assertEquals("Top wall of step " + i, program.get(i).isTopWall(),
 					receivedProtocol.getStep(i).isTopWall());
-			assertEquals("Direction of step " + i, program.get(i)
-					.isClockwise(), receivedProtocol.getStep(i).isClockwise());
+			assertEquals("Direction of step " + i,
+					program.get(i).isClockwise(), receivedProtocol.getStep(i)
+							.isClockwise());
 		}
 
 		double[] receivedSegregation = receivedResult.getSegregation();

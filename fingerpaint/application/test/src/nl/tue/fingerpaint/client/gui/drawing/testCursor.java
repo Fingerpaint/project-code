@@ -37,9 +37,12 @@ public class testCursor {
 			@Override
 			public Boolean test(WebDriver driver, TestRunner<Boolean> tester) {
 				navigate(driver);
+				driver.findElement(By.id("cursorSizeSpinner")).clear();
 				return true;
 			}
 		};
+		
+		testExecutor(browsertester);
 	}
 	
 	/**
@@ -58,6 +61,7 @@ public class testCursor {
 			}
 		};
 		
+		testExecutor(browsertester);
 	}
 	
 	/**
@@ -67,7 +71,7 @@ public class testCursor {
 	 */
 	private void navigate(WebDriver driver){
 		TestUtil.navigateCellBrowser(driver, 2, 4);
-		driver.findElement(By.id("gwt-debug-toolSelector"));
+		driver.findElement(By.id("toolSelector"));
 	}
 	
 	/**
@@ -77,7 +81,7 @@ public class testCursor {
 	 * @return true iff all tests in the CrossBrowserTester were successful
 	 */
 	private boolean testExecutor(CrossBrowserTest<Boolean> browsertester){
-		boolean success = true;//variable to keep track of results
+		boolean success = true; //variable to keep track of results
 		try {
 			MultiBrowserTester<Boolean> multitester = new MultiBrowserTester<Boolean>(
 					browsertester, 
@@ -97,10 +101,10 @@ public class testCursor {
 				}
 			}
 			
-			List<Map<Dimension, Map<DesiredCapabilities, BufferedImage>>> screenies = multitester.getLastScreenshots();
-			for(Map<Dimension, Map<DesiredCapabilities, BufferedImage>> screenie : screenies){
-				
-			}
+//			List<Map<Dimension, Map<DesiredCapabilities, BufferedImage>>> screenies = multitester.getLastScreenshots();
+//			for(Map<Dimension, Map<DesiredCapabilities, BufferedImage>> screenie : screenies){
+//				
+//			}
 		} catch (MalformedURLException | MultiBrowserTesterException e) {
 			e.printStackTrace();
 			return false;

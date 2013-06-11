@@ -19,7 +19,6 @@ public class RectangleGeometry extends Geometry {
 	private static final int VERTICAL_CELLS = 240;
 	private static final int HORIZONTAL_CELLS = 400;
 
-	
 	// ----Constructors-----------------------------------------
 	/**
 	 * Uses constructor from super class (Geometry.java)
@@ -62,8 +61,8 @@ public class RectangleGeometry extends Geometry {
 	 * 
 	 */
 	@Override
-	public double[] getDistribution() {
-		double[] dist = new double[HORIZONTAL_CELLS * VERTICAL_CELLS];
+	public int[] getDistribution() {
+		int[] dist = new int[HORIZONTAL_CELLS * VERTICAL_CELLS];
 		ImageData img = context.getImageData(X_OFFSET + 1, TOP_OFFSET + 1,
 				getWidth(), getHeight());
 		CanvasPixelArray data = img.getData();
@@ -74,45 +73,14 @@ public class RectangleGeometry extends Geometry {
 			for (int x = 0; x < width; x += factor) {
 				index = (y * width + x) * 4;
 				dist[x / factor + HORIZONTAL_CELLS
-						* (VERTICAL_CELLS - 1 - y / factor)] = (double) data
-						.get(index) / 255;
+						* (VERTICAL_CELLS - 1 - y / factor)] = data
+						.get(index);
 			}
 		}
 		return dist;
 	}
 
 	// ----Implemented abstract methods from superclass----------------
-
-	/**
-	 * Fills a single pixel of the canvas with the current colour. Also updates
-	 * internal representation vector accordingly.
-	 * 
-	 * <pre>
-	 * 0 <=
-	 * {@code x} < 400
-	 * 
-	 * <pre>
-	 * 0 <= {@code y} < 240
-	 * 
-	 * @param x
-	 *            x-coordinate, relative to the canvas element, of the pixel to
-	 *            be filled
-	 * @param y
-	 *            y-coordinate, relative to the canvas element, of the pixel to
-	 * be filled
-	 * @param colour The colour to fill the pixel with
-	 */
-	@Override
-	public void fillPixel(int x, int y, CssColor colour) {
-		if (isInsideDrawingArea(x, y)) {
-			// Fill a rectangle with the currentColor. Change to valid
-			// coordinates to find upper left corner of the 'pixel'.
-			// Make the 'pixel' the size of the multiplying factor.
-			context.setFillStyle(colour);
-			context.fillRect(getValidCoord(x) + X_OFFSET, getValidCoord(y)
-					+ TOP_OFFSET, factor, factor);
-		}
-	}
 
 	/**
 	 * Returns whether the position ({@code x}, {@code y}) is inside the drawing
@@ -143,8 +111,7 @@ public class RectangleGeometry extends Geometry {
 	 */
 	@Override
 	protected boolean isInsideTopWall(int x, int y) {
-		return (x > 0 && x < getWidth()
-				&& y > -HEIGHT_OF_WALL && y < 0);
+		return (x > 0 && x < getWidth() && y > -HEIGHT_OF_WALL && y < 0);
 	}
 
 	/**
@@ -163,8 +130,8 @@ public class RectangleGeometry extends Geometry {
 	 */
 	@Override
 	protected boolean isInsideBottomWall(int x, int y) {
-		return (x > 0 && x < getWidth()
-				&& y > getHeight() && y < getHeight() + HEIGHT_OF_WALL);
+		return (x > 0 && x < getWidth() && y > getHeight() && y < getHeight()
+				+ HEIGHT_OF_WALL);
 	}
 
 	/**
@@ -175,9 +142,9 @@ public class RectangleGeometry extends Geometry {
 	 */
 	@Override
 	protected void initialiseDistribution() {
-		distribution = new double[HORIZONTAL_CELLS * VERTICAL_CELLS];
+		distribution = new int[HORIZONTAL_CELLS * VERTICAL_CELLS];
 		for (int i = 0; i < distribution.length; i++) {
-			distribution[i] = 1;
+			distribution[i] = 255;
 		}
 	}
 
@@ -201,7 +168,7 @@ public class RectangleGeometry extends Geometry {
 		context.lineTo(X_OFFSET + 0.5, TOP_OFFSET + 0.5);
 		context.closePath();
 		context.stroke();
-		
+
 		// Draw the outline of the bottom wall
 		context.beginPath();
 		context.moveTo(X_OFFSET + 0.5, TOP_OFFSET + getHeight() + 1.5);
@@ -213,7 +180,7 @@ public class RectangleGeometry extends Geometry {
 				+ HEIGHT_OF_WALL);
 		context.closePath();
 		context.stroke();
-		
+
 		// Fill the top and bottom walls
 		fillWall(0, true);
 		fillWall(0, false);
@@ -233,7 +200,7 @@ public class RectangleGeometry extends Geometry {
 		// Set the height of the upper border of the wall
 		double y = topWal ? TOP_OFFSET + 1 - HEIGHT_OF_WALL : TOP_OFFSET
 				+ getHeight() + 2;
-		
+
 		// Clip the area inside the wall
 		context.beginPath();
 		context.moveTo(X_OFFSET + 1, y);
@@ -250,13 +217,13 @@ public class RectangleGeometry extends Geometry {
 		// Set the stroke style for the arrows (stripes)
 		context.setStrokeStyle(wallStripeColor.toHexString());
 		context.setLineWidth(STRIPE_WIDTH);
-		
+
 		// Set the initial x and y values for the arrows to the left
 		double x = X_OFFSET + 1 + getWidth() / 2.0 - STRIPE_INTERVAL / 2.0
 				+ xOffset;
 		y = topWal ? TOP_OFFSET + 0.5 - HEIGHT_OF_WALL / 2.0 : TOP_OFFSET
 				+ getHeight() + 1.5 + HEIGHT_OF_WALL / 2.0;
-		
+
 		// Draw all the arrows to the left
 		while (x > X_OFFSET + 0.5) {
 			context.beginPath();
@@ -267,9 +234,10 @@ public class RectangleGeometry extends Geometry {
 			x -= STRIPE_INTERVAL;
 		}
 
-		// Set the initial x value for the arrows to the right (y stays the same)
+		// Set the initial x value for the arrows to the right (y stays the
+		// same)
 		x = X_OFFSET + 1 + getWidth() / 2.0 + STRIPE_INTERVAL / 2.0 + xOffset;
-		
+
 		// Draw all the arrows to the right
 		while (x < X_OFFSET + getWidth()) {
 			context.beginPath();
@@ -279,7 +247,7 @@ public class RectangleGeometry extends Geometry {
 			context.stroke();
 			x += STRIPE_INTERVAL;
 		}
-		
+
 		// Restore clipping area to full canvas
 		removeClippingArea();
 	}
@@ -395,18 +363,18 @@ public class RectangleGeometry extends Geometry {
 	 * The distribution to be set and drawn
 	 */
 	@Override
-	public void drawDistribution(double[] dist) {
+	public void drawDistribution(int[] dist) {
 		ImageData img = context.getImageData(X_OFFSET + 1, TOP_OFFSET + 1,
 				getWidth(), getHeight());
 		CanvasPixelArray data = img.getData();
 		int width = getWidth();
 		int l = dist.length;
 		int x, y, col, index, sw, sh, w2, h2;
-		
+
 		for (int i = 0; i < l; i++) {
 			x = i % 400;
 			y = 239 - i / 400;
-			col = (int) (dist[i] * 255);
+			col = dist[i];
 			sw = x * factor;
 			sh = y * factor;
 			w2 = (x + 1) * factor;
@@ -424,8 +392,43 @@ public class RectangleGeometry extends Geometry {
 	}
 
 	/**
+	 * Returns the string representation of the .svg image of the canvas
+	 * 
+	 * @return The string representation of the .svg image of the canvas
+	 */
+	@Override
+	public String getCanvasImage() {
+		int[] dist = getDistribution();
+		int width = getBaseWidth();
+		int height = getBaseHeight();
+		int d = factor;		
+		StringBuilder sb = new StringBuilder();
+		sb.append("<svg>");
+		
+		for (int i = 0; i < dist.length; i++) {
+			int x = i % width;
+			int y = height - i / width;
+			String col = intToHexString(dist[i]);		
+			sb.append("<rect fill=\""
+					+ col + "\" height=\""
+					+ d + "\" stroke=\"none\" width=\"" + d + "\" x=\""
+					+ x * d + "\" y=\"" + y * d + "\"/>");			
+		}
+		sb.append( "</svg>");
+		return sb.toString();
+	}
+
+	private String intToHexString(int i) {
+		String hexValue = Integer.toHexString(i);
+	
+		hexValue = hexValue.length() == 1 ? "0"+hexValue : hexValue;
+		
+		return "#" + hexValue + hexValue + hexValue;
+	}
+
+	/**
 	 * Resets the current distribution to all white. Equivalent to calling
-	 * drawDistribution with a dist parameter containing '1' at all indices (but
+	 * drawDistribution with a dist parameter containing '255' at all indices (but
 	 * faster)
 	 */
 	@Override

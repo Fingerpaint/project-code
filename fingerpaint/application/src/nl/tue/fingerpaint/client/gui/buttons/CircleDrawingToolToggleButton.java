@@ -2,8 +2,8 @@ package nl.tue.fingerpaint.client.gui.buttons;
 
 import nl.tue.fingerpaint.client.Fingerpaint;
 import nl.tue.fingerpaint.client.gui.GuiState;
-import nl.tue.fingerpaint.client.gui.drawingtool.CircleDrawingTool;
 import nl.tue.fingerpaint.client.model.ApplicationState;
+import nl.tue.fingerpaint.client.model.drawingtool.CircleDrawingTool;
 import nl.tue.fingerpaint.client.resources.FingerpaintConstants;
 
 import com.google.gwt.event.dom.client.ClickEvent;

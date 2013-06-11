@@ -2,13 +2,12 @@ package nl.tue.fingerpaint.client.model;
 
 import java.util.ArrayList;
 
-import nl.tue.fingerpaint.client.gui.drawingtool.DrawingTool;
-import nl.tue.fingerpaint.client.gui.drawingtool.SquareDrawingTool;
+import nl.tue.fingerpaint.client.model.drawingtool.DrawingTool;
+import nl.tue.fingerpaint.client.model.drawingtool.SquareDrawingTool;
 import nl.tue.fingerpaint.shared.utils.Colour;
 
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
-import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.canvas.dom.client.ImageData;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.ImageElement;
@@ -25,7 +24,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 public abstract class Geometry {
 
 	/** Internal representation of the geometry */
-	protected double[] distribution;
+	protected int[] distribution;
 
 	/** The canvas to draw on */
 	protected Canvas canvas;
@@ -258,7 +257,7 @@ public abstract class Geometry {
 	 * 
 	 * @return The distribution of this geometry
 	 */
-	abstract public double[] getDistribution();
+	abstract public int[] getDistribution();
 
 	/**
 	 * Sets the distribution to {@code dist}
@@ -266,7 +265,7 @@ public abstract class Geometry {
 	 * @param dist
 	 *            The distribution to set
 	 */
-	public void setDistribution(double[] dist) {
+	public void setDistribution(int[] dist) {
 		this.distribution = dist;
 	}
 
@@ -561,24 +560,6 @@ public abstract class Geometry {
 		context.save();
 	}
 
-	/**
-	 * Colours the pixel(s) corresponding to coordinates ({@code x}, {@code y}).
-	 * Also updates the internal representation accordingly.
-	 * 
-	 * @param x
-	 *            The horizontal position of the mouse click relative to the
-	 *            top-left corner of the {@code canvas}
-	 * @param y
-	 *            The vertical position of the mouse click relative to the
-	 *            top-left corner of the {@code canvas}
-	 * @param colour
-	 *            The colour to fill the pixel with
-	 * 
-	 * @post The cell of the {@code internalRepresenationVector} corresponding
-	 *       to the coordinates ({@code x}, {@code y}) has been updated, and the
-	 *       corresponding pixels on the canvas have been coloured
-	 */
-	abstract protected void fillPixel(int x, int y, CssColor colour);
 
 	/**
 	 * Returns whether the position ({@code x}, {@code y}) is inside the drawing
@@ -742,21 +723,6 @@ public abstract class Geometry {
 	protected abstract MixingStep determineSwipe(int mouseX, int mouseY);
 
 	/**
-	 * Returns a CssColor object with the gray scale colour corresponding to the
-	 * given value
-	 * 
-	 * @param value
-	 *            The value which determines the colour; 0 means black and 1
-	 *            means white
-	 * @return The CssColor object with the gray scale colour corresponding to
-	 *         {@code value}
-	 */
-	protected CssColor getColour(double value) {
-		int colourCode = (int) Math.round(value * 255);
-		return CssColor.make(colourCode, colourCode, colourCode);
-	}
-
-	/**
 	 * Creates and returns an image element with the image data belonging to the
 	 * drawing tool.
 	 * 
@@ -806,7 +772,16 @@ public abstract class Geometry {
 	 * @param dist
 	 *            The distribution to be set and drawn
 	 */
-	abstract public void drawDistribution(double[] dist);
+	
+	abstract public void drawDistribution(int[] dist);
+	
+	/**
+	 * Returns the string representation of the .svg image of the canvas
+	 * 
+	 * @return The string representation of the .svg image of the canvas
+	 */
+	abstract public String getCanvasImage();
+	
 
 	/**
 	 * Resets the current distribution to all white

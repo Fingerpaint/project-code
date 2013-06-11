@@ -15,7 +15,7 @@ public class FileExporter {
 	 * 
 	 * @param svg SVG image as a string.
 	 */
-	public static void exportGraph(String svg) {
+	public static void exportSvgImage(String svg) {
 		// Add tags to indicate that this should be an svg image
 		svg = svg.substring(0, 4)
 				+ " xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\""

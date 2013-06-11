@@ -3,6 +3,9 @@ package nl.tue.fingerpaint.client.simulator;
 import nl.tue.fingerpaint.client.model.MixingProtocol;
 import nl.tue.fingerpaint.client.simulator.SimulatorService;
 import nl.tue.fingerpaint.client.simulator.SimulatorServiceAsync;
+import nl.tue.fingerpaint.client.storage.FingerpaintJsonizer;
+import nl.tue.fingerpaint.client.storage.FingerpaintZipper;
+
 
 import org.junit.Test;
 
@@ -36,10 +39,10 @@ public class SimulatorServiceTest extends GWTTestCase {
 		};
 
 		int size = 96000;
-		double[] concentrationVector = new double[size];
+		int[] concentrationVector = new int[size];
 		for (int i = 0; i < size; i++) {
 			if (i < size / 2) {
-				concentrationVector[i] = 1;
+				concentrationVector[i] = 255;
 			} else {
 				concentrationVector[i] = 0;
 			}
@@ -48,7 +51,9 @@ public class SimulatorServiceTest extends GWTTestCase {
 		protocol.addStep(40, true, true);
 		protocol.addStep(40, true, false);
 		Simulation simulation = new Simulation("Default", protocol,
-				concentrationVector, 5, true);
+				FingerpaintZipper.zip(
+						FingerpaintJsonizer.toString(concentrationVector))
+						.substring(1), 5, true);
 
 		service.simulate(simulation, callback);
 

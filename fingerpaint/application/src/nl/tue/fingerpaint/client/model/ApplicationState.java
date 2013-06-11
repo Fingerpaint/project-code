@@ -1,6 +1,5 @@
 package nl.tue.fingerpaint.client.model;
 
-
 /**
  * Class that keeps track of the Geometry and Mixer the user has selected. Used
  * by the cellBrowser widget in Fingerpaint.java to store chosen variables.
@@ -26,7 +25,7 @@ public class ApplicationState {
 	 * Stores the initial distribution, and not the current distribution as
 	 * shown on the canvas, once set.
 	 */
-	private double[] initialDistribution = null;
+	private int[] initialDistribution = null;
 
 	/**
 	 * The number of times (#steps) that the defined protocol will be applied.
@@ -169,7 +168,7 @@ public class ApplicationState {
 	 * 
 	 * @return The current initial concentration distribution
 	 */
-	public double[] getInitialDistribution() {
+	public int[] getInitialDistribution() {
 		return initialDistribution;
 	}
 
@@ -179,7 +178,7 @@ public class ApplicationState {
 	 * @param distribution
 	 *            The distribution to set
 	 */
-	public void setInitialDistribution(double[] distribution) {
+	public void setInitialDistribution(int[] distribution) {
 		this.initialDistribution = distribution;
 	}
 
@@ -218,5 +217,7 @@ public class ApplicationState {
 	public void drawDistribution() {
 		geom.drawDistribution(initialDistribution);
 	}
+
+
 
 }

@@ -16,6 +16,8 @@ import nl.tue.fingerpaint.client.simulator.SimulationResult;
 import nl.tue.fingerpaint.client.simulator.SimulatorService;
 import nl.tue.fingerpaint.client.simulator.SimulatorServiceAsync;
 import nl.tue.fingerpaint.client.storage.FileExporter;
+import nl.tue.fingerpaint.client.storage.FingerpaintJsonizer;
+import nl.tue.fingerpaint.client.storage.FingerpaintZipper;
 import nl.tue.fingerpaint.client.storage.ResultStorage;
 import nl.tue.fingerpaint.client.storage.StorageManager;
 import nl.tue.fingerpaint.shared.GeometryNames;
@@ -69,6 +71,7 @@ public class Fingerpaint implements EntryPoint {
 	 * This is the entry point method.
 	 */
 	public void onModuleLoad() {
+		
 		// Set the DebugID prefix to empty
 		DebugInfo.setDebugIdPrefix("");
 
@@ -77,8 +80,9 @@ public class Fingerpaint implements EntryPoint {
 
 		// Initialise the loading panel
 		// Add animation image
-		Image loadImage = new Image(FingerpaintResources.INSTANCE.loadImage()
-				.getSafeUri());
+		Image loadImage = new Image(FingerpaintResources.INSTANCE
+				.loadImageDynamic().getSafeUri());
+		loadImage.getElement().setId("loadImage");
 		GuiState.loadingPanel.add(loadImage);
 
 		// Add label that may contain explanatory text
@@ -195,15 +199,21 @@ public class Fingerpaint implements EntryPoint {
 
 	/**
 	 * Save the currently shown graph to disk in svg format.
+	 * 
+	 * @param multiple Indicates whether the single graph or the multiple graphs
+	 * graph should be exported.
 	 */
-	public void exportGraph() {
+	public void exportGraph(boolean multiple) {
+		//get the panel that contains the right graph (single or multiple)
+		String id = multiple ? "compareGraphPanel" : "viewSingleGraphGraphPanel";
+		
 		String svg = IFrameElement
-				.as(DOM.getElementById("compareGraphPanel")
+				.as(DOM.getElementById(id)
 						.getElementsByTagName("iframe").getItem(0))
 				.getContentDocument().getElementById("chartArea")
 				.getInnerHTML();
 
-		FileExporter.exportGraph(svg);
+		FileExporter.exportSvgImage(svg);
 	}
 
 	/**
@@ -230,13 +240,13 @@ public class Fingerpaint implements EntryPoint {
 	 */
 	public void setProtocolWidgetsVisible(boolean visible) {
 		if (visible) {
-			GuiState.protocolPanelContainer.showRelativeTo(GuiState.menuPanel);
+			GuiState.protocolPanelContainer.setVisibleAnimated(true);
 		} else {
-			GuiState.protocolPanelContainer.hide();
+			GuiState.protocolPanelContainer.setVisibleAnimated(false);
 		}
 	}
 
-	/**
+	/*
 	 * this method is used to acquire the size of the current cursor in pixels
 	 * 
 	 * @return cursorSizeSpinner.getValue()-1
@@ -400,8 +410,10 @@ public class Fingerpaint implements EntryPoint {
 			@Override
 			public void run() {
 				Simulation simulation = new Simulation(as.getMixerChoice(),
-						protocol, as.getInitialDistribution(), as.getNrSteps(),
-						false);
+						protocol, FingerpaintZipper.zip(
+								FingerpaintJsonizer.toString(as
+										.getInitialDistribution()))
+								.substring(1), as.getNrSteps(), false);
 
 				TimeoutRpcRequestBuilder timeoutRpcRequestBuilder = new TimeoutRpcRequestBuilder(
 						10000);
