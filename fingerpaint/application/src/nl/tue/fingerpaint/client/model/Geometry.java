@@ -91,9 +91,6 @@ public abstract class Geometry {
 	 */
 	private boolean definingStep;
 
-	/** {@code true} if the top wall is being moved, {@code false} otherwise */
-	protected boolean topWallStep;
-
 	/**
 	 * Threshold in pixels to decide when a large enough swipe has been carried
 	 * out to define a protocol step.
@@ -130,7 +127,7 @@ public abstract class Geometry {
 	 * @param clientWidth
 	 *            The width of the window in which the application is displayed
 	 */
-	public Geometry(int clientHeight, int clientWidth) {
+	protected Geometry(int clientHeight, int clientWidth) {
 		initialiseDistribution();
 
 		setFactor(Math.max(
@@ -141,7 +138,6 @@ public abstract class Geometry {
 
 		drawing = false;
 		definingStep = false;
-		topWallStep = true;
 
 		createCanvas(clientHeight, clientWidth);
 
@@ -338,8 +334,7 @@ public abstract class Geometry {
 	// drawing------------
 
 	/**
-	 * Initialisation method which creates the canvas. Also initialises and adds
-	 * MouseHandlers to the canvas. If the browser doesn't support HTML5 canvas,
+	 * Initialisation method which creates the canvas. If the browser doesn't support HTML5 canvas,
 	 * adds a message stating this to the RootPanel and returns.
 	 * 
 	 * @param height
@@ -402,22 +397,23 @@ public abstract class Geometry {
 			context.drawImage(toolImage, Math.max(x - displacement, 0)
 					+ X_OFFSET, Math.max(y - displacement, 0) + TOP_OFFSET);
 
-		} else if (isInsideTopWall(x, y) || isInsideBottomWall(x, y)) {
+		} else if (isInsideWall(x, y)) {
 			// cancel current animation if there is one
 			if (animationTimer != null) {
 				animationTimer.cancel();
 				removeClippingArea();
-				fillWall(0, topWallStep);
+				fillWall(0);
 				clipGeometryOutline();
 			}
 			
 			// User started defining a step of the protocol
 			definingStep = true;
-			topWallStep = isInsideTopWall(x, y);
 
 			startDefineMixingStep(x, y);
 		}
 	}
+	
+	public abstract boolean isInsideWall(int x, int y);
 
 	/**
 	 * Code to execute on a MouseUp event.
@@ -453,9 +449,9 @@ public abstract class Geometry {
 			drawLine(previousX, previousY, x, y);
 			previousX = x;
 			previousY = y;
-		} else if (definingStep && (isInsideTopWall(x, y) || isInsideBottomWall(x, y))) {
+		} else if (definingStep && (isInsideWall(x, y))) {
 			removeClippingArea();
-			fillWall(x - swipeStartX, topWallStep);
+			fillWall(x - swipeStartX);
 			clipGeometryOutline();
 		}
 	}
@@ -465,12 +461,12 @@ public abstract class Geometry {
 	 */
 	public void onDragOut() {
 		removeClippingArea();
-		fillWall(0, topWallStep);
+		fillWall(0);
 		clipGeometryOutline();
 
 		removeMouseMoveHandler(0);
 	}
-
+	
 	/**
 	 * Removes the mouseMoveHandler from the canvas, if it is present. If
 	 * defining a step has been ended, an animation is started to move the walls
@@ -502,13 +498,22 @@ public abstract class Geometry {
 						x = Math.max(x - speed * ANIMATION_DISTANCE, 0);
 					}
 					removeClippingArea();
-					fillWall(x, topWallStep);
+  
+					fillWall(x);
 					clipGeometryOutline();
 				}
 			};
 			animationTimer.scheduleRepeating(REFRESH_INTERVAL);
 		}
 	}
+
+	/**
+	 * Colours the inside of one of the walls of the geometry.
+	 * 
+	 * @param x
+	 *            The x-distance to the initial position
+	 */
+	protected abstract void fillWall(int x);
 
 	/**
 	 * Initialises the distribution of the drawing area
@@ -523,17 +528,6 @@ public abstract class Geometry {
 	 * @post The outline of the walls has been drawn on the {@code canvas}
 	 */
 	abstract protected void drawWalls();
-
-	/**
-	 * Colours the inside of one of the walls of the geometry.
-	 * 
-	 * @param xOffset
-	 *            The x-distance to the initial position
-	 * @param topWal
-	 *            {@code true} if the top wall has to be filled, {@code false}
-	 *            otherwise
-	 */
-	abstract protected void fillWall(int xOffset, boolean topWal);
 
 	/**
 	 * Draws the border around the drawing area
@@ -576,38 +570,6 @@ public abstract class Geometry {
 	 *         {@code false} otherwise.
 	 */
 	abstract protected boolean isInsideDrawingArea(int x, int y);
-
-	/**
-	 * Returns whether the position ({@code x}, {@code y}) is inside the top
-	 * wall on the {@code canvas}.
-	 * 
-	 * @param x
-	 *            The x-coordinate relative to the top-left corner of the
-	 *            {@code canvas}
-	 * @param y
-	 *            The y-coordinate relative to the top-left corner of the
-	 *            {@code canvas}
-	 * 
-	 * @return {@code true} if coordinates (x, y) are inside the top wall.
-	 *         {@code false} otherwise.
-	 */
-	abstract protected boolean isInsideTopWall(int x, int y);
-
-	/**
-	 * Returns whether the position ({@code x}, {@code y}) is inside the bottom
-	 * wall on the {@code canvas}.
-	 * 
-	 * @param x
-	 *            The x-coordinate relative to the top-left corner of the
-	 *            {@code canvas}
-	 * @param y
-	 *            The y-coordinate relative to the top-left corner of the
-	 *            {@code canvas}
-	 * 
-	 * @return {@code true} if coordinates (x, y) are inside the bottom wall.
-	 *         {@code false} otherwise.
-	 */
-	abstract protected boolean isInsideBottomWall(int x, int y);
 
 	/**
 	 * Draws a line manually, filling a single pixel at a time. Can't use the
