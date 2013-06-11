@@ -12,11 +12,20 @@ import com.google.gwt.visualization.client.visualizations.LineChart;
 import com.google.gwt.visualization.client.visualizations.LineChart.Options;
 
 /**
- * Class for the creation of segregation graphs
+ * <p>
+ * Class for the creation of segregation graphs.
+ * </p>
  * 
- * HOW TO CALL THIS CLASS: Load the visualisation API, passing the
- * onLoadCallback to be called when loading is done.
- * VisualizationUtils.loadVisualizationApi(onLoadCallback, LineChart.PACKAGE);
+ * <h2>How to call this class</h2>
+ * <p>
+ * Load the visualisation API, passing the {@code onLoadCallback} to be called when
+ * loading is done. This should be done as follows:
+ * <pre>
+ *   GraphVisualisator gv = new GraphVisualisator();
+ *   Runnable onLoad = gv.createGraph(...);
+ *   VisualizationUtils.loadVisualizationApi(onLoad, LineChart.PACKAGE);
+ * </pre>
+ * </p>
  * 
  * @author Group Fingerpaint
  */
@@ -38,8 +47,8 @@ public class GraphVisualisator {
 	private int xAxisLength = 0;
 
 	/** Stores the chart. */
-	private LineChart lineChart;	
-	
+	private LineChart lineChart;
+
 	/**
 	 * Returns the runnable object to initiate drawing the graph in
 	 * Fingerpaint.createGraph()
@@ -50,13 +59,17 @@ public class GraphVisualisator {
 	 *            List of names of the different plots in the chart
 	 * @param performance
 	 *            Values of the different plots
-	 * @param onLoad A callback to execute when the graph has been loaded.
-	 * @param height The height of the image to be drawn
-	 * @param width The width of the image to be drawn
+	 * @param onLoad
+	 *            A callback to execute when the graph has been loaded.
+	 * @param height
+	 *            The height of the image to be drawn
+	 * @param width
+	 *            The width of the image to be drawn
 	 * @return The runnable object to initiate drawing the graph
 	 */
 	public Runnable createGraph(Panel panel, ArrayList<String> names,
-			ArrayList<double[]> performance, AsyncCallback<Boolean> onLoad, int height, int width) {
+			ArrayList<double[]> performance, AsyncCallback<Boolean> onLoad,
+			int height, int width) {
 		for (int i = 0; i < names.size(); i++) {
 			addSegregationResult(performance.get(i));
 		}
@@ -71,13 +84,16 @@ public class GraphVisualisator {
 	 *            The panel the graph will be added to
 	 * @return The runnable object to initiate drawing the graph
 	 */
-	private Runnable getOnLoadCallBack(final Panel panel, final AsyncCallback<Boolean> onLoad, final int height, final int width) {
+	private Runnable getOnLoadCallBack(final Panel panel,
+			final AsyncCallback<Boolean> onLoad, final int height,
+			final int width) {
 		// Create a callback to be called when the visualisation API
 		// has been loaded.
 		return new Runnable() {
 			public void run() {
 				// Create a line chart visualisation.
-				lineChart = new LineChart(createTable(), createOptions(height, width));
+				lineChart = new LineChart(createTable(), createOptions(height,
+						width));
 				panel.add(lineChart);
 				onLoad.onSuccess(true);
 			}
