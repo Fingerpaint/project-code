@@ -24,6 +24,10 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+/**
+ * Tests the graph visualisation classes.
+ * @author Group Fingerpaint
+ */
 public class GraphVisualisatorTest {
 
 	/**

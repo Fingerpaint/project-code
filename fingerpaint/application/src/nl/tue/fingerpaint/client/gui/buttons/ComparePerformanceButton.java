@@ -44,6 +44,10 @@ public class ComparePerformanceButton extends Button implements ClickHandler {
 
 	}
 
+	/**
+	 * Creates a list containing the names of all locally stored results.
+	 * @param event The event that has fired.
+	 */
 	@Override
 	public void onClick(ClickEvent event) {
 		ArrayList<String> resultNames = (ArrayList<String>) StorageManager.INSTANCE

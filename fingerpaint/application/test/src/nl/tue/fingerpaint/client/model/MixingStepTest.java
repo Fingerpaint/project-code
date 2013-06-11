@@ -50,7 +50,10 @@ public class MixingStepTest extends GWTTestCase {
 		stepClass.setStepSize(0.9);
 		assertEquals(1.0, stepClass.getStepSize());
 	}
-
+	
+	/**
+	 * Returns the module name for the GWT test.
+	 */
 	@Override
 	public String getModuleName() {
 		return "nl.tue.fingerpaint.Fingerpaint";

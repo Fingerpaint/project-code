@@ -39,6 +39,10 @@ public class LoadProtocolButton extends Button implements ClickHandler {
 		ensureDebugId("loadProtocolButton");
 	}
 
+	/**
+	 * Creates a panel with the names of all locally stored distributions.
+	 * @param event The event that has fired.
+	 */
 	@Override
 	public void onClick(ClickEvent event) {
 		List<String> geometryProtocols = StorageManager.INSTANCE

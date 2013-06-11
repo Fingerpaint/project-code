@@ -133,6 +133,10 @@ public class Colour {
 				+ pad(Integer.toHexString(b), 2);
 	}
 	
+	/**
+	 * Converts the colour to a hexadecimal code.
+	 * @return the hexadecimal code for the colour.
+	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -143,6 +147,11 @@ public class Colour {
 		return result;
 	}
 
+	/**
+	 * Compares this Colour to an other object.
+	 * @return {@code true} if {@code this} is equal to {@code object},
+	 * {@code false} otherwise.
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
@@ -167,6 +176,10 @@ public class Colour {
 		return true;
 	}
 
+	/**
+	 * Returns the hexadecimal representation of this colour as a String.
+	 * @return the hexadecimal representation of this colour as a String.
+	 */
 	@Override
 	public String toString() {
 		return toHexString();

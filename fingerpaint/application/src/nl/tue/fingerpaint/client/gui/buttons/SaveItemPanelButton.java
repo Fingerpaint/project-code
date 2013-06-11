@@ -39,6 +39,11 @@ public class SaveItemPanelButton extends Button implements ClickHandler {
 		ensureDebugId("saveItemPanelButton");
 	}
 
+	/**
+	 * Tries to save the chosen result. If successful, a notification is shown;
+	 * otherwise, the overwrite save panel is created.
+	 * @param event The event that has fired.
+	 */
 	@Override
 	public void onClick(ClickEvent event) {
 		boolean success = fp.save(GuiState.saveNameTextBox.getText(), false);

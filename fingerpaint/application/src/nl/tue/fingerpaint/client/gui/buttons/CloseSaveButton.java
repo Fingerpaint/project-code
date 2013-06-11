@@ -23,6 +23,11 @@ public class CloseSaveButton extends Button implements ClickHandler {
 		ensureDebugId("closeSaveButton");
 	}
 
+	/**
+	 * Closes the overwrite panel, shows the save panel and selects the
+	 * previously entered name.
+	 * @param event The event that has fired.
+	 */
 	@Override
 	public void onClick(ClickEvent event) {
 		GuiState.overwriteSavePanel.hide();

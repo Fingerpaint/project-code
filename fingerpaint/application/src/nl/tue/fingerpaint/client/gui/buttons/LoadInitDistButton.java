@@ -41,6 +41,10 @@ public class LoadInitDistButton extends Button implements ClickHandler {
 		ensureDebugId("loadInitDistButton");
 	}
 
+	/**
+	 * Creates a panel with the names of all locally stored distributions.
+	 * @param event The event that has fired.
+	 */
 	@Override
 	public void onClick(ClickEvent event) {
 		// Get all initial distributions for current geometry

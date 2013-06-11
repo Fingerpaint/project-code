@@ -36,6 +36,10 @@ public class SaveResultsButton extends Button implements ClickHandler {
 		ensureDebugId("saveResultsButton");
 	}
 
+	/**
+	 * Creates the save results popup panel.
+	 * @param event The event that has fired.
+	 */
 	@Override
 	public void onClick(ClickEvent event) {
 		fp.setLastClicked(StorageManager.KEY_RESULTS);
