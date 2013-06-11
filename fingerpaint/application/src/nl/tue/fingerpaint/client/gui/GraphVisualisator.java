@@ -2,6 +2,8 @@ package nl.tue.fingerpaint.client.gui;
 
 import java.util.ArrayList;
 
+import org.apache.commons.lang.ArrayUtils;
+
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.visualization.client.AbstractDataTable;
@@ -12,7 +14,9 @@ import com.google.gwt.visualization.client.visualizations.LineChart;
 import com.google.gwt.visualization.client.visualizations.LineChart.Options;
 
 /**
- * <p>Class for the creation of segregation graphs.</p>
+ * <p>
+ * Class for the creation of segregation graphs.
+ * </p>
  * 
  * <p>
  * HOW TO CALL THIS CLASS: Load the visualisation API, passing the
@@ -40,8 +44,8 @@ public class GraphVisualisator {
 	private int xAxisLength = 0;
 
 	/** Stores the chart. */
-	private LineChart lineChart;	
-	
+	private LineChart lineChart;
+
 	/**
 	 * Returns the runnable object to initiate drawing the graph in
 	 * Fingerpaint.createGraph()
@@ -52,13 +56,17 @@ public class GraphVisualisator {
 	 *            List of names of the different plots in the chart
 	 * @param performance
 	 *            Values of the different plots
-	 * @param onLoad A callback to execute when the graph has been loaded.
-	 * @param height The height of the image to be drawn
-	 * @param width The width of the image to be drawn
+	 * @param onLoad
+	 *            A callback to execute when the graph has been loaded.
+	 * @param height
+	 *            The height of the image to be drawn
+	 * @param width
+	 *            The width of the image to be drawn
 	 * @return The runnable object to initiate drawing the graph
 	 */
 	public Runnable createGraph(Panel panel, ArrayList<String> names,
-			ArrayList<double[]> performance, AsyncCallback<Boolean> onLoad, int height, int width) {
+			ArrayList<double[]> performance, AsyncCallback<Boolean> onLoad,
+			int height, int width) {
 		for (int i = 0; i < names.size(); i++) {
 			addSegregationResult(performance.get(i));
 		}
@@ -71,21 +79,24 @@ public class GraphVisualisator {
 	 * 
 	 * @param panel
 	 *            The panel the graph will be added to.
-     * @param onLoad
-     *            The function that should be called upon completion.
-     * @param height
-     *            The height of the window in which the graph will be shown.
-     * @param width
-     *            The width of the window in which the graph will be shown.
+	 * @param onLoad
+	 *            The function that should be called upon completion.
+	 * @param height
+	 *            The height of the window in which the graph will be shown.
+	 * @param width
+	 *            The width of the window in which the graph will be shown.
 	 * @return The runnable object to initiate drawing the graph.
 	 */
-	private Runnable getOnLoadCallBack(final Panel panel, final AsyncCallback<Boolean> onLoad, final int height, final int width) {
+	private Runnable getOnLoadCallBack(final Panel panel,
+			final AsyncCallback<Boolean> onLoad, final int height,
+			final int width) {
 		// Create a callback to be called when the visualisation API
 		// has been loaded.
 		return new Runnable() {
 			public void run() {
 				// Create a line chart visualisation.
-				lineChart = new LineChart(createTable(), createOptions(height, width));
+				lineChart = new LineChart(createTable(), createOptions(height,
+						width));
 				panel.add(lineChart);
 				onLoad.onSuccess(true);
 			}
@@ -99,8 +110,14 @@ public class GraphVisualisator {
 	 *            The list of segregation points to be added
 	 */
 	private void addSegregationResult(double[] newPerformance) {
-		xAxisLength = Math.max(xAxisLength, newPerformance.length);
-		this.segregationPoints.add(newPerformance);
+		double[] newPerformanceWithStartPoint = new double[newPerformance.length + 1];
+		// set mix performance startvalue to 1.0
+		newPerformanceWithStartPoint[0] = 1.0;
+		System.arraycopy(newPerformance, 0, newPerformanceWithStartPoint, 1,
+				newPerformance.length);
+		xAxisLength = Math
+				.max(xAxisLength, newPerformanceWithStartPoint.length);
+		this.segregationPoints.add(newPerformanceWithStartPoint);
 	}
 
 	/**
@@ -113,8 +130,11 @@ public class GraphVisualisator {
 
 	/**
 	 * Creates and returns the options to set to the graph.
-	 * @param height The height of the window in which the graph will be shown.
-     * @param width The width of the window in which the graph will be shown.
+	 * 
+	 * @param height
+	 *            The height of the window in which the graph will be shown.
+	 * @param width
+	 *            The width of the window in which the graph will be shown.
 	 * @return The options to be set
 	 */
 	private Options createOptions(int height, int width) {
@@ -145,8 +165,8 @@ public class GraphVisualisator {
 		data.addRows(xAxisLength);
 		for (int i = 0; i < segregationPoints.size(); i++) {
 			for (int j = 0; j < segregationPoints.get(i).length; j++) {
-				data.setValue(j, 0, Integer.toString(j + 1));
-				data.setValue(j, i + 1, segregationPoints.get(i)[j]);
+				data.setValue(j, 0, Integer.toString(j));// x-value
+				data.setValue(j, i + 1, segregationPoints.get(i)[j]);// y-value
 			}
 		}
 
