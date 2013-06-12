@@ -2,10 +2,10 @@ package nl.tue.fingerpaint.client.storage;
 
 import java.util.ArrayList;
 
-import nl.tue.fingerpaint.client.model.MixingProtocol;
-import nl.tue.fingerpaint.client.model.MixingStep;
-import nl.tue.fingerpaint.client.model.RectangleMixingStep;
 import nl.tue.fingerpaint.shared.GeometryNames;
+import nl.tue.fingerpaint.shared.model.MixingProtocol;
+import nl.tue.fingerpaint.shared.model.MixingStep;
+import nl.tue.fingerpaint.shared.model.RectangleMixingStep;
 
 import org.junit.Test;
 

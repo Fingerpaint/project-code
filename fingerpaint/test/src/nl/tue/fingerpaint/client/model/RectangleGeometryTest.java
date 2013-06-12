@@ -1,6 +1,8 @@
 package nl.tue.fingerpaint.client.model;
 
 import nl.tue.fingerpaint.client.model.Geometry.StepAddedListener;
+import nl.tue.fingerpaint.shared.model.MixingStep;
+import nl.tue.fingerpaint.shared.model.RectangleMixingStep;
 
 import org.junit.Test;
 
@@ -103,36 +105,35 @@ protected RectangleGeometry geom;
 		initialise();
 		int Xl = 1;
 		int Xr = geom.getWidth();
-		geom.isInsideWall(x, y);
+		// geom.isInsideWall(x, y);
 	}
 
-	/**
-	 * 
-	 * @param message
-	 * @param top
-	 * @param clockwise
-	 * @param stepSize
-	 * @return
-	 */
-	private StepAddedListener setUpStepAddedListener(final String message,
-			final boolean top, final boolean clockwise, final double stepSize) {
-		StepAddedListener stl = new StepAddedListener() {
-
-			@Override
-			public void onStepAdded(MixingStep newStep) {
-				RectangleMixingStep step = (RectangleMixingStep) newStep;
-				step.setStepSize(stepSize);
-				listenerFired  = true;
-				assertEquals(message + " is top", top, step.isTopWall());
-				assertEquals(message + " is clockwise", clockwise,
-						step.isClockwise());
-				assertEquals(message + " has stepsize " + stepSize, stepSize,
-						step.getStepSize());
-			}
-		};
-
-		return stl;
-	}
+//	/**
+//	 * 
+//	 * @param message
+//	 * @param top
+//	 * @param clockwise
+//	 * @param stepSize
+//	 * @return
+//	 */
+//	private StepAddedListener setUpStepAddedListener(final String message,
+//			final boolean top, final boolean clockwise, final double stepSize) {
+//		StepAddedListener stl = new StepAddedListener() {
+//			@Override
+//			public void onStepAdded(MixingStep step) {
+//				RectangleMixingStep step = (RectangleMixingStep) newStep;
+//				step.setStepSize(stepSize);
+//				listenerFired  = true;
+//				assertEquals(message + " is top", top, step.isTopWall());
+//				assertEquals(message + " is clockwise", clockwise,
+//						step.isClockwise());
+//				assertEquals(message + " has stepsize " + stepSize, stepSize,
+//						step.getStepSize());
+//			}
+//		};
+//
+//		return stl;
+//	}
 	
 	/**
 	 * Returns the module name for the GWT test.
