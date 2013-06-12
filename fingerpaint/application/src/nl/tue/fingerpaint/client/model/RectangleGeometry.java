@@ -60,7 +60,7 @@ public class RectangleGeometry extends Geometry {
 	 * Get the current distribution from the canvas, and puts it in the
 	 * distribution.
 	 * 
-	 * @return The current concentration distribution
+	 * @return The current concentration distribution, ranges from 0 (black) to 255 (white)
 	 * 
 	 */
 	@Override
@@ -142,7 +142,7 @@ public class RectangleGeometry extends Geometry {
 
 	/**
 	 * Creates vector (array) of length 240 * 400. Initialises colour to all
-	 * white (1)
+	 * white (255)
 	 * 
 	 * @post {@code representationVector} is initialised
 	 */

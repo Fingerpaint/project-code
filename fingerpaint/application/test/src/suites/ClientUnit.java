@@ -45,7 +45,7 @@ import com.google.gwt.junit.client.GWTTestCase;
 	MixingProtocolTest.class,
 	RectangleMixingStepTest.class, 
 	NumberSpinnerTest.class,
-//	RectangleGeometryTest.class,
+	RectangleGeometryTest.class,
 	SimulationResultTest.class,
 	SimulationTest.class,
 //	SimulatorServiceTest.class,
