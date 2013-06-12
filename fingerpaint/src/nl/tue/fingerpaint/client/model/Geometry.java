@@ -32,31 +32,33 @@ public abstract class Geometry {
 	/** The context belonging to the canvas */
 	protected Context2d context;
 	/** The factor by which the base dimension of the geometry are multiplied */
-	protected int factor;
-
-	/**
-	 * Distance between left border of the canvas and the left border of the
-	 * drawing area.
-	 */
-	protected static final int X_OFFSET = 4;
-
-	/**
-	 * Distance between the top border of the canvas and the top border of the
-	 * drawing area.
-	 */
-	protected static final int TOP_OFFSET = 24;
-
-	/**
-	 * Minimum distance between the bottom border of the canvas and the bottom
-	 * border of the drawing area.
-	 */
-	protected static final int BOTTOM_OFFSET = 24;
+	protected double factor;
 
 	/**
 	 * The height of the wall in the same distance unit as the
 	 * {@code rectangleHeight}.
 	 */
-	protected final static int HEIGHT_OF_WALL = 20;
+	protected final static int HEIGHT_OF_WALL = 25;
+	/**
+	 * Distance between left border of the canvas and the left border of the
+	 * drawing area.
+	 */
+	protected static final int X_OFFSET = 0;
+	/**
+	 * Distance between the top border of the canvas and the top border of the
+	 * drawing area.
+	 */
+	protected static final int TOP_OFFSET = HEIGHT_OF_WALL;
+	/**
+	 * Minimum distance between the bottom border of the canvas and the bottom
+	 * border of the drawing area.
+	 */
+	protected static final int BOTTOM_OFFSET = HEIGHT_OF_WALL;
+	/**
+	 * Threshold in pixels to decide when a large enough swipe has been carried
+	 * out to define a protocol step.
+	 */
+	protected final static int SWIPE_THRESHOLD = 20;
 
 	/** The current drawing tool */
 	protected DrawingTool tool;
@@ -75,28 +77,21 @@ public abstract class Geometry {
 	protected Colour currentColor;
 
 	/**
+	 * {@code true} if the user is currently defining a step, {@code false}
+	 * otherwise
+	 */
+	private boolean definingStep;
+	
+	/**
 	 * Stores the x-coordinate of the mouse event that initiates a wall
 	 * movement.
 	 */
 	protected int swipeStartX;
-
 	/**
 	 * Stores the y-coordinate of the mouse event that initiates a wall
 	 * movement.
 	 */
 	protected int swipeStartY;
-
-	/**
-	 * {@code true} if the user is currently defining a step, {@code false}
-	 * otherwise
-	 */
-	private boolean definingStep;
-
-	/**
-	 * Threshold in pixels to decide when a large enough swipe has been carried
-	 * out to define a protocol step.
-	 */
-	protected final static int SWIPE_THRESHOLD = 20;
 
 	/** The background colour of the walls */
 	protected static Colour wallColor = Colour.LIGHT_GRAY;
@@ -131,34 +126,25 @@ public abstract class Geometry {
 	protected Geometry(int clientHeight, int clientWidth) {
 		initialiseDistribution();
 
-		setFactor(Math.max(
-				1,
-				(Math.min((clientHeight - TOP_OFFSET - BOTTOM_OFFSET)
-						/ getBaseHeight(), (clientWidth - X_OFFSET)
-						/ getBaseWidth()))));
-
 		drawing = false;
 		definingStep = false;
 
+		// Actually create the canvas element
 		createCanvas(clientHeight, clientWidth);
+		updateSize(clientWidth, clientHeight);
+		
+		// Initialise drawing colour to black
+		setColor(Colour.BLACK);
+		// Initialise drawing tool to a square with radius 3
+		setDrawingTool(new SquareDrawingTool(3));
 
 		// Draw the outline of the walls and the drawing canvas. Then clip the
 		// drawing area.
 		drawWalls();
 		drawGeometryOutline();
 		clipGeometryOutline();
-
-		// Initialise drawing colour to black
-		setColor(Colour.BLACK);
-
-		// Surrounded with try-catch for testing purposes
-		try {
-			// Initialise drawing tool to a square with radius 3
-			setDrawingTool(new SquareDrawingTool(3));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
+		
+		// Initialise mouse handlers
 		initialiseNativeHandlers(canvas.getElement());
 	}
 
@@ -170,7 +156,7 @@ public abstract class Geometry {
 	 */
 	private native void initialiseNativeHandlers(Element canvas) /*-{
 		var hammer = $wnd.Hammer(canvas, {
-			drag_min_distance : 50,
+			drag_min_distance : 2,
 			drag_horizontal : true,
 			drag_vertical : true,
 			transform : true,
@@ -179,7 +165,7 @@ public abstract class Geometry {
 			hold_timeout : 400,
 			swipe : true,
 			swipe_time : 200, // ms
-			swipe_min_distance : 3, // pixels
+			swipe_min_distance : 20, // pixels
 			prevent_default : true
 		}), that = this;
 
@@ -204,6 +190,14 @@ public abstract class Geometry {
 	}-*/;
 
 	/**
+	 * Updates the internal size and factor.
+	 * 
+	 * @param clientWidth The width of the canvas element.
+	 * @param clientHeight The height of the canvas element.
+	 */
+	protected abstract void updateSize(int clientWidth, int clientHeight);
+	
+	/**
 	 * Resizes the canvas to adjust to mobile-device orientation changes.
 	 * 
 	 * @param clientWidth The width of the canvas element.
@@ -213,18 +207,8 @@ public abstract class Geometry {
 	public void resize(int clientWidth, int clientHeight){
 		int[] dist = getDistribution();		
 
-		setFactor(Math.max(
-				1,
-				(Math.min((clientHeight - TOP_OFFSET - BOTTOM_OFFSET)
-						/ getBaseHeight(), (clientWidth - X_OFFSET)
-						/ getBaseWidth()))));
-
 		drawing = false;
 		definingStep = false;
-
-
-		//createCanvas(clientHeight, clientWidth);
-		//Todo: resize canvas
 		
 		canvas.setWidth(clientWidth + "px");
 		canvas.setCoordinateSpaceWidth(clientWidth);
@@ -234,14 +218,14 @@ public abstract class Geometry {
 		// original state
 		context = canvas.getContext2d();
 		context.save();
+		
+		updateSize(clientWidth, clientHeight);
 
 		// Draw the outline of the walls and the drawing canvas. Then clip the
 		// drawing area.
 		drawWalls();
 		drawGeometryOutline();
 		clipGeometryOutline();
-
-		//initialiseNativeHandlers(canvas.getElement());
 
 		drawDistribution(dist);		
 	}
@@ -328,7 +312,7 @@ public abstract class Geometry {
 	 * @return total height of the drawing area
 	 */
 	public int getHeight() {
-		return factor * getBaseHeight();
+		return (int) Math.ceil(factor * getBaseHeight());
 	}
 
 	/**
@@ -337,7 +321,7 @@ public abstract class Geometry {
 	 * @return total width of the drawing area
 	 */
 	public int getWidth() {
-		return factor * getBaseWidth();
+		return (int) Math.ceil(factor * getBaseWidth());
 	}
 
 	/**
@@ -364,8 +348,8 @@ public abstract class Geometry {
 		this.tool = tool;
 
 		int rad = tool.getRadius();
-		int size = (rad * 2 + 1) * factor;
-		this.displacement = rad * factor;
+		int size = (int) Math.floor((rad * 2 + 1) * factor);
+		this.displacement = (int) Math.floor(rad * factor);
 
 		ImageData data = this.tool.getTool(context.createImageData(size, size),
 				currentColor);
@@ -775,7 +759,7 @@ public abstract class Geometry {
 	 * @return The valid coordinate belonging to input c
 	 */
 	protected int getValidCoord(int c) {
-		return ((c - 1) / factor) * factor + 1;
+		return (int) Math.floor(((c - 1) / factor) * factor + 1);
 	}
 
 	// --Public methods for general use---------------------------------

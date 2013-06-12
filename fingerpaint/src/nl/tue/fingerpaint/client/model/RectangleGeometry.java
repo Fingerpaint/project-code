@@ -16,10 +16,14 @@ import com.google.gwt.canvas.dom.client.ImageData;
  */
 public class RectangleGeometry extends Geometry {
 
-	/** Number of verical cells. */
+	/** Number of vertical cells. */
 	protected static final int VERTICAL_CELLS = 240;
 	/** Number of horizontal cells. */
 	protected static final int HORIZONTAL_CELLS = 400;
+	/** Width of the drawing area in pixels. */
+	protected int canvasWidth;
+	/** Height of the drawing area in pixels. */
+	protected int canvasHeight;
 
 	/** {@code true} if the top wall is being moved, {@code false} otherwise */
 	protected boolean topWallStep;
@@ -59,6 +63,16 @@ public class RectangleGeometry extends Geometry {
 		return HORIZONTAL_CELLS;
 	}
 
+	@Override
+	public int getHeight() {
+		return canvasHeight;
+	}
+	
+	@Override
+	public int getWidth() {
+		return canvasWidth;
+	}
+	
 	/**
 	 * Get the current distribution from the canvas, and puts it in the
 	 * distribution.
@@ -75,11 +89,12 @@ public class RectangleGeometry extends Geometry {
 		int width = img.getWidth();
 		int height = img.getHeight();
 		int index;
-		for (int y = height - factor; y >= 0; y -= factor) {
-			for (int x = 0; x < width; x += factor) {
+		for (int y = (int) Math.floor(height - factor); y >= 0; y -= (int) Math.floor(factor)) {
+			for (int x = 0; x < width; x += (int) Math.floor(factor)) {
+				// times 4 because we have R, G, B and alpha value per pixel
 				index = (y * width + x) * 4;
-				dist[x / factor + HORIZONTAL_CELLS
-						* (VERTICAL_CELLS - 1 - y / factor)] = data
+				dist[(int) Math.floor(x / factor) + HORIZONTAL_CELLS
+						* (VERTICAL_CELLS - 1 - (int) Math.floor(y / factor))] = data
 						.get(index);
 			}
 		}
@@ -87,7 +102,24 @@ public class RectangleGeometry extends Geometry {
 	}
 
 	// ----Implemented abstract methods from superclass----------------
-
+	@Override
+	protected void updateSize(int clientWidth, int clientHeight) {
+		clientHeight -= TOP_OFFSET + BOTTOM_OFFSET;
+		clientWidth -= X_OFFSET * 2; // X_OFFSET is used on both sides
+		
+		if (clientHeight >= (clientWidth / (double) HORIZONTAL_CELLS) * VERTICAL_CELLS) {
+			// width is limiting factor
+			canvasWidth = clientWidth;
+			canvasHeight = (int) Math.floor((clientWidth / (double) HORIZONTAL_CELLS) * VERTICAL_CELLS);
+			factor = clientWidth / (double) HORIZONTAL_CELLS;
+		} else {
+			// height is limiting factor
+			canvasHeight = clientHeight;
+			canvasWidth = (int) Math.floor((clientHeight / (double) VERTICAL_CELLS) * HORIZONTAL_CELLS);
+			factor = clientHeight / (double) VERTICAL_CELLS;
+		}
+	}
+	
 	/**
 	 * Returns whether the position ({@code x}, {@code y}) is inside the drawing
 	 * area on the {@code canvas}. Note: The border around the drawing area
@@ -98,7 +130,7 @@ public class RectangleGeometry extends Geometry {
 	 */
 	@Override
 	public boolean isInsideDrawingArea(int x, int y) {
-		return x > 0 && y > 0 && x < getWidth() + 1 && y < getHeight() + 1;
+		return x > 0 && y > 0 && x <= getWidth() && y <= getHeight();
 	}
 	
 	@Override
@@ -121,7 +153,7 @@ public class RectangleGeometry extends Geometry {
 	 *         {@code false} otherwise.
 	 */
 	protected boolean isInsideTopWall(int x, int y) {
-		return (x > 0 && x < getWidth() && y > -HEIGHT_OF_WALL && y < 0);
+		return (x > 0 && x <= getWidth() && y > -HEIGHT_OF_WALL && y <= 0);
 	}
 
 	/**
@@ -139,7 +171,7 @@ public class RectangleGeometry extends Geometry {
 	 *         {@code false} otherwise.
 	 */
 	protected boolean isInsideBottomWall(int x, int y) {
-		return (x > 0 && x < getWidth() && y > getHeight() && y < getHeight()
+		return (x > 0 && x <= getWidth() && y > getHeight() && y <= getHeight()
 				+ HEIGHT_OF_WALL);
 	}
 
@@ -217,14 +249,14 @@ public class RectangleGeometry extends Geometry {
 		context.beginPath();
 		context.moveTo(X_OFFSET + 1, y);
 		context.lineTo(X_OFFSET + getWidth() + 1, y);
-		context.lineTo(X_OFFSET + getWidth() + 1, y + HEIGHT_OF_WALL - 1);
-		context.lineTo(X_OFFSET + 1, y + HEIGHT_OF_WALL - 1);
+		context.lineTo(X_OFFSET + getWidth() + 1, y + HEIGHT_OF_WALL - 2);
+		context.lineTo(X_OFFSET + 1, y + HEIGHT_OF_WALL - 2);
 		context.closePath();
 		context.clip();
 
 		// Fill the area inside the wall
 		context.setFillStyle(wallColor.toHexString());
-		context.fillRect(X_OFFSET + 1, y, getWidth() + 1, HEIGHT_OF_WALL - 1);
+		context.fillRect(X_OFFSET + 1, y, getWidth() + 1, HEIGHT_OF_WALL - 2);
 
 		// Set the stroke style for the arrows (stripes)
 		context.setStrokeStyle(wallStripeColor.toHexString());
@@ -372,11 +404,12 @@ public class RectangleGeometry extends Geometry {
 	}
 
 	/**
-	 * Sets the given distribution as the current distribution, and draws it on
-	 * the canvas
+	 * <p>Sets the given distribution as the current distribution, and draws it on
+	 * the canvas</p>
 	 * 
-	 * <pre>
-	 * {@code dist.length} == 96000
+	 * <p>Pre:
+	 * {@code dist.length} == {@link #HORIZONTAL_CELLS} * {@LINK #VERTICAL_CELLS}
+	 * </p>
 	 * 
 	 * @param dist
 	 * The distribution to be set and drawn
@@ -391,13 +424,13 @@ public class RectangleGeometry extends Geometry {
 		int x, y, col, index, sw, sh, w2, h2;
 
 		for (int i = 0; i < l; i++) {
-			x = i % 400;
-			y = 239 - i / 400;
+			x = i % HORIZONTAL_CELLS;
+			y = (VERTICAL_CELLS - 1) - i / HORIZONTAL_CELLS;
 			col = dist[i];
-			sw = x * factor;
-			sh = y * factor;
-			w2 = (x + 1) * factor;
-			h2 = (y + 1) * factor;
+			sw = (int) Math.floor(x * factor);
+			sh = (int) Math.floor(y * factor);
+			w2 = (int) Math.floor((x + 1) * factor);
+			h2 = (int) Math.floor((y + 1) * factor);
 			for (int w = sw; w < w2; w++) {
 				for (int h = sh; h < h2; h++) {
 					index = (h * width + w) * 4;
@@ -420,7 +453,7 @@ public class RectangleGeometry extends Geometry {
 		int[] dist = getDistribution();
 		int width = getBaseWidth();
 		int height = getBaseHeight();
-		int d = factor;		
+		int d = (int) Math.floor(factor);
 		StringBuilder sb = new StringBuilder();
 		sb.append("<svg>");
 		
@@ -431,7 +464,7 @@ public class RectangleGeometry extends Geometry {
 			sb.append("<rect fill=\""
 					+ col + "\" height=\""
 					+ d + "\" stroke=\"none\" width=\"" + d + "\" x=\""
-					+ x * d + "\" y=\"" + y * d + "\"/>");			
+					+ (x * d) + "\" y=\"" + (y * d) + "\"/>");			
 		}
 		sb.append( "</svg>");
 		return sb.toString();
