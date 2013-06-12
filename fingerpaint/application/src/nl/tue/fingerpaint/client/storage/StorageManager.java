@@ -325,6 +325,7 @@ public class StorageManager {
 							false);
 			for (String secondLevelKey : secondLevel.keySet()) {
 				if (secondLevelKey.equals(key)) {
+
 					return FingerpaintJsonizer.protocolFromString(secondLevel
 							.get(key).toString());
 				}
@@ -367,12 +368,16 @@ public class StorageManager {
 			return null;
 		}
 
+		Logger.getLogger("").log(Level.INFO, "getResult(" + key + ")");
+		
 		HashMap<String, Object> firstLevel = FingerpaintJsonizer
 				.hashMapFromString(localStorage.getItem(KEY_RESULTS), false);
 		for (String firstLevelKey : firstLevel.keySet()) {
+			Logger.getLogger("").log(Level.INFO, "found key " + firstLevelKey);
 			if (firstLevelKey.equals(key)) {
 				String result = firstLevel.get(key).toString();
-				return FingerpaintJsonizer.resultFromString(result);
+				Logger.getLogger("").log(Level.INFO, "result = " + result);
+				return FingerpaintJsonizer.resultStorageFromString(result);
 			}
 		}
 		return null;

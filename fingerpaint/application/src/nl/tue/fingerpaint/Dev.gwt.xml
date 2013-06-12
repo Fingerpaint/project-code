@@ -15,9 +15,6 @@
     <!-- <inherits name='com.google.gwt.user.theme.chrome.Chrome'/> -->
     <!-- <inherits name='com.google.gwt.user.theme.dark.Dark'/> -->
 
-    <!-- gwt-jsonmaker -->
-    <inherits name="org.jsonmaker.gwt.Gwt_jsonmaker" />
-
     <!-- use ClientBundle for CSS -->
     <inherits name="com.google.gwt.resources.Resources" />
 

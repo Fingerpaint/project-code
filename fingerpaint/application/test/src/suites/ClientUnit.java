@@ -3,7 +3,7 @@ package suites;
 import nl.tue.fingerpaint.client.gui.NumberSpinnerTest;
 import nl.tue.fingerpaint.client.model.ApplicationStateTest;
 import nl.tue.fingerpaint.client.model.MixingProtocolTest;
-import nl.tue.fingerpaint.client.model.MixingStepTest;
+import nl.tue.fingerpaint.client.model.RectangleMixingStepTest;
 import nl.tue.fingerpaint.client.model.RectangleGeometryTest;
 import nl.tue.fingerpaint.client.simulator.SimulatorServiceTest;
 import nl.tue.fingerpaint.client.storage.StorageManagerTest;
@@ -21,7 +21,7 @@ import com.google.gwt.junit.client.GWTTestCase;
  * <ul>
  * <li> {@link ApplicationStateTest} </li>
  * <li> {@link MixingProtocolTest} </li>
- * <li> {@link MixingStepTest} </li>
+ * <li> {@link RectangleMixingStepTest} </li>
  * <li> {@link NumberSpinnerTest} </li>
  * <li> {@link RectangleGeometryTest} </li>
  * <li> {@link SimulatorServiceTest} </li>
@@ -36,7 +36,7 @@ import com.google.gwt.junit.client.GWTTestCase;
 @SuiteClasses({
 	ApplicationStateTest.class,
 	MixingProtocolTest.class,
-	MixingStepTest.class, 
+	RectangleMixingStepTest.class, 
 	NumberSpinnerTest.class,
 //	RectangleGeometryTest.class,
 	SimulatorServiceTest.class,

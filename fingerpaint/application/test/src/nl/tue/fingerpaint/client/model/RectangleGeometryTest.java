@@ -190,7 +190,8 @@ public class RectangleGeometryTest extends GWTTestCase {
 		StepAddedListener stl = new StepAddedListener() {
 
 			@Override
-			public void onStepAdded(MixingStep step) {
+			public void onStepAdded(MixingStep newStep) {
+				RectangleMixingStep step = (RectangleMixingStep) newStep;
 				step.setStepSize(stepSize);
 				mixingStepAdded = true;
 				assertEquals(message + " is top", top, step.isTopWall());
