@@ -103,7 +103,12 @@ protected RectangleGeometry geom;
 		initialise();
 		int Xl = 1;
 		int Xr = geom.getWidth();
-		geom.isInsideWall(x, y);
+		int Yt = -1;
+		int Yb = geom.getHeight();
+		assertTrue("(" + Xl + ", " + Yt + ") should be in the top wall",geom.isInsideTopWall(Xl, Yt));
+		assertTrue("(" + Xr + ", " + Yt + ") should be in the top wall",geom.isInsideTopWall(Xr, Yt));
+		assertTrue("(" + Xl + ", " + Yb + ") should be in the bottom wall",geom.isInsideBottomWall(Xl, Yb));
+		assertTrue("(" + Xr + ", " + Yb + ") should be in the bottom wall",geom.isInsideBottomWall(Xr, Yb));
 	}
 
 	/**
