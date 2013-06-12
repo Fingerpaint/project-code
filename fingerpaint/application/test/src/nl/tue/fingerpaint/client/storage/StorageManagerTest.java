@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import nl.tue.fingerpaint.client.model.MixingProtocol;
 import nl.tue.fingerpaint.client.model.MixingStep;
+import nl.tue.fingerpaint.client.model.RectangleMixingStep;
 import nl.tue.fingerpaint.shared.GeometryNames;
 
 import org.junit.Test;
@@ -79,13 +80,15 @@ public class StorageManagerTest extends GWTTestCase {
 				geometry, key);
 
 		for (int i = 0; i < program.size(); i++) {
+			RectangleMixingStep currStep = (RectangleMixingStep) receivedProtocol.getStep(i);
+			RectangleMixingStep checkStep = (RectangleMixingStep) program.get(i);
 			assertEquals("Step size of step " + i,
-					program.get(i).getStepSize(), receivedProtocol.getStep(i)
+					checkStep.getStepSize(), currStep
 							.getStepSize(), 0.000001);
-			assertEquals("Top wall of step " + i, program.get(i).isTopWall(),
-					receivedProtocol.getStep(i).isTopWall());
+			assertEquals("Top wall of step " + i, checkStep.isTopWall(),
+					currStep.isTopWall());
 			assertEquals("Direction of step " + i,
-					program.get(i).isClockwise(), receivedProtocol.getStep(i)
+					checkStep.isClockwise(), currStep
 							.isClockwise());
 		}
 	}
@@ -139,13 +142,15 @@ public class StorageManagerTest extends GWTTestCase {
 
 		MixingProtocol receivedProtocol = receivedResult.getMixingProtocol();
 		for (int i = 0; i < program.size(); i++) {
+			RectangleMixingStep currStep = (RectangleMixingStep) receivedProtocol.getStep(i);
+			RectangleMixingStep checkStep = (RectangleMixingStep) program.get(i);
 			assertEquals("Step size of step " + i,
-					program.get(i).getStepSize(), receivedProtocol.getStep(i)
+					checkStep.getStepSize(), currStep
 							.getStepSize(), 0.000001);
-			assertEquals("Top wall of step " + i, program.get(i).isTopWall(),
-					receivedProtocol.getStep(i).isTopWall());
+			assertEquals("Top wall of step " + i, checkStep.isTopWall(),
+					currStep.isTopWall());
 			assertEquals("Direction of step " + i,
-					program.get(i).isClockwise(), receivedProtocol.getStep(i)
+					checkStep.isClockwise(), currStep
 							.isClockwise());
 		}
 
@@ -174,10 +179,10 @@ public class StorageManagerTest extends GWTTestCase {
 	private void initProtocol() {
 		protocol = new MixingProtocol();
 
-		MixingStep step1 = new MixingStep(1.25, true, true);
-		MixingStep step2 = new MixingStep(2.50, true, false);
-		MixingStep step3 = new MixingStep(3.75, false, true);
-		MixingStep step4 = new MixingStep(4.0, false, false);
+		RectangleMixingStep step1 = new RectangleMixingStep(1.25, true, true);
+		RectangleMixingStep step2 = new RectangleMixingStep(2.50, true, false);
+		RectangleMixingStep step3 = new RectangleMixingStep(3.75, false, true);
+		RectangleMixingStep step4 = new RectangleMixingStep(4.0, false, false);
 
 		program = new ArrayList<MixingStep>();
 		program.add(step1);

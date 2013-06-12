@@ -382,9 +382,13 @@ public class Fingerpaint implements EntryPoint {
 	public void resetProtocol() {
 		as.setProtocol(new MixingProtocol());
 		GuiState.labelProtocolRepresentation.setText("");
+		GuiState.labelProtocolRepresentation.setVisible(false);
+		GuiState.labelProtocolLabel.setVisible(false);
 		as.setNrSteps(NrStepsSpinner.DEFAULT_VALUE);
 		GuiState.nrStepsSpinner.setValue(NrStepsSpinner.DEFAULT_VALUE);
 		GuiState.mixNowButton.setEnabled(false);
+		GuiState.saveProtocolButton.setEnabled(false);
+		GuiState.saveResultsButton.setEnabled(false);
 	}
 
 	/**

@@ -325,6 +325,7 @@ public class StorageManager {
 							false);
 			for (String secondLevelKey : secondLevel.keySet()) {
 				if (secondLevelKey.equals(key)) {
+
 					return FingerpaintJsonizer.protocolFromString(secondLevel
 							.get(key).toString());
 				}

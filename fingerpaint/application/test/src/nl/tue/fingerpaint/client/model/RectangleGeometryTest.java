@@ -1,5 +1,7 @@
 package nl.tue.fingerpaint.client.model;
 
+import nl.tue.fingerpaint.client.model.Geometry.StepAddedListener;
+
 import org.junit.Test;
 
 import com.google.gwt.junit.client.GWTTestCase;
@@ -11,12 +13,14 @@ import com.google.gwt.junit.client.GWTTestCase;
  */
 public class RectangleGeometryTest extends GWTTestCase {
 
-	protected RectangleGeometry geom;
+protected RectangleGeometry geom;
 	
 	/** arbitrary height, needed to initialise the geometry */
 	public final int testClientHeight = 400;
 	/** arbitrary width, needed to initialise the geometry */
 	public final int testClientWidth = 600;
+
+	protected boolean listenerFired = false;
 	
 	/**
 	 * Initialises the geometry for a new test case
@@ -24,6 +28,8 @@ public class RectangleGeometryTest extends GWTTestCase {
 	public void  initialise(){
 		geom = new RectangleGeometry(testClientHeight, testClientWidth);
 	}
+	
+	//-----Unit tests----------------------------------------------------------
 	
 	/**
 	 * A test to check whether a new geometry is initialised correctly.
@@ -85,6 +91,47 @@ public class RectangleGeometryTest extends GWTTestCase {
 		assertTrue("coordinates (1, height+wallheight-1) should be inside the bottom wall",geom.isInsideBottomWall(1, geom.getHeight()+geom.HEIGHT_OF_WALL-1));
 		assertTrue("coordinates (width, height+1) should be inside the bottom wall",geom.isInsideBottomWall(geom.getWidth(), geom.getHeight()+1));
 		assertTrue("coordinates (width, height+wallheight-1) should be inside the bottom wall",geom.isInsideBottomWall(geom.getWidth(), geom.getHeight()+geom.HEIGHT_OF_WALL-1));
+	}
+	
+	//-----Integration tests---------------------------------------------------
+	
+	/**
+	 * tests if rectangleGeometry can recognise mixing steps properly
+	 */
+	@Test
+	public void testMixingSteps(){
+		initialise();
+		int Xl = 1;
+		int Xr = geom.getWidth();
+		geom.isInsideWall(x, y);
+	}
+
+	/**
+	 * 
+	 * @param message
+	 * @param top
+	 * @param clockwise
+	 * @param stepSize
+	 * @return
+	 */
+	private StepAddedListener setUpStepAddedListener(final String message,
+			final boolean top, final boolean clockwise, final double stepSize) {
+		StepAddedListener stl = new StepAddedListener() {
+
+			@Override
+			public void onStepAdded(MixingStep newStep) {
+				RectangleMixingStep step = (RectangleMixingStep) newStep;
+				step.setStepSize(stepSize);
+				listenerFired  = true;
+				assertEquals(message + " is top", top, step.isTopWall());
+				assertEquals(message + " is clockwise", clockwise,
+						step.isClockwise());
+				assertEquals(message + " has stepsize " + stepSize, stepSize,
+						step.getStepSize());
+			}
+		};
+
+		return stl;
 	}
 	
 	/**
