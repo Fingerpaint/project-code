@@ -17,7 +17,10 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 
 /**
- * Abstract class representing a geometry
+ * A {@link Geometry} is a 2D shape that can be drawn on the canvas. A
+ * distribution can be drawn in a geometry by the user. The geometry is
+ * responsible for making sure that a user can only draw <i>within</i>
+ * the bounds of it. This allows for adding arbitrary shapes later.
  * 
  * @author Project Fingerpaint
  */
@@ -169,41 +172,41 @@ public abstract class Geometry {
 	/**
 	 * Initialise the mouse/touch handlers on the canvas, using native code.
 	 * 
-	 * @param canvas The element to initialise the handlers on.
+	 * @param canvas
+	 *            The element to initialise the handlers on.
 	 */
 	private native void initialiseNativeHandlers(Element canvas) /*-{
 		var hammer = $wnd.Hammer(canvas, {
-				drag_min_distance : 50,
-				drag_horizontal : true,
-				drag_vertical : true,
-				transform : true,
-				scale_treshold : 0.1,
-				hold : true,
-				hold_timeout : 400,
-				swipe : true,
-				swipe_time : 200, // ms
-				swipe_min_distance : 3, // pixels
-				prevent_default : true
-			}),
-			that = this;
+			drag_min_distance : @nl.tue.fingerpaint.client.model.Geometry::SWIPE_THRESHOLD,
+			drag_horizontal : true,
+			drag_vertical : true,
+			transform : true,
+			scale_treshold : 0.1,
+			hold : true,
+			hold_timeout : 400,
+			swipe : true,
+			swipe_time : 200, // ms
+			swipe_min_distance : @nl.tue.fingerpaint.client.model.Geometry::SWIPE_THRESHOLD, // pixels
+			prevent_default : true
+		}), that = this;
 
 		// Drag handlers
 		hammer.on('touch', function(e) {
-			that.@nl.tue.fingerpaint.client.model.Geometry::onDragStart(II)
-								(e.gesture.touches[0].pageX - e.target.offsetLeft,
-									e.gesture.touches[0].pageY - e.target.offsetTop);
+			that.@nl.tue.fingerpaint.client.model.Geometry::onDragStart(II)(
+					e.gesture.touches[0].pageX - e.target.offsetLeft,
+					e.gesture.touches[0].pageY - e.target.offsetTop);
 		});
 
 		hammer.on('drag', function(e) {
-			that.@nl.tue.fingerpaint.client.model.Geometry::onDragMove(II)
-								(e.gesture.touches[0].pageX - e.target.offsetLeft,
-									e.gesture.touches[0].pageY - e.target.offsetTop);
+			that.@nl.tue.fingerpaint.client.model.Geometry::onDragMove(II)(
+					e.gesture.touches[0].pageX - e.target.offsetLeft,
+					e.gesture.touches[0].pageY - e.target.offsetTop);
 		});
 
 		hammer.on('release', function(e) {
-			that.@nl.tue.fingerpaint.client.model.Geometry::onDragEnd(II)
-								(e.gesture.touches[0].pageX - e.target.offsetLeft,
-									e.gesture.touches[0].pageY - e.target.offsetTop);
+			that.@nl.tue.fingerpaint.client.model.Geometry::onDragEnd(II)(
+					e.gesture.touches[0].pageX - e.target.offsetLeft,
+					e.gesture.touches[0].pageY - e.target.offsetTop);
 		});
 	}-*/;
 
@@ -386,7 +389,7 @@ public abstract class Geometry {
 	public void onDragStart(int x, int y) {
 		x -= X_OFFSET;
 		y -= TOP_OFFSET;
-		
+
 		if (isInsideDrawingArea(x, y)) {
 			// User started drawing the concentration distribution
 			drawing = true;
@@ -410,7 +413,7 @@ public abstract class Geometry {
 				fillWall(0, topWallStep);
 				clipGeometryOutline();
 			}
-			
+
 			// User started defining a step of the protocol
 			definingStep = true;
 			topWallStep = isInsideTopWall(x, y);
@@ -430,7 +433,7 @@ public abstract class Geometry {
 	public void onDragEnd(int x, int y) {
 		x -= X_OFFSET;
 		y -= TOP_OFFSET;
-		
+
 		if (definingStep) {
 			stopDefineMixingStep(x, y);
 		}
@@ -448,18 +451,19 @@ public abstract class Geometry {
 	public void onDragMove(int x, int y) {
 		x -= X_OFFSET;
 		y -= TOP_OFFSET;
-		
+
 		if (drawing && isInsideDrawingArea(x, y)) {
 			drawLine(previousX, previousY, x, y);
 			previousX = x;
 			previousY = y;
-		} else if (definingStep && (isInsideTopWall(x, y) || isInsideBottomWall(x, y))) {
+		} else if (definingStep
+				&& (isInsideTopWall(x, y) || isInsideBottomWall(x, y))) {
 			removeClippingArea();
 			fillWall(x - swipeStartX, topWallStep);
 			clipGeometryOutline();
 		}
 	}
-	
+
 	/**
 	 * Code to execute on a MouseOut event.
 	 */
@@ -559,7 +563,6 @@ public abstract class Geometry {
 		context.restore();
 		context.save();
 	}
-
 
 	/**
 	 * Returns whether the position ({@code x}, {@code y}) is inside the drawing
@@ -772,16 +775,15 @@ public abstract class Geometry {
 	 * @param dist
 	 *            The distribution to be set and drawn
 	 */
-	
+
 	abstract public void drawDistribution(int[] dist);
-	
+
 	/**
 	 * Returns the string representation of the .svg image of the canvas
 	 * 
 	 * @return The string representation of the .svg image of the canvas
 	 */
 	abstract public String getCanvasImage();
-	
 
 	/**
 	 * Resets the current distribution to all white
