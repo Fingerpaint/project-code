@@ -269,8 +269,6 @@ public class FingerpaintJsonizer {
 	}
 
 	/**
-	 * TODO: Ask Thom about this.
-	 * 
 	 * Convert an int array to JSON string representation.
 	 * 
 	 * @param array
@@ -281,15 +279,8 @@ public class FingerpaintJsonizer {
 		StringBuilder sb = new StringBuilder();
 		sb.append("[");
 
-		//long iPart;
-		//double fPart;
 		for (int i = 0; i < array.length; i++) {
-			//iPart = (long) array[i];
-			//fPart = array[i] - iPart;
-			// below assumes (by looking at the actual code) that the toString
-			// of a double that is smaller than 1 starts with "0."
 			String number = Integer.toString(array[i]);
-		//	sb.append(iPart + "." + (fPartStr.length() > 0 ? fPartStr : "0"));
 			sb.append(number);
 			if (i < array.length - 1) {
 				sb.append(",");

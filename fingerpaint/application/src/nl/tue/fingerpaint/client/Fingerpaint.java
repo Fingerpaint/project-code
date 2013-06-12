@@ -240,11 +240,7 @@ public class Fingerpaint implements EntryPoint {
 	 *            If the "define protocol" widgets should be visible or not.
 	 */
 	public void setProtocolWidgetsVisible(boolean visible) {
-		if (visible) {
-			GuiState.protocolPanelContainer.setVisibleAnimated(true);
-		} else {
-			GuiState.protocolPanelContainer.setVisibleAnimated(false);
-		}
+			GuiState.protocolPanelContainer.setVisibleAnimated(visible);
 	}
 
 	/**

@@ -27,12 +27,12 @@ import nl.tue.fingerpaint.client.gui.buttons.SaveProtocolButton;
 import nl.tue.fingerpaint.client.gui.buttons.SaveResultsButton;
 import nl.tue.fingerpaint.client.gui.buttons.SquareDrawingToolToggleButton;
 import nl.tue.fingerpaint.client.gui.buttons.ToggleColourButton;
+import nl.tue.fingerpaint.client.gui.buttons.ToggleDefineProtocol;
 import nl.tue.fingerpaint.client.gui.buttons.ToolSelectButton;
 import nl.tue.fingerpaint.client.gui.buttons.ViewSingleGraphButton;
 import nl.tue.fingerpaint.client.gui.celllists.CompareSelectPopupCellList;
 import nl.tue.fingerpaint.client.gui.celllists.LoadInitDistCellList;
 import nl.tue.fingerpaint.client.gui.celllists.LoadProtocolCellList;
-import nl.tue.fingerpaint.client.gui.checkboxes.DefineProtocolCheckBox;
 import nl.tue.fingerpaint.client.gui.flextables.ResultsFlexTable;
 import nl.tue.fingerpaint.client.gui.labels.ProtocolRepresentationLabel;
 import nl.tue.fingerpaint.client.gui.labels.SaveMessageLabel;
@@ -47,7 +47,6 @@ import nl.tue.fingerpaint.client.gui.spinners.StepSizeSpinner;
 import nl.tue.fingerpaint.client.gui.textboxes.SaveNameTextBox;
 import nl.tue.fingerpaint.client.resources.FingerpaintConstants;
 
-import com.google.gwt.debug.client.DebugInfo;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -59,8 +58,10 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 /**
  * <p>
  * A class that contains references to all the GUI elements used in the
- * Fingerpaint application.
+ * Fingerpaint application. This class is used as an "element manager",
+ * for easy element referencing.
  * </p>
+ * 
  * <p>
  * All widgets that can be initialised, must be initialised in this class.
  * </p>
@@ -81,31 +82,17 @@ public class GuiState {
 	 */
 	public static final int SAVE_SUCCESS_TIMEOUT = 2000;
 
-	// --- PROTECTED GLOBALS --------------------------------------------------
-	/*
-	 * The below initialisation parameters for the cursorSizeSpinner represent
-	 * cursor pixels.
-	 */
-	// TODO: determine good value for MIN and MAX.
-	/** The default value of {@link #cursorSizeSpinner}. */
-	protected static final double CURSOR_DEFAULT = 3.0;
-	/** The rate of {@link #cursorSizeSpinner}. */
-	protected static final double CURSOR_RATE = 1.0;
-	/** The minimum value of {@link #cursorSizeSpinner}. */
-	protected static final double CURSOR_MIN = 1.0;
-	/** The maximum value of {@link #cursorSizeSpinner}. */
-	protected static final double CURSOR_MAX = 50.0;
-
 	// --- LOADING APPLICATION WIDGETS ----------------------------------------
 	/**
-	 * Panel that covers the entire application and blocks the user from //
+	 * Panel that covers the entire application and blocks the user from
 	 * accessing other features.
 	 */
 	public static FlowPanel loadingPanel = new FlowPanel();
 
 	/**
-	 * The message to be shown during the loading animation of the loading
-	 * panel.
+	 * The message to be shown below the loading animation of the loading
+	 * panel. This may be empty, but can be used to inform the user about
+	 * <i>what</i> is loading exactly.
 	 */
 	public static Label loadingPanelMessage = new Label();
 
@@ -123,7 +110,8 @@ public class GuiState {
 	// --- DRAWING TOOL WIDGETS -----------------------------------------------
 	/**
 	 * Pop-up panel which contains options for selecting a different drawing
-	 * tool.
+	 * tool. Also, the size of the drawing tool can be changed trough an
+	 * element in this panel.
 	 */
 	public static PopupPanel toolSelector = new PopupPanel(true);
 
@@ -243,10 +231,10 @@ public class GuiState {
 			FingerpaintConstants.INSTANCE.lblProtocol());
 
 	/**
-	 * Checkbox that needs to be checked to define a protocol. If it isn't
-	 * checked, steps (wall movements) are executed directly.
+	 * Toggle button that needs to be clicked to define a protocol. If it isn't
+	 * in its default state, steps 9wall movements) are executed directly.
 	 */
-	public static DefineProtocolCheckBox defineProtocolCheckBox;
+	public static ToggleDefineProtocol toggleDefineProtocol;
 
 	// --- SAVE POP-UP MENU WIDGETS -------------------------------------------
 	/** Pop-up panel to handle the saving of the current results. */
@@ -454,7 +442,8 @@ public class GuiState {
 				.ensureDebugId("viewSingleGraphHorizontalPanel");
 		viewSingleGraphVerticalPanel
 				.ensureDebugId("viewSingleGraphVerticalPanel");
-		viewSingleGraphGraphPanel.getElement().setId("viewSingleGraphGraphPanel");
+		viewSingleGraphGraphPanel.getElement().setId(
+				"viewSingleGraphGraphPanel");
 
 		compareSelectPopupPanel.ensureDebugId("compareSelectPopupPanel");
 		comparePopupPanel.ensureDebugId("comparePopupPanel");

@@ -9,7 +9,6 @@ import nl.tue.fingerpaint.client.model.ApplicationState;
  */
 public class CursorSizeSpinner extends NumberSpinner implements
 		NumberSpinnerListener {
-	// TODO: determine good value for MIN and MAX.
 	/** The default value of this spinner. */
 	protected static final double DEFAULT_VALUE = 3.0;
 	/** The rate of this spinner. */
