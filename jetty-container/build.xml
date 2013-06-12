@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<project name="jetty-container" basedir="." default="jar">
+
+    <property name="src.dir" value="src"/>
+    <property name="build.dir" value="build"/>   
+    <property name="lib.dir" value="lib"/>
+    
+    <path id="project.classpath">       
+        <fileset dir="${lib.dir}">
+            <include name="**/*.jar"/>
+        </fileset>
+    </path>
+    
+    <target name="prepare">
+        <mkdir dir="${build.dir}/classes/"/>
+    </target>
+   
+    <target name="clean">
+        <delete dir="${build.dir}"/>
+    </target>
+    
+    <target name="compile" depends="prepare" description="Compile source">
+        <javac srcdir="${src.dir}" destdir="${build.dir}/classes" 
+        	includeantruntime="false">
+            <classpath refid="project.classpath"/>
+        </javac>
+    </target>
+	
+    
+    <target name="jar" depends="compile" description="Create jarfile.">
+    	
+        <fail message="Property war.dir needs to be set to a valid directory">
+            <condition>
+                <not>
+                    <available file="${war.dir}" type="dir" />
+                </not>
+    		</condition>
+    	</fail>
+    	<fail message="Property jar.dir needs to be set to a valid directory">
+    		<condition>
+    			<not>
+    			    <available file="${jar.dir}" type="dir" />
+    		    </not>
+    		</condition>
+    	</fail>
+    	<fail message="Property jar.name needs to be set to a file name">
+    	    <condition>
+    	        <or>
+    	            <equals arg1="${jar.name}" arg2=""/>
+    	            <not>
+    	                <isset property="jar.name"/>
+    	            </not>
+    	       </or>
+    	   </condition>
+    	</fail>
+        <jar jarfile="${build.dir}/deps.jar">
+            <zipgroupfileset dir="${lib.dir}">
+                <include name="**/*.jar" />
+            </zipgroupfileset>
+        </jar>
+        <sleep seconds="1" />
+        <jar jarfile="${jar.dir}/${jar.name}" basedir="${build.dir}/classes/">
+        	<zipfileset dir="${war.dir}/" prefix="war" />
+            <zipfileset src="${build.dir}/deps.jar">
+                <exclude name="META-INF/*.SF"/>
+                <exclude name="META-INF/**"/>
+            </zipfileset>
+            <manifest>
+                <attribute name="Main-Class"
+                	value="nl.tue.jettycontainer.EntryPoint" />
+            </manifest>
+        </jar>
+    </target>
+</project>
