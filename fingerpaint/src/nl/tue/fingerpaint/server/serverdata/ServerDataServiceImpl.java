@@ -1,8 +1,8 @@
 package nl.tue.fingerpaint.server.serverdata;
 
-import nl.tue.fingerpaint.client.serverdata.ServerDataService;
 import nl.tue.fingerpaint.shared.GeometryNames;
 import nl.tue.fingerpaint.shared.ServerDataResult;
+import nl.tue.fingerpaint.shared.serverdata.ServerDataService;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 

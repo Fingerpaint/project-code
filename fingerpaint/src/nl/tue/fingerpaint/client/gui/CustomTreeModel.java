@@ -25,14 +25,13 @@ import nl.tue.fingerpaint.client.gui.celllists.LoadInitDistCellList;
 import nl.tue.fingerpaint.client.gui.celllists.LoadProtocolCellList;
 import nl.tue.fingerpaint.client.gui.spinners.CursorSizeSpinner;
 import nl.tue.fingerpaint.client.gui.spinners.NrStepsSpinner;
-import nl.tue.fingerpaint.client.gui.spinners.NumberSpinner;
 import nl.tue.fingerpaint.client.gui.spinners.StepSizeSpinner;
 import nl.tue.fingerpaint.client.model.ApplicationState;
 import nl.tue.fingerpaint.client.model.Geometry.StepAddedListener;
-import nl.tue.fingerpaint.shared.model.MixingProtocol;
-import nl.tue.fingerpaint.shared.model.MixingStep;
 import nl.tue.fingerpaint.client.model.RectangleGeometry;
 import nl.tue.fingerpaint.client.serverdata.ServerDataCache;
+import nl.tue.fingerpaint.shared.model.MixingProtocol;
+import nl.tue.fingerpaint.shared.model.MixingStep;
 
 import com.google.gwt.cell.client.ClickableTextCell;
 import com.google.gwt.cell.client.ValueUpdater;
