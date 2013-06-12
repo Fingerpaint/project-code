@@ -68,6 +68,7 @@
     
     <!-- Path to the Simulator Service -->
 	<servlet path="/simulatorService" class="nl.tue.fingerpaint.server.simulator.SimulatorServiceImpl"/>
-    
+
     <set-property name="user.agent" value="gecko1_8" />
+    
 </module>

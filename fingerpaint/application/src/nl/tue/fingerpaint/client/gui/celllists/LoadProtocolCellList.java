@@ -83,7 +83,7 @@ public class LoadProtocolCellList extends CellList<String> {
 							
 							selectionModel.setSelected(selected, false);
 							GuiState.loadPanel.hide();
-							
+
 							GuiState.labelProtocolRepresentation.setVisible(true);
 							GuiState.labelProtocolLabel.setVisible(true);
 							GuiState.saveProtocolButton.setEnabled(true);
