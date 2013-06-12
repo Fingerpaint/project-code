@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import nl.tue.fingerpaint.testenvironment.StandardCapabilitiesProvider;
-import nl.tue.fingerpaint.util.TestUtil;
+import nl.tue.fingerpaint.testenvironment.TestUtil;
 import nl.tue.multibrowsertest.CrossBrowserTest;
 import nl.tue.multibrowsertest.MultiBrowserTester;
 import nl.tue.multibrowsertest.MultiBrowserTester.ResultTriple;

@@ -1,4 +1,4 @@
-package nl.tue.fingerpaint.util;
+package nl.tue.fingerpaint.testenvironment;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;

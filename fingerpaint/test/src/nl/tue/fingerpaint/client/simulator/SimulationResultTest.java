@@ -1,5 +1,7 @@
 package nl.tue.fingerpaint.client.simulator;
 
+import nl.tue.fingerpaint.shared.simulator.SimulationResult;
+
 import org.junit.Test;
 
 import com.google.gwt.junit.client.GWTTestCase;
