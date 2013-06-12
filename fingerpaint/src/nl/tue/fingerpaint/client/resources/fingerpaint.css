@@ -16,16 +16,12 @@
 @def POPUP_PANEL_Z 20;
 @def LOADING_OVERLAY_Z 90;
 @def LOADING_OVERLAY_CONTENT_Z 91;
-@def MENU_WIDTH 240px; 
-
-/* -- MORE CONSTANTS -- */
+@def MENU_WIDTH 240px; /* -- MORE CONSTANTS -- */
 @eval BLACK nl.tue.fingerpaint.shared.utils.Colour.BLACK.toHexString();
 @eval MAIN_LIGHT nl.tue.fingerpaint.shared.utils.Colour.TUE_LIGHT_BLUE.toHexString();
 @eval MAIN nl.tue.fingerpaint.shared.utils.Colour.TUE_BLUE.toHexString();
 @eval MAIN_DARK nl.tue.fingerpaint.shared.utils.Colour.TUE_DARK_BLUE.toHexString();
 @eval WHITE nl.tue.fingerpaint.shared.utils.Colour.WHITE.toHexString();
-
-
 	/* only TOP: Auto-aanvul voor alle richtingen
    TOP & RIGHT = TOP/BOTTOM & RIGHT/LEFT are equal */
 /* . is een class; Kan je aan meerdere hangen
@@ -44,12 +40,11 @@ a:focus,a:active,button,input[type="reset"]::-moz-focus-inner,input[type="button
 }
 
 body {
-/* 	background-image: url("http://cdn.dottech.org/media/2013/01/optical_illusion_rotating.jpg"); */
-/* 	background-position: center top; */
-/* 	background-size: cover; */
-/* 	background-image: url("http://www.gravatar.com/avatar/c88dd72da6a28c7afaf3301bac80d929?s=210"); insert nice picture here */
-/* 	background-position: center center; */
-	background-repeat: no-repeat; 
+	/* 	background-image: url("http://cdn.dottech.org/media/2013/01/optical_illusion_rotating.jpg"); */
+	/* 	background-position: center top; */ /* 	background-size: cover; */
+	/* 	background-image: url("http://www.gravatar.com/avatar/c88dd72da6a28c7afaf3301bac80d929?s=210"); insert nice picture here */
+	/* 	background-position: center center; */
+	background-repeat: no-repeat;
 	background-attachment: fixed;
 	font-family: sans !important;
 	font-size: 15px !important;
@@ -119,6 +114,12 @@ body {
 	border: 1px solid MAIN;
 	padding: 2px;
 	margin-bottom: 6px;
+}
+
+#fingerpaintCanvas {
+	position: fixed;
+	top: 0;
+	left: 0;
 }
 
 #menuPanelWrapper {

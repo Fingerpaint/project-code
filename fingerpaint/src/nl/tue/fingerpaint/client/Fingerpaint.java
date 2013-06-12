@@ -28,6 +28,8 @@ import com.google.gwt.debug.client.DebugInfo;
 import com.google.gwt.dom.client.IFrameElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.logical.shared.ResizeEvent;
+import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.http.client.RequestTimeoutException;
 import com.google.gwt.user.cellview.client.CellBrowser;
 import com.google.gwt.user.client.DOM;
@@ -118,6 +120,17 @@ public class Fingerpaint implements EntryPoint {
 		// Set (debug) IDs on a number of elements that do not have a dedicated
 		// class
 		GuiState.setIDs();
+		
+		//switch between portrait and canvas view
+		Window.addResizeHandler(new ResizeHandler() {
+			@Override
+			public void onResize(ResizeEvent event) {
+				if (as.getGeometry() != null) {
+					as.getGeometry().resize(Window.getClientWidth() - 20,
+							Window.getClientHeight() - 20);
+				}
+			}
+		});
 	}
 
 	/**
@@ -463,5 +476,4 @@ public class Fingerpaint implements EntryPoint {
 		};
 		doLaterTimer.schedule(100);
 	}
-
 }
