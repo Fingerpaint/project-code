@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import nl.tue.screenshot.ScreenshotComparator;
+import nl.tue.screenshotcomparator.ScreenshotComparator;
 
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.remote.DesiredCapabilities;

@@ -1,5 +1,7 @@
 package nl.tue.fingerpaint.client.model;
 
+import nl.tue.fingerpaint.shared.model.RectangleMixingStep;
+
 import org.junit.Test;
 
 import com.google.gwt.junit.client.GWTTestCase;
@@ -11,7 +13,7 @@ import com.google.gwt.junit.client.GWTTestCase;
  */
 public class RectangleMixingStepTest extends GWTTestCase {
 	/** The mixing step to be tested in this class. */
-	MixingStep stepClass;
+	RectangleMixingStep stepClass;
 
 	/**
 	 * A test to check whether the getter returns the step size it was
