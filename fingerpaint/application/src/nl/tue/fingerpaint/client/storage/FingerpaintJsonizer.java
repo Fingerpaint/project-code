@@ -269,8 +269,6 @@ public class FingerpaintJsonizer {
 	}
 
 	/**
-	 * TODO: Ask Thom about this.
-	 * 
 	 * Convert an int array to JSON string representation.
 	 * 
 	 * @param array

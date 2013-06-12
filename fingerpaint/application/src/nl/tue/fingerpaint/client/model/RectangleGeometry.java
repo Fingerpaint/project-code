@@ -13,10 +13,9 @@ import com.google.gwt.canvas.dom.client.ImageData;
  */
 public class RectangleGeometry extends Geometry {
 
-	/**
-	 * The parameters of the canvas
-	 */
+	/** Number of verical cells. */
 	protected static final int VERTICAL_CELLS = 240;
+	/** Number of horizontal cells. */
 	protected static final int HORIZONTAL_CELLS = 400;
 
 	/** {@code true} if the top wall is being moved, {@code false} otherwise */
@@ -365,7 +364,7 @@ public class RectangleGeometry extends Geometry {
 		} else {
 			clockwise = toTheLeft;
 		}
-		MixingStep movement = new MixingStep(1, clockwise, topWall);
+		RectangleMixingStep movement = new RectangleMixingStep(1, clockwise, topWall);
 		return movement;
 	}
 

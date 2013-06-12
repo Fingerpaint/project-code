@@ -1,7 +1,6 @@
 package nl.tue.fingerpaint.client.gui.buttons;
 
 import nl.tue.fingerpaint.client.Fingerpaint;
-import nl.tue.fingerpaint.client.gui.GuiState;
 import nl.tue.fingerpaint.client.resources.FingerpaintConstants;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -41,7 +40,6 @@ public class ResetProtocolButton extends Button implements ClickHandler {
 	@Override
 	public void onClick(ClickEvent event) {
 		fp.resetProtocol();
-		GuiState.saveResultsButton.setEnabled(false);
 	}
 
 }

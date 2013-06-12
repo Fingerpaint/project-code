@@ -34,6 +34,7 @@ import nl.tue.fingerpaint.client.gui.celllists.LoadInitDistCellList;
 import nl.tue.fingerpaint.client.gui.celllists.LoadProtocolCellList;
 import nl.tue.fingerpaint.client.gui.checkboxes.DefineProtocolCheckBox;
 import nl.tue.fingerpaint.client.gui.flextables.ResultsFlexTable;
+import nl.tue.fingerpaint.client.gui.labels.ProtocolLabel;
 import nl.tue.fingerpaint.client.gui.labels.ProtocolRepresentationLabel;
 import nl.tue.fingerpaint.client.gui.labels.SaveMessageLabel;
 import nl.tue.fingerpaint.client.gui.panels.LoadPopupPanel;
@@ -238,8 +239,7 @@ public class GuiState {
 	 * Label to be displayed above the protocol-related buttons, to explain
 	 * their purpose.
 	 */
-	public static Label labelProtocolLabel = new Label(
-			FingerpaintConstants.INSTANCE.lblProtocol());
+	public static ProtocolLabel labelProtocolLabel = new ProtocolLabel();
 
 	/**
 	 * Checkbox that needs to be checked to define a protocol. If it isn't
@@ -437,7 +437,6 @@ public class GuiState {
 		removeResultsVerticalPanel.ensureDebugId("removeResultsVerticalPanel");
 
 		nrStepsLabel.ensureDebugId("nrStepsLabel");
-		labelProtocolLabel.ensureDebugId("labelProtocolLabel");
 
 		saveButtonsPanel.ensureDebugId("saveButtonsPanel");
 		saveItemVerticalPanel.ensureDebugId("saveItemVerticalPanel");

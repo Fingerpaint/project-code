@@ -31,24 +31,7 @@ public class MixingProtocol implements Serializable {
 	public MixingStep getStep(int index) {
 		return program.get(index);
 	}
-
-	/**
-	 * Adds a single mixing step to the end of the current program.
-	 * 
-	 * @param stepSize
-	 *            The stepSize of the wall movement, should be divisible by 0.25
-	 * @param direction
-	 *            the direction of the wall movement, true is clockwise, false
-	 *            counterclockwise
-	 * @param wall
-	 *            the wall that is moved, true for the top wall, false for the
-	 *            bottom wall
-	 */
-	public void addStep(double stepSize, boolean direction, boolean wall) {
-		MixingStep nextStep = new MixingStep(stepSize, direction, wall);
-		program.add(nextStep);
-	}
-
+	
 	/**
 	 * Adds the mixing step step to the end of the current program.
 	 * 
@@ -62,30 +45,6 @@ public class MixingProtocol implements Serializable {
 			throw new NullPointerException();
 		}
 		program.add(step);
-	}
-
-	/**
-	 * Edits a single mixing step at index {@code index}.
-	 * 
-	 * @param index
-	 *            the index of the step to be removed
-	 * @param stepSize
-	 *            The stepSize of the wall movement, should be divisible by 0.25
-	 * @param direction
-	 *            the direction of the wall movement, true is clockwise, false
-	 *            counterclockwise
-	 * @param wall
-	 *            the wall that is moved, true for the top wall, false for the
-	 *            bottom wall
-	 * 
-	 * @throws IndexOutOfBoundsException
-	 *             if {@code index} >= {@code getProgramSize()} or {@code index}
-	 *             < 0
-	 */
-	public void editStep(int index, double stepSize, boolean direction,
-			boolean wall) {
-		MixingStep newStep = new MixingStep(stepSize, direction, wall);
-		program.set(index, newStep);
 	}
 
 	/**
@@ -202,7 +161,7 @@ public class MixingProtocol implements Serializable {
 		String[] steps = protocol.split(", ");
 		
 		for (int i = 0; i < steps.length; i++) {
-			result.addStep(MixingStep.fromString(steps[i]));
+			result.addStep(new RectangleMixingStep(steps[i]));
 		}
 
 		return result;

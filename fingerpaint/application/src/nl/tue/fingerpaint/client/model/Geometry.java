@@ -413,6 +413,12 @@ public abstract class Geometry {
 		}
 	}
 	
+	/**
+	 * Returns whether the point {@code (x, y)} is inside one of the walls.
+	 * @param x The x-coordinate of the event, relative to the canvas.
+	 * @param y The y-coordinate of the event, relative to the canvas.
+	 * @return whether the point {@code (x, y)} is inside one of the walls.
+	 */
 	public abstract boolean isInsideWall(int x, int y);
 
 	/**
@@ -449,7 +455,7 @@ public abstract class Geometry {
 			drawLine(previousX, previousY, x, y);
 			previousX = x;
 			previousY = y;
-		} else if (definingStep && (isInsideWall(x, y))) {
+		} else if (definingStep) {
 			removeClippingArea();
 			fillWall(x - swipeStartX);
 			clipGeometryOutline();

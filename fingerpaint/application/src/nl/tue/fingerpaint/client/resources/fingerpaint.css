@@ -51,10 +51,10 @@ input[type="file"] > input[type="button"]::-moz-focus-inner {
 }
 
 body {
-/* 	background-image: url("http://richrock.com/gifs/optical-illusion-wheels-circles-rotating.png"); */
-/* 	background-position: center top; */
-	background-image: url("http://www.gravatar.com/avatar/c88dd72da6a28c7afaf3301bac80d929?s=210"); /* insert nice picture here */
-	background-position: center center;
+	background-image: url("http://richrock.com/gifs/optical-illusion-wheels-circles-rotating.png");
+	background-position: center top;
+/* 	background-image: url("http://www.gravatar.com/avatar/c88dd72da6a28c7afaf3301bac80d929?s=210"); insert nice picture here */
+/* 	background-position: center center; */
 	background-repeat: no-repeat; 
 	background-attachment: fixed;
 	font-family: sans !important;
