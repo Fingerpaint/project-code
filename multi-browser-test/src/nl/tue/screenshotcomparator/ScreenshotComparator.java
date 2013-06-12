@@ -1,4 +1,4 @@
-package nl.tue.screenshot;
+package nl.tue.screenshotcomparator;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;

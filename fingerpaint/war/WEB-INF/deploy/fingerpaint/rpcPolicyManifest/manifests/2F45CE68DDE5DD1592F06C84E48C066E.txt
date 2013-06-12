@@ -1,2 +1,0 @@
-serviceClass: nl.tue.fingerpaint.shared.serverdata.ServerDataService
-path: 579BB7BE675E3C6D7340E47F9C814AAD.gwt.rpc
