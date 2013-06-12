@@ -421,8 +421,9 @@ public class GuiState {
 		menuPanelWrapper.getElement().setId("menuPanelWrapper");
 
 		toolSelector.ensureDebugId("toolSelector");
-		popupPanelPanel.ensureDebugId("popupPanelPanel");
-		popupPanelMenu.ensureDebugId("popupPanelMenu");
+		popupPanelPanel.getElement().setId("popupPanelPanel");
+		
+		popupPanelMenu.ensureDebugId("popupPanelMenu");		
 		removeResultsVerticalPanel.ensureDebugId("removeResultsVerticalPanel");
 
 		nrStepsLabel.ensureDebugId("nrStepsLabel");

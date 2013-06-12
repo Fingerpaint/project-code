@@ -25,6 +25,7 @@ import nl.tue.fingerpaint.client.gui.celllists.LoadInitDistCellList;
 import nl.tue.fingerpaint.client.gui.celllists.LoadProtocolCellList;
 import nl.tue.fingerpaint.client.gui.spinners.CursorSizeSpinner;
 import nl.tue.fingerpaint.client.gui.spinners.NrStepsSpinner;
+import nl.tue.fingerpaint.client.gui.spinners.NumberSpinner;
 import nl.tue.fingerpaint.client.gui.spinners.StepSizeSpinner;
 import nl.tue.fingerpaint.client.model.ApplicationState;
 import nl.tue.fingerpaint.client.model.Geometry.StepAddedListener;
@@ -149,7 +150,7 @@ public class CustomTreeModel implements TreeViewModel {
 		// Initialise the cursorSizeSpinner so it can be added to the tool
 		// selector popup
 		GuiState.cursorSizeSpinner = new CursorSizeSpinner(as);
-
+		
 		// Initialise the toolSelectButton and add to menuPanel
 		GuiState.squareDrawingTool = new SquareDrawingToolToggleButton(fp, as);
 		GuiState.circleDrawingTool = new CircleDrawingToolToggleButton(fp, as);

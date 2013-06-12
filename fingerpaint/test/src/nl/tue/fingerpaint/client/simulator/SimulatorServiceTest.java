@@ -2,6 +2,10 @@ package nl.tue.fingerpaint.client.simulator;
 
 import nl.tue.fingerpaint.shared.model.MixingProtocol;
 import nl.tue.fingerpaint.shared.model.RectangleMixingStep;
+import nl.tue.fingerpaint.shared.simulator.Simulation;
+import nl.tue.fingerpaint.shared.simulator.SimulationResult;
+import nl.tue.fingerpaint.shared.simulator.SimulatorService;
+import nl.tue.fingerpaint.shared.simulator.SimulatorServiceAsync;
 import nl.tue.fingerpaint.client.storage.FingerpaintJsonizer;
 import nl.tue.fingerpaint.client.storage.FingerpaintZipper;
 

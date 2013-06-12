@@ -44,8 +44,6 @@ public class ToggleDefineProtocol extends Button implements ClickHandler {
 		ensureDebugId("ToggleDefineProtocol");
 		this.setText("Define protocol");
 		this.isHidden = true;
-
-		// TODO: Style
 	}
 
 	/**
