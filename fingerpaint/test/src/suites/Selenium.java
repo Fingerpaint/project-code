@@ -25,5 +25,5 @@ import org.junit.runners.Suite.SuiteClasses;
 	GraphVisualisatorTest.class
 	})
 public class Selenium {
-	
+	// empty on purpose
 }

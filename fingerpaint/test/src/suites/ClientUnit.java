@@ -2,9 +2,12 @@ package suites;
 
 import nl.tue.fingerpaint.client.gui.NumberSpinnerTest;
 import nl.tue.fingerpaint.client.model.ApplicationStateTest;
+import nl.tue.fingerpaint.client.model.DrawingToolTest;
 import nl.tue.fingerpaint.client.model.MixingProtocolTest;
-import nl.tue.fingerpaint.client.model.RectangleMixingStepTest;
 import nl.tue.fingerpaint.client.model.RectangleGeometryTest;
+import nl.tue.fingerpaint.client.model.RectangleMixingStepTest;
+import nl.tue.fingerpaint.client.simulator.SimulationResultTest;
+import nl.tue.fingerpaint.client.simulator.SimulationTest;
 import nl.tue.fingerpaint.client.simulator.SimulatorServiceTest;
 import nl.tue.fingerpaint.client.storage.StorageManagerTest;
 
@@ -20,10 +23,13 @@ import com.google.gwt.junit.client.GWTTestCase;
  * This test suite runs all the tests of the following classes: </p>
  * <ul>
  * <li> {@link ApplicationStateTest} </li>
+ * <li> {@link DrawingToolTest} </li>
  * <li> {@link MixingProtocolTest} </li>
  * <li> {@link RectangleMixingStepTest} </li>
  * <li> {@link NumberSpinnerTest} </li>
  * <li> {@link RectangleGeometryTest} </li>
+ * <li> {@link SimulationResultTest} </li>
+ * <li> {@link SimulationTest} </li>
  * <li> {@link SimulatorServiceTest} </li>
  * <li> {@link StorageManagerTest} </li>
  * </ul>
@@ -35,11 +41,14 @@ import com.google.gwt.junit.client.GWTTestCase;
 // Run all the tests of each of the following classes:
 @SuiteClasses({
 	ApplicationStateTest.class,
+	DrawingToolTest.class,
 	MixingProtocolTest.class,
 	RectangleMixingStepTest.class, 
 	NumberSpinnerTest.class,
-//	RectangleGeometryTest.class,
-	SimulatorServiceTest.class,
+	RectangleGeometryTest.class,
+	SimulationResultTest.class,
+	SimulationTest.class,
+//	SimulatorServiceTest.class,
 	StorageManagerTest.class
 	})
 public class ClientUnit extends GWTTestCase {

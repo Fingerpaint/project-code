@@ -2,8 +2,6 @@ package nl.tue.fingerpaint.shared.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.logging.Logger;
-import java.util.logging.Level;
 
 /**
  * This class symbolises a mixing program consisting of a number of mixing steps
@@ -143,7 +141,6 @@ public class MixingProtocol implements Serializable {
 			return "";
 		}
 
-		Logger.getLogger("").log(Level.INFO, result);
 		return result.substring(0, result.length() - 2);
 	}
 
