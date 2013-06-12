@@ -1,0 +1,2 @@
+serviceClass: nl.tue.fingerpaint.shared.simulator.SimulatorService
+path: 1A456BB9CBBD58E9CD369E49FD34D23E.gwt.rpc
