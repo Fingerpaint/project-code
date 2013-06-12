@@ -62,7 +62,7 @@
     <script src="jszip-deflate.js"></script>
     <script src="jszip-inflate.js"></script>
     <script src="jszip-load.js"></script>
-
-    <set-property name="user.agent" value="gecko1_8" />
     
+    <script src="hammer.js"></script>
+    <set-property name="user.agent" value="gecko1_8" />
 </module>
