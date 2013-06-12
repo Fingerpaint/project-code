@@ -12,6 +12,7 @@ import com.google.gwt.canvas.dom.client.ImageData;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.ImageElement;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -129,7 +130,7 @@ public abstract class Geometry {
 	 */
 	protected Geometry(int clientHeight, int clientWidth) {
 		initialiseDistribution();
-
+		
 		setFactor(Math.max(
 				1,
 				(Math.min((clientHeight - TOP_OFFSET - BOTTOM_OFFSET)
@@ -159,9 +160,8 @@ public abstract class Geometry {
 		}
 
 		initialiseNativeHandlers(canvas.getElement());
-
 	}
-
+	
 	/**
 	 * Initialise the mouse/touch handlers on the canvas, using native code.
 	 * 

@@ -148,7 +148,7 @@ public class NumberSpinner extends Composite {
 
 		});
 
-		Button upButton = new Button("▲");
+		Button upButton = new Button("+");//backup old value: ("▲")		
 		upButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				if (!hasLimits || getValue() <= MAX - RATE) {
@@ -158,7 +158,7 @@ public class NumberSpinner extends Composite {
 		});
 		upButton.setStyleName("dp-spinner-upbutton");
 
-		Button downButton = new Button("‭▼");
+		Button downButton = new Button("-");//backup old value: ("‭▼")
 		downButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				if (!hasLimits || getValue() >= MIN + RATE) {
@@ -172,11 +172,9 @@ public class NumberSpinner extends Composite {
 		downButton.setStyleName("dp-spinner-downbutton");
 
 		horPanel = new HorizontalPanel();
-		vertPanel = new VerticalPanel();
+		horPanel.add(downButton);
 		horPanel.add(numberBox);
-		vertPanel.add(upButton);
-		vertPanel.add(downButton);
-		horPanel.add(vertPanel);
+		horPanel.add(upButton);
 		
 		initWidget(horPanel);
 	}
