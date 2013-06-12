@@ -45,6 +45,10 @@ public class MixNowButton extends Button implements ClickHandler {
 		ensureDebugId("mixNowButton");
 	}
 
+	/**
+	 * Executes the mixing run with the currently defined protocol.
+	 * @param event The event that has fired.
+	 */
 	@Override
 	public void onClick(ClickEvent event) {
 		fp.executeMixingRun(as.getProtocol());

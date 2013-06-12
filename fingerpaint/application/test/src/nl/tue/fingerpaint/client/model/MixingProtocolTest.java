@@ -5,7 +5,8 @@ import org.junit.Test;
 import com.google.gwt.junit.client.GWTTestCase;
 
 /**
- * GWT jUnit tests for the class {@link MixingProtocol}.
+ * GWT jUnit tests for the class {@link MixingProtocol}. Only tests
+ * RectangleMixingSteps.
  * 
  * @author Group Fingerpaint
  */
@@ -39,7 +40,7 @@ public class MixingProtocolTest extends GWTTestCase {
 	@Test
 	public void testAddStep() {
 		init();
-		MixingStep newStep = new MixingStep(2.0, false, false);
+		MixingStep newStep = new RectangleMixingStep(2.0, false, false);
 		program.addStep(newStep);
 		// test if the new step is appended
 		assertEquals(newStep, program.getStep(3));
@@ -64,45 +65,6 @@ public class MixingProtocolTest extends GWTTestCase {
 		assertEquals(step0, program.getStep(0));
 		// check if the last element is moved up correctly
 		assertEquals(step2, program.getStep(1));
-	}
-
-	/**
-	 * A test to check whether the step size is correctly edited for the given
-	 * mixing step.
-	 */
-	@Test
-	public void testEditStepSize() {
-		init();
-		MixingStep edited = program.getStep(1);
-		// should change the step size of step1 to 2.25
-		program.editStep(1, 2.25, edited.isClockwise(), edited.isTopWall());
-		assertEquals(2.25, program.getStep(1).getStepSize());
-	}
-
-	/**
-	 * A test to check whether the step direction is correctly edited for the
-	 * given mixing step.
-	 */
-	@Test
-	public void testEditStepDirection() {
-		init();
-		MixingStep edited = program.getStep(0);
-		// should change the stepDirection of step0 equal to false
-		program.editStep(0, edited.getStepSize(), false, edited.isTopWall());
-		assertEquals(false, program.getStep(0).isClockwise());
-	}
-
-	/**
-	 * A test to check whether the step wall is correctly edited for the given
-	 * mixing step.
-	 */
-	@Test
-	public void testEditStepWall() {
-		init();
-		MixingStep edited = program.getStep(2);
-		// should change the stepWall of step2 equal to true
-		program.editStep(2, edited.getStepSize(), true, edited.isTopWall());
-		assertEquals(true, program.getStep(2).isClockwise());
 	}
 
 	/**
@@ -172,24 +134,6 @@ public class MixingProtocolTest extends GWTTestCase {
 	}
 
 	/**
-	 * A test to check whether the editStep function throws a correct
-	 * IndexOutOfBoundsException, for an out of bounds retrieve index.
-	 */
-	@Test
-	public void testEditStepException() {
-		init();
-		try {
-			// out of bounds index, rest is bogus
-			program.editStep(3, 666, false, false);
-			fail("IndexOutOfBoundsException expected");
-		} catch (IndexOutOfBoundsException e) {
-			assertTrue(true);
-		} catch (Exception e) {
-			fail(e.toString());
-		}
-	}
-
-	/**
 	 * A test to check whether the moveStep function throws a correct
 	 * IndexOutOfBoundsException, for an out of bounds initialIndex.
 	 */
@@ -242,7 +186,10 @@ public class MixingProtocolTest extends GWTTestCase {
 			fail(e.toString());
 		}
 	}
-
+	
+	/**
+	 * Returns the module name for the GWT test.
+	 */
 	@Override
 	public String getModuleName() {
 		return "nl.tue.fingerpaint.Fingerpaint";
@@ -254,9 +201,9 @@ public class MixingProtocolTest extends GWTTestCase {
 	 */
 	private void init() {
 		program = new MixingProtocol();
-		step0 = new MixingStep(0.5, true, false);
-		step1 = new MixingStep(1.75, true, true);
-		step2 = new MixingStep(1.0, false, false);
+		step0 = new RectangleMixingStep(0.5, true, false);
+		step1 = new RectangleMixingStep(1.75, true, true);
+		step2 = new RectangleMixingStep(1.0, false, false);
 		program.addStep(step0);
 		program.addStep(step1);
 		program.addStep(step2);

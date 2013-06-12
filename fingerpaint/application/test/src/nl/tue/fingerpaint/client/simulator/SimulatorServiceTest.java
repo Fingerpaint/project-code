@@ -1,14 +1,13 @@
 package nl.tue.fingerpaint.client.simulator;
 
 import nl.tue.fingerpaint.client.model.MixingProtocol;
-import nl.tue.fingerpaint.client.simulator.SimulatorService;
-import nl.tue.fingerpaint.client.simulator.SimulatorServiceAsync;
+import nl.tue.fingerpaint.client.model.RectangleMixingStep;
 import nl.tue.fingerpaint.client.storage.FingerpaintJsonizer;
 import nl.tue.fingerpaint.client.storage.FingerpaintZipper;
 
 import org.junit.Test;
 
-import com.google.gwt.core.shared.GWT;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.junit.client.GWTTestCase;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
@@ -105,8 +104,8 @@ public class SimulatorServiceTest extends GWTTestCase {
 			}
 		}
 		protocol = new MixingProtocol();
-		protocol.addStep(40, true, true);
-		protocol.addStep(40, true, false);
+		protocol.addStep(new RectangleMixingStep(40, true, true));
+		protocol.addStep(new RectangleMixingStep(40, true, false));
 		nrSteps = 5;
 		this.allSteps = allSteps;
 

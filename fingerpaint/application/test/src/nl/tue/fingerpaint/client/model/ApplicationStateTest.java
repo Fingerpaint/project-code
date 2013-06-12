@@ -92,7 +92,7 @@ public class ApplicationStateTest extends GWTTestCase {
 	public void testProtocol() {
 		init();
 		final MixingProtocol prot = new MixingProtocol();
-		prot.addStep(new MixingStep(0.25, false, true));
+		prot.addStep(new RectangleMixingStep(0.25, false, true));
 		as.setProtocol(prot);
 		final MixingProtocol result = as.getProtocol();
 		assertEquals("The string value of the protocol", prot.toString(), result.toString());
@@ -126,6 +126,9 @@ public class ApplicationStateTest extends GWTTestCase {
 				as.getStepSize());
 	}
 
+	/**
+	 * Returns the module name for the GWT test.
+	 */
 	@Override
 	public String getModuleName() {
 		return "nl.tue.fingerpaint.Fingerpaint";

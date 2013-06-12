@@ -13,11 +13,13 @@ import com.google.gwt.canvas.dom.client.ImageData;
  */
 public class RectangleGeometry extends Geometry {
 
-	/**
-	 * The parameters of the canvas
-	 */
-	private static final int VERTICAL_CELLS = 240;
-	private static final int HORIZONTAL_CELLS = 400;
+	/** Number of verical cells. */
+	protected static final int VERTICAL_CELLS = 240;
+	/** Number of horizontal cells. */
+	protected static final int HORIZONTAL_CELLS = 400;
+
+	/** {@code true} if the top wall is being moved, {@code false} otherwise */
+	protected boolean topWallStep;
 
 	// ----Constructors-----------------------------------------
 	/**
@@ -30,6 +32,7 @@ public class RectangleGeometry extends Geometry {
 	 */
 	public RectangleGeometry(int clientHeight, int clientWidth) {
 		super(clientHeight, clientWidth);
+		topWallStep = true;
 	}
 
 	// ----Getters and Setters-----------------------------------------
@@ -94,6 +97,11 @@ public class RectangleGeometry extends Geometry {
 	public boolean isInsideDrawingArea(int x, int y) {
 		return x > 0 && y > 0 && x < getWidth() + 1 && y < getHeight() + 1;
 	}
+	
+	@Override
+	public boolean isInsideWall(int x, int y) {
+		return isInsideTopWall(x, y) || isInsideBottomWall(x, y);
+	}
 
 	/**
 	 * Returns whether the position ({@code x}, {@code y}) is inside the top
@@ -109,7 +117,6 @@ public class RectangleGeometry extends Geometry {
 	 * @return {@code true} if coordinates (x, y) are inside the top wall.
 	 *         {@code false} otherwise.
 	 */
-	@Override
 	protected boolean isInsideTopWall(int x, int y) {
 		return (x > 0 && x < getWidth() && y > -HEIGHT_OF_WALL && y < 0);
 	}
@@ -128,7 +135,6 @@ public class RectangleGeometry extends Geometry {
 	 * @return {@code true} if coordinates (x, y) are inside the bottom wall.
 	 *         {@code false} otherwise.
 	 */
-	@Override
 	protected boolean isInsideBottomWall(int x, int y) {
 		return (x > 0 && x < getWidth() && y > getHeight() && y < getHeight()
 				+ HEIGHT_OF_WALL);
@@ -185,17 +191,20 @@ public class RectangleGeometry extends Geometry {
 		fillWall(0, true);
 		fillWall(0, false);
 	}
+	
+	@Override
+	protected void fillWall(int x) {
+		fillWall(x, topWallStep);
+	}
 
 	/**
 	 * Colours the inside of one of the walls of the geometry.
-	 * 
 	 * @param xOffset
 	 *            The x-distance to the initial position
 	 * @param topWal
 	 *            {@code true} if the top wall has to be filled, {@code false}
 	 *            otherwise
 	 */
-	@Override
 	protected void fillWall(int xOffset, boolean topWal) {
 		// Set the height of the upper border of the wall
 		double y = topWal ? TOP_OFFSET + 1 - HEIGHT_OF_WALL : TOP_OFFSET
@@ -296,6 +305,13 @@ public class RectangleGeometry extends Geometry {
 		context.closePath();
 		context.clip();
 	}
+	
+	@Override
+	protected void startDefineMixingStep(int mouseX, int mouseY) {
+		super.startDefineMixingStep(mouseX, mouseY);
+
+		topWallStep = isInsideTopWall(mouseX, mouseY);
+	}
 
 	/**
 	 * Checks whether a new {@code Step} should be added. If the MouseEvent's
@@ -348,7 +364,7 @@ public class RectangleGeometry extends Geometry {
 		} else {
 			clockwise = toTheLeft;
 		}
-		MixingStep movement = new MixingStep(1, clockwise, topWall);
+		RectangleMixingStep movement = new RectangleMixingStep(1, clockwise, topWall);
 		return movement;
 	}
 
@@ -418,6 +434,11 @@ public class RectangleGeometry extends Geometry {
 		return sb.toString();
 	}
 
+	/**
+	 * Converts a 0-255 black and white value to a hexadecimal representation.
+	 * @param i Original colour.
+	 * @return Hexadecimal representation of {@code i}.
+	 */
 	private String intToHexString(int i) {
 		String hexValue = Integer.toHexString(i);
 	
@@ -436,5 +457,4 @@ public class RectangleGeometry extends Geometry {
 		context.setFillStyle(CssColor.make("white"));
 		context.fillRect(X_OFFSET + 1, TOP_OFFSET + 1, getWidth(), getHeight());
 	}
-
 }

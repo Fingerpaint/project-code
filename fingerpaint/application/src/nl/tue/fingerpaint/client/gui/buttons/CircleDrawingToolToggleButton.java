@@ -39,6 +39,10 @@ public class CircleDrawingToolToggleButton extends ToggleButton implements Click
 		ensureDebugId("circleDrawingTool");
 	}
 
+	/**
+	 * Changes to the circular drawing tool with the correct cursor size.
+	 * @param event The event that has fired.
+	 */
 	@Override
 	public void onClick(ClickEvent event) {
 		if (!isDown()) {

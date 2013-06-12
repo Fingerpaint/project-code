@@ -1,6 +1,8 @@
 package nl.tue.fingerpaint.client.gui.celllists;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import nl.tue.fingerpaint.client.gui.GuiState;
 import nl.tue.fingerpaint.client.model.ApplicationState;
@@ -71,16 +73,21 @@ public class LoadProtocolCellList extends CellList<String> {
 				.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
 					public void onSelectionChange(SelectionChangeEvent event) {
 						String selected = selectionModel.getSelectedObject();
-
-						as.setProtocol(StorageManager.INSTANCE.getProtocol(
-								GeometryNames.getShortName(as
-										.getGeometryChoice()), selected));
-						GuiState.labelProtocolRepresentation.setText(as
-								.getProtocol().toString());
-						GuiState.mixNowButton.setEnabled(true);
-						
-						selectionModel.setSelected(selected, false);
-						GuiState.loadPanel.hide();
+						if (selected != null) {
+							as.setProtocol(StorageManager.INSTANCE.getProtocol(
+									GeometryNames.getShortName(as
+											.getGeometryChoice()), selected));
+							GuiState.labelProtocolRepresentation.setText(as
+									.getProtocol().toString());
+							GuiState.mixNowButton.setEnabled(true);
+							
+							selectionModel.setSelected(selected, false);
+							GuiState.loadPanel.hide();
+							
+							GuiState.labelProtocolRepresentation.setVisible(true);
+							GuiState.labelProtocolLabel.setVisible(true);
+							GuiState.saveProtocolButton.setEnabled(true);
+						}
 					}
 				});
 	}

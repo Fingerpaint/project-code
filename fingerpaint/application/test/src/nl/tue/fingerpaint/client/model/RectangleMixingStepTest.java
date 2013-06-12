@@ -9,7 +9,7 @@ import com.google.gwt.junit.client.GWTTestCase;
  * 
  * @author Group Fingerpaint
  */
-public class MixingStepTest extends GWTTestCase {
+public class RectangleMixingStepTest extends GWTTestCase {
 	/** The mixing step to be tested in this class. */
 	MixingStep stepClass;
 
@@ -50,7 +50,10 @@ public class MixingStepTest extends GWTTestCase {
 		stepClass.setStepSize(0.9);
 		assertEquals(1.0, stepClass.getStepSize());
 	}
-
+	
+	/**
+	 * Returns the module name for the GWT test.
+	 */
 	@Override
 	public String getModuleName() {
 		return "nl.tue.fingerpaint.Fingerpaint";
@@ -61,7 +64,7 @@ public class MixingStepTest extends GWTTestCase {
 	 * Setup method for the mixing step in this test class.
 	 */
 	private void init() {
-		stepClass = new MixingStep(1, true, true);
+		stepClass = new RectangleMixingStep(1, true, true);
 	}
 
 }

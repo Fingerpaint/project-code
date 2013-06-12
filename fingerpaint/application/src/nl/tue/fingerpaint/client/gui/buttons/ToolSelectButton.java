@@ -25,6 +25,10 @@ public class ToolSelectButton extends Button implements ClickHandler {
 		ensureDebugId("toolSelectButton");
 	}
 
+	/**
+	 * Shows the popup in which to select the drawing tool.
+	 * @param event The event that has fired.
+	 */
 	@Override
 	public void onClick(ClickEvent event) {
 		GuiState.toolSelector

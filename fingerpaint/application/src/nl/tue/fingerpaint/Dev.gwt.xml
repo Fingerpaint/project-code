@@ -63,9 +63,11 @@
     <script src="jszip-inflate.js"></script>
     <script src="jszip-load.js"></script>
     
+    <!-- Javascript library to handle touch/click events -->
+    <script src="hammer.js"></script>
+    
     <!-- Path to the Simulator Service -->
 	<servlet path="/simulatorService" class="nl.tue.fingerpaint.server.simulator.SimulatorServiceImpl"/>
-
-    <set-property name="user.agent" value="gecko1_8" />
     
+    <set-property name="user.agent" value="gecko1_8" />
 </module>

@@ -36,11 +36,19 @@ public class CompareSelectPopupCellList extends CellList<String> implements
 		ensureDebugId("compareSelectPopupCellList");
 	}
 
+	/**
+	 * Returns the set of selected results.
+	 * @return the set of selected results.
+	 */
 	@Override
 	public MultiSelectionModel<String> getSelectionModel() {
 		return selectionModel;
 	}
 
+	/**
+	 * Toggles the item which was clicked or tapped to selected or unselected.
+	 * @param event The name that was clicked or tapped.
+	 */
 	@Override
 	public void onCellPreview(CellPreviewEvent<String> event) {
 		if (BrowserEvents.CLICK.equals(event.getNativeEvent().getType())) {

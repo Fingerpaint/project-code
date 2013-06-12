@@ -60,6 +60,10 @@ public class RectangleGeometryTest extends GWTTestCase {
 				CssColor.make("black").toString(), geom.getColor().toString());
 	}
 
+	/**
+	 * Tests whether the end of a swipe in the canvas correctly does or does not
+	 * generate a new mixing step.
+	 */
 	@Test
 	public void testStopDefineMixingStep() {
 		int width = new RectangleGeometry(clientHeight, clientWidth).getWidth();
@@ -186,7 +190,8 @@ public class RectangleGeometryTest extends GWTTestCase {
 		StepAddedListener stl = new StepAddedListener() {
 
 			@Override
-			public void onStepAdded(MixingStep step) {
+			public void onStepAdded(MixingStep newStep) {
+				RectangleMixingStep step = (RectangleMixingStep) newStep;
 				step.setStepSize(stepSize);
 				mixingStepAdded = true;
 				assertEquals(message + " is top", top, step.isTopWall());
@@ -200,6 +205,9 @@ public class RectangleGeometryTest extends GWTTestCase {
 		return stl;
 	}
 
+	/**
+	 * Returns the module name for the GWT test.
+	 */
 	@Override
 	public String getModuleName() {
 		return "nl.tue.fingerpaint.Fingerpaint";

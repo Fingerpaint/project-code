@@ -54,6 +54,10 @@ public class MenuToggleButton extends Button implements ClickHandler {
 		this.buttonAnimation = new RotationAnimation(imgEl, 45);
 	}
 
+	/**
+	 * Toggles the visibility of the main menu.
+	 * @param event The event that has fired.
+	 */
 	@Override
 	public void onClick(ClickEvent event) {
 		if (shown) {
