@@ -63,4 +63,7 @@
 	<script src="jszip-inflate.js"></script>
 	<script src="jszip-load.js"></script>
 
+	<!-- Path to the Simulator Service -->
+	<servlet path="/simulatorService" class="nl.tue.fingerpaint.server.simulator.SimulatorServiceImpl"/>
+
 </module>
