@@ -21,6 +21,11 @@ public class MixingProtocol implements Serializable {
 	private ArrayList<MixingStep> program = new ArrayList<MixingStep>();
 
 	/**
+	 * Default constructor, necessary for serialisation.
+	 */
+	public MixingProtocol() { }
+	
+	/**
 	 * Returns the MixingStep located at index {@code index}.
 	 * 
 	 * @param index

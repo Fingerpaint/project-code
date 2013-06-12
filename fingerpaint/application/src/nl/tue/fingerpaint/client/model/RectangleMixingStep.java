@@ -1,12 +1,14 @@
 package nl.tue.fingerpaint.client.model;
 
+import java.io.Serializable;
+
 /**
  * Class for a mixing step for the rectangular geometry.
  * 
  * @author Group Fingerpaint
  *
  */
-public class RectangleMixingStep extends MixingStep {
+public class RectangleMixingStep extends MixingStep implements Serializable {
 	/** Randomly generated serialVersionUID */
 	private static final long serialVersionUID = 9188459726499715212L;
 
@@ -19,6 +21,11 @@ public class RectangleMixingStep extends MixingStep {
 	/** The wall that is moved; true for the top wall, false for the bottom wall */
 	private boolean wall;
 
+	/**
+	 * Default constructor, necessary for serialisation.
+	 */
+	public RectangleMixingStep() { }
+	
 	/**
 	 * Initialises a RectangleMixingStep from a string.
 	 * @param stepRep The textual representation of this mixing step.
