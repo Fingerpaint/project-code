@@ -23,7 +23,7 @@ public abstract class DrawingTool {
 	 *            The radius of the drawing tool
 	 */
 	public DrawingTool(int radius) {
-		this.radius = radius;
+		this.radius = Math.max(0, radius);
 	}
 
 	// --Getters and Setters----------------------------------------
@@ -44,7 +44,7 @@ public abstract class DrawingTool {
 	 *            The radius of the drawing tool
 	 */
 	public void setRadius(int r) {
-		radius = r;
+		radius = Math.max(0, r);;
 	}
 
 	// --Private and protected methods for internal use---------------
