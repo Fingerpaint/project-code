@@ -1,4 +1,4 @@
-package nl.tue.fingerpaint.server;
+package nl.tue.fingerpaint.server.serverdata;
 
 import nl.tue.fingerpaint.client.serverdata.ServerDataService;
 import nl.tue.fingerpaint.shared.GeometryNames;
@@ -21,15 +21,16 @@ public class ServerDataServiceImpl extends RemoteServiceServlet implements
 
 	/**
 	 * Returns server data, i.e. which geometries and mixers are available.
+	 * 
 	 * @return server data, i.e. which geometries and mixers are available.
 	 */
 	@Override
 	public ServerDataResult getServerData() {
 		return new ServerDataResult(
-				new String[] { GeometryNames.CIRC_LONG, GeometryNames.RECT_LONG, GeometryNames.JOBE_LONG, GeometryNames.SQR_LONG },
-				new String[] { "Mixer 1", "Mixer 2", "Mixer 3", "Mixer 4", "Mixer 5", "Mixer 6", "Mixer 7", "Mixer 8", "Mixer 9", "Mixer 10", "Mixer 11",
-				"Mixer 12", "Default" },
-				new int[] { 0, 0, 3, 0, 2, 1, 1, 3, 3, 2, 2, 1 , 1});
+				new String[] { GeometryNames.RECT_LONG, GeometryNames.SQR_LONG },
+				new String[] { "Default", "Default" },
+				new int[] { 0, 1 }
+			);
 	}
 
 }

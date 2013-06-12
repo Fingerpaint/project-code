@@ -48,7 +48,7 @@ import com.google.gwt.visualization.client.VisualizationUtils;
 import com.google.gwt.visualization.client.visualizations.LineChart;
 
 /**
- * Entry point classes define <code>onModuleLoad()</code>.
+ * This is the entry point of the Fingerpaint application.
  * 
  * @author Group Fingerpaint
  */
@@ -94,7 +94,7 @@ public class Fingerpaint implements EntryPoint {
 
 		// initialise the underlying model of the application
 		as = new ApplicationState();
-		as.setNrSteps(1.0);
+		as.setNrSteps(NrStepsSpinner.DEFAULT_VALUE);
 		setLoadingPanelVisible(true);
 		ServerDataCache.initialise(new AsyncCallback<String>() {
 			@Override

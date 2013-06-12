@@ -6,7 +6,8 @@ import com.google.gwt.canvas.dom.client.CanvasPixelArray;
 import com.google.gwt.canvas.dom.client.ImageData;
 
 /**
- * A class containing a square drawing tool
+ * A {@code SquareDrawingTool} is a {@link DrawingTool} with a square shape.
+ * Users can thus use this drawing tool to draw squares on the canvas.
  * 
  * @author Group Fingerpaint
  */
@@ -14,10 +15,10 @@ public class SquareDrawingTool extends DrawingTool {
 
 	// --Constructors-------------------------------------------
 	/**
-	 * Constructs a square drawing tool with radius r
+	 * Constructs a square drawing tool with a size of {@code r}.
 	 * 
 	 * @param r
-	 *            The radius of the drawing tool
+	 *            The height (and width) of the drawing tool.
 	 */
 	public SquareDrawingTool(int r) {
 		super(r);

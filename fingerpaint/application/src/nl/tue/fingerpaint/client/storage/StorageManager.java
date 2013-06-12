@@ -18,7 +18,7 @@ import com.google.gwt.storage.client.StorageMap;
 
 /**
  * <p>
- * A {@code StorageManager} manages the local storage in the browser. The is
+ * A {@code StorageManager} manages the local storage in the browser. There is
  * only one instance of the storage manager, that must be used for all
  * interaction with the storage.
  * </p>
@@ -133,6 +133,10 @@ public class StorageManager {
 	 */
 	protected StorageManager() {
 		localStorage = Storage.getLocalStorageIfSupported();
+		if (localStorage == null) {
+			state = ERROR;
+			return;
+		}
 
 		// Make sure that all keys are set
 		StorageMap sm = new StorageMap(localStorage);
@@ -189,11 +193,7 @@ public class StorageManager {
 			}
 		}
 
-		if (localStorage == null) {
-			state = ERROR;
-		} else {
-			state = INITIALISED;
-		}
+		state = INITIALISED;
 	}
 
 	// ---- PUBLIC PART OF CLASS

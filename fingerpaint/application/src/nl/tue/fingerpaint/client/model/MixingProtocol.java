@@ -17,6 +17,25 @@ public class MixingProtocol implements Serializable {
 	private static final long serialVersionUID = 4249912306397874059L;
 	/** the current mixing program */
 	private ArrayList<MixingStep> program = new ArrayList<MixingStep>();
+	/** The geometry that this protocol is defined for. */
+	private String geometry;
+
+	/**
+	 * Construct a new protocol that applies to the rectangular geometry.
+	 */
+	public MixingProtocol() {
+		this.geometry = GeometryNames.RECT_LONG;
+	}
+	
+	/**
+	 * Construct a new protocol that applies to the given geometry.
+	 * 
+	 * @param geometry
+	 *            The long name of the geometry to which this protocol applies.
+	 */
+	public MixingProtocol(String geometry) {
+		this.geometry = geometry;
+	}
 
 	/**
 	 * Returns the MixingStep located at index {@code index}.
@@ -159,7 +178,7 @@ public class MixingProtocol implements Serializable {
 	 * @return The long name of the geometry this protocol is defined for.
 	 */
 	public String getGeometry() {
-		return GeometryNames.RECT_LONG;
+		return geometry;
 	}
 
 	/**
