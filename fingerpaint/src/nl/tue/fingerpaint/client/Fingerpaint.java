@@ -7,20 +7,20 @@ import nl.tue.fingerpaint.client.gui.GraphVisualisator;
 import nl.tue.fingerpaint.client.gui.GuiState;
 import nl.tue.fingerpaint.client.gui.spinners.NrStepsSpinner;
 import nl.tue.fingerpaint.client.model.ApplicationState;
-import nl.tue.fingerpaint.shared.model.MixingProtocol;
 import nl.tue.fingerpaint.client.resources.FingerpaintConstants;
 import nl.tue.fingerpaint.client.resources.FingerpaintResources;
 import nl.tue.fingerpaint.client.serverdata.ServerDataCache;
-import nl.tue.fingerpaint.shared.simulator.Simulation;
-import nl.tue.fingerpaint.shared.simulator.SimulationResult;
-import nl.tue.fingerpaint.shared.simulator.SimulatorService;
-import nl.tue.fingerpaint.shared.simulator.SimulatorServiceAsync;
 import nl.tue.fingerpaint.client.storage.FileExporter;
 import nl.tue.fingerpaint.client.storage.FingerpaintJsonizer;
 import nl.tue.fingerpaint.client.storage.FingerpaintZipper;
 import nl.tue.fingerpaint.client.storage.ResultStorage;
 import nl.tue.fingerpaint.client.storage.StorageManager;
 import nl.tue.fingerpaint.shared.GeometryNames;
+import nl.tue.fingerpaint.shared.model.MixingProtocol;
+import nl.tue.fingerpaint.shared.simulator.Simulation;
+import nl.tue.fingerpaint.shared.simulator.SimulationResult;
+import nl.tue.fingerpaint.shared.simulator.SimulatorService;
+import nl.tue.fingerpaint.shared.simulator.SimulatorServiceAsync;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
@@ -28,6 +28,8 @@ import com.google.gwt.debug.client.DebugInfo;
 import com.google.gwt.dom.client.IFrameElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.logical.shared.ResizeEvent;
+import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.http.client.RequestTimeoutException;
 import com.google.gwt.user.cellview.client.CellBrowser;
 import com.google.gwt.user.client.DOM;
@@ -118,6 +120,17 @@ public class Fingerpaint implements EntryPoint {
 		// Set (debug) IDs on a number of elements that do not have a dedicated
 		// class
 		GuiState.setIDs();
+		
+		//switch between portrait and canvas view
+		Window.addResizeHandler(new ResizeHandler() {
+			@Override
+			public void onResize(ResizeEvent event) {
+				if (as.getGeometry() != null) {
+					as.getGeometry().resize(Window.getClientWidth() - 20,
+							Window.getClientHeight() - 20);
+				}
+			}
+		});
 	}
 
 	/**
