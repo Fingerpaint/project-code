@@ -2,8 +2,6 @@ package nl.tue.fingerpaint.client.model;
 
 import java.io.Serializable;
 
-import org.jsonmaker.gwt.client.Jsonizer;
-
 /**
  * MixingStep is a class that stores information for an individual mixing step
  * of a mixing protocol
@@ -191,37 +189,6 @@ public class MixingStep implements Serializable {
 
 		stepString += "[" + (double) nrUnits / 4 + "]";
 		return stepString;
-	}
-
-	/**
-	 * Converts a string to a mixing step.
-	 * 
-	 * @param step
-	 *            The string to be converted
-	 * @return A mixing step object that matches the given input string
-	 */
-	public static MixingStep fromString(String step) {
-		MixingStep result = new MixingStep();
-		
-		if (step.startsWith("-")) {
-			result.setDirection(false);
-			step = step.substring(1);
-		} else {
-			result.setDirection(true);
-		}
-		result.setWall(step.startsWith("T"));
-		
-		// Remove the letter (B or T) and the brackets ([ and ]) from the string.
-		step = step.substring(2, step.length() - 1);
-		// Convert the resulting string and add it to the result.
-		result.setStepSize(Double.parseDouble(step));
-		
-		return result;
-	}
-
-	/** MixingStep JSONizer Interface */
-	public interface MixingStepJsonizer extends Jsonizer {
-		// Empty on purpose
 	}
 
 }

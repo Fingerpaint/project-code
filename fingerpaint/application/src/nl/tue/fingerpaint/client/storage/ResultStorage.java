@@ -2,9 +2,6 @@ package nl.tue.fingerpaint.client.storage;
 
 import nl.tue.fingerpaint.client.model.MixingProtocol;
 
-import org.jsonmaker.gwt.client.Jsonizer;
-import org.jsonmaker.gwt.client.annotation.Transient;
-
 /**
  * Class that holds everything needed to store a mixing result. Can be JSONized
  * using the ResultStorageJsonizer
@@ -69,7 +66,6 @@ public class ResultStorage {
 	 * 
 	 * @return The initial concentration distribution that was used
 	 */
-	@Transient
 	public int[] getDistribution() {
 		return FingerpaintJsonizer.intArrayFromString(FingerpaintZipper
 				.unzip(this.zippedDist));
@@ -81,7 +77,6 @@ public class ResultStorage {
 	 * @param distribution
 	 *            The concentration distribution to set
 	 */
-	@Transient
 	public void setDistribution(int[] distribution) {
 		this.zippedDist = FingerpaintZipper.zip(FingerpaintJsonizer
 				.toString(distribution));
@@ -133,7 +128,6 @@ public class ResultStorage {
 	 * 
 	 * @return The protocol that was used
 	 */
-	@Transient
 	public MixingProtocol getMixingProtocol() {
 		return MixingProtocol.fromString(protocol);
 	}
@@ -144,7 +138,6 @@ public class ResultStorage {
 	 * @param protocol
 	 *            The protocol object to set
 	 */
-	@Transient
 	public void setMixingProtocol(MixingProtocol protocol) {
 		this.protocol = protocol.toString();
 	}
@@ -185,11 +178,6 @@ public class ResultStorage {
 	 */
 	public void setNrSteps(int nrSteps) {
 		this.nrSteps = nrSteps;
-	}
-
-	/** ResultStorage JSONizer Interface */
-	public interface ResultStorageJsonizer extends Jsonizer {
-		// Empty on purpose
 	}
 
 }

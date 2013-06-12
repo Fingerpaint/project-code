@@ -3,7 +3,7 @@ package nl.tue.fingerpaint.client.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import org.jsonmaker.gwt.client.Jsonizer;
+import nl.tue.fingerpaint.shared.GeometryNames;
 
 /**
  * This class symbolises a mixing program consisting of a number of mixing steps
@@ -156,12 +156,10 @@ public class MixingProtocol implements Serializable {
 	/**
 	 * Returns the long name of the geometry this protocol is defined for.
 	 * 
-	 * TODO: Currently hard coded, needs to be made dynamic .
-	 * 
 	 * @return The long name of the geometry this protocol is defined for.
 	 */
 	public String getGeometry() {
-		return "Rectangle400x240";
+		return GeometryNames.RECT_LONG;
 	}
 
 	/**
@@ -173,43 +171,12 @@ public class MixingProtocol implements Serializable {
 		for (MixingStep ms : program) {
 			result += ms.toString() + ", ";
 		}
-		
+
 		// Prevent StringIndexOutOfBoundsException due to empty protocol
 		if (result.length() < 2) {
 			return "";
 		}
-		
+
 		return result.substring(0, result.length() - 2);
-	}
-
-	/**
-	 * Converts a string to a mixing protocol.
-	 * 
-	 * @param protocol
-	 *            The string to be converted
-	 * @return A mixing protocol object that matches the given input string
-	 */
-	public static MixingProtocol fromString(String protocol) {
-		// Remove the leading and trailing double quotes ("), if present.
-		if(protocol.startsWith("\"")){
-			protocol = protocol.substring(1, protocol.length());
-		}
-		if(protocol.endsWith("\"")){
-			protocol = protocol.substring(0, protocol.length() - 1);
-		}
-		
-		MixingProtocol result = new MixingProtocol();
-		String[] steps = protocol.split(", ");
-		
-		for (int i = 0; i < steps.length; i++) {
-			result.addStep(MixingStep.fromString(steps[i]));
-		}
-
-		return result;
-	}
-
-	/** MixingProtocol JSONizer Interface */
-	public interface MixingProtocolJsonizer extends Jsonizer {
-		// Empty on purpose
 	}
 }

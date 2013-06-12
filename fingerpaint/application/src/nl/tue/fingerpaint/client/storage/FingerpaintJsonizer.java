@@ -6,9 +6,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import nl.tue.fingerpaint.client.model.MixingProtocol;
-import nl.tue.fingerpaint.client.storage.ResultStorage.ResultStorageJsonizer;
-
-import org.jsonmaker.gwt.client.JsonizerParser;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JsonUtils;
@@ -63,8 +60,8 @@ public class FingerpaintJsonizer {
 	}
 
 	/**
-	 * Create an integer array that is represented by the given JSON array. When a
-	 * value in the array is not a number, 1.0 is used as a default value.
+	 * Create an integer array that is represented by the given JSON array. When
+	 * a value in the array is not a number, 1.0 is used as a default value.
 	 * 
 	 * @param jsonArray
 	 *            A JSON array that can be used as an integer array in Java.
@@ -87,10 +84,10 @@ public class FingerpaintJsonizer {
 	}
 
 	/**
-	 * Create an integer array that is represented by the given JSON string. When
-	 * the given value does not represent an array, {@code null} is returned.
-	 * When a value in the array is not an integer, 1.0 is used as a default
-	 * value.
+	 * Create an integer array that is represented by the given JSON string.
+	 * When the given value does not represent an array, {@code null} is
+	 * returned. When a value in the array is not an integer, 1.0 is used as a
+	 * default value.
 	 * 
 	 * @param jsonIntArray
 	 *            A JSON string that represents an array and can be used as an
@@ -241,16 +238,47 @@ public class FingerpaintJsonizer {
 	 *         {@code null} is returned.
 	 */
 	public static ResultStorage resultFromString(String jsonString) {
-		ResultStorageJsonizer json = (ResultStorageJsonizer) GWT
-				.create(ResultStorageJsonizer.class);
+		JSONValue val;
 		try {
-			return (ResultStorage) JsonizerParser.parse(json, jsonString);
+			val = JSONParser.parseStrict(jsonString);
 		} catch (Exception e) {
 			// When the value is null or empty, return an empty hash map
 			Logger.getLogger("").log(Level.SEVERE,
 					"[resultFromString] Could not parse value...");
 			return null;
 		}
+		JSONObject valObj;
+
+		if ((valObj = val.isObject()) != null) {
+			ResultStorage result = new ResultStorage();
+			HashMap<String, Object> jsonObject = hashMapFromJSONObject(valObj,
+					true);
+			String[] keys = new String[] { "geometry", "mixer",
+					"zippedDistribution", "mixingProtocol", "segregation",
+					"nrSteps" };
+
+			for (String key : keys) {
+				if (jsonObject.containsKey(key)) {
+					if (key.equals(keys[0])) {
+						result.setGeometry((String) jsonObject.get(key));
+					} else if (key.equals(keys[1])) {
+						result.setMixer((String) jsonObject.get(key));
+					} else if (key.equals(keys[2])) {
+						result.setZippedDistribution((String) jsonObject.get(key));
+					} else if (key.equals(keys[3])) {
+						result.setMixingProtocol(mixingProtocolFromJSONArray((JSONArray) jsonObject.get(key)));
+					} else if (key.equals(keys[4])) {
+						
+					} else if (key.equals(keys[5])) {
+						
+					}
+				}
+			}
+			
+			return result;
+		}
+
+		return null;
 	}
 
 	/**
