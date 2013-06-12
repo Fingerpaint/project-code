@@ -61,7 +61,7 @@ public interface FingerpaintConstants extends Constants {
 	 * @return Localised string that contains the text for the
 	 *         {@link GuiState#nrStepsLabel} label.
 	 */
-	@DefaultStringValue("#steps")
+	@DefaultStringValue("Number of steps")
 	public String lblNrSteps();
 
 	/**
@@ -216,8 +216,7 @@ public interface FingerpaintConstants extends Constants {
 	 */
 	@DefaultStringValue("Export graph")
 	public String btnExportGraph();
-	
-	
+
 	/**
 	 * @return Localised string that contains the text for the
 	 *         {@link GuiState#exportDistributionButton} button.
@@ -225,7 +224,6 @@ public interface FingerpaintConstants extends Constants {
 	@DefaultStringValue("Export image")
 	public String btnExportDist();
 
-	
 	/**
 	 * @return Localised string that contains the text for the
 	 *         {@link GuiState#exportSingleGraphButton} button.
@@ -253,14 +251,13 @@ public interface FingerpaintConstants extends Constants {
 	 */
 	@DefaultStringValue("New Comparison")
 	public String btnNewCompare();
-
-	// -- CONSTANTS FOR CHECKBOXES --------------------------------------------
+	
 	/**
 	 * @return Localised string that contains the text for the
-	 *         {@link GuiState#defineProtocolCheckBox} checkbox.
+	 *         {@link GuiState#toggleDefineProtocol} toggle button.
 	 */
 	@DefaultStringValue("Define Protocol")
-	public String cbDefProt();
+	public String btnDefProt();
 
 	// --- CONSTANTS FOR ERRORS -----------------------------------------------
 	/**

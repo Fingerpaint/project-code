@@ -34,13 +34,6 @@ public interface FingerpaintResources extends ClientBundle {
 	public ImageResource loadImageDynamic();
 	
 	/**
-	 * @return A static picture that can be used to indicate that the
-	 *         application is busy doing something.
-	 */
-	@Source("loading_static.gif")
-	public ImageResource loadImageStatic();
-	
-	/**
 	 * @return An image of a plus sign. Used in the button that can toggle
 	 *         if the menu is visible or not.
 	 */

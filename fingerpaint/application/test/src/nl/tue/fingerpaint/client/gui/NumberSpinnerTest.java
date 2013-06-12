@@ -43,10 +43,11 @@ public class NumberSpinnerTest extends GWTTestCase {
 	public void testDefaultBelowMin() {
 		try {
 			numberSpinner = new NumberSpinner(MIN - 1, RATE, MIN, MAX, true);
+			fail("IllegalArgumentException expected, because default is lower than minimum.");
 		} catch (IllegalArgumentException e) {
-			assertTrue(
-					"IllegalArgumentException expected, because default is lower than minimum.",
-					true);
+			assertTrue(true);
+		} catch (Exception e){
+			fail(e.toString() + " observed, IllegalArgumentException expected");
 		}
 	}
 
@@ -58,10 +59,11 @@ public class NumberSpinnerTest extends GWTTestCase {
 	public void testDefaultAboveMax() {
 		try {
 			numberSpinner = new NumberSpinner(MAX + 1, RATE, MIN, MAX, true);
+			fail("IllegalArgumentException expected, because default is higher than minimum.");
 		} catch (IllegalArgumentException e) {
-			assertTrue(
-					"IllegalArgumentException expected, because default is bigger than maximum.",
-					true);
+			assertTrue(true);
+		} catch (Exception e){
+			fail(e.toString() + " observed, IllegalArgumentException expected");
 		}
 	}
 
@@ -74,10 +76,11 @@ public class NumberSpinnerTest extends GWTTestCase {
 		try {
 			numberSpinner = new NumberSpinner(defaultValue, RATE, MAX + 1, MAX,
 					true);
+			fail("IllegalArgumentException expected, because minimum is bigger than maximum.");
 		} catch (IllegalArgumentException e) {
-			assertTrue(
-					"IllegalArgumentException expected, because minimum is bigger than maximum.",
-					true);
+			assertTrue(true);
+		} catch (Exception e){
+			fail(e.toString() + " observed, IllegalArgumentException expected");
 		}
 	}
 

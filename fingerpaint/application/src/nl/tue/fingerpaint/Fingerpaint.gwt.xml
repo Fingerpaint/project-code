@@ -62,5 +62,7 @@
 	<script src="jszip-deflate.js"></script>
 	<script src="jszip-inflate.js"></script>
 	<script src="jszip-load.js"></script>
+	
+	<script src="hammer.js"></script>
 
 </module>

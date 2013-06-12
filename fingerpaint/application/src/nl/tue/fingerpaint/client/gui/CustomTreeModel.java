@@ -19,10 +19,10 @@ import nl.tue.fingerpaint.client.gui.buttons.SaveProtocolButton;
 import nl.tue.fingerpaint.client.gui.buttons.SaveResultsButton;
 import nl.tue.fingerpaint.client.gui.buttons.SquareDrawingToolToggleButton;
 import nl.tue.fingerpaint.client.gui.buttons.ToggleColourButton;
+import nl.tue.fingerpaint.client.gui.buttons.ToggleDefineProtocol;
 import nl.tue.fingerpaint.client.gui.buttons.ViewSingleGraphButton;
 import nl.tue.fingerpaint.client.gui.celllists.LoadInitDistCellList;
 import nl.tue.fingerpaint.client.gui.celllists.LoadProtocolCellList;
-import nl.tue.fingerpaint.client.gui.checkboxes.DefineProtocolCheckBox;
 import nl.tue.fingerpaint.client.gui.spinners.CursorSizeSpinner;
 import nl.tue.fingerpaint.client.gui.spinners.NrStepsSpinner;
 import nl.tue.fingerpaint.client.gui.spinners.StepSizeSpinner;
@@ -229,12 +229,12 @@ public class CustomTreeModel implements TreeViewModel {
 		GuiState.menuPanel.add(GuiState.sizeLabel);
 		GuiState.menuPanel.add(GuiState.sizeSpinner);
 
-		// Initialise the checkbox that indicates whether a protocol is
+		// Initialise the toggleButton that indicates whether a protocol is
 		// being defined, or single steps have to be executed and add to
 		// menu panel
-		GuiState.defineProtocolCheckBox = new DefineProtocolCheckBox(fp);
-		GuiState.menuPanel.add(GuiState.defineProtocolCheckBox);
-
+		GuiState.toggleDefineProtocol = new ToggleDefineProtocol(fp);
+		GuiState.menuPanel.add(GuiState.toggleDefineProtocol);		
+		
 		// Initialise a spinner for #steps
 		GuiState.nrStepsSpinner = new NrStepsSpinner(as);
 
@@ -331,10 +331,9 @@ public class CustomTreeModel implements TreeViewModel {
 	 *            The {@code MixingStep} to be added.
 	 */
 	private void addStep(MixingStep step) {
-		if (GuiState.defineProtocolCheckBox.getValue()) {
+		if (!GuiState.toggleDefineProtocol.isHidden()) {
 			step.setStepSize(as.getStepSize());
 			as.addMixingStep(step);
-
 			updateProtocolLabel(step);
 			GuiState.mixNowButton.setEnabled(true);
 		} else {
