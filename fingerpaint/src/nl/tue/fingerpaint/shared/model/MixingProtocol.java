@@ -3,8 +3,6 @@ package nl.tue.fingerpaint.shared.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import nl.tue.fingerpaint.shared.GeometryNames;
-
 /**
  * This class symbolises a mixing program consisting of a number of mixing steps
  * 
@@ -24,7 +22,7 @@ public class MixingProtocol implements Serializable {
 	 * Construct a new protocol that applies to the rectangular geometry.
 	 */
 	public MixingProtocol() {
-		this.geometry = GeometryNames.RECT_LONG;
+		this.geometry = "Rectangle400x240";
 	}
 	
 	/**
