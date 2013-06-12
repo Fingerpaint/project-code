@@ -61,7 +61,6 @@ public class ToggleDefineProtocol extends Button implements ClickHandler {
 			fp.setProtocolWidgetsVisible(true);
 			this.setText("Hide Define protocol");
 		} else {
-			fp.resetProtocol();
 			fp.setProtocolWidgetsVisible(false);
 			this.setText("Define protocol");
 		}

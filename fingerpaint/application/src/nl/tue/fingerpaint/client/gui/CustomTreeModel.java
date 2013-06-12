@@ -331,6 +331,7 @@ public class CustomTreeModel implements TreeViewModel {
 	 *            The {@code MixingStep} to be added.
 	 */
 	private void addStep(MixingStep step) {
+		GuiState.labelProtocolLabel.setVisible(true);
 		if (!GuiState.toggleDefineProtocol.isHidden()) {
 			step.setStepSize(as.getStepSize());
 			as.addMixingStep(step);
@@ -338,7 +339,6 @@ public class CustomTreeModel implements TreeViewModel {
 			GuiState.mixNowButton.setEnabled(true);
 		} else {
 			MixingProtocol protocol = new MixingProtocol();
-			GuiState.labelProtocolLabel.setVisible(true);
 			step.setStepSize(as.getStepSize());
 			protocol.addStep(step);
 			fp.executeMixingRun(protocol);

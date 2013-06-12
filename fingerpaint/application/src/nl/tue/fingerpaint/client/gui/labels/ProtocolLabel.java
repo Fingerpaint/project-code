@@ -19,7 +19,7 @@ public class ProtocolLabel extends Label {
 	public ProtocolLabel() {
 		super(FingerpaintConstants.INSTANCE.lblProtocol());
 		setVisible(false);
-		ensureDebugId("protocolLabel");
+		ensureDebugId("labelProtocolLabel");
 	}
 	
 }
