@@ -14,7 +14,7 @@ import org.jsonmaker.gwt.client.Jsonizer;
 public abstract class MixingStep implements Serializable {
 
 	/** Randomly generated serialVersionUID */
-	protected static final long serialVersionUID = -4628728115890489404L;
+	private static final long serialVersionUID = -4628728115890489404L;
 	/** the minimum step size, all step sizes should be a multiple of this */
 	public static final double STEP_UNIT = 0.25;
 	/** lowest allowed step size */

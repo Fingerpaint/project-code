@@ -2,6 +2,8 @@ package nl.tue.fingerpaint.client.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 import org.jsonmaker.gwt.client.Jsonizer;
 
@@ -137,7 +139,8 @@ public class MixingProtocol implements Serializable {
 		if (result.length() < 2) {
 			return "";
 		}
-		
+
+		Logger.getLogger("").log(Level.INFO, result);
 		return result.substring(0, result.length() - 2);
 	}
 
@@ -163,7 +166,6 @@ public class MixingProtocol implements Serializable {
 		for (int i = 0; i < steps.length; i++) {
 			result.addStep(new RectangleMixingStep(steps[i]));
 		}
-
 		return result;
 	}
 
