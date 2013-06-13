@@ -65,7 +65,7 @@ body {
 }
 
 #loading-overlay {
-	position: absolute;
+	position: fixed;
 	top: 0; /*Absolute margin from top of screen is 0*/
 	right: 0;
 	bottom: 0;
