@@ -61,6 +61,14 @@ public class LoadProtocolCellList extends CellList<String> {
 
 		// Push the data into the widget.
 		setRowData(0, geometryProtocols);
+
+		// Alternate between white and light-gray background colors
+		for (int i = 0; i < geometryProtocols.size(); i += 2) {
+			this.getRowElement(i).addClassName("cellListStyleGray");
+		}
+		for (int i = 1; i < geometryProtocols.size(); i += 2) {
+			this.getRowElement(i).addClassName("cellListStyleWhite");
+		}
 	}
 
 	/**
@@ -78,11 +86,12 @@ public class LoadProtocolCellList extends CellList<String> {
 							GuiState.labelProtocolRepresentation.setText(as
 									.getProtocol().toString());
 							GuiState.mixNowButton.setEnabled(true);
-							
+
 							selectionModel.setSelected(selected, false);
 							GuiState.loadPanel.hide();
 
-							GuiState.labelProtocolRepresentation.setVisible(true);
+							GuiState.labelProtocolRepresentation
+									.setVisible(true);
 							GuiState.labelProtocolLabel.setVisible(true);
 							GuiState.saveProtocolButton.setEnabled(true);
 						}

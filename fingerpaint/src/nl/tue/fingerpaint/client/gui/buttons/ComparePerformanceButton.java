@@ -40,7 +40,7 @@ public class ComparePerformanceButton extends Button implements ClickHandler {
 
 		GuiState.compareButton = new CompareButton(fp);
 
-		initialize();
+		initialise();
 
 	}
 
@@ -66,16 +66,10 @@ public class ComparePerformanceButton extends Button implements ClickHandler {
 				});
 	}
 
-	private void initialize() {
-		// Initialise the cellList to contain all the mixing runs
-		// final ComparePerformanceCellList cellList = new
-		// ComparePerformanceCellList();
-
+	private void initialise() {
 		// Initialise all components of the second popup panel
 		VerticalPanel vertPanel = new VerticalPanel();
 		HorizontalPanel horPanel = new HorizontalPanel();
-		GuiState.closeCompareButton = new CloseCompareButton(
-				GuiState.compareSelectPopupCellList.getSelectionModel());
 		horPanel.add(GuiState.newCompareButton);
 		GuiState.exportMultipleGraphButton = new ExportMultipleGraphsButton(fp);
 		horPanel.add(GuiState.exportMultipleGraphButton);
@@ -91,8 +85,6 @@ public class ComparePerformanceButton extends Button implements ClickHandler {
 		HorizontalPanel compareHorizontalPanel = new HorizontalPanel();
 		compareVerticalPanel.add(compareHorizontalPanel);
 		compareHorizontalPanel.add(GuiState.compareButton);
-		GuiState.cancelCompareButton = new CancelCompareButton(
-				GuiState.compareSelectPopupCellList.getSelectionModel());
 		compareHorizontalPanel.add(GuiState.cancelCompareButton);
 	}
 }
