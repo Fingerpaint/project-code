@@ -93,8 +93,8 @@ public class CustomTreeModel implements TreeViewModel {
 	private void setUserChoiceValues(String selectedMixer) {
 		// TODO: Actually create a different geometry depending on the
 		// chosen geometry...
-		as.setGeometry(new RectangleGeometry(Window.getClientHeight() - 20,
-				Window.getClientWidth() - 20));
+		as.setGeometry(new RectangleGeometry(Window.getClientHeight(),
+				Window.getClientWidth()));
 	}
 
 	/**

@@ -43,17 +43,17 @@ public abstract class Geometry {
 	 * Distance between left border of the canvas and the left border of the
 	 * drawing area.
 	 */
-	protected static final int X_OFFSET = 0;
+	protected static final int X_OFFSET = 4;
 	/**
 	 * Distance between the top border of the canvas and the top border of the
 	 * drawing area.
 	 */
-	protected static final int TOP_OFFSET = HEIGHT_OF_WALL;
+	protected static final int TOP_OFFSET = HEIGHT_OF_WALL + X_OFFSET;
 	/**
 	 * Minimum distance between the bottom border of the canvas and the bottom
 	 * border of the drawing area.
 	 */
-	protected static final int BOTTOM_OFFSET = HEIGHT_OF_WALL;
+	protected static final int BOTTOM_OFFSET = HEIGHT_OF_WALL + X_OFFSET;
 	/**
 	 * Threshold in pixels to decide when a large enough swipe has been carried
 	 * out to define a protocol step.

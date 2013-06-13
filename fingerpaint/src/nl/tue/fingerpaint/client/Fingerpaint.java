@@ -125,8 +125,8 @@ public class Fingerpaint implements EntryPoint {
 			@Override
 			public void onResize(ResizeEvent event) {
 				if (as.getGeometry() != null) {
-					as.getGeometry().resize(Window.getClientWidth() - 20,
-							Window.getClientHeight() - 20);
+					as.getGeometry().resize(Window.getClientWidth(),
+							Window.getClientHeight());
 				}
 			}
 		});
