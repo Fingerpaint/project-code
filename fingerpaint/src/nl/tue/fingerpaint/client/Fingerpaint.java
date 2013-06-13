@@ -412,9 +412,12 @@ public class Fingerpaint implements EntryPoint {
 	 *            The protocol that should be executed.
 	 * @param nrSteps
 	 *            The number of times the protocol should be executed
+	 * @param mixingRun
+	 *            {@code true} if a complete run is executed, {@code false} if
+	 *            this is only a single step.
 	 */
 	public void executeMixingRun(final MixingProtocol protocol,
-			final int nrSteps) {
+			final int nrSteps, final boolean mixingRun) {
 		setLoadingPanelMessage(FingerpaintConstants.INSTANCE.prepareData());
 		setLoadingPanelVisible(true);
 
@@ -442,14 +445,16 @@ public class Fingerpaint implements EntryPoint {
 						as.getGeometry().drawDistribution(
 								result.getConcentrationVectors()[result
 										.getConcentrationVectors().length - 1]);
-						as.setSegregation(result.getSegregationPoints());						
+						as.setSegregation(result.getSegregationPoints());
 						setLoadingPanelVisible(false);
-						as.setMixRunSucces(true);
+						if (mixingRun) {
+							GuiState.saveResultsButton.setEnabled(true);
+							GuiState.viewSingleGraphButton.setEnabled(true);
+						}
 					}
 
 					@Override
 					public void onFailure(Throwable caught) {
-						as.setMixRunSucces(false);
 						setLoadingPanelVisible(false);
 						if (caught instanceof RequestTimeoutException) {
 							showError(FingerpaintConstants.INSTANCE
