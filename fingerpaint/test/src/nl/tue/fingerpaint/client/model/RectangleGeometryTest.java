@@ -1,7 +1,5 @@
 package nl.tue.fingerpaint.client.model;
 
-import nl.tue.fingerpaint.client.model.Geometry.StepAddedListener;
-import nl.tue.fingerpaint.shared.model.MixingStep;
 import nl.tue.fingerpaint.shared.model.RectangleMixingStep;
 
 import org.junit.Test;
@@ -21,8 +19,6 @@ protected RectangleGeometry geom;
 	public final int testClientHeight = 400;
 	/** arbitrary width, needed to initialise the geometry */
 	public final int testClientWidth = 600;
-
-	protected boolean listenerFired = false;
 	
 	/**
 	 * Initialises the geometry for a new test case
@@ -53,6 +49,8 @@ protected RectangleGeometry geom;
 	@Test
 	public void testIsInsideDrawingArea(){
 		initialise();
+		
+		//test all four corner cases
 		assertTrue("coordinates (1, 1) should be inside the canvas",geom.isInsideDrawingArea(1, 1));
 		assertTrue("coordinates (1, height) should be inside the canvas",geom.isInsideDrawingArea(1, geom.getHeight()));
 		assertTrue("coordinates (width, 1) should be inside the canvas",geom.isInsideDrawingArea(geom.getWidth(), 1));
@@ -65,6 +63,8 @@ protected RectangleGeometry geom;
 	@Test
 	public void testIsOutsideDrawingArea(){
 		initialise();
+		
+		//test all four sides
 		assertFalse("coordinates (0, 1) should be outside the canvas",geom.isInsideDrawingArea(0, 1));
 		assertFalse("coordinates (1, height+1) should be outside the canvas",geom.isInsideDrawingArea(1, geom.getHeight()+1));
 		assertFalse("coordinates (width, 0) should be outside the canvas",geom.isInsideDrawingArea(geom.getWidth(), 0));
@@ -77,10 +77,12 @@ protected RectangleGeometry geom;
 	@Test
 	public void testIsInsideTopWall(){
 		initialise();
+		
+		//test all four corner cases
 		assertTrue("coordinates (1, -1) should be inside the top wall",geom.isInsideTopWall(1, -1));
 		assertTrue("coordinates (1, 1-wallheight) should be inside the top wall",geom.isInsideTopWall(1, 1-geom.HEIGHT_OF_WALL));
-		assertTrue("coordinates (width, -1) should be inside the top wall",geom.isInsideTopWall(geom.getWidth(), -1));
-		assertTrue("coordinates (width, 1-wallheight) should be inside the top wall",geom.isInsideTopWall(geom.getWidth(), 1-geom.HEIGHT_OF_WALL));
+		assertTrue("coordinates (width-1, -1) should be inside the top wall",geom.isInsideTopWall(geom.getWidth()-1, -1));
+		assertTrue("coordinates (width-1, 1-wallheight) should be inside the top wall",geom.isInsideTopWall(geom.getWidth()-1, 1-geom.HEIGHT_OF_WALL));
 	}
 	
 	/**
@@ -89,10 +91,12 @@ protected RectangleGeometry geom;
 	@Test
 	public void testIsInsideBottomWall(){
 		initialise();
+		
+		//test all four corner cases
 		assertTrue("coordinates (1, height+1) should be inside the bottom wall",geom.isInsideBottomWall(1, geom.getHeight()+1));
 		assertTrue("coordinates (1, height+wallheight-1) should be inside the bottom wall",geom.isInsideBottomWall(1, geom.getHeight()+geom.HEIGHT_OF_WALL-1));
-		assertTrue("coordinates (width, height+1) should be inside the bottom wall",geom.isInsideBottomWall(geom.getWidth(), geom.getHeight()+1));
-		assertTrue("coordinates (width, height+wallheight-1) should be inside the bottom wall",geom.isInsideBottomWall(geom.getWidth(), geom.getHeight()+geom.HEIGHT_OF_WALL-1));
+		assertTrue("coordinates (width-1, height+1) should be inside the bottom wall",geom.isInsideBottomWall(geom.getWidth()-1, geom.getHeight()+1));
+		assertTrue("coordinates (width-1, height+wallheight-1) should be inside the bottom wall",geom.isInsideBottomWall(geom.getWidth()-1, geom.getHeight()+geom.HEIGHT_OF_WALL-1));
 	}
 	
 	//-----Integration tests---------------------------------------------------
@@ -103,37 +107,58 @@ protected RectangleGeometry geom;
 	@Test
 	public void testMixingSteps(){
 		initialise();
+		
+		//these four values represent four points
 		int Xl = 1;
-		int Xr = geom.getWidth();
-		// geom.isInsideWall(x, y);
+		int Xr = geom.getWidth()-1;
+		int Yt = -1;
+		int Yb = geom.getHeight()+1;
+		
+		//check if the four points used for testing are in the correct wall
+		assertTrue("(" + Xl + ", " + Yt + ") should be in the top wall",geom.isInsideTopWall(Xl, Yt));
+		assertTrue("(" + Xr + ", " + Yt + ") should be in the top wall",geom.isInsideTopWall(Xr, Yt));
+		assertTrue("(" + Xl + ", " + Yb + ") should be in the bottom wall",geom.isInsideBottomWall(Xl, Yb));
+		assertTrue("(" + Xr + ", " + Yb + ") should be in the bottom wall",geom.isInsideBottomWall(Xr, Yb));
+		
+		// test mixing steps for each combination of top/bottom wall and clockwise/counterclockwise
+		testStep(true, false);
+		testStep(false, true);
+		testStep(true, true);
+		testStep(false, false);
 	}
-
-//	/**
-//	 * 
-//	 * @param message
-//	 * @param top
-//	 * @param clockwise
-//	 * @param stepSize
-//	 * @return
-//	 */
-//	private StepAddedListener setUpStepAddedListener(final String message,
-//			final boolean top, final boolean clockwise, final double stepSize) {
-//		StepAddedListener stl = new StepAddedListener() {
-//			@Override
-//			public void onStepAdded(MixingStep step) {
-//				RectangleMixingStep step = (RectangleMixingStep) newStep;
-//				step.setStepSize(stepSize);
-//				listenerFired  = true;
-//				assertEquals(message + " is top", top, step.isTopWall());
-//				assertEquals(message + " is clockwise", clockwise,
-//						step.isClockwise());
-//				assertEquals(message + " has stepsize " + stepSize, stepSize,
-//						step.getStepSize());
-//			}
-//		};
-//
-//		return stl;
-//	}
+	
+	/**
+	 * Helper method to test an individual mixing step, 
+	 * tests if geometry correctly sets topWall and clockwise for its mixing steps
+	 * 
+	 * @param true if a top wall mixing step should be tested, false for a bottom wall step
+	 * @param Clockwise true if the mixing movement should be clockwise, false otherwise
+	 */
+	protected void testStep(boolean topWall, boolean clockwise){
+		initialise();
+		int x1; //the x-coordinate of the dragStart
+		int x2; //the x-coordinate of the dragEnd
+		int y;
+		if(topWall){
+			y = -1;
+		}else{
+			y = geom.getHeight()+1;
+		}
+		if(topWall ^ clockwise){ //a movement to the left
+			x1 = geom.getWidth()-1;
+			x2 = 1;
+		}else{ //a movement to the right
+			x1 = 1;
+			x2 = geom.getWidth()-1;
+		}
+		//now input the wall movement in RectangleGeometry
+		//and retrieve the resultant MixingStep
+		geom.startDefineMixingStep(x1, y);
+		RectangleMixingStep testStep = (RectangleMixingStep) geom.determineSwipe(x2, y);
+		
+		assertEquals("topWall should be " + topWall + " for this test, clockwise was " + clockwise,topWall, testStep.isTopWall());
+		assertEquals("clockwise should be " + clockwise + " for this test, topWall was " + topWall, clockwise, testStep.isClockwise());
+	}
 	
 	/**
 	 * Returns the module name for the GWT test.
