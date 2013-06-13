@@ -51,7 +51,7 @@ public class MixNowButton extends Button implements ClickHandler {
 	 */
 	@Override
 	public void onClick(ClickEvent event) {
-		fp.executeMixingRun(as.getProtocol());
+		fp.executeMixingRun(as.getProtocol(), as.getNrSteps());
 	}
 
 }

@@ -15,11 +15,25 @@ public class MixingProtocol implements Serializable {
 	private static final long serialVersionUID = 4249912306397874059L;
 	/** the current mixing program */
 	private ArrayList<MixingStep> program = new ArrayList<MixingStep>();
+	/** The geometry that this protocol is defined for. */
+	private String geometry;
 
 	/**
-	 * Default constructor, necessary for serialisation.
+	 * Construct a new protocol that applies to the rectangular geometry.
 	 */
-	public MixingProtocol() { }
+	public MixingProtocol() {
+		this.geometry = "Rectangle400x240";
+	}
+	
+	/**
+	 * Construct a new protocol that applies to the given geometry.
+	 * 
+	 * @param geometry
+	 *            The long name of the geometry to which this protocol applies.
+	 */
+	public MixingProtocol(String geometry) {
+		this.geometry = geometry;
+	}
 	
 	/**
 	 * Returns the MixingStep located at index {@code index}.
@@ -118,12 +132,10 @@ public class MixingProtocol implements Serializable {
 	/**
 	 * Returns the long name of the geometry this protocol is defined for.
 	 * 
-	 * TODO: Currently hard coded, needs to be made dynamic .
-	 * 
 	 * @return The long name of the geometry this protocol is defined for.
 	 */
 	public String getGeometry() {
-		return "Rectangle400x240";
+		return geometry;
 	}
 
 	/**
@@ -135,7 +147,7 @@ public class MixingProtocol implements Serializable {
 		for (MixingStep ms : program) {
 			result += ms.toString() + ", ";
 		}
-		
+
 		// Prevent StringIndexOutOfBoundsException due to empty protocol
 		if (result.length() < 2) {
 			return "";
@@ -143,7 +155,7 @@ public class MixingProtocol implements Serializable {
 
 		return result.substring(0, result.length() - 2);
 	}
-
+	
 	/**
 	 * Converts a string to a mixing protocol.
 	 * 
@@ -153,16 +165,16 @@ public class MixingProtocol implements Serializable {
 	 */
 	public static MixingProtocol fromString(String protocol) {
 		// Remove the leading and trailing double quotes ("), if present.
-		if(protocol.startsWith("\"")){
+		if (protocol.startsWith("\"")) {
 			protocol = protocol.substring(1, protocol.length());
 		}
-		if(protocol.endsWith("\"")){
+		if (protocol.endsWith("\"")) {
 			protocol = protocol.substring(0, protocol.length() - 1);
 		}
-		
+
 		MixingProtocol result = new MixingProtocol();
 		String[] steps = protocol.split(", ");
-		
+
 		for (int i = 0; i < steps.length; i++) {
 			result.addStep(new RectangleMixingStep(steps[i]));
 		}

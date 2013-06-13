@@ -1,8 +1,6 @@
 package nl.tue.fingerpaint.client.gui.celllists;
 
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import nl.tue.fingerpaint.client.gui.GuiState;
 import nl.tue.fingerpaint.client.model.ApplicationState;
