@@ -1,5 +1,7 @@
 package nl.tue.fingerpaint.shared.utils;
 
+import com.google.gwt.canvas.dom.client.CssColor;
+
 /**
  * A {@code Colour} is simply ... a colour. It can be used way easier than the
  * default GWT {@link CssColor} though. For example, colours can be compared and
