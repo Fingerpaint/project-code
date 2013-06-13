@@ -52,7 +52,21 @@ public class RectangleMixingStepTest extends GWTTestCase {
 		stepClass.setStepSize(0.9);
 		assertEquals(1.0, stepClass.getStepSize());
 	}
-	
+
+	/**
+	 * A test to check whether the {@code toString} and {@code fromString}
+	 * functions work properly.
+	 */
+	@Test
+	public void testToString() {
+		init();
+		RectangleMixingStep result = new RectangleMixingStep(
+				stepClass.toString());
+		assertEquals("The resulting mixing step", stepClass.getName(),
+				result.getName());
+
+	}
+
 	/**
 	 * Returns the module name for the GWT test.
 	 */
