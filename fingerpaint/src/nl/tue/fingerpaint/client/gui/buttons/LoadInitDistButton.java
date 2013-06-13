@@ -10,6 +10,7 @@ import nl.tue.fingerpaint.shared.GeometryNames;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.client.ui.Button;
 
 /**
@@ -57,6 +58,13 @@ public class LoadInitDistButton extends Button implements ClickHandler {
 		GuiState.loadVerticalPanel.add(GuiState.loadInitDistCellList);
 		GuiState.loadVerticalPanel.add(GuiState.closeLoadButton);
 		GuiState.loadPanel.center();
+	}
+	
+	/**
+	 * Adds a "no saved files found" to the loadVerticalPanel if the parameter list is empty
+	 */
+	private void emptyListCheck(CellList<String> list){
+		
 	}
 
 }
