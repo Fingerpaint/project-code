@@ -4,7 +4,6 @@ import nl.tue.fingerpaint.client.gui.GuiState;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.Constants;
-import com.google.gwt.safehtml.shared.SafeHtml;
 
 /**
  * The {@code FingerpaintConstants} are a set of localised constants. They can

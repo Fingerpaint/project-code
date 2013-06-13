@@ -42,6 +42,9 @@ public class InitDistFlexTable extends FlexTable {
 	 * 
 	 * @param initDists
 	 *            List of all results currently stored in the local storage.
+	 * @param geom
+	 *            Currently selected geometry: used to locate the distribution
+	 *            in the local storage.
 	 */
 	public void fillFlexTable(final ArrayList<String> initDists,
 			final String geom) {
