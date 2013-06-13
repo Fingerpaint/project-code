@@ -1,13 +1,13 @@
 package nl.tue.fingerpaint.client.model.drawingtool;
 
-
 import nl.tue.fingerpaint.shared.utils.Colour;
 
 import com.google.gwt.canvas.dom.client.CanvasPixelArray;
 import com.google.gwt.canvas.dom.client.ImageData;
 
 /**
- * A class containing a circle drawing tool
+ * A {@code CircleDrawingTool} is a {@link DrawingTool} with a circular shape.
+ * Users can thus use this drawing tool to draw circles on the canvas.
  * 
  * @author Group Fingerpaint
  */
@@ -27,7 +27,9 @@ public class CircleDrawingTool extends DrawingTool {
 	// --Private and protected methods for internal use---------------------
 	/**
 	 * Fills all the pixels in the data array belonging to this pixel with
-	 * regard to the grid
+	 * regard to the grid. That is, when we have a factor of 3 for example,
+	 * then every pixel is shown on the canvas as  3x3 = 9 pixels. This
+	 * function then fills those 9 pixels.
 	 * 
 	 * @param data
 	 *            The canvas pixel array that holds the canvas data
@@ -56,7 +58,7 @@ public class CircleDrawingTool extends DrawingTool {
 
 	// --Public methods for general use--------------------------
 	/**
-	 * Returns an ImageData object representing the square drawing tool
+	 * Returns an ImageData object representing the circle drawing tool.
 	 * 
 	 * @param img
 	 *            The ImageData object to draw the drawing tool on

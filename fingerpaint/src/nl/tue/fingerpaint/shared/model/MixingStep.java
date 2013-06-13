@@ -100,14 +100,14 @@ public abstract class MixingStep implements Serializable {
 	public abstract String getName();
 
 	/**
-	 * Returns the string representation of this mixing step.
-	 */
-	public abstract String toString();
-
-	/**
 	 * Sets this step's parameters to those as specified in the string.
+	 * 
 	 * @param string Textual representation of the step.
 	 */
 	public abstract void fromString(String string);
-
+	
+	/**
+	 * Returns the string representation of this mixing step.
+	 */
+	public abstract String toString();
 }

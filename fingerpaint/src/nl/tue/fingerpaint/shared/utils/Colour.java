@@ -1,7 +1,5 @@
 package nl.tue.fingerpaint.shared.utils;
 
-import com.google.gwt.canvas.dom.client.CssColor;
-
 /**
  * A {@code Colour} is simply ... a colour. It can be used way easier than the
  * default GWT {@link CssColor} though. For example, colours can be compared and
@@ -194,7 +192,7 @@ public class Colour {
 	 *            Wanted length of string.
 	 * @return Given string, left-padded with zeroes so it has requested length.
 	 */
-	protected String pad(String str, int len) {
+	protected static String pad(String str, int len) {
 		if (str == null) {
 			str = "";
 		}

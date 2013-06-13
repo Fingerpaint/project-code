@@ -7,9 +7,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import nl.tue.fingerpaint.client.gui.panels.NotificationPopupPanel;
-import nl.tue.fingerpaint.shared.model.MixingProtocol;
 import nl.tue.fingerpaint.client.resources.FingerpaintConstants;
 import nl.tue.fingerpaint.shared.GeometryNames;
+import nl.tue.fingerpaint.shared.model.MixingProtocol;
 
 import com.google.gwt.core.client.JavaScriptException;
 import com.google.gwt.json.client.JSONValue;
@@ -18,7 +18,7 @@ import com.google.gwt.storage.client.StorageMap;
 
 /**
  * <p>
- * A {@code StorageManager} manages the local storage in the browser. The is
+ * A {@code StorageManager} manages the local storage in the browser. There is
  * only one instance of the storage manager, that must be used for all
  * interaction with the storage.
  * </p>
@@ -133,6 +133,10 @@ public class StorageManager {
 	 */
 	protected StorageManager() {
 		localStorage = Storage.getLocalStorageIfSupported();
+		if (localStorage == null) {
+			state = ERROR;
+			return;
+		}
 
 		// Make sure that all keys are set
 		StorageMap sm = new StorageMap(localStorage);
@@ -189,11 +193,7 @@ public class StorageManager {
 			}
 		}
 
-		if (localStorage == null) {
-			state = ERROR;
-		} else {
-			state = INITIALISED;
-		}
+		state = INITIALISED;
 	}
 
 	// ---- PUBLIC PART OF CLASS
@@ -367,13 +367,13 @@ public class StorageManager {
 		if (state != INITIALISED) {
 			return null;
 		}
-
+		
 		HashMap<String, Object> firstLevel = FingerpaintJsonizer
 				.hashMapFromString(localStorage.getItem(KEY_RESULTS), false);
 		for (String firstLevelKey : firstLevel.keySet()) {
 			if (firstLevelKey.equals(key)) {
 				String result = firstLevel.get(key).toString();
-				return FingerpaintJsonizer.resultFromString(result);
+				return FingerpaintJsonizer.resultStorageFromString(result);
 			}
 		}
 		return null;
@@ -551,12 +551,10 @@ public class StorageManager {
 	 */
 	public boolean putResult(String key, ResultStorage result, boolean overwrite) {
 		if (state != INITIALISED) {
-			Logger.getLogger("").log(Level.INFO, "Not initialized");
 			return false;
 		}
 
 		if (isNameInUse(KEY_RESULTS, key, null) && !overwrite) {
-			Logger.getLogger("").log(Level.INFO, "Name in use.");
 			return false;
 		}
 		HashMap<String, Object> firstLevel = FingerpaintJsonizer
@@ -571,7 +569,7 @@ public class StorageManager {
 						FingerpaintConstants.INSTANCE.capacityExceeded())
 						.show(3000);
 			} else {
-				Logger.getLogger("").log(Level.INFO,
+				Logger.getLogger("").log(Level.SEVERE,
 						"Unknown error during saving.");
 			}
 		}

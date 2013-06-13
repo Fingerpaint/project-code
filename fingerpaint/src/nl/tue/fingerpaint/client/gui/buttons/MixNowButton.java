@@ -55,12 +55,13 @@ public class MixNowButton extends Button implements ClickHandler {
 	@Override
 	public void onClick(ClickEvent event) {
 
-		fp.executeMixingRun(as.getProtocol());
+		fp.executeMixingRun(as.getProtocol(), as.getNrSteps());
 		// only show options below is mix run was succesful
 		if (as.isMixRunSuccesful()) {
 			GuiState.saveResultsButton.setEnabled(true);
 			GuiState.viewSingleGraphButton.setEnabled(true);
 		}
+
 	}
 
 }

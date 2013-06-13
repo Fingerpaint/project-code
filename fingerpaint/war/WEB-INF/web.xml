@@ -8,7 +8,7 @@
   <servlet>
     <servlet-name>serverDataService</servlet-name>
     <servlet-class>
-      nl.tue.fingerpaint.server.ServerDataServiceImpl
+      nl.tue.fingerpaint.server.serverdata.ServerDataServiceImpl
     </servlet-class>
   </servlet>
   <servlet-mapping>

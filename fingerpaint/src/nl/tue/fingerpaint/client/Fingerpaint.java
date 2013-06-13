@@ -50,7 +50,7 @@ import com.google.gwt.visualization.client.VisualizationUtils;
 import com.google.gwt.visualization.client.visualizations.LineChart;
 
 /**
- * Entry point classes define <code>onModuleLoad()</code>.
+ * This is the entry point of the Fingerpaint application.
  * 
  * @author Group Fingerpaint
  */
@@ -73,7 +73,6 @@ public class Fingerpaint implements EntryPoint {
 	 * This is the entry point method.
 	 */
 	public void onModuleLoad() {
-		
 		// Set the DebugID prefix to empty
 		DebugInfo.setDebugIdPrefix("");
 
@@ -96,7 +95,7 @@ public class Fingerpaint implements EntryPoint {
 
 		// initialise the underlying model of the application
 		as = new ApplicationState();
-		as.setNrSteps(1.0);
+		as.setNrSteps(NrStepsSpinner.DEFAULT_VALUE);
 		setLoadingPanelVisible(true);
 		ServerDataCache.initialise(new AsyncCallback<String>() {
 			@Override
@@ -120,8 +119,8 @@ public class Fingerpaint implements EntryPoint {
 		// Set (debug) IDs on a number of elements that do not have a dedicated
 		// class
 		GuiState.setIDs();
-		
-		//switch between portrait and canvas view
+
+		// switch between portrait and canvas view
 		Window.addResizeHandler(new ResizeHandler() {
 			@Override
 			public void onResize(ResizeEvent event) {
@@ -253,7 +252,7 @@ public class Fingerpaint implements EntryPoint {
 	 *            If the "define protocol" widgets should be visible or not.
 	 */
 	public void setProtocolWidgetsVisible(boolean visible) {
-			GuiState.protocolPanelContainer.setVisibleAnimated(visible);
+		GuiState.protocolPanelContainer.setVisibleAnimated(visible);
 	}
 
 	/**
@@ -411,8 +410,11 @@ public class Fingerpaint implements EntryPoint {
 	 * 
 	 * @param protocol
 	 *            The protocol that should be executed.
+	 * @param nrSteps
+	 *            The number of times the protocol should be executed
 	 */
-	public void executeMixingRun(final MixingProtocol protocol) {
+	public void executeMixingRun(final MixingProtocol protocol,
+			final int nrSteps) {
 		setLoadingPanelMessage(FingerpaintConstants.INSTANCE.prepareData());
 		setLoadingPanelVisible(true);
 
@@ -427,7 +429,7 @@ public class Fingerpaint implements EntryPoint {
 						protocol, FingerpaintZipper.zip(
 								FingerpaintJsonizer.toString(as
 										.getInitialDistribution()))
-								.substring(1), as.getNrSteps(), false);
+								.substring(1), nrSteps, false);
 
 				TimeoutRpcRequestBuilder timeoutRpcRequestBuilder = new TimeoutRpcRequestBuilder(
 						10000);
@@ -476,5 +478,4 @@ public class Fingerpaint implements EntryPoint {
 		};
 		doLaterTimer.schedule(100);
 	}
-
 }
