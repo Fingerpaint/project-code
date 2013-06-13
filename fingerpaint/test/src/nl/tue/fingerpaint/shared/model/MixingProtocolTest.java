@@ -1,4 +1,4 @@
-package nl.tue.fingerpaint.client.model;
+package nl.tue.fingerpaint.shared.model;
 
 import nl.tue.fingerpaint.shared.model.MixingProtocol;
 import nl.tue.fingerpaint.shared.model.MixingStep;

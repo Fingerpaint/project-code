@@ -1,4 +1,4 @@
-package nl.tue.fingerpaint.client.simulator;
+package nl.tue.fingerpaint.shared.simulator;
 
 import nl.tue.fingerpaint.shared.model.MixingProtocol;
 import nl.tue.fingerpaint.shared.simulator.Simulation;
