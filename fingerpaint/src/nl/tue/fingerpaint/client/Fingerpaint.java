@@ -401,6 +401,7 @@ public class Fingerpaint implements EntryPoint {
 		GuiState.mixNowButton.setEnabled(false);
 		GuiState.saveProtocolButton.setEnabled(false);
 		GuiState.saveResultsButton.setEnabled(false);
+		GuiState.viewSingleGraphButton.setEnabled(false);
 	}
 
 	/**
