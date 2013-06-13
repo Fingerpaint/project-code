@@ -11,38 +11,41 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
 
 /**
- * Button that can be used to remove previously saved mixing results. 
+ * Button that can be used to remove previously saved mixing results.
  * 
  * @author Group Fingerpaint
  */
-public class RemoveSavedResultsButton extends Button implements ClickHandler {	
+public class RemoveSavedResultsButton extends Button implements ClickHandler {
 	/**
-	 * Construct a new button that can be used to remove previously saved
-	 * mixing results.
+	 * Construct a new button that can be used to remove previously saved mixing
+	 * results.
 	 */
-	public RemoveSavedResultsButton(){
-		super(FingerpaintConstants.INSTANCE.btnRemoveResults()); 
+	public RemoveSavedResultsButton() {
+		super(FingerpaintConstants.INSTANCE.btnRemoveResults());
 		addClickHandler(this);
 		ensureDebugId("removeSavedResultsButton");
 	}
-	
+
 	/**
 	 * Creates a popup panel showing all saved results.
-	 * @param event The event that has fired.
+	 * 
+	 * @param event
+	 *            The event that has fired.
 	 */
 	@Override
 	public void onClick(ClickEvent event) {
-		GuiState.resultsFlexTable.removeFromParent();
-		GuiState.closeResultsButton.removeFromParent();
-		
-		GuiState.removeResultsVerticalPanel
-				.add(GuiState.resultsFlexTable);
-		GuiState.removeResultsVerticalPanel
-				.add(GuiState.closeResultsButton);
+		//GuiState.resultsFlexTable.removeFromParent();
+		//GuiState.closeResultsButton.removeFromParent();
+
+		// TODO: remove either below 1 or above 2 lines
+		GuiState.removeResultsVerticalPanel.clear();
+
+		GuiState.removeResultsVerticalPanel.add(GuiState.resultsFlexTable);
+		GuiState.removeResultsVerticalPanel.add(GuiState.closeResultsButton);
 
 		final ArrayList<String> names = (ArrayList<String>) StorageManager.INSTANCE
 				.getResults();
-		GuiState.resultsFlexTable.fillFlexTable(names); 
+		GuiState.resultsFlexTable.fillFlexTable(names);
 
 		GuiState.removeResultsPanel.center();
 	}
