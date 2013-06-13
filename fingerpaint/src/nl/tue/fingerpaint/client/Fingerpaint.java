@@ -399,7 +399,7 @@ public class Fingerpaint implements EntryPoint {
 	 * @param protocol
 	 *            The protocol that should be executed.
 	 */
-	public void executeMixingRun(final MixingProtocol protocol) {
+	public void executeMixingRun(final MixingProtocol protocol, final int nrSteps) {
 		setLoadingPanelMessage(FingerpaintConstants.INSTANCE.prepareData());
 		setLoadingPanelVisible(true);
 
@@ -414,7 +414,7 @@ public class Fingerpaint implements EntryPoint {
 						protocol, FingerpaintZipper.zip(
 								FingerpaintJsonizer.toString(as
 										.getInitialDistribution()))
-								.substring(1), as.getNrSteps(), false);
+								.substring(1), nrSteps, false);
 
 				TimeoutRpcRequestBuilder timeoutRpcRequestBuilder = new TimeoutRpcRequestBuilder(
 						10000);
