@@ -48,8 +48,8 @@ public class ProtocolFlexTable extends FlexTable {
 			final int row = i + 1;
 			final String name = protocols.get(i);
 			setText(row, 0, name);
-			Button removeStockButton = new Button("x");
-			removeStockButton.addClickHandler(new ClickHandler() {
+			Button removeButton = new Button("x");
+			removeButton.addClickHandler(new ClickHandler() {
 				public void onClick(ClickEvent event) {
 					int removedIndex = protocols.indexOf(name);
 					protocols.remove(removedIndex);
@@ -60,7 +60,7 @@ public class ProtocolFlexTable extends FlexTable {
 							.show(GuiState.DEFAULT_TIMEOUT);
 				}
 			});
-			setWidget(row, 1, removeStockButton);
+			setWidget(row, 1, removeButton);
 		}
 	}
 }
