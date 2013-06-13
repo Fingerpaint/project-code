@@ -9,6 +9,9 @@ import nl.tue.fingerpaint.client.model.RectangleMixingStepTest;
 import nl.tue.fingerpaint.client.simulator.SimulationResultTest;
 import nl.tue.fingerpaint.client.simulator.SimulationTest;
 import nl.tue.fingerpaint.client.simulator.SimulatorServiceTest;
+import nl.tue.fingerpaint.client.storage.FingerpaintJsonizerTest;
+import nl.tue.fingerpaint.client.storage.FingerpaintZipperTest;
+import nl.tue.fingerpaint.client.storage.ResultStorageTest;
 import nl.tue.fingerpaint.client.storage.StorageManagerTest;
 
 import org.junit.runner.RunWith;
@@ -31,6 +34,9 @@ import com.google.gwt.junit.client.GWTTestCase;
  * <li> {@link SimulationResultTest} </li>
  * <li> {@link SimulationTest} </li>
  * <li> {@link SimulatorServiceTest} </li>
+ * <li> {@link FingerpaintJsonizerTest} </li>
+ * <li> {@link FingerpaintZipperTest} </li>
+ * <li> {@link ResultStorageTest} </li>
  * <li> {@link StorageManagerTest} </li>
  * </ul>
  * 
@@ -48,7 +54,10 @@ import com.google.gwt.junit.client.GWTTestCase;
 	RectangleGeometryTest.class,
 	SimulationResultTest.class,
 	SimulationTest.class,
-//	SimulatorServiceTest.class,
+	//SimulatorServiceTest.class,
+	FingerpaintJsonizerTest.class,
+	FingerpaintZipperTest.class,
+	ResultStorageTest.class,
 	StorageManagerTest.class
 	})
 public class ClientUnit extends GWTTestCase {
