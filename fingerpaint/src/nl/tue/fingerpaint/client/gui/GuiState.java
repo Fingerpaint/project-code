@@ -419,7 +419,9 @@ public class GuiState {
 	public static CancelCompareButton cancelCompareButton;
 
 	/** Close button inside the compare performance pop-up. */
-	public static CloseCompareButton closeCompareButton;
+	// Note: this button NEEDS to be initialised AFTER the compareSelectPopupCellList
+	public static CloseCompareButton closeCompareButton = new CloseCompareButton(
+			GuiState.compareSelectPopupCellList.getSelectionModel());
 
 	/**
 	 * Button inside the compare performance pop-up to start a new comparison.
