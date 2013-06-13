@@ -40,7 +40,7 @@ public class ComparePerformanceButton extends Button implements ClickHandler {
 
 		GuiState.compareButton = new CompareButton(fp);
 
-		initialize();
+		initialise();
 
 	}
 
@@ -58,14 +58,6 @@ public class ComparePerformanceButton extends Button implements ClickHandler {
 		// Push the data into the widget.
 		GuiState.compareSelectPopupCellList.setRowData(0, resultNames);
 
-		// Alternate between white and light-gray background colors
-		for (int i = 0; i < resultNames.size(); i += 2) {
-			GuiState.compareSelectPopupCellList.getRowElement(i).addClassName("cellListStyleGray");
-		}
-		for (int i = 1; i < resultNames.size(); i += 2) {
-			GuiState.compareSelectPopupCellList.getRowElement(i).addClassName("cellListStyleWhite");
-		}
-		
 		GuiState.compareSelectPopupPanel
 				.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
 					public void setPosition(int offsetWidth, int offsetHeight) {
@@ -74,16 +66,10 @@ public class ComparePerformanceButton extends Button implements ClickHandler {
 				});
 	}
 
-	private void initialize() {
-		// Initialise the cellList to contain all the mixing runs
-		// final ComparePerformanceCellList cellList = new
-		// ComparePerformanceCellList();
-
+	private void initialise() {
 		// Initialise all components of the second popup panel
 		VerticalPanel vertPanel = new VerticalPanel();
 		HorizontalPanel horPanel = new HorizontalPanel();
-		GuiState.closeCompareButton = new CloseCompareButton(
-				GuiState.compareSelectPopupCellList.getSelectionModel());
 		horPanel.add(GuiState.newCompareButton);
 		GuiState.exportMultipleGraphButton = new ExportMultipleGraphsButton(fp);
 		horPanel.add(GuiState.exportMultipleGraphButton);
@@ -99,8 +85,6 @@ public class ComparePerformanceButton extends Button implements ClickHandler {
 		HorizontalPanel compareHorizontalPanel = new HorizontalPanel();
 		compareVerticalPanel.add(compareHorizontalPanel);
 		compareHorizontalPanel.add(GuiState.compareButton);
-		GuiState.cancelCompareButton = new CancelCompareButton(
-				GuiState.compareSelectPopupCellList.getSelectionModel());
 		compareHorizontalPanel.add(GuiState.cancelCompareButton);
 	}
 }
