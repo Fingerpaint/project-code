@@ -167,7 +167,7 @@ public interface FingerpaintConstants extends Constants {
 	 * @return Localised string that contains the text for the
 	 *         {@link GuiState#removeInitDistButton} button.
 	 */
-	@DefaultStringValue("Remove Saved Distribution")
+	@DefaultStringValue("Remove Saved Distributions")
 	public String btnRemoveInitDistButton();
 
 	/**
@@ -209,7 +209,7 @@ public interface FingerpaintConstants extends Constants {
 	 * @return Localised string that contains the text for the
 	 *         {@link GuiState#removeSavedProtButton} button.
 	 */
-	@DefaultStringValue("Remove Saved Protocol")
+	@DefaultStringValue("Remove Saved Protocols")
 	public String btnRemoveSavedProtButton();
 
 	/**
