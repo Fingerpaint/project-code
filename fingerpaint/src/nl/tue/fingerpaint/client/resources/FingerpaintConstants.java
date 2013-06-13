@@ -93,6 +93,15 @@ public interface FingerpaintConstants extends Constants {
 	@DefaultStringValue("This name is already in use. "
 			+ "Choose whether to overwrite existing file or to cancel.")
 	public String nameInUse();
+	
+	// -- CONSTANTS FOR DELETE MESSAGES -----------------------------------------
+	/**
+	 * @return Localised string that describes that an item has been saved
+	 *         successfully.
+	 */
+	@DefaultStringValue("Delete successful.")
+	public String deleteSuccess();
+	
 
 	// --- CONSTANTS FOR BUTTONS ----------------------------------------------
 	/**
@@ -258,6 +267,22 @@ public interface FingerpaintConstants extends Constants {
 	 */
 	@DefaultStringValue("Define Protocol")
 	public String btnDefProt();
+	
+	/**
+	 * @return Localised string that contains the text for the
+	 *         {@link GuiState#removeInitDistButton} button.
+	 */
+	@DefaultStringValue("Remove Distribution")
+	public String btnRemoveInitDistButton();
+
+	
+	/**
+	 * @return Localised string that contains the text for the
+	 *         {@link GuiState#removeSavedProtButton} button.
+	 */
+	@DefaultStringValue("Remove protocol")
+	public String btnRemoveSavedProtButton();
+	
 
 	// --- CONSTANTS FOR ERRORS -----------------------------------------------
 	/**

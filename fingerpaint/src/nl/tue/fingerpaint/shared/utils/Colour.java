@@ -194,7 +194,7 @@ public class Colour {
 	 *            Wanted length of string.
 	 * @return Given string, left-padded with zeroes so it has requested length.
 	 */
-	protected String pad(String str, int len) {
+	protected static String pad(String str, int len) {
 		if (str == null) {
 			str = "";
 		}
