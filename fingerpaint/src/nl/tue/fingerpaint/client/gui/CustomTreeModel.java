@@ -13,6 +13,8 @@ import nl.tue.fingerpaint.client.gui.buttons.LoadInitDistButton;
 import nl.tue.fingerpaint.client.gui.buttons.LoadProtocolButton;
 import nl.tue.fingerpaint.client.gui.buttons.MixNowButton;
 import nl.tue.fingerpaint.client.gui.buttons.OverwriteSaveButton;
+import nl.tue.fingerpaint.client.gui.buttons.RemoveInitDistButton;
+import nl.tue.fingerpaint.client.gui.buttons.RemoveSavedProtButton;
 import nl.tue.fingerpaint.client.gui.buttons.ResetDistButton;
 import nl.tue.fingerpaint.client.gui.buttons.ResetProtocolButton;
 import nl.tue.fingerpaint.client.gui.buttons.SaveDistributionButton;
@@ -96,8 +98,8 @@ public class CustomTreeModel implements TreeViewModel {
 	 */
 	private void createGeometry() {
 		if (as.getGeometryChoice().equals(GeometryNames.RECT_LONG)) {
-			as.setGeometry(new RectangleGeometry(Window.getClientHeight() - 20,
-					Window.getClientWidth() - 20, 240, 400));
+			as.setGeometry(new RectangleGeometry(Window.getClientHeight(),
+					Window.getClientWidth(), 240, 400));
 		} else if (as.getGeometryChoice().equals(GeometryNames.SQR_LONG)) {
 			int size = Math.min(Window.getClientHeight(), Window.getClientWidth());
 			as.setGeometry(new RectangleGeometry(size - 20,	size - 20,
@@ -167,7 +169,7 @@ public class CustomTreeModel implements TreeViewModel {
 		// Initialise the cursorSizeSpinner so it can be added to the tool
 		// selector popup
 		GuiState.cursorSizeSpinner = new CursorSizeSpinner(as);
-		
+
 		// Initialise the toolSelectButton and add to menuPanel
 		GuiState.squareDrawingTool = new SquareDrawingToolToggleButton(fp, as);
 		GuiState.circleDrawingTool = new CircleDrawingToolToggleButton(fp, as);
@@ -201,16 +203,20 @@ public class CustomTreeModel implements TreeViewModel {
 		GuiState.loadInitDistButton = new LoadInitDistButton(as);
 		GuiState.menuPanel.add(GuiState.loadInitDistButton);
 		GuiState.loadInitDistCellList = new LoadInitDistCellList(as);
-		
-		//Initialise the exportDistributionButton and add it to the menuPanel
+
+		// Initialise the RemoveInitDistButton and add it to the menuPanel
+		GuiState.removeInitDistButton = new RemoveInitDistButton(as);
+		GuiState.menuPanel.add(GuiState.removeInitDistButton);
+
+		// Initialise the exportDistributionButton and add it to the menuPanel
 		GuiState.exportDistributionButton = new ExportDistributionButton(as);
 		GuiState.menuPanel.add(GuiState.exportDistributionButton);
-		
 
 		// Initialise the saveResultsButton and add it to the menuPanel
 		GuiState.saveResultsButton = new SaveResultsButton(fp);
+		GuiState.saveResultsButton.setEnabled(false);
 		GuiState.menuPanel.add(GuiState.saveResultsButton);
-		
+
 		// Initialise panel to save items
 		GuiState.overwriteSaveButton = new OverwriteSaveButton(fp);
 		GuiState.saveItemPanelButton = new SaveItemPanelButton(fp);
@@ -237,7 +243,7 @@ public class CustomTreeModel implements TreeViewModel {
 
 		// Initialise the comparePerformanceButton and add it to the
 		// menuPanel
-		//createComparePerformanceButton();
+		// createComparePerformanceButton();
 		GuiState.comparePerformanceButton = new ComparePerformanceButton(fp);
 		GuiState.menuPanel.add(GuiState.comparePerformanceButton);
 
@@ -251,8 +257,8 @@ public class CustomTreeModel implements TreeViewModel {
 		// being defined, or single steps have to be executed and add to
 		// menu panel
 		GuiState.toggleDefineProtocol = new ToggleDefineProtocol(fp);
-		GuiState.menuPanel.add(GuiState.toggleDefineProtocol);		
-		
+		GuiState.menuPanel.add(GuiState.toggleDefineProtocol);
+
 		// Initialise a spinner for #steps
 		GuiState.nrStepsSpinner = new NrStepsSpinner(as);
 
@@ -269,6 +275,9 @@ public class CustomTreeModel implements TreeViewModel {
 		GuiState.loadProtocolButton = new LoadProtocolButton(as);
 		GuiState.loadProtocolCellList = new LoadProtocolCellList(as);
 
+		// Initialise the loadProtocolButton
+		GuiState.removeSavedProtButton = new RemoveSavedProtButton(as);		
+
 		// Add all the protocol widgets to the menuPanel and hide them
 		// initially.
 		VerticalPanel protocolPanel = new VerticalPanel();
@@ -280,6 +289,7 @@ public class CustomTreeModel implements TreeViewModel {
 		protocolPanel.add(GuiState.resetProtocolButton);
 		protocolPanel.add(GuiState.saveProtocolButton);
 		protocolPanel.add(GuiState.loadProtocolButton);
+		protocolPanel.add(GuiState.removeSavedProtButton);
 		GuiState.protocolPanelContainer.add(protocolPanel);
 		GuiState.menuPanel.add(GuiState.protocolPanelContainer);
 

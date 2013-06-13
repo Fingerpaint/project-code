@@ -48,17 +48,17 @@ public abstract class Geometry {
 	 * Distance between left border of the canvas and the left border of the
 	 * drawing area.
 	 */
-	protected static final int X_OFFSET = 0;
+	protected static final int X_OFFSET = 4;
 	/**
 	 * Distance between the top border of the canvas and the top border of the
 	 * drawing area.
 	 */
-	protected static final int TOP_OFFSET = HEIGHT_OF_WALL;
+	protected static final int TOP_OFFSET = HEIGHT_OF_WALL + X_OFFSET;
 	/**
 	 * Minimum distance between the bottom border of the canvas and the bottom
 	 * border of the drawing area.
 	 */
-	protected static final int BOTTOM_OFFSET = HEIGHT_OF_WALL;
+	protected static final int BOTTOM_OFFSET = HEIGHT_OF_WALL + X_OFFSET;
 	/**
 	 * Threshold in pixels to decide when a large enough swipe has been carried
 	 * out to define a protocol step.
@@ -157,21 +157,33 @@ public abstract class Geometry {
 
 		// Drag handlers
 		hammer.on('touch', function(e) {
+			var left = ($wnd.document.documentElement && $wnd.document.documentElement.scrollLeft) || 
+              $wnd.document.body.scrollLeft,
+              top = ($wnd.document.documentElement && $wnd.document.documentElement.scrollTop) || 
+              $wnd.document.body.scrollTop;
 			that.@nl.tue.fingerpaint.client.model.Geometry::onDragStart(II)(
-					e.gesture.touches[0].pageX - e.target.offsetLeft,
-					e.gesture.touches[0].pageY - e.target.offsetTop);
+					e.gesture.touches[0].pageX - e.target.offsetLeft - left,
+					e.gesture.touches[0].pageY - e.target.offsetTop - top);
 		});
 
 		hammer.on('drag', function(e) {
+			var left = ($wnd.document.documentElement && $wnd.document.documentElement.scrollLeft) || 
+              $wnd.document.body.scrollLeft,
+              top = ($wnd.document.documentElement && $wnd.document.documentElement.scrollTop) || 
+              $wnd.document.body.scrollTop;
 			that.@nl.tue.fingerpaint.client.model.Geometry::onDragMove(II)(
-					e.gesture.touches[0].pageX - e.target.offsetLeft,
-					e.gesture.touches[0].pageY - e.target.offsetTop);
+					e.gesture.touches[0].pageX - e.target.offsetLeft - left,
+					e.gesture.touches[0].pageY - e.target.offsetTop - top);
 		});
 
 		hammer.on('release', function(e) {
+			var left = ($wnd.document.documentElement && $wnd.document.documentElement.scrollLeft) || 
+              $wnd.document.body.scrollLeft,
+              top = ($wnd.document.documentElement && $wnd.document.documentElement.scrollTop) || 
+              $wnd.document.body.scrollTop;
 			that.@nl.tue.fingerpaint.client.model.Geometry::onDragEnd(II)(
-					e.gesture.touches[0].pageX - e.target.offsetLeft,
-					e.gesture.touches[0].pageY - e.target.offsetTop);
+					e.gesture.touches[0].pageX - e.target.offsetLeft - left,
+					e.gesture.touches[0].pageY - e.target.offsetTop - top);
 		});
 	}-*/;
 	
@@ -428,8 +440,11 @@ public abstract class Geometry {
 			y = getValidCoord(y);
 
 			// Draw the first image of the drawing tool
-			context.drawImage(toolImage, Math.max(x - displacement, 0)
-					+ X_OFFSET, Math.max(y - displacement, 0) + TOP_OFFSET);
+			context.drawImage(toolImage, 0, 0,
+					toolImage.getWidth(), toolImage.getHeight(),
+					x - displacement + X_OFFSET, y - displacement + TOP_OFFSET,
+					toolImage.getWidth(), toolImage.getHeight()
+				);
 
 		} else if (isInsideWall(x, y)) {
 			// cancel current animation if there is one
@@ -666,8 +681,11 @@ public abstract class Geometry {
 		for (int i = 0; i <= longest; i++) {
 			int x3 = getValidCoord(x1);
 			int y3 = getValidCoord(y1);
-			context.drawImage(toolImage, Math.max(x3 - displacement, 1)
-					+ X_OFFSET, Math.max(y3 - displacement, 1) + TOP_OFFSET);
+			context.drawImage(toolImage, 0, 0,
+					toolImage.getWidth(), toolImage.getHeight(),
+					x3 - displacement + X_OFFSET, y3 - displacement + TOP_OFFSET,
+					toolImage.getWidth(), toolImage.getHeight()
+				);
 			numerator += shortest;
 			if (!(numerator < longest)) {
 				numerator -= longest;

@@ -145,7 +145,6 @@ public class SizeAnimation extends Animation {
 	 */
 	public void doHide(int durationMillis, AsyncCallback<Boolean> onComplete) {
 		if (subject.getClientHeight() > 0 && subject.getClientWidth() > 0) {
-			refreshSize();
 			hidden = false;
 			this.onCompleteCallback = onComplete;
 			run(durationMillis);

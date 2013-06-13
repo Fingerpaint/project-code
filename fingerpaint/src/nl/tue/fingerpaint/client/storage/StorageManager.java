@@ -7,9 +7,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import nl.tue.fingerpaint.client.gui.panels.NotificationPopupPanel;
-import nl.tue.fingerpaint.shared.model.MixingProtocol;
 import nl.tue.fingerpaint.client.resources.FingerpaintConstants;
 import nl.tue.fingerpaint.shared.GeometryNames;
+import nl.tue.fingerpaint.shared.model.MixingProtocol;
 
 import com.google.gwt.core.client.JavaScriptException;
 import com.google.gwt.json.client.JSONValue;
@@ -367,16 +367,12 @@ public class StorageManager {
 		if (state != INITIALISED) {
 			return null;
 		}
-
-		Logger.getLogger("").log(Level.INFO, "getResult(" + key + ")");
 		
 		HashMap<String, Object> firstLevel = FingerpaintJsonizer
 				.hashMapFromString(localStorage.getItem(KEY_RESULTS), false);
 		for (String firstLevelKey : firstLevel.keySet()) {
-			Logger.getLogger("").log(Level.INFO, "found key " + firstLevelKey);
 			if (firstLevelKey.equals(key)) {
 				String result = firstLevel.get(key).toString();
-				Logger.getLogger("").log(Level.INFO, "result = " + result);
 				return FingerpaintJsonizer.resultStorageFromString(result);
 			}
 		}
@@ -555,12 +551,10 @@ public class StorageManager {
 	 */
 	public boolean putResult(String key, ResultStorage result, boolean overwrite) {
 		if (state != INITIALISED) {
-			Logger.getLogger("").log(Level.INFO, "Not initialized");
 			return false;
 		}
 
 		if (isNameInUse(KEY_RESULTS, key, null) && !overwrite) {
-			Logger.getLogger("").log(Level.INFO, "Name in use.");
 			return false;
 		}
 		HashMap<String, Object> firstLevel = FingerpaintJsonizer
@@ -575,7 +569,7 @@ public class StorageManager {
 						FingerpaintConstants.INSTANCE.capacityExceeded())
 						.show(3000);
 			} else {
-				Logger.getLogger("").log(Level.INFO,
+				Logger.getLogger("").log(Level.SEVERE,
 						"Unknown error during saving: " + e.getDescription());
 			}
 		}

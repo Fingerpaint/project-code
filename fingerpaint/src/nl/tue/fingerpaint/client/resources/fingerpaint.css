@@ -9,7 +9,6 @@
 /* background-color:#84D200; /* light-green */
 /* background-color:#FFDD00; /* yellow */
 /* background-color:#D6007B; /* pink */
-
 /* -- DEFINES -- */
 @def TOGGLE_COLOUR_BUTTON_Z 10;
 @def TOGGLE_COLOUR_BUTTON_Z_BG 11;
@@ -19,12 +18,13 @@
 @def LOADING_OVERLAY_CONTENT_Z 91;
 @def MENU_WIDTH 240px;
 
-/* -- MORE CONSTANTS -- */
+ /* -- MORE CONSTANTS -- */
 @eval BLACK nl.tue.fingerpaint.shared.utils.Colour.BLACK.toHexString();
 @eval MAIN_LIGHT nl.tue.fingerpaint.shared.utils.Colour.TUE_LIGHT_BLUE.toHexString();
 @eval MAIN nl.tue.fingerpaint.shared.utils.Colour.TUE_BLUE.toHexString();
 @eval MAIN_DARK nl.tue.fingerpaint.shared.utils.Colour.TUE_DARK_BLUE.toHexString();
 @eval WHITE nl.tue.fingerpaint.shared.utils.Colour.WHITE.toHexString();
+@eval LIGHT_GRAY nl.tue.fingerpaint.shared.utils.Colour.LIGHT_GRAY.toHexString();
 
 * {
 	outline: none;
@@ -34,14 +34,8 @@
 }
 
 /* (try to) erase Firefox outline */
-a:focus,
-a:active,
-button,
-input[type="reset"]::-moz-focus-inner,
-input[type="button"]::-moz-focus-inner,
-input[type="submit"]::-moz-focus-inner,
-select::-moz-focus-inner,
-input[type="file"]>input[type="button"]::-moz-focus-inner {
+a:focus,a:active,button,input[type="reset"]::-moz-focus-inner,input[type="button"]::-moz-focus-inner,input[type="submit"]::-moz-focus-inner,select::-moz-focus-inner,input[type="file"]>input[type="button"]::-moz-focus-inner
+	{
 	border: 1px dotted transparent;
 	outline: none !important;
 }
@@ -103,6 +97,16 @@ body {
 	width: MENU_WIDTH;
 }
 
+.cellListStyleWhite {
+	padding: 10px;
+	background : WHITE;
+}
+
+.cellListStyleGray {
+	padding: 10px;
+	background-color: LIGHT_GRAY;
+}
+
 /* remove list header row */
 .removeListHeader {
 	background-color: MAIN;
@@ -125,8 +129,8 @@ body {
 
 #fingerpaintCanvas {
 	position: fixed;
-	top: 4px;
-	left: 4px;
+	top: 0;
+	left: 0;
 }
 
 #menuPanelWrapper {
@@ -147,9 +151,6 @@ body {
 	width: MENU_WIDTH;
 }
 
-/*
-TODO: Set width of GuiState.toolSelector panel to (MenuPanel + toolSelectButton)-width for consistency
-*/
 }
 #menuToggleButton {
 	border-radius: 20px;
@@ -189,12 +190,12 @@ TODO: Set width of GuiState.toolSelector panel to (MenuPanel + toolSelectButton)
 	text-align: center;
 }
 
-.gwt-Button:hover,.gwt-ToggleButton:hover {
+.gwt-Button:hover,.gwt-ToggleButton:hover, .dp-spinner-upbutton:hover,.dp-spinner-downbutton:hover {
 	background: MAIN_LIGHT;
 	border: 0; /* disable some weird Google styling */
 }
 
-.gwt-Button:active,.gwt-ToggleButton:active,.gwt-ToggleButton-down {
+.gwt-Button:active,.gwt-ToggleButton:active,.gwt-ToggleButton-down:active,.dp-spinner-upbutton:active,.dp-spinner-downbutton:active {
 	background: -webkit-linear-gradient(bottom, MAIN_LIGHT, MAIN);
 	background: linear-gradient(to top, MAIN_LIGHT, MAIN);
 	border: 0; /* disable some weird Google styling */

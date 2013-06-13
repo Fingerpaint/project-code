@@ -13,18 +13,18 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
 
 /**
- * FlexTable that displays all results currently stored in the local storage.
+ * FlexTable that displays all protocols currently stored in the local storage .
  * 
  * @author Group Fingerpaint
  */
-public class ResultsFlexTable extends FlexTable {
+public class ProtocolFlexTable extends FlexTable {
 
 	/**
 	 * Construct a new FlexTable that can be used to display all results
 	 * currently stored in the local storage. Also allows for removing these
 	 * results individually.
 	 */
-	public ResultsFlexTable() {
+	public ProtocolFlexTable() {
 		super();
 
 		setText(0, 0, FingerpaintConstants.INSTANCE.flexFileName());
@@ -33,27 +33,30 @@ public class ResultsFlexTable extends FlexTable {
 		getRowFormatter().addStyleName(0, "removeListHeader");
 		addStyleName("removeList");
 
-		ensureDebugId("resultsFlexTable");
+		ensureDebugId("protocolFlexTable");
 	}
 
 	/**
 	 * Fills this FlexTable with the items in {@code results}. Also adds a click
 	 * handler for each item in the FlexTable, to remove the item.
 	 * 
-	 * @param results
+	 * @param protocols
 	 *            List of all results currently stored in the local storage.
+	 * @param geom
+	 *            Currently selected geometry: used to locate the protocol
+	 *            in the local storage.
 	 */
-	public void fillFlexTable(final ArrayList<String> results) {
-		for (int i = 0; i < results.size(); i++) {
+	public void fillFlexTable(final ArrayList<String> protocols, final String geom) {
+		for (int i = 0; i < protocols.size(); i++) {
 			final int row = i + 1;
-			final String name = results.get(i);
+			final String name = protocols.get(i);
 			setText(row, 0, name);
 			Button removeButton = new Button("x");
 			removeButton.addClickHandler(new ClickHandler() {
 				public void onClick(ClickEvent event) {
-					int removedIndex = results.indexOf(name);
-					results.remove(removedIndex);
-					StorageManager.INSTANCE.removeResult(name);
+					int removedIndex = protocols.indexOf(name);
+					protocols.remove(removedIndex);
+					StorageManager.INSTANCE.removeProtocol(name, geom);
 					removeRow(removedIndex + 1);
 					new NotificationPopupPanel(FingerpaintConstants.INSTANCE
 							.deleteSuccess())

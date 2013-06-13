@@ -34,6 +34,7 @@ public class CompareSelectPopupCellList extends CellList<String> implements
 		// Initialise the cellList to contain all the mixing runs
 		setSelectionModel(selectionModel, selectionEventManager);
 		ensureDebugId("compareSelectPopupCellList");
+	
 	}
 
 	/**

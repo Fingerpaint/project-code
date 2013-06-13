@@ -12,9 +12,21 @@ import com.google.gwt.user.client.rpc.ServiceDefTarget;
  */
 public class TimeoutRpcRequestBuilder extends RpcRequestBuilder {
 
+	/**
+	 * The default timeout for a request.
+	 */
+	public static final int DEFAULT_TIMEOUT = 60000;
+	
 	/** The number of milliseconds after which the class fails */
 	private int timeoutMillis;
 
+	/**
+	 * Constructs a TimeOutRpcRequestBuilder object with the default timeout.
+	 */
+	public TimeoutRpcRequestBuilder() {
+		this.timeoutMillis = DEFAULT_TIMEOUT;
+	}
+	
 	/**
 	 * Constructs a TimeOutRpcRequestBuilder object.
 	 * 

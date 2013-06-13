@@ -50,7 +50,7 @@ public class SaveItemPanelButton extends Button implements ClickHandler {
 		if (success) {
 			NotificationPopupPanel np = new NotificationPopupPanel(
 					FingerpaintConstants.INSTANCE.saveSuccess());
-			np.show(GuiState.SAVE_SUCCESS_TIMEOUT);
+			np.show(GuiState.DEFAULT_TIMEOUT);
 			GuiState.saveItemPanel.hide();
 			
 			// Again disable this button, when saving was successful.
