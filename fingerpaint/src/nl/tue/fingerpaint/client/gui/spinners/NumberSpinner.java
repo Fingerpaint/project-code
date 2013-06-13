@@ -8,7 +8,6 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DoubleBox;
 import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
  * NumberSpinner Custom Control
@@ -28,7 +27,6 @@ public class NumberSpinner extends Composite {
 	private boolean hasLimits;
 	private NumberSpinnerListener spinnerListener;
 	private HorizontalPanel horPanel;
-	private VerticalPanel vertPanel;
 
 	// ----Constructors--------------------------------------------
 

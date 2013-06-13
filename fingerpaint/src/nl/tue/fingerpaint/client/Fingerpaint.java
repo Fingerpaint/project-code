@@ -7,20 +7,20 @@ import nl.tue.fingerpaint.client.gui.GraphVisualisator;
 import nl.tue.fingerpaint.client.gui.GuiState;
 import nl.tue.fingerpaint.client.gui.spinners.NrStepsSpinner;
 import nl.tue.fingerpaint.client.model.ApplicationState;
-import nl.tue.fingerpaint.shared.model.MixingProtocol;
 import nl.tue.fingerpaint.client.resources.FingerpaintConstants;
 import nl.tue.fingerpaint.client.resources.FingerpaintResources;
 import nl.tue.fingerpaint.client.serverdata.ServerDataCache;
-import nl.tue.fingerpaint.shared.simulator.Simulation;
-import nl.tue.fingerpaint.shared.simulator.SimulationResult;
-import nl.tue.fingerpaint.shared.simulator.SimulatorService;
-import nl.tue.fingerpaint.shared.simulator.SimulatorServiceAsync;
 import nl.tue.fingerpaint.client.storage.FileExporter;
 import nl.tue.fingerpaint.client.storage.FingerpaintJsonizer;
 import nl.tue.fingerpaint.client.storage.FingerpaintZipper;
 import nl.tue.fingerpaint.client.storage.ResultStorage;
 import nl.tue.fingerpaint.client.storage.StorageManager;
 import nl.tue.fingerpaint.shared.GeometryNames;
+import nl.tue.fingerpaint.shared.model.MixingProtocol;
+import nl.tue.fingerpaint.shared.simulator.Simulation;
+import nl.tue.fingerpaint.shared.simulator.SimulationResult;
+import nl.tue.fingerpaint.shared.simulator.SimulatorService;
+import nl.tue.fingerpaint.shared.simulator.SimulatorServiceAsync;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
@@ -28,6 +28,8 @@ import com.google.gwt.debug.client.DebugInfo;
 import com.google.gwt.dom.client.IFrameElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.logical.shared.ResizeEvent;
+import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.http.client.RequestTimeoutException;
 import com.google.gwt.user.cellview.client.CellBrowser;
 import com.google.gwt.user.client.DOM;
@@ -48,7 +50,7 @@ import com.google.gwt.visualization.client.VisualizationUtils;
 import com.google.gwt.visualization.client.visualizations.LineChart;
 
 /**
- * Entry point classes define <code>onModuleLoad()</code>.
+ * This is the entry point of the Fingerpaint application.
  * 
  * @author Group Fingerpaint
  */
@@ -71,7 +73,6 @@ public class Fingerpaint implements EntryPoint {
 	 * This is the entry point method.
 	 */
 	public void onModuleLoad() {
-		
 		// Set the DebugID prefix to empty
 		DebugInfo.setDebugIdPrefix("");
 
@@ -94,7 +95,7 @@ public class Fingerpaint implements EntryPoint {
 
 		// initialise the underlying model of the application
 		as = new ApplicationState();
-		as.setNrSteps(1.0);
+		as.setNrSteps(NrStepsSpinner.DEFAULT_VALUE);
 		setLoadingPanelVisible(true);
 		ServerDataCache.initialise(new AsyncCallback<String>() {
 			@Override
@@ -118,6 +119,17 @@ public class Fingerpaint implements EntryPoint {
 		// Set (debug) IDs on a number of elements that do not have a dedicated
 		// class
 		GuiState.setIDs();
+
+		// switch between portrait and canvas view
+		Window.addResizeHandler(new ResizeHandler() {
+			@Override
+			public void onResize(ResizeEvent event) {
+				if (as.getGeometry() != null) {
+					as.getGeometry().resize(Window.getClientWidth() - 20,
+							Window.getClientHeight() - 20);
+				}
+			}
+		});
 	}
 
 	/**
@@ -240,7 +252,7 @@ public class Fingerpaint implements EntryPoint {
 	 *            If the "define protocol" widgets should be visible or not.
 	 */
 	public void setProtocolWidgetsVisible(boolean visible) {
-			GuiState.protocolPanelContainer.setVisibleAnimated(visible);
+		GuiState.protocolPanelContainer.setVisibleAnimated(visible);
 	}
 
 	/**
@@ -398,8 +410,11 @@ public class Fingerpaint implements EntryPoint {
 	 * 
 	 * @param protocol
 	 *            The protocol that should be executed.
+	 * @param nrSteps
+	 *            The number of times the protocol should be executed
 	 */
-	public void executeMixingRun(final MixingProtocol protocol, final int nrSteps) {
+	public void executeMixingRun(final MixingProtocol protocol,
+			final int nrSteps) {
 		setLoadingPanelMessage(FingerpaintConstants.INSTANCE.prepareData());
 		setLoadingPanelVisible(true);
 
@@ -463,5 +478,4 @@ public class Fingerpaint implements EntryPoint {
 		};
 		doLaterTimer.schedule(100);
 	}
-
 }

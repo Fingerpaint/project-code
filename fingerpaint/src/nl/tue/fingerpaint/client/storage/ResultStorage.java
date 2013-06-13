@@ -3,8 +3,7 @@ package nl.tue.fingerpaint.client.storage;
 import nl.tue.fingerpaint.shared.model.MixingProtocol;
 
 /**
- * Class that holds everything needed to store a mixing result. Can be JSONized
- * using the ResultStorageJsonizer
+ * Class that holds everything needed to store a mixing result.
  * 
  * @author Group Fingerpaint
  */

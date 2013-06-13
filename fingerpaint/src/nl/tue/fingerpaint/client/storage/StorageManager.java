@@ -18,7 +18,7 @@ import com.google.gwt.storage.client.StorageMap;
 
 /**
  * <p>
- * A {@code StorageManager} manages the local storage in the browser. The is
+ * A {@code StorageManager} manages the local storage in the browser. There is
  * only one instance of the storage manager, that must be used for all
  * interaction with the storage.
  * </p>
@@ -133,6 +133,10 @@ public class StorageManager {
 	 */
 	protected StorageManager() {
 		localStorage = Storage.getLocalStorageIfSupported();
+		if (localStorage == null) {
+			state = ERROR;
+			return;
+		}
 
 		// Make sure that all keys are set
 		StorageMap sm = new StorageMap(localStorage);
@@ -189,11 +193,7 @@ public class StorageManager {
 			}
 		}
 
-		if (localStorage == null) {
-			state = ERROR;
-		} else {
-			state = INITIALISED;
-		}
+		state = INITIALISED;
 	}
 
 	// ---- PUBLIC PART OF CLASS
@@ -368,12 +368,16 @@ public class StorageManager {
 			return null;
 		}
 
+		Logger.getLogger("").log(Level.INFO, "getResult(" + key + ")");
+		
 		HashMap<String, Object> firstLevel = FingerpaintJsonizer
 				.hashMapFromString(localStorage.getItem(KEY_RESULTS), false);
 		for (String firstLevelKey : firstLevel.keySet()) {
+			Logger.getLogger("").log(Level.INFO, "found key " + firstLevelKey);
 			if (firstLevelKey.equals(key)) {
 				String result = firstLevel.get(key).toString();
-				return FingerpaintJsonizer.resultFromString(result);
+				Logger.getLogger("").log(Level.INFO, "result = " + result);
+				return FingerpaintJsonizer.resultStorageFromString(result);
 			}
 		}
 		return null;
