@@ -431,8 +431,7 @@ public class Fingerpaint implements EntryPoint {
 										.getInitialDistribution()))
 								.substring(1), nrSteps, false);
 
-				TimeoutRpcRequestBuilder timeoutRpcRequestBuilder = new TimeoutRpcRequestBuilder(
-						10000);
+				TimeoutRpcRequestBuilder timeoutRpcRequestBuilder = new TimeoutRpcRequestBuilder();
 				SimulatorServiceAsync service = GWT
 						.create(SimulatorService.class);
 				((ServiceDefTarget) service)
@@ -443,14 +442,14 @@ public class Fingerpaint implements EntryPoint {
 						as.getGeometry().drawDistribution(
 								result.getConcentrationVectors()[result
 										.getConcentrationVectors().length - 1]);
-						as.setSegregation(result.getSegregationPoints());
-						GuiState.saveResultsButton.setEnabled(true);
-						GuiState.viewSingleGraphButton.setEnabled(true);
+						as.setSegregation(result.getSegregationPoints());						
 						setLoadingPanelVisible(false);
+						as.setMixRunSucces(true);
 					}
 
 					@Override
 					public void onFailure(Throwable caught) {
+						as.setMixRunSucces(false);
 						setLoadingPanelVisible(false);
 						if (caught instanceof RequestTimeoutException) {
 							showError(FingerpaintConstants.INSTANCE

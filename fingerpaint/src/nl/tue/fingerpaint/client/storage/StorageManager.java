@@ -7,9 +7,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import nl.tue.fingerpaint.client.gui.panels.NotificationPopupPanel;
-import nl.tue.fingerpaint.shared.model.MixingProtocol;
 import nl.tue.fingerpaint.client.resources.FingerpaintConstants;
 import nl.tue.fingerpaint.shared.GeometryNames;
+import nl.tue.fingerpaint.shared.model.MixingProtocol;
 
 import com.google.gwt.core.client.JavaScriptException;
 import com.google.gwt.json.client.JSONValue;
@@ -569,7 +569,7 @@ public class StorageManager {
 						FingerpaintConstants.INSTANCE.capacityExceeded())
 						.show(3000);
 			} else {
-				Logger.getLogger("").log(Level.INFO,
+				Logger.getLogger("").log(Level.SEVERE,
 						"Unknown error during saving.");
 			}
 		}

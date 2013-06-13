@@ -3,11 +3,14 @@ package nl.tue.fingerpaint.client.gui.buttons;
 import nl.tue.fingerpaint.client.gui.animation.RotationAnimation;
 import nl.tue.fingerpaint.client.gui.animation.SizeAnimation;
 import nl.tue.fingerpaint.client.resources.FingerpaintResources;
+import nl.tue.fingerpaint.shared.utils.Utils;
 
 import com.google.gwt.dom.client.ImageElement;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.SimplePanel;
 
@@ -69,7 +72,18 @@ public class MenuToggleButton extends Button implements ClickHandler {
 			menuAnimation.doHide(DURATION);
 		} else {
 			buttonAnimation.doRotate(DURATION, SHOWN_ANGLE, true);
-			menuAnimation.doShow(DURATION);
+			menuAnimation.doShow(DURATION, new AsyncCallback<Boolean>() {
+				@Override
+				public void onSuccess(Boolean result) {
+					menuPanel.getElement().getStyle().clearWidth();
+					refreshMenuSize();
+				}
+				
+				@Override
+				public void onFailure(Throwable caught) {
+					// will not be called
+				}
+			});
 		}
 		
 		// Actually toggle state
@@ -77,9 +91,23 @@ public class MenuToggleButton extends Button implements ClickHandler {
 	}
 	
 	/**
-	 * Internally update the size of the menu that is animated.
+	 * Internally update the size of the element that is animated.
 	 */
 	public void refreshMenuSize() {
-		this.menuAnimation.refreshSize();
+		// Save current value for width
+		int oldWidthPx = Utils.parseIntFromCss(menuPanel.getElement().getStyle().getWidth());
+		
+		// Clear values, so the element is visible and we can get the size
+		menuPanel.getElement().getStyle().clearWidth();
+		
+		// Update size internally
+		menuAnimation.refreshSize();
+		
+		// Restore value of width
+		if (oldWidthPx >= 0) {
+			// if less than 0, the width of the menu is not in pixels...
+			// we do not know what to do in that case :-(
+			menuPanel.getElement().getStyle().setWidth(oldWidthPx, Unit.PX);
+		}
 	}
 }

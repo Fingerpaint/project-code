@@ -93,6 +93,15 @@ public interface FingerpaintConstants extends Constants {
 	@DefaultStringValue("This name is already in use. "
 			+ "Choose whether to overwrite existing file or to cancel.")
 	public String nameInUse();
+	
+	// -- CONSTANTS FOR DELETE MESSAGES -----------------------------------------
+	/**
+	 * @return Localised string that describes that an item has been saved
+	 *         successfully.
+	 */
+	@DefaultStringValue("Delete successful.")
+	public String deleteSuccess();
+	
 
 	// --- CONSTANTS FOR BUTTONS ----------------------------------------------
 	/**
@@ -153,6 +162,13 @@ public interface FingerpaintConstants extends Constants {
 	 */
 	@DefaultStringValue("Load Initial Distribution")
 	public String btnLoadDist();
+	
+	/**
+	 * @return Localised string that contains the text for the
+	 *         {@link GuiState#removeInitDistButton} button.
+	 */
+	@DefaultStringValue("Remove Saved Distributions")
+	public String btnRemoveInitDistButton();
 
 	/**
 	 * @return Localised string that contains the text for the
@@ -188,6 +204,13 @@ public interface FingerpaintConstants extends Constants {
 	 */
 	@DefaultStringValue("Load Mixing Protocol")
 	public String btnLoadProt();
+	
+	/**
+	 * @return Localised string that contains the text for the
+	 *         {@link GuiState#removeSavedProtButton} button.
+	 */
+	@DefaultStringValue("Remove Saved Protocols")
+	public String btnRemoveSavedProtButton();
 
 	/**
 	 * @return Localised string that contains the text for the
@@ -257,7 +280,7 @@ public interface FingerpaintConstants extends Constants {
 	 *         {@link GuiState#toggleDefineProtocol} toggle button.
 	 */
 	@DefaultStringValue("Define Protocol")
-	public String btnDefProt();
+	public String btnDefProt();	
 
 	// --- CONSTANTS FOR ERRORS -----------------------------------------------
 	/**

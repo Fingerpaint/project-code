@@ -55,6 +55,13 @@ public class LoadInitDistCellList extends CellList<String> {
 	public void fillCellList(List<String> geometryDistributions) {
 		setRowCount(geometryDistributions.size(), true);
 		setRowData(0, geometryDistributions);
+		//Alternate between white and light-gray background colors
+		for (int i = 0; i < geometryDistributions.size(); i += 2) {
+			this.getRowElement(i).addClassName("cellListStyleGray");
+		}
+		for (int i = 1; i < geometryDistributions.size(); i += 2) {
+			this.getRowElement(i).addClassName("cellListStyleWhite");
+		}
 	}
 
 	/**
@@ -65,17 +72,19 @@ public class LoadInitDistCellList extends CellList<String> {
 				.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
 					public void onSelectionChange(SelectionChangeEvent event) {
 						String selected = selectionModel.getSelectedObject();
-					
+
 						if (selected != null) {
-	
+
 							// get the selected initial distribution, and
 							// set it in the AS
 							int[] dist = StorageManager.INSTANCE
-									.getDistribution(GeometryNames.getShortName(as
-											.getGeometryChoice()), selected);
+									.getDistribution(GeometryNames
+											.getShortName(as
+													.getGeometryChoice()),
+											selected);
 							as.setInitialDistribution(dist);
 							as.drawDistribution();
-							
+
 							selectionModel.setSelected(selected, false);
 							GuiState.loadPanel.removeFromParent();
 						}
