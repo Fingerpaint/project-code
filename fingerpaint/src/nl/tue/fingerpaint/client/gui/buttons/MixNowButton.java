@@ -1,6 +1,7 @@
 package nl.tue.fingerpaint.client.gui.buttons;
 
 import nl.tue.fingerpaint.client.Fingerpaint;
+import nl.tue.fingerpaint.client.gui.GuiState;
 import nl.tue.fingerpaint.client.model.ApplicationState;
 import nl.tue.fingerpaint.client.resources.FingerpaintConstants;
 
@@ -47,11 +48,19 @@ public class MixNowButton extends Button implements ClickHandler {
 
 	/**
 	 * Executes the mixing run with the currently defined protocol.
-	 * @param event The event that has fired.
+	 * 
+	 * @param event
+	 *            The event that has fired.
 	 */
 	@Override
 	public void onClick(ClickEvent event) {
+
 		fp.executeMixingRun(as.getProtocol());
+		// only show options below is mix run was succesful
+		if (as.isMixRunSuccesful()) {
+			GuiState.saveResultsButton.setEnabled(true);
+			GuiState.viewSingleGraphButton.setEnabled(true);
+		}
 	}
 
 }
