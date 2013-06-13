@@ -171,21 +171,33 @@ public abstract class Geometry {
 
 		// Drag handlers
 		hammer.on('touch', function(e) {
+			var left = ($wnd.document.documentElement && $wnd.document.documentElement.scrollLeft) || 
+              $wnd.document.body.scrollLeft,
+              top = ($wnd.document.documentElement && $wnd.document.documentElement.scrollTop) || 
+              $wnd.document.body.scrollTop;
 			that.@nl.tue.fingerpaint.client.model.Geometry::onDragStart(II)(
-					e.gesture.touches[0].pageX - e.target.offsetLeft,
-					e.gesture.touches[0].pageY - e.target.offsetTop);
+					e.gesture.touches[0].pageX - e.target.offsetLeft - left,
+					e.gesture.touches[0].pageY - e.target.offsetTop - top);
 		});
 
 		hammer.on('drag', function(e) {
+			var left = ($wnd.document.documentElement && $wnd.document.documentElement.scrollLeft) || 
+              $wnd.document.body.scrollLeft,
+              top = ($wnd.document.documentElement && $wnd.document.documentElement.scrollTop) || 
+              $wnd.document.body.scrollTop;
 			that.@nl.tue.fingerpaint.client.model.Geometry::onDragMove(II)(
-					e.gesture.touches[0].pageX - e.target.offsetLeft,
-					e.gesture.touches[0].pageY - e.target.offsetTop);
+					e.gesture.touches[0].pageX - e.target.offsetLeft - left,
+					e.gesture.touches[0].pageY - e.target.offsetTop - top);
 		});
 
 		hammer.on('release', function(e) {
+			var left = ($wnd.document.documentElement && $wnd.document.documentElement.scrollLeft) || 
+              $wnd.document.body.scrollLeft,
+              top = ($wnd.document.documentElement && $wnd.document.documentElement.scrollTop) || 
+              $wnd.document.body.scrollTop;
 			that.@nl.tue.fingerpaint.client.model.Geometry::onDragEnd(II)(
-					e.gesture.touches[0].pageX - e.target.offsetLeft,
-					e.gesture.touches[0].pageY - e.target.offsetTop);
+					e.gesture.touches[0].pageX - e.target.offsetLeft - left,
+					e.gesture.touches[0].pageY - e.target.offsetTop - top);
 		});
 	}-*/;
 
