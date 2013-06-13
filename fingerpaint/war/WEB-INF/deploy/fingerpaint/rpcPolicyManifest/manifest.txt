@@ -1,4 +1,0 @@
-# Module fingerpaint
-# RPC service class, partial path of RPC policy file
-nl.tue.fingerpaint.shared.serverdata.ServerDataService, 579BB7BE675E3C6D7340E47F9C814AAD.gwt.rpc
-nl.tue.fingerpaint.shared.simulator.SimulatorService, 1A456BB9CBBD58E9CD369E49FD34D23E.gwt.rpc
