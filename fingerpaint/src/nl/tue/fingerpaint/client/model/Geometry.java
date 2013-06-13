@@ -434,8 +434,11 @@ public abstract class Geometry {
 			y = getValidCoord(y);
 
 			// Draw the first image of the drawing tool
-			context.drawImage(toolImage, Math.max(x - displacement, 0)
-					+ X_OFFSET, Math.max(y - displacement, 0) + TOP_OFFSET);
+			context.drawImage(toolImage, 0, 0,
+					toolImage.getWidth(), toolImage.getHeight(),
+					x - displacement + X_OFFSET, y - displacement + TOP_OFFSET,
+					toolImage.getWidth(), toolImage.getHeight()
+				);
 
 		} else if (isInsideWall(x, y)) {
 			// cancel current animation if there is one
@@ -672,8 +675,11 @@ public abstract class Geometry {
 		for (int i = 0; i <= longest; i++) {
 			int x3 = getValidCoord(x1);
 			int y3 = getValidCoord(y1);
-			context.drawImage(toolImage, Math.max(x3 - displacement, 1)
-					+ X_OFFSET, Math.max(y3 - displacement, 1) + TOP_OFFSET);
+			context.drawImage(toolImage, 0, 0,
+					toolImage.getWidth(), toolImage.getHeight(),
+					x3 - displacement + X_OFFSET, y3 - displacement + TOP_OFFSET,
+					toolImage.getWidth(), toolImage.getHeight()
+				);
 			numerator += shortest;
 			if (!(numerator < longest)) {
 				numerator -= longest;
