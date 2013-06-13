@@ -38,10 +38,12 @@ import nl.tue.fingerpaint.client.gui.celllists.LoadProtocolCellList;
 import nl.tue.fingerpaint.client.gui.flextables.InitDistFlexTable;
 import nl.tue.fingerpaint.client.gui.flextables.ProtocolFlexTable;
 import nl.tue.fingerpaint.client.gui.flextables.ResultsFlexTable;
+import nl.tue.fingerpaint.client.gui.labels.NoFilesFoundLabel;
 import nl.tue.fingerpaint.client.gui.labels.ProtocolLabel;
 import nl.tue.fingerpaint.client.gui.labels.ProtocolRepresentationLabel;
 import nl.tue.fingerpaint.client.gui.labels.SaveMessageLabel;
 import nl.tue.fingerpaint.client.gui.panels.LoadPopupPanel;
+import nl.tue.fingerpaint.client.gui.panels.LoadVerticalPanel;
 import nl.tue.fingerpaint.client.gui.panels.ProtocolPanelContainer;
 import nl.tue.fingerpaint.client.gui.panels.RemoveResultsPopupPanel;
 import nl.tue.fingerpaint.client.gui.panels.SaveItemPopupPanel;
@@ -318,13 +320,16 @@ public class GuiState {
 	 * Vertical panel to hold the textbox and the cancel button in the load
 	 * pop-up panel.
 	 */
-	public static VerticalPanel loadVerticalPanel = new VerticalPanel();
+	public static LoadVerticalPanel loadVerticalPanel = new LoadVerticalPanel();
 
 	/** Pop-up panel to handle the loading of previously saved items. */
 	public static LoadPopupPanel loadPanel = new LoadPopupPanel();
 
 	/** Button to close the load pop-up menu. */
 	public static CloseLoadButton closeLoadButton = new CloseLoadButton();
+	
+	/** Label to indicate there are no saves found for the selected loading option */
+	public static NoFilesFoundLabel noFilesFoundLabel = new NoFilesFoundLabel();
 
 	// --- STEP SIZE WIDGETS --------------------------------------------------
 	/**
