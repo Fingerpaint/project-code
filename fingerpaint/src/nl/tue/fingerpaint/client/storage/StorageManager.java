@@ -576,7 +576,7 @@ public class StorageManager {
 						.show(3000);
 			} else {
 				Logger.getLogger("").log(Level.INFO,
-						"Unknown error during saving.");
+						"Unknown error during saving: " + e.getDescription());
 			}
 		}
 		return true;

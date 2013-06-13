@@ -28,7 +28,7 @@ protected RectangleGeometry geom;
 	 * Initialises the geometry for a new test case
 	 */
 	public void  initialise(){
-		geom = new RectangleGeometry(testClientHeight, testClientWidth);
+		geom = new RectangleGeometry(testClientHeight, testClientWidth, 240, 400);
 	}
 	
 	//-----Unit tests----------------------------------------------------------
