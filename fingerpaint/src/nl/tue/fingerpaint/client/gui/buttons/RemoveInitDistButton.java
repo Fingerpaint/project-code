@@ -1,8 +1,6 @@
 package nl.tue.fingerpaint.client.gui.buttons;
 
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import nl.tue.fingerpaint.client.gui.GuiState;
 import nl.tue.fingerpaint.client.model.ApplicationState;
@@ -12,9 +10,13 @@ import nl.tue.fingerpaint.shared.GeometryNames;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 
+/**
+ * Button to initiate the removal of an initial distribution.
+ * 
+ * @author Group Fingerpaint
+ */
 public class RemoveInitDistButton extends Button implements ClickHandler {
 
 	/**
@@ -22,11 +24,19 @@ public class RemoveInitDistButton extends Button implements ClickHandler {
 	 * geometry.
 	 */
 	protected ApplicationState as;
-
-	public RemoveInitDistButton(ApplicationState as) {
+	
+	/**
+	 * Construct a new button that can be used to initiate the removal of
+	 * an initial distribution.
+	 * 
+	 * @param appState
+	 *            Reference to the model, used to get the currently selected
+	 *            geometry, which in turn is used in the local storage.
+	 */
+	public RemoveInitDistButton(ApplicationState appState) {
 		super(FingerpaintConstants.INSTANCE.btnRemoveInitDistButton());
 		addClickHandler(this);
-		this.as = as;		
+		this.as = appState;		
 		this.getElement().setId("removeInitDistButton");
 	}
 
@@ -37,14 +47,7 @@ public class RemoveInitDistButton extends Button implements ClickHandler {
 	 *            The event that has fired.
 	 */
 	@Override
-	public void onClick(ClickEvent event) {
-		
-		Logger.getLogger("").log(Level.INFO, "clickhandler initiated");
-		
-		GuiState.initDistFlexTable.removeFromParent();
-		GuiState.closeResultsButton.removeFromParent();
-
-		//TODO: Remove either below 1 or above 2 lines
+	public void onClick(ClickEvent event) {		
 		GuiState.removeResultsVerticalPanel.clear();
 		
 		GuiState.removeResultsVerticalPanel.add(GuiState.initDistFlexTable);

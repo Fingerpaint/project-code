@@ -42,6 +42,9 @@ public class ProtocolFlexTable extends FlexTable {
 	 * 
 	 * @param protocols
 	 *            List of all results currently stored in the local storage.
+	 * @param geom
+	 *            Currently selected geometry: used to locate the protocol
+	 *            in the local storage.
 	 */
 	public void fillFlexTable(final ArrayList<String> protocols, final String geom) {
 		for (int i = 0; i < protocols.size(); i++) {

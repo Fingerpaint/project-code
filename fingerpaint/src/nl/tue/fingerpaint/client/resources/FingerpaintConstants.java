@@ -4,7 +4,6 @@ import nl.tue.fingerpaint.client.gui.GuiState;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.Constants;
-import com.google.gwt.safehtml.shared.SafeHtml;
 
 /**
  * The {@code FingerpaintConstants} are a set of localised constants. They can
@@ -163,6 +162,13 @@ public interface FingerpaintConstants extends Constants {
 	 */
 	@DefaultStringValue("Load Initial Distribution")
 	public String btnLoadDist();
+	
+	/**
+	 * @return Localised string that contains the text for the
+	 *         {@link GuiState#removeInitDistButton} button.
+	 */
+	@DefaultStringValue("Remove Saved Distributions")
+	public String btnRemoveInitDistButton();
 
 	/**
 	 * @return Localised string that contains the text for the
@@ -198,6 +204,13 @@ public interface FingerpaintConstants extends Constants {
 	 */
 	@DefaultStringValue("Load Mixing Protocol")
 	public String btnLoadProt();
+	
+	/**
+	 * @return Localised string that contains the text for the
+	 *         {@link GuiState#removeSavedProtButton} button.
+	 */
+	@DefaultStringValue("Remove Saved Protocols")
+	public String btnRemoveSavedProtButton();
 
 	/**
 	 * @return Localised string that contains the text for the
@@ -267,23 +280,7 @@ public interface FingerpaintConstants extends Constants {
 	 *         {@link GuiState#toggleDefineProtocol} toggle button.
 	 */
 	@DefaultStringValue("Define Protocol")
-	public String btnDefProt();
-	
-	/**
-	 * @return Localised string that contains the text for the
-	 *         {@link GuiState#removeInitDistButton} button.
-	 */
-	@DefaultStringValue("Remove Distribution")
-	public String btnRemoveInitDistButton();
-
-	
-	/**
-	 * @return Localised string that contains the text for the
-	 *         {@link GuiState#removeSavedProtButton} button.
-	 */
-	@DefaultStringValue("Remove protocol")
-	public String btnRemoveSavedProtButton();
-	
+	public String btnDefProt();	
 
 	// --- CONSTANTS FOR ERRORS -----------------------------------------------
 	/**

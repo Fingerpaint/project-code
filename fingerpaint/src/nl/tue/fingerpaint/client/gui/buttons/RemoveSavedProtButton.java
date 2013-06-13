@@ -10,9 +10,13 @@ import nl.tue.fingerpaint.shared.GeometryNames;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 
+/**
+ * Button to initiate the removal of a saved mixing protocol
+ * 
+ * @author Group Fingerpaint
+ */
 public class RemoveSavedProtButton extends Button implements ClickHandler {
 
 	/**
@@ -21,10 +25,18 @@ public class RemoveSavedProtButton extends Button implements ClickHandler {
 	 */
 	protected ApplicationState as;
 
-	public RemoveSavedProtButton(ApplicationState as) {
+	/**
+	 * Construct a new button that can be used to initiate the removal of
+	 * a saved mixing protocol
+	 * 
+	 * @param appState
+	 *            Reference to the model, used to get the currently selected
+	 *            geometry, which in turn is used in the local storage.
+	 */
+	public RemoveSavedProtButton(ApplicationState appState) {
 		super(FingerpaintConstants.INSTANCE.btnRemoveSavedProtButton());
 		addClickHandler(this);
-		this.as = as;
+		this.as = appState;
 		this.getElement().setId("removeSavedProtButton");
 	}
 
@@ -36,10 +48,6 @@ public class RemoveSavedProtButton extends Button implements ClickHandler {
 	 */
 	@Override
 	public void onClick(ClickEvent event) {
-	//	GuiState.protocolFlexTable.removeFromParent();
-		//GuiState.closeResultsButton.removeFromParent();
-
-		// TODO: Remove either below 1 or above 2 lines
 		GuiState.removeResultsVerticalPanel.clear();
 
 		GuiState.removeResultsVerticalPanel.add(GuiState.protocolFlexTable);

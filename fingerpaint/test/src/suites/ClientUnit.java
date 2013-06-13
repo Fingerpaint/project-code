@@ -3,12 +3,7 @@ package suites;
 import nl.tue.fingerpaint.client.gui.NumberSpinnerTest;
 import nl.tue.fingerpaint.client.model.ApplicationStateTest;
 import nl.tue.fingerpaint.client.model.DrawingToolTest;
-import nl.tue.fingerpaint.client.model.MixingProtocolTest;
 import nl.tue.fingerpaint.client.model.RectangleGeometryTest;
-import nl.tue.fingerpaint.client.model.RectangleMixingStepTest;
-import nl.tue.fingerpaint.client.simulator.SimulationResultTest;
-import nl.tue.fingerpaint.client.simulator.SimulationTest;
-import nl.tue.fingerpaint.client.simulator.SimulatorServiceTest;
 import nl.tue.fingerpaint.client.storage.FingerpaintJsonizerTest;
 import nl.tue.fingerpaint.client.storage.FingerpaintZipperTest;
 import nl.tue.fingerpaint.client.storage.ResultStorageTest;
@@ -27,13 +22,8 @@ import com.google.gwt.junit.client.GWTTestCase;
  * <ul>
  * <li> {@link ApplicationStateTest} </li>
  * <li> {@link DrawingToolTest} </li>
- * <li> {@link MixingProtocolTest} </li>
- * <li> {@link RectangleMixingStepTest} </li>
  * <li> {@link NumberSpinnerTest} </li>
  * <li> {@link RectangleGeometryTest} </li>
- * <li> {@link SimulationResultTest} </li>
- * <li> {@link SimulationTest} </li>
- * <li> {@link SimulatorServiceTest} </li>
  * <li> {@link FingerpaintJsonizerTest} </li>
  * <li> {@link FingerpaintZipperTest} </li>
  * <li> {@link ResultStorageTest} </li>
@@ -47,14 +37,9 @@ import com.google.gwt.junit.client.GWTTestCase;
 // Run all the tests of each of the following classes:
 @SuiteClasses({
 	ApplicationStateTest.class,
-	DrawingToolTest.class,
-	MixingProtocolTest.class,
-	RectangleMixingStepTest.class, 
+	DrawingToolTest.class, 
 	NumberSpinnerTest.class,
 	RectangleGeometryTest.class,
-	SimulationResultTest.class,
-	SimulationTest.class,
-	//SimulatorServiceTest.class,
 	FingerpaintJsonizerTest.class,
 	FingerpaintZipperTest.class,
 	ResultStorageTest.class,

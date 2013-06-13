@@ -431,8 +431,7 @@ public class Fingerpaint implements EntryPoint {
 										.getInitialDistribution()))
 								.substring(1), nrSteps, false);
 
-				TimeoutRpcRequestBuilder timeoutRpcRequestBuilder = new TimeoutRpcRequestBuilder(
-						10000);
+				TimeoutRpcRequestBuilder timeoutRpcRequestBuilder = new TimeoutRpcRequestBuilder();
 				SimulatorServiceAsync service = GWT
 						.create(SimulatorService.class);
 				((ServiceDefTarget) service)

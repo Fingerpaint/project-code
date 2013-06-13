@@ -1,4 +1,4 @@
-package nl.tue.fingerpaint.client.model;
+package nl.tue.fingerpaint.shared.model;
 
 import nl.tue.fingerpaint.shared.model.MixingProtocol;
 import nl.tue.fingerpaint.shared.model.MixingStep;
@@ -101,6 +101,22 @@ public class MixingProtocolTest extends GWTTestCase {
 		assertEquals(step1, program.getStep(2));
 	}
 
+	/**
+	 * A test to check whether the {@code toString} and {@code fromString}
+	 * functions work properly.
+	 */
+	@Test
+	public void testToString() {
+		init();
+		MixingProtocol result = MixingProtocol.fromString(program.toString());
+		assertEquals("Size of the program", program.getProgramSize(),
+				result.getProgramSize());
+		for (int i = 0; i < program.getProgramSize(); i++) {
+			assertEquals("MixingStep " + i + " of the program", program
+					.getStep(i).toString(), result.getStep(i).toString());
+		}
+	}
+
 	// Exception tests----------------------------------------------
 	/**
 	 * A test to check whether the getStep function throws a correct
@@ -190,7 +206,7 @@ public class MixingProtocolTest extends GWTTestCase {
 			fail(e.toString());
 		}
 	}
-	
+
 	/**
 	 * Returns the module name for the GWT test.
 	 */
