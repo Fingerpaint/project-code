@@ -89,7 +89,7 @@ public class RectangleGeometry extends Geometry {
 		int width = img.getWidth();
 		int height = img.getHeight();
 		int index;
-		for (int y = (int) Math.floor(height - factor); y >= 0; y -= (int) Math.floor(factor)) {
+		for (int y = height; y >= 0; y -= (int) Math.floor(factor)) {
 			for (int x = 0; x < width; x += (int) Math.floor(factor)) {
 				// times 4 because we have R, G, B and alpha value per pixel
 				index = (y * width + x) * 4;
@@ -109,14 +109,14 @@ public class RectangleGeometry extends Geometry {
 		
 		if (clientHeight >= (clientWidth / (double) HORIZONTAL_CELLS) * VERTICAL_CELLS) {
 			// width is limiting factor
-			canvasWidth = clientWidth;
-			canvasHeight = (int) Math.floor((clientWidth / (double) HORIZONTAL_CELLS) * VERTICAL_CELLS);
-			factor = clientWidth / (double) HORIZONTAL_CELLS;
+			canvasWidth = clientWidth - 2;
+			canvasHeight = (int) Math.floor((canvasWidth / (double) HORIZONTAL_CELLS) * VERTICAL_CELLS);
+			factor = canvasWidth / (double) HORIZONTAL_CELLS;
 		} else {
 			// height is limiting factor
-			canvasHeight = clientHeight;
-			canvasWidth = (int) Math.floor((clientHeight / (double) VERTICAL_CELLS) * HORIZONTAL_CELLS);
-			factor = clientHeight / (double) VERTICAL_CELLS;
+			canvasHeight = clientHeight - 2;
+			canvasWidth = (int) Math.floor((canvasHeight / (double) VERTICAL_CELLS) * HORIZONTAL_CELLS);
+			factor = canvasHeight / (double) VERTICAL_CELLS;
 		}
 	}
 	
@@ -236,27 +236,27 @@ public class RectangleGeometry extends Geometry {
 	 * Colours the inside of one of the walls of the geometry.
 	 * @param xOffset
 	 *            The x-distance to the initial position
-	 * @param topWal
+	 * @param topWall
 	 *            {@code true} if the top wall has to be filled, {@code false}
 	 *            otherwise
 	 */
-	protected void fillWall(int xOffset, boolean topWal) {
+	protected void fillWall(int xOffset, boolean topWall) {
 		// Set the height of the upper border of the wall
-		double y = topWal ? TOP_OFFSET + 1 - HEIGHT_OF_WALL : TOP_OFFSET
+		double y = topWall ? TOP_OFFSET + 1 - HEIGHT_OF_WALL : TOP_OFFSET
 				+ getHeight() + 2;
 
 		// Clip the area inside the wall
 		context.beginPath();
 		context.moveTo(X_OFFSET + 1, y);
 		context.lineTo(X_OFFSET + getWidth() + 1, y);
-		context.lineTo(X_OFFSET + getWidth() + 1, y + HEIGHT_OF_WALL - 2);
-		context.lineTo(X_OFFSET + 1, y + HEIGHT_OF_WALL - 2);
+		context.lineTo(X_OFFSET + getWidth() + 1, y + HEIGHT_OF_WALL - 1);
+		context.lineTo(X_OFFSET + 1, y + HEIGHT_OF_WALL - 1);
 		context.closePath();
 		context.clip();
 
 		// Fill the area inside the wall
 		context.setFillStyle(wallColor.toHexString());
-		context.fillRect(X_OFFSET + 1, y, getWidth() + 1, HEIGHT_OF_WALL - 2);
+		context.fillRect(X_OFFSET + 1, y, getWidth() + 1, HEIGHT_OF_WALL - 1);
 
 		// Set the stroke style for the arrows (stripes)
 		context.setStrokeStyle(wallStripeColor.toHexString());
@@ -265,7 +265,7 @@ public class RectangleGeometry extends Geometry {
 		// Set the initial x and y values for the arrows to the left
 		double x = X_OFFSET + 1 + getWidth() / 2.0 - STRIPE_INTERVAL / 2.0
 				+ xOffset;
-		y = topWal ? TOP_OFFSET + 0.5 - HEIGHT_OF_WALL / 2.0 : TOP_OFFSET
+		y = topWall ? TOP_OFFSET + 0.5 - HEIGHT_OF_WALL / 2.0 : TOP_OFFSET
 				+ getHeight() + 1.5 + HEIGHT_OF_WALL / 2.0;
 
 		// Draw all the arrows to the left
