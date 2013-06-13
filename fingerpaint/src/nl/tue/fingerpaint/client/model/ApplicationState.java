@@ -39,6 +39,11 @@ public class ApplicationState {
 	 * Initially set to 0, to indicate that the spinner has not been loaded yet.
 	 */
 	private int nrSteps = 0;
+	
+	/**
+	 * Variable that keeps represents if a succesful mixing run has been executed.
+	 */
+	private boolean isMixRunSuccesful;
 
 	// --Getters and Setters------------------------------------------------
 	/**
@@ -225,4 +230,19 @@ public class ApplicationState {
 		geom.drawDistribution(initialDistribution);
 	}
 
+	/**
+	 * Returns bool representing whether the last mixing run was succesful
+	 * @return bool representing whether the last mixing run was succesful
+	 */
+	public boolean isMixRunSuccesful(){
+		return isMixRunSuccesful;
+	}
+	
+	/**
+	 * Sets the result of the last mixing run
+	 * @param b Represents success/fail  
+	 */
+	public void setMixRunSucces(Boolean b){
+		 isMixRunSuccesful = b;
+	}
 }

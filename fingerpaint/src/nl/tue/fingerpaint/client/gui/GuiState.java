@@ -18,6 +18,8 @@ import nl.tue.fingerpaint.client.gui.buttons.MenuToggleButton;
 import nl.tue.fingerpaint.client.gui.buttons.MixNowButton;
 import nl.tue.fingerpaint.client.gui.buttons.NewCompareButton;
 import nl.tue.fingerpaint.client.gui.buttons.OverwriteSaveButton;
+import nl.tue.fingerpaint.client.gui.buttons.RemoveInitDistButton;
+import nl.tue.fingerpaint.client.gui.buttons.RemoveSavedProtButton;
 import nl.tue.fingerpaint.client.gui.buttons.RemoveSavedResultsButton;
 import nl.tue.fingerpaint.client.gui.buttons.ResetDistButton;
 import nl.tue.fingerpaint.client.gui.buttons.ResetProtocolButton;
@@ -33,6 +35,8 @@ import nl.tue.fingerpaint.client.gui.buttons.ViewSingleGraphButton;
 import nl.tue.fingerpaint.client.gui.celllists.CompareSelectPopupCellList;
 import nl.tue.fingerpaint.client.gui.celllists.LoadInitDistCellList;
 import nl.tue.fingerpaint.client.gui.celllists.LoadProtocolCellList;
+import nl.tue.fingerpaint.client.gui.flextables.InitDistFlexTable;
+import nl.tue.fingerpaint.client.gui.flextables.ProtocolFlexTable;
 import nl.tue.fingerpaint.client.gui.flextables.ResultsFlexTable;
 import nl.tue.fingerpaint.client.gui.labels.ProtocolLabel;
 import nl.tue.fingerpaint.client.gui.labels.ProtocolRepresentationLabel;
@@ -59,8 +63,8 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 /**
  * <p>
  * A class that contains references to all the GUI elements used in the
- * Fingerpaint application. This class is used as an "element manager",
- * for easy element referencing.
+ * Fingerpaint application. This class is used as an "element manager", for easy
+ * element referencing.
  * </p>
  * 
  * <p>
@@ -81,7 +85,7 @@ public class GuiState {
 	 * Stores how long in milliseconds a SAVE_SUCCESS_MESSAGE should be shown in
 	 * a NotificationPanel.
 	 */
-	public static final int SAVE_SUCCESS_TIMEOUT = 2000;
+	public static final int DEFAULT_TIMEOUT = 2000;
 
 	// --- LOADING APPLICATION WIDGETS ----------------------------------------
 	/**
@@ -91,9 +95,9 @@ public class GuiState {
 	public static FlowPanel loadingPanel = new FlowPanel();
 
 	/**
-	 * The message to be shown below the loading animation of the loading
-	 * panel. This may be empty, but can be used to inform the user about
-	 * <i>what</i> is loading exactly.
+	 * The message to be shown below the loading animation of the loading panel.
+	 * This may be empty, but can be used to inform the user about <i>what</i>
+	 * is loading exactly.
 	 */
 	public static Label loadingPanelMessage = new Label();
 
@@ -111,8 +115,8 @@ public class GuiState {
 	// --- DRAWING TOOL WIDGETS -----------------------------------------------
 	/**
 	 * Pop-up panel which contains options for selecting a different drawing
-	 * tool. Also, the size of the drawing tool can be changed trough an
-	 * element in this panel.
+	 * tool. Also, the size of the drawing tool can be changed trough an element
+	 * in this panel.
 	 */
 	public static PopupPanel toolSelector = new PopupPanel(true);
 
@@ -174,13 +178,31 @@ public class GuiState {
 
 	/** Flextable to hold all the result entries. */
 	public static ResultsFlexTable resultsFlexTable = new ResultsFlexTable();
-
+	
 	/** Button to remove previously saved mixing results. */
 	public static RemoveSavedResultsButton removeSavedResultsButton = new RemoveSavedResultsButton();
 
 	/** Button to close the remove results pop-up panel. */
 	public static CloseResultsButton closeResultsButton = new CloseResultsButton();
 
+	// --- REMOVE SAVED PROTOCOL WIDGETS---------------------
+	/** button to remove previously saved protocols */
+	public static RemoveSavedProtButton removeSavedProtButton;
+	// Note: This button makes use of the same panels and flextable as
+	// removeSavedResultsButton
+	
+	/** Flextable to hold all the protocol entries. */
+	public static ProtocolFlexTable protocolFlexTable = new ProtocolFlexTable();
+
+	// --- REMOVE SAVED INITIAL DISTRIBUTION WIDGETS---------------------
+	/** button to remove previously saved protocols */
+	public static RemoveInitDistButton removeInitDistButton;
+	// Note: This button makes use of the same panels and flextable as
+	// removeSavedResultsButton
+	
+	/** Flextable to hold all the protocol entries. */
+	public static InitDistFlexTable initDistFlexTable = new InitDistFlexTable();
+	
 	// --- MIXING PROTOCOL WIDGETS --------------------------------------------
 	/**
 	 * CellList that can be used to load a previously saved mixing protocol.
@@ -422,8 +444,8 @@ public class GuiState {
 
 		toolSelector.ensureDebugId("toolSelector");
 		popupPanelPanel.getElement().setId("popupPanelPanel");
-		
-		popupPanelMenu.ensureDebugId("popupPanelMenu");		
+
+		popupPanelMenu.ensureDebugId("popupPanelMenu");
 		removeResultsVerticalPanel.ensureDebugId("removeResultsVerticalPanel");
 
 		nrStepsLabel.ensureDebugId("nrStepsLabel");

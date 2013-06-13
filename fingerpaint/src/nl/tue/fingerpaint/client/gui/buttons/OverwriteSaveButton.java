@@ -48,7 +48,7 @@ public class OverwriteSaveButton extends Button implements ClickHandler {
 
 		NotificationPopupPanel np = new NotificationPopupPanel(
 				FingerpaintConstants.INSTANCE.saveSuccess());
-		np.show(GuiState.SAVE_SUCCESS_TIMEOUT);
+		np.show(GuiState.DEFAULT_TIMEOUT);
 		GuiState.overwriteSavePanel.hide();
 		
 		// Upon successful overwrite, disable the save button.
