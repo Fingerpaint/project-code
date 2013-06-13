@@ -22,7 +22,11 @@ public class MenuToggleButton extends Button implements ClickHandler {
 	public static final String ELEMENT_ID = "menuToggleButton";
 	
 	/** How long the sliding animation takes. */
-	public static final int DURATION = 1000;
+	public static final int DURATION = 300;
+	/** At which angle the toggle button content is when the menu is hidden. */
+	public static final int HIDDEN_ANGLE = 0;
+	/** At which angle the toggle button content is when the menu is shown. */
+	public static final int SHOWN_ANGLE = 135;
 	
 	/** Indicate if the menu is shown or not. */
 	protected boolean shown = true;
@@ -51,7 +55,7 @@ public class MenuToggleButton extends Button implements ClickHandler {
 		this.menuPanel = menuPanelWrapper;
 		addClickHandler(this);
 		this.menuAnimation = new SizeAnimation(menuPanelWrapper.getElement(), SizeAnimation.ANIMATE_WIDTH);
-		this.buttonAnimation = new RotationAnimation(imgEl, 45);
+		this.buttonAnimation = new RotationAnimation(imgEl, SHOWN_ANGLE);
 	}
 
 	/**
@@ -61,10 +65,10 @@ public class MenuToggleButton extends Button implements ClickHandler {
 	@Override
 	public void onClick(ClickEvent event) {
 		if (shown) {
-			buttonAnimation.doRotate(DURATION, 0, true);
+			buttonAnimation.doRotate(DURATION, HIDDEN_ANGLE, false);
 			menuAnimation.doHide(DURATION);
 		} else {
-			buttonAnimation.doRotate(DURATION, 45, false);
+			buttonAnimation.doRotate(DURATION, SHOWN_ANGLE, true);
 			menuAnimation.doShow(DURATION);
 		}
 		
