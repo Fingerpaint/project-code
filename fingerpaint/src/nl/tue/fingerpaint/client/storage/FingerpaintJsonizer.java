@@ -497,7 +497,7 @@ public class FingerpaintJsonizer {
 	 *            Array to cast.
 	 * @return Best-try casted array.
 	 */
-	private static double[] toDoubleArray(Object[] arr) {
+	public static double[] toDoubleArray(Object[] arr) {
 		double[] result = new double[arr.length];
 
 		for (int i = 0; i < arr.length; i++) {
@@ -521,7 +521,7 @@ public class FingerpaintJsonizer {
 	 *            Array to cast.
 	 * @return Best-try casted array.
 	 */
-	private static int[] toIntArray(Object[] arr) {
+	public static int[] toIntArray(Object[] arr) {
 		int[] result = new int[arr.length];
 
 		for (int i = 0; i < arr.length; i++) {
