@@ -1,11 +1,15 @@
 package nl.tue.fingerpaint.client.model;
 
+import nl.tue.fingerpaint.client.gui.GuiState;
 import nl.tue.fingerpaint.shared.model.MixingProtocol;
 import nl.tue.fingerpaint.shared.model.MixingStep;
 
 /**
- * Class that keeps track of the Geometry and Mixer the user has selected. Used
- * by the cellBrowser widget in Fingerpaint.java to store chosen variables.
+ * The {@code ApplicationState} is a class that can be and is used to keep track
+ * of all relevant parameters in the application. Like {@link GuiState}, it is
+ * some sort of manager, or central registry, for easy tracking of in this case
+ * parameters chosen by the user. This includes the geometry and mixer that were
+ * chosen, the protocol, step size, et cetera.
  * 
  * @author Group Fingerpaint
  */
@@ -220,7 +224,5 @@ public class ApplicationState {
 	public void drawDistribution() {
 		geom.drawDistribution(initialDistribution);
 	}
-
-
 
 }
