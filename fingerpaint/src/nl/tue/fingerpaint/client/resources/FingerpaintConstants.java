@@ -77,6 +77,13 @@ public interface FingerpaintConstants extends Constants {
 	 */
 	@DefaultStringValue("Step size")
 	public String lblStepSize();
+	
+	/**
+	 * @return Localised string that contains the text for the
+	 * 			{@link GuiState#noFilesFoundLabel} label
+	 */
+	@DefaultStringValue("No saved files")
+	public String noFilesFound();
 
 	// -- CONSTANTS FOR SAVE MESSAGES -----------------------------------------
 	/**
