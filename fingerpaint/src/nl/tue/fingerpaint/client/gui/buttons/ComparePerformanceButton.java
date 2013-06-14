@@ -25,8 +25,8 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 public class ComparePerformanceButton extends Button implements ClickHandler {
 
 	private Fingerpaint fp;
-	VerticalPanel compareVerticalPanel = new VerticalPanel();
-	HorizontalPanel compareHorizontalPanel = new HorizontalPanel();
+	private VerticalPanel compareVerticalPanel = new VerticalPanel();
+	private HorizontalPanel compareHorizontalPanel = new HorizontalPanel();
 	
 	/** the label for when there are no files found to load */
 	NoFilesFoundLabel noFilesFoundLabel = new NoFilesFoundLabel();
