@@ -108,6 +108,7 @@ public abstract class MixingStep implements Serializable {
 	
 	/**
 	 * Returns the string representation of this mixing step.
+	 * @return Textual representation of this step.
 	 */
 	public abstract String toString();
 }

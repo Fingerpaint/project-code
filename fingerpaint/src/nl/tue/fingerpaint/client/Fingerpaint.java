@@ -2,8 +2,6 @@ package nl.tue.fingerpaint.client;
 
 import java.util.ArrayList;
 
-import javax.naming.OperationNotSupportedException;
-
 import nl.tue.fingerpaint.client.gui.CustomTreeModel;
 import nl.tue.fingerpaint.client.gui.GraphVisualisator;
 import nl.tue.fingerpaint.client.gui.GuiState;
@@ -286,9 +284,16 @@ public class Fingerpaint implements EntryPoint {
 	 * @param canOverwrite
 	 *            If we can overwrite an already-existing "file" with the given
 	 *            name or not.
-	 * @return {@code true} if "file" was saved, {@code false} otherwise
+ 	 * @return <ul>
+	 *            <li>{@code SAVE_SUCCESSFUL} If saving was successful.</li>
+	 *            <li>{@code NOT_INITIALISED_ERROR} If the local storage is not initialised.</li>
+	 *            <li>{@code NAME_IN_USE_ERROR} If the name is already in use.</li>
+	 *            <li>{@code QUOTA_EXCEEDED_ERROR} If the local storage is full.</li>
+	 *            <li>{@code NONEXISTANT_KEY_ERROR} If the key does not exist.</li>
+	 *            <li>{@code UNKNOWN_ERROR} If an error occurs, other than those above.</li>
+	 *         </ul> 
 	 */
-	public boolean save(String name, boolean canOverwrite) {
+	public int save(String name, boolean canOverwrite) {
 		if (lastSaveButtonClicked.equals(StorageManager.KEY_INITDIST)) {
 			return StorageManager.INSTANCE.putDistribution(
 					GeometryNames.getShortName(as.getGeometryChoice()), name,
@@ -311,10 +316,10 @@ public class Fingerpaint implements EntryPoint {
 						canOverwrite);
 			} catch (Exception e) {
 				GWT.log("Saving results encountered an error", e);
-				return false;
+				return StorageManager.UNKNOWN_ERROR;
 			}
 		}
-		return false;
+		return StorageManager.UNKNOWN_ERROR;
 	}
 
 	/**
@@ -477,7 +482,7 @@ public class Fingerpaint implements EntryPoint {
 					setLoadingPanelVisible(false);
 					new NotificationPopupPanel(FingerpaintConstants.INSTANCE
 							.geometryUnsupported())
-					        .show(GuiState.DEFAULT_TIMEOUT);
+					        .show(GuiState.UNSUPPORTED_GEOM_TIMEOUT);
 				}
 			} 
 			

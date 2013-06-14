@@ -236,6 +236,7 @@ public class NumberSpinner extends Composite implements ChangeHandler, KeyUpHand
 
 	/**
 	 * Returns the given value to a valid value for this spinner.
+	 * @return Value of this spinner, rounded to the nearest valid value.
 	 */
 	private double getRoundedValue() {
 		double result = getValue();

@@ -131,8 +131,8 @@ protected RectangleGeometry geom;
 	 * Helper method to test an individual mixing step, 
 	 * tests if geometry correctly sets topWall and clockwise for its mixing steps
 	 * 
-	 * @param true if a top wall mixing step should be tested, false for a bottom wall step
-	 * @param Clockwise true if the mixing movement should be clockwise, false otherwise
+	 * @param topWall true if a top wall mixing step should be tested, false for a bottom wall step
+	 * @param clockwise true if the mixing movement should be clockwise, false otherwise
 	 */
 	protected void testStep(boolean topWall, boolean clockwise){
 		initialise();
