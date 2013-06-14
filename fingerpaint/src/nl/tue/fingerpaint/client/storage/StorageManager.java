@@ -605,7 +605,7 @@ public class StorageManager {
 			return NAME_IN_USE_ERROR;
 		}
 		HashMap<String, Object> firstLevel = FingerpaintJsonizer
-				.hashMapFromString(localStorage.getItem(KEY_RESULTS));
+				.hashMapFromString(localStorage.getItem(KEY_RESULTS), false);
 		firstLevel.put(key, FingerpaintJsonizer.toString(result));
 		try {
 			localStorage.setItem(KEY_RESULTS,
