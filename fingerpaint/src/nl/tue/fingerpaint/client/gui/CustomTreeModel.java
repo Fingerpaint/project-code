@@ -98,10 +98,10 @@ public class CustomTreeModel implements TreeViewModel {
 	 * Creates the chosen geometry.
 	 */
 	private void createGeometry() {
-		if (as.getGeometryChoice().equals(GeometryNames.RECT_LONG)) {
+		if (as.getGeometryChoice().equals(GeometryNames.RECT)) {
 			as.setGeometry(new RectangleGeometry(Window.getClientHeight(),
 					Window.getClientWidth(), 240, 400));
-		} else if (as.getGeometryChoice().equals(GeometryNames.SQR_LONG)) {
+		} else if (as.getGeometryChoice().equals(GeometryNames.SQR)) {
 			int size = Math.min(Window.getClientHeight(), Window.getClientWidth());
 			as.setGeometry(new RectangleGeometry(size - 20,	size - 20,
 					240, 240));

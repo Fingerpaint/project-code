@@ -49,7 +49,7 @@ public class LoadProtocolButton extends Button implements ClickHandler {
 		GuiState.loadVerticalPanel.clear();
 		
 		List<String> geometryProtocols = StorageManager.INSTANCE
-				.getProtocols(GeometryNames.getShortName(as.getGeometryChoice()));
+				.getProtocols(as.getGeometryChoice());
 		GuiState.loadProtocolCellList.fillCellList(geometryProtocols);
 
 		GuiState.loadVerticalPanel.addList(GuiState.loadProtocolCellList);

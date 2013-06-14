@@ -17,7 +17,7 @@ import com.google.gwt.junit.client.GWTTestCase;
  */
 public class SimulationTest extends GWTTestCase {
 
-	private final String geom = GeometryNames.RECT_LONG;
+	private final String geom = GeometryNames.RECT;
 	private final String mixer = "mixer";
 	private final String prot = "T[0.25], B[6.25], -B[8.0], -T[5.5]";
 	private final int[] dist = new int[96000];
@@ -66,7 +66,7 @@ public class SimulationTest extends GWTTestCase {
 		}
 		
 		try {
-			sim = new Simulation(GeometryNames.SQR_LONG, mixer, protocol, distribution, runs, vectors);
+			sim = new Simulation(GeometryNames.SQR, mixer, protocol, distribution, runs, vectors);
 			fail("An exception should have been thrown");
 		} catch (UnsupportedOperationException e) {
 		} catch (Exception e) {

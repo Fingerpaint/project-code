@@ -83,8 +83,7 @@ public class LoadProtocolCellList extends CellList<String> {
 						String selected = selectionModel.getSelectedObject();
 						if (selected != null) {
 							as.setProtocol(StorageManager.INSTANCE.getProtocol(
-									GeometryNames.getShortName(as
-											.getGeometryChoice()), selected));
+									as.getGeometryChoice(), selected));
 							GuiState.labelProtocolRepresentation.setText(as
 									.getProtocol().toString());
 							GuiState.mixNowButton.setEnabled(true);

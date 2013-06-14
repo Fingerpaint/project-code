@@ -299,11 +299,11 @@ public class Fingerpaint implements EntryPoint {
 	public int save(String name, boolean canOverwrite) {
 		if (lastSaveButtonClicked.equals(StorageManager.KEY_INITDIST)) {
 			return StorageManager.INSTANCE.putDistribution(
-					GeometryNames.getShortName(as.getGeometryChoice()), name,
+					as.getGeometryChoice(), name,
 					as.getGeometry().getDistribution(), canOverwrite);
 		} else if (lastSaveButtonClicked.equals(StorageManager.KEY_PROTOCOLS)) {
 			return StorageManager.INSTANCE.putProtocol(
-					GeometryNames.getShortName(as.getGeometryChoice()), name,
+					as.getGeometryChoice(), name,
 					as.getProtocol(), canOverwrite);
 		} else if (lastSaveButtonClicked.equals(StorageManager.KEY_RESULTS)) {
 			ResultStorage result = new ResultStorage();

@@ -29,28 +29,28 @@ import com.google.gwt.storage.client.StorageMap;
  * <ul>
  * <li>{@link #KEY_INITDIST}
  * <ul>
- * <li>{@link GeometryNames#RECT_SHORT}
+ * <li>{@link GeometryNames#RECT}
  * <ul>
  * <li>Name of some saved distribution for a rectangular geometry</li>
  * <li>Other name</li>
  * <li>...</li>
  * </ul>
  * </li>
- * <li>{@link GeometryNames#SQR_SHORT}
+ * <li>{@link GeometryNames#SQR}
  * <ul>
  * <li>Name of saved distribution for a square geometry</li>
  * <li>Other name</li>
  * <li>...</li>
  * </ul>
  * </li>
- * <li>{@link GeometryNames#CIRC_SHORT}
+ * <li>{@link GeometryNames#CIRC}
  * <ul>
  * <li>Name of saved distribution for a circle geometry</li>
  * <li>Other name</li>
  * <li>...</li>
  * </ul>
  * </li>
- * <li>{@link GeometryNames#JOBE_SHORT}
+ * <li>{@link GeometryNames#JOBE}
  * <ul>
  * <li>Name of saved distribution for a journal bearing geometry</li>
  * <li>Other name</li>
@@ -136,8 +136,8 @@ public class StorageManager {
 			KEY_PROTOCOLS, KEY_RESULTS };
 	/** Keys that are used on the second level. */
 	protected String[] secondLevelKeys = new String[] {
-			GeometryNames.CIRC_SHORT, GeometryNames.JOBE_SHORT,
-			GeometryNames.RECT_SHORT, GeometryNames.SQR_SHORT };
+			GeometryNames.CIRC, GeometryNames.JOBE,
+			GeometryNames.RECT, GeometryNames.SQR };
 
 	// ---- CONSTRUCTOR
 	// ---------------------------------------------------------------------------
