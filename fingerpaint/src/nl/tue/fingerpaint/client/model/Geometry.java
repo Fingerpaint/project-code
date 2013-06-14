@@ -187,6 +187,12 @@ public abstract class Geometry {
 		});
 	}-*/;
 	
+	/**
+	 * Initialise the canvas to the given size.
+	 * 
+	 * @param clientWidth Width of canvas.
+	 * @param clientHeight Height of canvas.
+	 */
 	protected void initialise(int clientWidth, int clientHeight) {
 		// Actually create the canvas element
 		createCanvas(clientHeight, clientWidth);

@@ -155,8 +155,6 @@ public class CustomTreeModel implements TreeViewModel {
 	 * Helper method that initialises the widgets for the mixing interface
 	 */
 	private void createMixingWidgets() {
-		GuiState.menuPanel.getElement().setId("menuPanel");
-
 		// Initialise a listener for when a new step is entered to the
 		// protocol
 		StepAddedListener l = new StepAddedListener() {
@@ -171,53 +169,32 @@ public class CustomTreeModel implements TreeViewModel {
 		// selector popup
 		GuiState.cursorSizeSpinner = new CursorSizeSpinner(as);
 
-		// Initialise the toolSelectButton and add to menuPanel
+		// Initialise the toolSelectButton and add it to the menu panel
+		// Also intialise the widgets in the submenu that this button toggles
 		GuiState.squareDrawingTool = new SquareDrawingToolToggleButton(fp, as);
 		GuiState.circleDrawingTool = new CircleDrawingToolToggleButton(fp, as);
-		GuiState.popupPanelMenu.add(GuiState.squareDrawingTool);
-		GuiState.popupPanelMenu.add(GuiState.circleDrawingTool);
-		GuiState.popupPanelPanel.add(GuiState.popupPanelMenu);
-		GuiState.popupPanelPanel.add(GuiState.cursorSizeSpinner);
-		GuiState.toolSelector.add(GuiState.popupPanelPanel);
-		GuiState.toolSelector.setModal(true);
-
-		GuiState.menuPanel.add(GuiState.toolSelectButton);
+		GuiState.mainMenuPanel.add(GuiState.toolSelectButton);
 
 		// Initialise toggleButton and add to
 		// menuPanel
 		GuiState.toggleColor = new ToggleColourButton(as);
-		GuiState.menuPanel.add(GuiState.toggleColor);
+		GuiState.mainMenuPanel.add(GuiState.toggleColor);
 
-		// Initialise the loadDistButton and add to
-		// menuPanel
-		// createLoadDistButton();
-		// menuPanel.add(loadDistButton);
-
-		// Initialise the resetDistButton and add to menuPanel
+		// Initialise the distribution buttons and add a button to access those
+		// to the menu panel. Also add the 'clear canvas' to the main menu
 		GuiState.resetDistButton = new ResetDistButton(as);
-		GuiState.menuPanel.add(GuiState.resetDistButton);
-
-		// Initialise the saveProtocolButton and add it to the menuPanel
+		GuiState.mainMenuPanel.add(GuiState.resetDistButton);
 		GuiState.saveDistributionButton = new SaveDistributionButton(fp);
-		GuiState.menuPanel.add(GuiState.saveDistributionButton);
-
-		// Initialise the loadInitDistButton and add it to the menuPanel
 		GuiState.loadInitDistButton = new LoadInitDistButton(as);
-		GuiState.menuPanel.add(GuiState.loadInitDistButton);
 		GuiState.loadInitDistCellList = new LoadInitDistCellList(as);
-
-		// Initialise the RemoveInitDistButton and add it to the menuPanel
 		GuiState.removeInitDistButton = new RemoveInitDistButton(as);
-		GuiState.menuPanel.add(GuiState.removeInitDistButton);
-
-		// Initialise the exportDistributionButton and add it to the menuPanel
 		GuiState.exportDistributionButton = new ExportDistributionButton(as);
-		GuiState.menuPanel.add(GuiState.exportDistributionButton);
+		GuiState.mainMenuPanel.add(GuiState.distributionsButton);
 
 		// Initialise the saveResultsButton and add it to the menuPanel
 		GuiState.saveResultsButton = new SaveResultsButton(fp);
 		GuiState.saveResultsButton.setEnabled(false);
-		GuiState.menuPanel.add(GuiState.saveResultsButton);
+		GuiState.mainMenuPanel.add(GuiState.saveResultsButton);
 
 		// Initialise panel to save items
 		GuiState.overwriteSaveButton = new OverwriteSaveButton(fp);
@@ -235,35 +212,35 @@ public class CustomTreeModel implements TreeViewModel {
 		GuiState.overwriteButtonsPanel.add(GuiState.closeSaveButton);
 
 		//Initialise the LoadResultsCellList and add the loadResultsButton
-		GuiState.menuPanel.add(GuiState.loadResultsButton);
+		GuiState.mainMenuPanel.add(GuiState.loadResultsButton);
 		GuiState.LoadResultsCellList = new LoadResultsCellList(fp, as);
 		
 		// Initialise the removeSavedResultsButton and add it to the
 		// menuPanel
 		GuiState.removeResultsPanel.add(GuiState.removeResultsVerticalPanel);
-		GuiState.menuPanel.add(GuiState.removeSavedResultsButton);
+		GuiState.mainMenuPanel.add(GuiState.removeSavedResultsButton);
 
 		GuiState.viewSingleGraphButton = new ViewSingleGraphButton(fp, as);
 		GuiState.exportSingleGraphButton = new ExportSingleGraphButton(fp);
-		GuiState.menuPanel.add(GuiState.viewSingleGraphButton);
+		GuiState.mainMenuPanel.add(GuiState.viewSingleGraphButton);
 
 		// Initialise the comparePerformanceButton and add it to the
 		// menuPanel
 		// createComparePerformanceButton();
 		GuiState.comparePerformanceButton = new ComparePerformanceButton(fp);
-		GuiState.menuPanel.add(GuiState.comparePerformanceButton);
+		GuiState.mainMenuPanel.add(GuiState.comparePerformanceButton);
 
 		// Initialise a spinner for changing the length of a mixing protocol
 		// step and add to menuPanel.
 		GuiState.sizeSpinner = new StepSizeSpinner(as);
-		GuiState.menuPanel.add(GuiState.sizeLabel);
-		GuiState.menuPanel.add(GuiState.sizeSpinner);
+		GuiState.mainMenuPanel.add(GuiState.sizeLabel);
+		GuiState.mainMenuPanel.add(GuiState.sizeSpinner);
 
 		// Initialise the toggleButton that indicates whether a protocol is
 		// being defined, or single steps have to be executed and add to
 		// menu panel
 		GuiState.toggleDefineProtocol = new ToggleDefineProtocol(fp);
-		GuiState.menuPanel.add(GuiState.toggleDefineProtocol);
+		GuiState.mainMenuPanel.add(GuiState.toggleDefineProtocol);
 
 		// Initialise a spinner for #steps
 		GuiState.nrStepsSpinner = new NrStepsSpinner(as);
@@ -297,15 +274,19 @@ public class CustomTreeModel implements TreeViewModel {
 		protocolPanel.add(GuiState.loadProtocolButton);
 		protocolPanel.add(GuiState.removeSavedProtButton);
 		GuiState.protocolPanelContainer.add(protocolPanel);
-		GuiState.menuPanel.add(GuiState.protocolPanelContainer);
+		GuiState.mainMenuPanel.add(GuiState.protocolPanelContainer);
 
 		fp.setProtocolWidgetsVisible(false);
 
 		// Add canvas and menuPanel to the page
 		RootPanel.get().add(as.getGeometry().getCanvas());
-		GuiState.menuPanelWrapper.add(GuiState.menuPanel);
-		GuiState.menuPanelWrapper.getElement().setId("menuPanelWrapper");
-		RootPanel.get().add(GuiState.menuPanelWrapper);
+		
+		GuiState.menuPanelInnerWrapper.add(GuiState.mainMenuPanel);
+		GuiState.menuPanelInnerWrapper.add(GuiState.subLevel1MenuPanel);
+		GuiState.menuPanelInnerWrapper.add(GuiState.subLevel2MenuPanel);
+		GuiState.menuPanelOuterWrapper.add(GuiState.menuPanelInnerWrapper);
+		RootPanel.get().add(GuiState.menuPanelOuterWrapper);
+		
 		GuiState.menuToggleButton.refreshMenuSize();
 		RootPanel.get().add(GuiState.menuToggleButton);
 	}
