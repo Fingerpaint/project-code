@@ -113,6 +113,13 @@ public interface FingerpaintConstants extends Constants {
 	// --- CONSTANTS FOR BUTTONS ----------------------------------------------
 	/**
 	 * @return Localised string that contains the text for
+	 *         {@link GuiState#backMenu1Button} and {@link GuiState#backMenu2Button}.
+	 */
+	@DefaultStringValue("Back")
+	public String btnBack();
+	
+	/**
+	 * @return Localised string that contains the text for
 	 *         {@link GuiState#squareDrawingTool}.
 	 */
 	@DefaultStringValue("square")
@@ -158,6 +165,13 @@ public interface FingerpaintConstants extends Constants {
 
 	/**
 	 * @return Localised string that contains the text for the
+	 *         {@link GuiState#distributionsButton} button.
+	 */
+	@DefaultStringValue("Distributions")
+	public String btnDists();
+	
+	/**
+	 * @return Localised string that contains the text for the
 	 *         {@link GuiState#saveDistributionButton} button.
 	 */
 	@DefaultStringValue("Save Distribution")
@@ -181,7 +195,7 @@ public interface FingerpaintConstants extends Constants {
 	 * @return Localised string that contains the text for the
 	 *         {@link GuiState#loadInitDistButton} button.
 	 */
-	@DefaultStringValue("Reset Distribution")
+	@DefaultStringValue("Clear canvas")
 	public String btnResetDist();
 
 	/**

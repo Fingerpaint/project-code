@@ -5,21 +5,41 @@ package nl.tue.fingerpaint.client.gui.animation;
  * 
  * @author Group Fingerpaint
  */
-public enum Direction {
+public enum Direction implements HasUniqueBitIdentifier {
 	/**
 	 * Used to indicate that an animation should go to the top.
 	 */
-	TOP,
+	TOP {
+		@Override
+		public int getId() {
+			return 1;
+		}
+	},
 	/**
 	 * Used to indicate that an animation should go to the right.
 	 */
-	RIGHT,
+	RIGHT {
+		@Override
+		public int getId() {
+			return 2;
+		}
+	},
 	/**
 	 * Used to indicate that an animation should go to the bottom.
 	 */
-	BOTTOM,
+	BOTTOM {
+		@Override
+		public int getId() {
+			return 4;
+		}
+	},
 	/**
 	 * Used to indicate that an animation should go to the left.
 	 */
-	LEFT
+	LEFT {
+		@Override
+		public int getId() {
+			return 8;
+		}
+	};
 }

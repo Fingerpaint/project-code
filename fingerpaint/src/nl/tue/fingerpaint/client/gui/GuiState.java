@@ -1,7 +1,9 @@
 package nl.tue.fingerpaint.client.gui;
 
+import nl.tue.fingerpaint.client.gui.buttons.BackMenuButton;
 import nl.tue.fingerpaint.client.gui.buttons.CancelCompareButton;
 import nl.tue.fingerpaint.client.gui.buttons.CancelSaveResultsButton;
+import nl.tue.fingerpaint.client.gui.buttons.CircleDrawingToolToggleButton;
 import nl.tue.fingerpaint.client.gui.buttons.CloseCompareButton;
 import nl.tue.fingerpaint.client.gui.buttons.CloseLoadButton;
 import nl.tue.fingerpaint.client.gui.buttons.CloseResultsButton;
@@ -9,6 +11,7 @@ import nl.tue.fingerpaint.client.gui.buttons.CloseSaveButton;
 import nl.tue.fingerpaint.client.gui.buttons.CloseSingleGraphViewButton;
 import nl.tue.fingerpaint.client.gui.buttons.CompareButton;
 import nl.tue.fingerpaint.client.gui.buttons.ComparePerformanceButton;
+import nl.tue.fingerpaint.client.gui.buttons.DistributionsButton;
 import nl.tue.fingerpaint.client.gui.buttons.ExportDistributionButton;
 import nl.tue.fingerpaint.client.gui.buttons.ExportMultipleGraphsButton;
 import nl.tue.fingerpaint.client.gui.buttons.ExportSingleGraphButton;
@@ -60,7 +63,6 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
-import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
@@ -106,32 +108,31 @@ public class GuiState {
 
 	// --- MENU WIDGETS -------------------------------------------------------
 	/** Vertical panel to contain all menu items. */
-	public static VerticalPanel menuPanel = new VerticalPanel();
+	public static VerticalPanel mainMenuPanel = new VerticalPanel();
 
-	/** Wrapper for the {@link #menuPanel}, used in animation. */
-	public static SimplePanel menuPanelWrapper = new SimplePanel();
+	/** Vertical panel to contain all menu items on the first submenu level. */
+	public static VerticalPanel subLevel1MenuPanel = new VerticalPanel();
+	
+	/** Vertical panel to contain all menu items on the second submenu level. */
+	public static VerticalPanel subLevel2MenuPanel = new VerticalPanel();
+	
+	/** Wrapper for the {@link #mainMenuPanel}, used in animation of hiding menu. */
+	public static FlowPanel menuPanelOuterWrapper = new FlowPanel();
+	
+	/** Wrapper for the {@link #menuPanelOuterWrapper}, used in animation of submenus. */
+	public static FlowPanel menuPanelInnerWrapper = new FlowPanel();
 
 	/** Button to toggle whether the menu is visible. */
 	public static MenuToggleButton menuToggleButton = new MenuToggleButton(
-			menuPanelWrapper);
+			menuPanelOuterWrapper);
+	
+	/** Button that is used in the first menu level to go up one level. */
+	public static BackMenuButton backMenu1Button = new BackMenuButton();
+	
+	/** Button that is used in the second menu level to go up one level. */
+	public static BackMenuButton backMenu2Button = new BackMenuButton();
 
 	// --- DRAWING TOOL WIDGETS -----------------------------------------------
-	/**
-	 * Pop-up panel which contains options for selecting a different drawing
-	 * tool. Also, the size of the drawing tool can be changed trough an element
-	 * in this panel.
-	 */
-	public static PopupPanel toolSelector = new PopupPanel(true);
-
-	/**
-	 * Panel in the pop-up panel to separate the tool selection and size
-	 * selection options for the drawing tool.
-	 */
-	public static HorizontalPanel popupPanelPanel = new HorizontalPanel();
-
-	/** Panel in the pop-up panel that contains the different drawing tools. */
-	public static VerticalPanel popupPanelMenu = new VerticalPanel();
-
 	/** Numberspinner to change the size of the drawing tool. */
 	public static CursorSizeSpinner cursorSizeSpinner;
 
@@ -139,7 +140,6 @@ public class GuiState {
 	public static ToggleColourButton toggleColor;
 
 	/** Button to change the shape of the selected drawing tool. */
-	// TODO: Change this to a button on which the current tool is drawn
 	public static ToolSelectButton toolSelectButton = new ToolSelectButton();
 
 	/** Button to select the square-shaped drawing tool. */
@@ -148,9 +148,7 @@ public class GuiState {
 
 	/** Button to select the circle-shaped drawing tool. */
 	// TODO: Change this to a button on which a circle is drawn
-	public static ToggleButton circleDrawingTool = new ToggleButton(
-			FingerpaintConstants.INSTANCE.btnCircleDraw(),
-			FingerpaintConstants.INSTANCE.btnCircleDraw());
+	public static CircleDrawingToolToggleButton circleDrawingTool;
 
 	// --- INITIAL DISTRIBUTION WIDGETS ---------------------------------------
 	/**
@@ -159,6 +157,9 @@ public class GuiState {
 	 */
 	public static LoadInitDistCellList loadInitDistCellList;
 
+	/** Button to enter the submenu with distribution related actions. */
+	public static DistributionsButton distributionsButton = new DistributionsButton();
+	
 	/** Button to save an initial concentration distribution. */
 	public static SaveDistributionButton saveDistributionButton;
 
@@ -449,13 +450,12 @@ public class GuiState {
 		loadingPanelMessage.getElement()
 				.setId(GuiState.LOADINGPANEL_MESSAGE_ID);
 
-		menuPanel.getElement().setId("menuPanel");
-		menuPanelWrapper.getElement().setId("menuPanelWrapper");
+		mainMenuPanel.getElement().setId("menuPanel");
+		GuiState.subLevel1MenuPanel.getElement().setId("menuSub1Panel");
+		GuiState.subLevel2MenuPanel.getElement().setId("menuSub2Panel");
+		menuPanelInnerWrapper.getElement().setId("menuPanelInnerWrapper");
+		menuPanelOuterWrapper.getElement().setId("menuPanelWrapper");
 
-		toolSelector.ensureDebugId("toolSelector");
-		popupPanelPanel.getElement().setId("popupPanelPanel");
-
-		popupPanelMenu.ensureDebugId("popupPanelMenu");
 		removeResultsVerticalPanel.ensureDebugId("removeResultsVerticalPanel");
 
 		nrStepsLabel.ensureDebugId("nrStepsLabel");

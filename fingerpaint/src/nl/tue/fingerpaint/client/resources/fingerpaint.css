@@ -17,6 +17,10 @@
 @def LOADING_OVERLAY_Z 90;
 @def LOADING_OVERLAY_CONTENT_Z 91;
 @def MENU_WIDTH 240px;
+@def MENU_TOTAL_WIDTH 720px; /* three levels, so 3 * MENU_WIDTH */
+@def MENU_BUTTON_WIDTH 230px; /* MENU_WIDTH - padding (= 2 * 5) */
+@def MENU_SPINNER_WIDTH 118px; /* border = 2 * 1 */
+@def MENU_SPINNER_BUTTON_WIDTH 55px; /* padding = 2 * 5 */
 
  /* -- MORE CONSTANTS -- */
 @eval BLACK nl.tue.fingerpaint.shared.utils.Colour.BLACK.toHexString();
@@ -84,8 +88,6 @@ body {
 	left: 0;
 	right: 0;
 	margin-top: 42px;
-	/* half the size of the loading image, plus extra margin (15px) */
-	width: 100%;
 	text-align: center;
 	font-weight: bold;
 	color: WHITE;
@@ -133,6 +135,10 @@ body {
 	left: 0;
 }
 
+#menuPanelInnerWrapper {
+	width: MENU_TOTAL_WIDTH;
+}
+
 #menuPanelWrapper {
 	position: absolute;
 	right: 8px;
@@ -143,7 +149,9 @@ body {
 	padding-bottom: 4px;
 }
 
-#menuPanel {
+#menuPanel, #menuSub1Panel, #menuSub2Panel {
+	display: inline-block;
+	vertical-align: top;
 	width: MENU_WIDTH;
 }
 
@@ -151,7 +159,6 @@ body {
 	width: MENU_WIDTH;
 }
 
-}
 #menuToggleButton {
 	border-radius: 20px;
 	margin: 0;
@@ -172,7 +179,7 @@ body {
 .gwt-Button,.gwt-ToggleButton,button {
 	border: 0;
 	margin: 2px 2px;
-	width: 100%;
+	width: MENU_BUTTON_WIDTH;
 	padding: 10px 5px;
 	background: MAIN;
 	color: WHITE;
@@ -230,26 +237,29 @@ cleacdr
 	background: none repeat scroll 0 0 WHITE;
 	border: 1px solid MAIN;
 	font-size: 32px;
-	height: 45px;
+	height: 43px;
 	text-align: right;
-	width: 100%;
+	width: MENU_SPINNER_WIDTH;
+	margin: 2px 0;
 }
 
 .dp-spinner-upbutton,.dp-spinner-downbutton {
 	font-size: 20pt;
 	padding: 2px 5px;
 	height: 45px;
-	width: 65px;
+	width: MENU_SPINNER_BUTTON_WIDTH;
 }
 
 .dp-spinner-upbutton {
-	margin-top: 0px;
-	margin-bottom: 1px;
+	border-radius: 0 3px 3px 0;
+	margin: 0;
+	margin: 2px 2px 2px 0;
 }
 
 .dp-spinner-downbutton {
-	margin-top: 1px;
-	margin-bottom: 0px;
+	border-radius: 3px 0 0 3px;
+	margin: 0;
+	margin: 2px 0 2px 2px;
 }
 
 .dp-spinner-horizontalpanel {

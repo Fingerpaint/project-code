@@ -8,27 +8,31 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
 
 /**
- * Button that can be used to change the drawing tool.
+ * Button that can be used to go up one level in the menu structure.
  * 
  * @author Group Fingerpaint
  */
-public class ToolSelectButton extends Button implements ClickHandler {
+public class BackMenuButton extends Button implements ClickHandler {
 
 	/**
-	 * Construct the {@link ToolSelectButton}.
+	 * Construct a new button that can be used to go up one level in the menu
+	 * structure.
 	 */
-	public ToolSelectButton() {
-		super(FingerpaintConstants.INSTANCE.btnSelectTool());
+	public BackMenuButton() {
+		super(FingerpaintConstants.INSTANCE.btnBack());
 		addClickHandler(this);
-		ensureDebugId("toolSelectButton");
+		ensureDebugId("backMenuButton");
 	}
 
 	/**
-	 * Shows the popup in which to select the drawing tool.
-	 * @param event The event that has fired.
+	 * Go up one level in the menu.
+	 * 
+	 * @param event
+	 *            The event that has fired.
 	 */
 	@Override
 	public void onClick(ClickEvent event) {
-		MenuLevelSwitcher.showSub1MenuToolSelector();
+		MenuLevelSwitcher.goBack();
 	}
+
 }

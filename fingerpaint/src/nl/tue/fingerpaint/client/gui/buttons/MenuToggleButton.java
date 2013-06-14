@@ -12,7 +12,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.FlowPanel;
 
 /**
  * <p>This button is used to show and hide the menu panel in the application.</p>
@@ -34,7 +34,7 @@ public class MenuToggleButton extends Button implements ClickHandler {
 	/** Indicate if the menu is shown or not. */
 	protected boolean shown = true;
 	/** The MenuPanel that is shown/hidden. */
-	protected SimplePanel menuPanel;
+	protected FlowPanel menuPanel;
 	/** Animation to hide menu panel. */
 	protected SizeAnimation menuAnimation;
 	/** Animation to rotate the button. */
@@ -45,7 +45,7 @@ public class MenuToggleButton extends Button implements ClickHandler {
 	 * 
 	 * @param menuPanelWrapper The element to be animated.
 	 */
-	public MenuToggleButton(SimplePanel menuPanelWrapper) {
+	public MenuToggleButton(FlowPanel menuPanelWrapper) {
 		super();
 		
 		// Set ID and load image element in button
