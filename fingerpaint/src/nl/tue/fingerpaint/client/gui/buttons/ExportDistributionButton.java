@@ -39,7 +39,6 @@ public class ExportDistributionButton  extends Button implements ClickHandler {
 	 */
 	@Override
 	public void onClick(ClickEvent event) {
-		String svg = as.getGeometry().getCanvasImage();
-		FileExporter.exportSvgImage(svg);	
+		FileExporter.exportCanvasImage(as.getGeometry().getCanvas());	
 	}
 }

@@ -1,5 +1,8 @@
 package nl.tue.fingerpaint.client.storage;
 
+import com.google.gwt.canvas.client.Canvas;
+import com.google.gwt.dom.client.CanvasElement;
+
 /**
  * Utility class that can be used to export files.
  * 
@@ -25,6 +28,15 @@ public class FileExporter {
 	}
 	
 	/**
+	 * Exports the canvas to a png image
+	 * 
+	 * @param svg SVG image as a string.
+	 */
+	public static void exportCanvasImage(Canvas canvas) {
+		promptCanvasDownload(canvas.getCanvasElement());
+	}
+	
+	/**
 	 * Saves a string representing an svg file to disk by showing a file download dialog.
 	 * @param svg File to save, in string representation.
 	 */
@@ -32,4 +44,14 @@ public class FileExporter {
 		var blob = new $wnd.Blob([svg], {type: "image/svg+xml;charset=utf-8"});
 		$wnd.saveAs(blob, "graph.svg");
 	}-*/;
+	
+	private static native void promptCanvasDownload(CanvasElement element) /*-{
+		element.toBlob(function(blob) {
+			$wnd.saveAs(
+				blob
+				, "distribution.png"
+			);
+		}, "image/png");
+	}-*/;
+	
 }

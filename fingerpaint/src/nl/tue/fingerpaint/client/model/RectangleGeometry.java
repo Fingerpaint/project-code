@@ -6,6 +6,7 @@ import nl.tue.fingerpaint.shared.model.RectangleMixingStep;
 import com.google.gwt.canvas.dom.client.CanvasPixelArray;
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.canvas.dom.client.ImageData;
+import com.google.gwt.dom.client.CanvasElement;
 
 /**
  * Class that represents the rectangular geometry. Keeps the internal
@@ -449,7 +450,7 @@ public class RectangleGeometry extends Geometry {
 	 * @return The string representation of the .svg image of the canvas
 	 */
 	@Override
-	public String getCanvasImage() {
+	public String getSvgCanvasImage() {
 		int[] dist = getDistribution();
 		int width = getBaseWidth();
 		int height = getBaseHeight();

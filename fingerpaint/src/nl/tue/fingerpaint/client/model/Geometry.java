@@ -796,7 +796,7 @@ public abstract class Geometry {
 	 * 
 	 * @return The string representation of the .svg image of the canvas
 	 */
-	abstract public String getCanvasImage();
+	abstract public String getSvgCanvasImage();
 
 	/**
 	 * Resets the current distribution to all white
