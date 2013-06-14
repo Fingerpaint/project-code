@@ -237,6 +237,7 @@ cleacdr
 .dp-spinner-downbutton {
 	margin-top: 1px;
 	margin-bottom: 0px;
+	padding-bottom: 10px;
 }
 
 .dp-spinner-horizontalpanel {
