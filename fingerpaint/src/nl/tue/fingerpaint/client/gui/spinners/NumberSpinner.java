@@ -136,14 +136,14 @@ public class NumberSpinner extends Composite implements ChangeHandler, KeyUpHand
 		}
 		this.RATE = rate;
 		this.hasLimits = limits;
-		
+
 		numberBox = new DoubleBox();
 		numberBox.setValue(defaultValue);
 		
 		numberBox.addChangeHandler(this);
 		numberBox.addKeyUpHandler(this);
 
-		Button upButton = new Button("+");//backup old value: ("▲")		
+		Button upButton = new Button("+");// backup old value: ("▲")
 		upButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				if (!hasLimits || getValue() <= MAX - RATE) {
@@ -153,7 +153,7 @@ public class NumberSpinner extends Composite implements ChangeHandler, KeyUpHand
 		});
 		upButton.setStyleName("dp-spinner-upbutton");
 
-		Button downButton = new Button("-");//backup old value: ("‭▼")
+		Button downButton = new Button("-");// backup old value: ("‭▼")
 		downButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				if (!hasLimits || getValue() >= MIN + RATE) {
@@ -161,7 +161,7 @@ public class NumberSpinner extends Composite implements ChangeHandler, KeyUpHand
 				}
 			}
 		});
-		
+
 		numberBox.setStyleName("spinnerNumberBox");
 
 		downButton.setStyleName("dp-spinner-downbutton");
@@ -170,7 +170,7 @@ public class NumberSpinner extends Composite implements ChangeHandler, KeyUpHand
 		horPanel.add(downButton);
 		horPanel.add(numberBox);
 		horPanel.add(upButton);
-		
+
 		initWidget(horPanel);
 	}
 
@@ -196,7 +196,8 @@ public class NumberSpinner extends Composite implements ChangeHandler, KeyUpHand
 	}
 
 	/**
-	 * Sets the value to the control and possibly performs rounding of the given         .
+	 * Sets the value to the control and possibly performs rounding of the given
+	 * .
 	 * 
 	 * @param d
 	 *            Value to be set
@@ -236,6 +237,7 @@ public class NumberSpinner extends Composite implements ChangeHandler, KeyUpHand
 
 	/**
 	 * Returns the given value to a valid value for this spinner.
+	 * @return Value of this spinner, rounded to the nearest valid value.
 	 */
 	private double getRoundedValue() {
 		double result = getValue();

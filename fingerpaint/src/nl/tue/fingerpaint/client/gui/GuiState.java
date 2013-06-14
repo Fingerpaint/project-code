@@ -17,6 +17,7 @@ import nl.tue.fingerpaint.client.gui.buttons.ExportMultipleGraphsButton;
 import nl.tue.fingerpaint.client.gui.buttons.ExportSingleGraphButton;
 import nl.tue.fingerpaint.client.gui.buttons.LoadInitDistButton;
 import nl.tue.fingerpaint.client.gui.buttons.LoadProtocolButton;
+import nl.tue.fingerpaint.client.gui.buttons.LoadResultsButton;
 import nl.tue.fingerpaint.client.gui.buttons.MenuToggleButton;
 import nl.tue.fingerpaint.client.gui.buttons.MixNowButton;
 import nl.tue.fingerpaint.client.gui.buttons.NewCompareButton;
@@ -38,6 +39,7 @@ import nl.tue.fingerpaint.client.gui.buttons.ViewSingleGraphButton;
 import nl.tue.fingerpaint.client.gui.celllists.CompareSelectPopupCellList;
 import nl.tue.fingerpaint.client.gui.celllists.LoadInitDistCellList;
 import nl.tue.fingerpaint.client.gui.celllists.LoadProtocolCellList;
+import nl.tue.fingerpaint.client.gui.celllists.LoadResultsCellList;
 import nl.tue.fingerpaint.client.gui.flextables.InitDistFlexTable;
 import nl.tue.fingerpaint.client.gui.flextables.ProtocolFlexTable;
 import nl.tue.fingerpaint.client.gui.flextables.ResultsFlexTable;
@@ -91,6 +93,12 @@ public class GuiState {
 	 * a NotificationPanel.
 	 */
 	public static final int DEFAULT_TIMEOUT = 2000;
+
+	/**
+	 * Timeout for the somewhat longer message that appears when a geometry
+	 * is unsupported.
+	 */
+	public static final int UNSUPPORTED_GEOM_TIMEOUT = 5000;
 
 	// --- LOADING APPLICATION WIDGETS ----------------------------------------
 	/**
@@ -173,6 +181,13 @@ public class GuiState {
 	/** Button to save the current mixing result. */
 	public static SaveResultsButton saveResultsButton;
 
+	// -- LOAD MIXING RESULTS WIDGETS -----------------------------------------
+	/** Button to load a previously saved mixing result */
+	public static LoadResultsButton loadResultsButton = new LoadResultsButton();
+	
+	/** CellList to list the to be loaded results */
+	public static LoadResultsCellList LoadResultsCellList;
+	
 	// --- REMOVE RESULTS WIDGETS ---------------------------------------------
 	/** Pop-up panel to handle the removal of results. */
 	public static RemoveResultsPopupPanel removeResultsPanel = new RemoveResultsPopupPanel();
@@ -477,6 +492,7 @@ public class GuiState {
 		viewSingleGraphGraphPanel.getElement().setId(
 				"viewSingleGraphGraphPanel");
 
+		compareSelectPopupPanel.setModal(true);
 		compareSelectPopupPanel.ensureDebugId("compareSelectPopupPanel");
 		comparePopupPanel.ensureDebugId("comparePopupPanel");
 		compareGraphPanel.getElement().setId("compareGraphPanel");

@@ -8,6 +8,7 @@ import nl.tue.fingerpaint.client.gui.GuiState;
 import nl.tue.fingerpaint.client.gui.panels.NotificationPopupPanel;
 import nl.tue.fingerpaint.client.gui.spinners.NrStepsSpinner;
 import nl.tue.fingerpaint.client.model.ApplicationState;
+import nl.tue.fingerpaint.client.resources.FingerpaintCellBrowserResources;
 import nl.tue.fingerpaint.client.resources.FingerpaintConstants;
 import nl.tue.fingerpaint.client.resources.FingerpaintResources;
 import nl.tue.fingerpaint.client.serverdata.ServerDataCache;
@@ -177,8 +178,10 @@ public class Fingerpaint implements EntryPoint {
 		 * Create the browser using the model. We specify the default value of
 		 * the hidden root node as "null".
 		 */
-		CellBrowser tree = (new CellBrowser.Builder<Object>(model, null))
-				.build();
+		CellBrowser.Builder<Object> treeBuilder = new CellBrowser.Builder<Object>(model, null);
+		treeBuilder.resources((CellBrowser.Resources) GWT.create(FingerpaintCellBrowserResources.class));
+		CellBrowser tree = treeBuilder.build();
+		
 		tree.getElement().setId("cell");
 
 		// Add the tree to the root layout panel.
@@ -284,22 +287,29 @@ public class Fingerpaint implements EntryPoint {
 	 * @param canOverwrite
 	 *            If we can overwrite an already-existing "file" with the given
 	 *            name or not.
-	 * @return {@code true} if "file" was saved, {@code false} otherwise
+ 	 * @return <ul>
+	 *            <li>{@code SAVE_SUCCESSFUL} If saving was successful.</li>
+	 *            <li>{@code NOT_INITIALISED_ERROR} If the local storage is not initialised.</li>
+	 *            <li>{@code NAME_IN_USE_ERROR} If the name is already in use.</li>
+	 *            <li>{@code QUOTA_EXCEEDED_ERROR} If the local storage is full.</li>
+	 *            <li>{@code NONEXISTANT_KEY_ERROR} If the key does not exist.</li>
+	 *            <li>{@code UNKNOWN_ERROR} If an error occurs, other than those above.</li>
+	 *         </ul> 
 	 */
-	public boolean save(String name, boolean canOverwrite) {
+	public int save(String name, boolean canOverwrite) {
 		if (lastSaveButtonClicked.equals(StorageManager.KEY_INITDIST)) {
 			return StorageManager.INSTANCE.putDistribution(
-					GeometryNames.getShortName(as.getGeometryChoice()), name,
+					as.getGeometryChoice(), name,
 					as.getGeometry().getDistribution(), canOverwrite);
 		} else if (lastSaveButtonClicked.equals(StorageManager.KEY_PROTOCOLS)) {
 			return StorageManager.INSTANCE.putProtocol(
-					GeometryNames.getShortName(as.getGeometryChoice()), name,
+					as.getGeometryChoice(), name,
 					as.getProtocol(), canOverwrite);
 		} else if (lastSaveButtonClicked.equals(StorageManager.KEY_RESULTS)) {
 			ResultStorage result = new ResultStorage();
 			result.setGeometry(as.getGeometryChoice());
 			result.setMixer(as.getMixerChoice());
-			result.setDistribution(as.getInitialDistribution());
+			result.setDistribution(as.getGeometry().getDistribution());
 			result.setMixingProtocol(as.getProtocol());
 			result.setSegregation(as.getSegregation());
 			result.setNrSteps(as.getNrSteps());
@@ -309,10 +319,10 @@ public class Fingerpaint implements EntryPoint {
 						canOverwrite);
 			} catch (Exception e) {
 				GWT.log("Saving results encountered an error", e);
-				return false;
+				return StorageManager.UNKNOWN_ERROR;
 			}
 		}
-		return false;
+		return StorageManager.UNKNOWN_ERROR;
 	}
 
 	/**
@@ -475,7 +485,7 @@ public class Fingerpaint implements EntryPoint {
 					setLoadingPanelVisible(false);
 					new NotificationPopupPanel(FingerpaintConstants.INSTANCE
 							.geometryUnsupported())
-					        .show(GuiState.DEFAULT_TIMEOUT);
+					        .show(GuiState.UNSUPPORTED_GEOM_TIMEOUT);
 				}
 			} 
 			

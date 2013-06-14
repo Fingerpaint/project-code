@@ -34,7 +34,7 @@ public class CloseCompareButton extends Button implements ClickHandler {
 	 *            this button is clicked.
 	 */
 	public CloseCompareButton(final MultiSelectionModel<String> selectionModel) {
-		super(FingerpaintConstants.INSTANCE.btnCancel());
+		super(FingerpaintConstants.INSTANCE.btnClose());
 		this.selectionModel = selectionModel;
 		addClickHandler(this);
 		ensureDebugId("closeCompareButton");

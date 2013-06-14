@@ -27,7 +27,7 @@ public class ServerDataServiceImpl extends RemoteServiceServlet implements
 	@Override
 	public ServerDataResult getServerData() {
 		return new ServerDataResult(
-				new String[] { GeometryNames.RECT_LONG, GeometryNames.SQR_LONG },
+				new String[] { GeometryNames.RECT, GeometryNames.SQR },
 				new String[] { "Default", "Default" },
 				new int[] { 0, 1 }
 			);

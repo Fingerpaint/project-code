@@ -64,9 +64,10 @@ public class ComparePerformanceButton extends Button implements ClickHandler {
 
 		// Push the data into the widget.
 		GuiState.compareSelectPopupCellList.setRowData(0, resultNames);
-
+		
 		//reconstruct the selection popup
 		setupSelectionPopup(GuiState.compareSelectPopupCellList);
+
 		
 		GuiState.compareSelectPopupPanel
 		.setPopupPositionAndShow(new PopupPanel.PositionCallback() {

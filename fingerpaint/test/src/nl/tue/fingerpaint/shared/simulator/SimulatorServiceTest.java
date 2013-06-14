@@ -27,7 +27,7 @@ public class SimulatorServiceTest extends GWTTestCase {
 	private MixingProtocol protocol;
 	private Simulation simulation;
 	private String mixer;
-	private String geom = GeometryNames.RECT_LONG;
+	private String geom = GeometryNames.RECT;
 	private int nrSteps;
 	final int size = 96000;
 	private boolean allSteps;

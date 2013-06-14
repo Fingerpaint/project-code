@@ -132,7 +132,7 @@ protected RectangleGeometry geom;
 	 * tests if geometry correctly sets topWall and clockwise for its mixing steps
 	 * 
 	 * @param topWall true if a top wall mixing step should be tested, false for a bottom wall step
-	 * @param Clockwise true if the mixing movement should be clockwise, false otherwise
+	 * @param clockwise true if the mixing movement should be clockwise, false otherwise
 	 */
 	protected void testStep(boolean topWall, boolean clockwise){
 		initialise();
