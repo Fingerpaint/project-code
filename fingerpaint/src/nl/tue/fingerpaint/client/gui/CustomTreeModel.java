@@ -27,6 +27,7 @@ import nl.tue.fingerpaint.client.gui.buttons.ToggleDefineProtocol;
 import nl.tue.fingerpaint.client.gui.buttons.ViewSingleGraphButton;
 import nl.tue.fingerpaint.client.gui.celllists.LoadInitDistCellList;
 import nl.tue.fingerpaint.client.gui.celllists.LoadProtocolCellList;
+import nl.tue.fingerpaint.client.gui.celllists.LoadResultsCellList;
 import nl.tue.fingerpaint.client.gui.spinners.CursorSizeSpinner;
 import nl.tue.fingerpaint.client.gui.spinners.NrStepsSpinner;
 import nl.tue.fingerpaint.client.gui.spinners.StepSizeSpinner;
@@ -233,6 +234,10 @@ public class CustomTreeModel implements TreeViewModel {
 		GuiState.overwriteSaveVerticalPanel.add(GuiState.overwriteButtonsPanel);
 		GuiState.overwriteButtonsPanel.add(GuiState.closeSaveButton);
 
+		//Initialise the LoadResultsCellList and add the loadResultsButton
+		GuiState.menuPanel.add(GuiState.loadResultsButton);
+		GuiState.LoadResultsCellList = new LoadResultsCellList(fp, as);
+		
 		// Initialise the removeSavedResultsButton and add it to the
 		// menuPanel
 		GuiState.removeResultsPanel.add(GuiState.removeResultsVerticalPanel);

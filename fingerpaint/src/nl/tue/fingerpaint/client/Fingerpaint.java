@@ -306,7 +306,7 @@ public class Fingerpaint implements EntryPoint {
 			ResultStorage result = new ResultStorage();
 			result.setGeometry(as.getGeometryChoice());
 			result.setMixer(as.getMixerChoice());
-			result.setDistribution(as.getInitialDistribution());
+			result.setDistribution(as.getGeometry().getDistribution());
 			result.setMixingProtocol(as.getProtocol());
 			result.setSegregation(as.getSegregation());
 			result.setNrSteps(as.getNrSteps());
