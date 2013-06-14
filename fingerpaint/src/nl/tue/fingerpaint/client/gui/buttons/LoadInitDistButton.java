@@ -47,6 +47,8 @@ public class LoadInitDistButton extends Button implements ClickHandler {
 	 */
 	@Override
 	public void onClick(ClickEvent event) {
+		
+		GuiState.loadVerticalPanel.clear();
 		// Get all initial distributions for current geometry
 		List<String> geometryDistributions = StorageManager.INSTANCE
 				.getDistributions(GeometryNames.getShortName(as
@@ -54,7 +56,6 @@ public class LoadInitDistButton extends Button implements ClickHandler {
 		GuiState.loadInitDistCellList.fillCellList(geometryDistributions);
 
 		GuiState.loadVerticalPanel.addList(GuiState.loadInitDistCellList);
-		GuiState.loadVerticalPanel.remove(GuiState.loadProtocolCellList);
 		GuiState.loadVerticalPanel.add(GuiState.closeLoadButton);
 		GuiState.loadPanel.center();
 	}

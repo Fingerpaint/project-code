@@ -45,12 +45,14 @@ public class LoadProtocolButton extends Button implements ClickHandler {
 	 */
 	@Override
 	public void onClick(ClickEvent event) {
+		
+		GuiState.loadVerticalPanel.clear();
+		
 		List<String> geometryProtocols = StorageManager.INSTANCE
 				.getProtocols(GeometryNames.getShortName(as.getGeometryChoice()));
 		GuiState.loadProtocolCellList.fillCellList(geometryProtocols);
 
 		GuiState.loadVerticalPanel.addList(GuiState.loadProtocolCellList);
-		GuiState.loadVerticalPanel.remove(GuiState.loadInitDistCellList);
 		GuiState.loadVerticalPanel.add(GuiState.closeLoadButton);
 		GuiState.loadPanel.center();
 	}

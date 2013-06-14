@@ -134,7 +134,7 @@ public interface FingerpaintConstants extends Constants {
 	/**
 	 * @return Localised string that contains the text for a cancel button.
 	 */
-	@DefaultStringValue("Close")
+	@DefaultStringValue("Cancel")
 	public String btnCancel();
 
 	/**
@@ -190,6 +190,13 @@ public interface FingerpaintConstants extends Constants {
 	 */
 	@DefaultStringValue("Save Results")
 	public String btnSaveResults();
+	
+	/**
+	 * @return Localised string that contains the text for the
+	 *         {@link GuiState#loadResultsButton} button.
+	 */
+	@DefaultStringValue("Load Results")
+	public String btnLoadResults();
 
 	/**
 	 * @return Localised string that contains the text for the
