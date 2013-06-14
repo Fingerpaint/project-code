@@ -75,6 +75,21 @@ public class MenuLevelSwitcher {
 	}
 	
 	/**
+	 * Switch to the level 1 menu in which a user can save, load and remove
+	 * results.
+	 */
+	public static void showSub1MenuResults() {
+		GuiState.subLevel1MenuPanel.clear();
+		GuiState.subLevel1MenuPanel.add(GuiState.saveResultsButton);
+		GuiState.subLevel1MenuPanel.add(GuiState.loadResultsButton);
+		GuiState.subLevel1MenuPanel.add(GuiState.removeSavedResultsButton);	
+		GuiState.subLevel1MenuPanel.add(GuiState.backMenu1Button);
+		
+		level = 1;
+		go(level);
+	}
+	
+	/**
 	 * Switch to the level 1 menu in which a user can change the drawing tool.
 	 */
 	public static void showSub1MenuToolSelector() {
