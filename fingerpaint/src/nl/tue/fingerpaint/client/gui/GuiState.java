@@ -46,6 +46,7 @@ import nl.tue.fingerpaint.client.gui.panels.LoadPopupPanel;
 import nl.tue.fingerpaint.client.gui.panels.LoadVerticalPanel;
 import nl.tue.fingerpaint.client.gui.panels.ProtocolPanelContainer;
 import nl.tue.fingerpaint.client.gui.panels.RemoveResultsPopupPanel;
+import nl.tue.fingerpaint.client.gui.panels.RemoveResultsVerticalPanel;
 import nl.tue.fingerpaint.client.gui.panels.SaveItemPopupPanel;
 import nl.tue.fingerpaint.client.gui.panels.ViewSingleGraphPopupPanel;
 import nl.tue.fingerpaint.client.gui.spinners.CursorSizeSpinner;
@@ -176,7 +177,7 @@ public class GuiState {
 	public static RemoveResultsPopupPanel removeResultsPanel = new RemoveResultsPopupPanel();
 
 	/** Vertical panel to hold the flextable and close button. */
-	public static VerticalPanel removeResultsVerticalPanel = new VerticalPanel();
+	public static RemoveResultsVerticalPanel removeResultsVerticalPanel = new RemoveResultsVerticalPanel();
 
 	/** Flextable to hold all the result entries. */
 	public static ResultsFlexTable resultsFlexTable = new ResultsFlexTable();
