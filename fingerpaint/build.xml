@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project name="Fingerpaint" basedir="." default="war">
+<project name="Fingerpaint" basedir="." default="jar">
  
 	<property name="package.prefix" value="nl.tue.fingerpaint" />
 	<property name="package.dir.prefix" value="nl/tue/fingerpaint" />
@@ -7,7 +7,8 @@
     <property name="src.dir" value="src" />
     <property name="build.dir" value="build" />
     <property name="lib.dir" value="lib" />
-	<property name="server.lib.dir" value="lib/server" />
+	<property name="server.lib.dir" value="${lib.dir}/server" />
+	<property name="client.lib.dir" value="${lib.dir}/client" />
 	<property name="gwt.lib.dir" value="lib/gwt" />
     
     <path id="server.classpath">       
@@ -30,38 +31,71 @@
 	    </fileset>
 	</path>
     
-    <target name="prepare">
+    <target name="prepare" description="prepare the build dir">
         <mkdir dir="${build.dir}"/>
-    	<mkdir dir="war/WEB-INF/classes" />
+    	<mkdir dir="${build.dir}/war/WEB-INF/classes" />
+    	<mkdir dir="${build.dir}/war/WEB-INF/lib" />
+    	<mkdir dir="${build.dir}/native" />
     </target>
    
-    <target name="clean">
+    <target name="clean" description="remove the build dir">
         <delete dir="${build.dir}" />
     </target>
 	
-	<target name="server-compile" depends="prepare">       
-	    <javac srcdir="${src.dir}" destdir="war/WEB-INF/classes" includeantruntime="false">
+	<target name="native" depends="prepare" unless="no.native">
+	    <exec executable="make" dir=".">
+	    	<arg value="all" />
+	    </exec>
+	</target>
+	
+	<target name="server-compile" depends="native" 
+		description="compile the server side">       
+	    <javac srcdir="${src.dir}" destdir="${build.dir}/war/WEB-INF/classes" includeantruntime="false">
 	    	<include name="${package.dir.prefix}/server/**" />
 	    	<include name="${package.dir.prefix}/shared/**" />
 	        <classpath refid="server.classpath" />
 	    </javac>
+		<copy todir="${build.dir}/war/WEB-INF/lib">
+		    <fileset dir="${server.lib.dir}"/>
+		</copy>
+		<copy todir="${build.dir}/war/WEB-INF/">
+		    <fileset dir="${src.dir}/${package.dir.prefix}/private"/>
+		</copy>
 	</target>
 
-    <target name="gwt-compile" depends="server-compile">
+    <target name="gwt-compile" depends="server-compile" 
+    	description="compile the client side">
+    	<condition property="gwt.args" value="">
+    	   <not>  
+    	      <isset property="gwt.args"/>
+    	   </not>
+    	</condition>
         <java failonerror="true" fork="true" classname="com.google.gwt.dev.Compiler">
             <classpath>
-                <!--<pathelement location="${build.dir}" />-->
                 <path refid="gwt.classpath" />
             </classpath>
             <jvmarg value="-Xmx256M"/>
-            <arg value="${package.prefix}.${gwt.module.name}" />
-        	<arg value="-strict" />
+        	<arg line="-strict" />
+        	<arg line="-war" />
+        	<arg value="${build.dir}/war" />
+        	<arg line="-deploy" />
+        	<arg value="${build.dir}/deploy" />
+        	<arg line="-extra" />
+        	<arg value="${build.dir}/extra" />
+        	<arg line="-optimize" />
+        	<arg value="9" />
+        	<arg line="${gwt.args}" />
+        	<arg value="${package.prefix}.${gwt.module.name}" />
          </java>
+        <copy todir="${build.dir}/war/${gwt.module.name}">
+            <fileset dir="${client.lib.dir}"/>
+        </copy>
      </target>
 
-    <target name="war" depends="gwt-compile">
-        <war basedir="war" destfile="${build.dir}/jetty-container/${gwt.module.name}.war" 
-        	webxml="war/WEB-INF/web.xml">
+    <target name="war" depends="gwt-compile"
+    	description="create a deployable war file">
+        <war basedir="${build.dir}/war" destfile="${build.dir}/jetty-container/${gwt.module.name}.war" 
+        	webxml="${build.dir}/war/WEB-INF/web.xml">
         </war>
     </target>
 	
@@ -69,9 +103,37 @@
 		description="Create one executable jarfile.">
 		<ant antfile="../jetty-container/build.xml" inheritall="false" 
 			useNativeBasedir="true" target="jar">
-			<property name="war.dir" location="war" />
+			<property name="war.dir" location="${build.dir}/war" />
 			<property name="jar.dir" location="." />
 			<property name="jar.name" value="${gwt.module.name}.jar" />
 		</ant>
+	</target>
+	
+	<target name="deploy" depends="jar">
+	    <java jar="${gwt.module.name}.jar" fork="true"/>
+	</target>
+	
+	<target name="test">
+		<mkdir dir="reports/htmlunit.prod" />
+		<junit fork="yes" printsummary="yes" haltonfailure="yes">
+    		<jvmarg line="-Xmx256m" />
+    		<sysproperty key="gwt.args" value="-prod -standardsMode -logLevel WARN -standardsMode -out www-test" />
+    		<sysproperty key="java.awt.headless" value="true" />
+    		<classpath>
+    		    <pathelement location="src" />
+    		    <pathelement location="test" />
+    		    <path refid="project.class.path" />
+    		    <pathelement location="C:/Users/Lasse Blaauwbroek/Documents/SEP Fingerpaint Project/GWT-compile-test/gwt-2.5.1/validation-api-1.0.0.GA.jar" />
+    		    <pathelement location="C:/Users/Lasse Blaauwbroek/Documents/SEP Fingerpaint Project/GWT-compile-test/gwt-2.5.1/validation-api-1.0.0.GA-sources.jar" />
+    		    <pathelement location="path_to_the_junit_jar" />
+    		</classpath>
+    		<batchtest todir="reports/htmlunit.prod" >
+    		    <fileset dir="test" >
+    		        <include name="**/*Test.java" />
+    		    </fileset>
+    		</batchtest>
+    		<formatter type="plain" />
+    		<formatter type="xml" />
+		</junit>
 	</target>
 </project>

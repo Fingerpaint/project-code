@@ -50,18 +50,25 @@
 	<!-- Specify the paths for translatable code -->
 	<source path='client' />
 	<source path='shared' />
+	
+	<!-- Specify the paths of the public folders -->
+	<public path="public" />
 
 	<!-- Supported languages (apart from English, which is the default language) -->
 	<!-- <extend-property name="locale" values="nl"/> -->
 
 	<!-- Javascript Library to zip -->
-	<script src="jszip.js"></script>
-	<script src="jszip-deflate.js"></script>
-	<script src="jszip-inflate.js"></script>
-	<script src="jszip-load.js"></script>
+	<script src="jszip.js" />
+	<script src="jszip-deflate.js" />
+	<script src="jszip-inflate.js" />
+	<script src="jszip-load.js" />
 	
 	<!-- Javascript library to handle touch/click events -->
-	<script src="hammer.js"></script>
+	<script src="hammer.js" />
+	
+	<!-- Javascript library to save files -->
+	<script src="FileSaver.js" />
+	<script src="Blob.js" />
 
 	<!-- Path to the Simulator Service -->
 	<servlet path="/simulatorService" class="nl.tue.fingerpaint.server.simulator.SimulatorServiceImpl"/>

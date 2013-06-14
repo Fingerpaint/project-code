@@ -1,5 +1,6 @@
 #include "nl_tue_fingerpaint_server_simulator_NativeCommunicator.h"
 #include <string.h>
+#include <unistd.h>
 
 extern void __subs_m_MOD_simulate(const char *geometry, size_t *len_geometry,
 								  const char *mixer, size_t *len_mixer,
@@ -15,7 +16,12 @@ extern void __subs_m_MOD_simulate(const char *geometry, size_t *len_geometry,
  */
 JNIEXPORT jdouble JNICALL Java_nl_tue_fingerpaint_server_simulator_NativeCommunicator_simulate
   (JNIEnv *env, jobject this, jstring geometry, jstring mixer,
-		  jdoubleArray distribution, jdouble step_size, jstring step_name) {
+		  jdoubleArray distribution, jdouble step_size, jstring step_name,
+		  jstring dir) {
+
+	const char *dir_chars = (*env)->GetStringUTFChars(env, dir, 0);
+	chdir(dir_chars);
+
 	const char *geometry_chars = (*env)->GetStringUTFChars(env, geometry, 0);
 	size_t geometry_chars_size = strlen(geometry_chars);
 
@@ -42,6 +48,7 @@ JNIEXPORT jdouble JNICALL Java_nl_tue_fingerpaint_server_simulator_NativeCommuni
     (*env)->ReleaseStringUTFChars(env, geometry, geometry_chars);
     (*env)->ReleaseStringUTFChars(env, mixer, mixer_chars);
 	(*env)->ReleaseStringUTFChars(env, step_name, step_name_chars);
+	(*env)->ReleaseStringUTFChars(env, dir, dir_chars);
 
 	return segregation;
 }

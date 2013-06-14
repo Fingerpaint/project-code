@@ -13,7 +13,7 @@ extern "C" {
  * Signature: (Ljava/lang/String;Ljava/lang/String;[DDLjava/lang/String;)D
  */
 JNIEXPORT jdouble JNICALL Java_nl_tue_fingerpaint_server_simulator_NativeCommunicator_simulate
-  (JNIEnv *, jobject, jstring, jstring, jdoubleArray, jdouble, jstring);
+  (JNIEnv *, jobject, jstring, jstring, jdoubleArray, jdouble, jstring, jstring);
 
 #ifdef __cplusplus
 }

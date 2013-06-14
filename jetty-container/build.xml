@@ -28,10 +28,10 @@
 	
     
     <target name="jar" depends="compile" description="Create jarfile.">
-    	
         <fail message="Property war.dir needs to be set to a valid directory">
             <condition>
                 <not>
+                	
                     <available file="${war.dir}" type="dir" />
                 </not>
     		</condition>
