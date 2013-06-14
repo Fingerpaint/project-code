@@ -9,22 +9,6 @@
 /* background-color:#84D200; /* light-green */
 /* background-color:#FFDD00; /* yellow */
 /* background-color:#D6007B; /* pink */
-/* -- DEFINES -- */
-@def TOGGLE_COLOUR_BUTTON_Z 10;
-@def TOGGLE_COLOUR_BUTTON_Z_BG 11;
-@def TOGGLE_COLOUR_BUTTON_Z_FG 12;
-@def POPUP_PANEL_Z 20;
-@def LOADING_OVERLAY_Z 90;
-@def LOADING_OVERLAY_CONTENT_Z 91;
-@def MENU_WIDTH 240px;
-
- /* -- MORE CONSTANTS -- */
-@eval BLACK nl.tue.fingerpaint.shared.utils.Colour.BLACK.toHexString();
-@eval MAIN_LIGHT nl.tue.fingerpaint.shared.utils.Colour.TUE_LIGHT_BLUE.toHexString();
-@eval MAIN nl.tue.fingerpaint.shared.utils.Colour.TUE_BLUE.toHexString();
-@eval MAIN_DARK nl.tue.fingerpaint.shared.utils.Colour.TUE_DARK_BLUE.toHexString();
-@eval WHITE nl.tue.fingerpaint.shared.utils.Colour.WHITE.toHexString();
-@eval LIGHT_GRAY nl.tue.fingerpaint.shared.utils.Colour.LIGHT_GRAY.toHexString();
 
 * {
 	outline: none;
@@ -95,16 +79,6 @@ body {
 #protPanel {
 	border: 0px;
 	width: MENU_WIDTH;
-}
-
-.cellListStyleWhite {
-	padding: 10px;
-	background : WHITE;
-}
-
-.cellListStyleGray {
-	padding: 10px;
-	background-color: LIGHT_GRAY;
 }
 
 /* remove list header row */
@@ -195,7 +169,7 @@ body {
 	border: 0; /* disable some weird Google styling */
 }
 
-.gwt-Button:active,.gwt-ToggleButton:active,.gwt-ToggleButton-down:active,.dp-spinner-upbutton:active,.dp-spinner-downbutton:active {
+.gwt-Button:active,.gwt-ToggleButton-down, .gwt-ToggleButton:active,.gwt-ToggleButton-down:active,.dp-spinner-upbutton:active,.dp-spinner-downbutton:active {
 	background: -webkit-linear-gradient(bottom, MAIN_LIGHT, MAIN);
 	background: linear-gradient(to top, MAIN_LIGHT, MAIN);
 	border: 0; /* disable some weird Google styling */

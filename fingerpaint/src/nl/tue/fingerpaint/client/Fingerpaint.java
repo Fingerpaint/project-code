@@ -7,6 +7,7 @@ import nl.tue.fingerpaint.client.gui.GraphVisualisator;
 import nl.tue.fingerpaint.client.gui.GuiState;
 import nl.tue.fingerpaint.client.gui.spinners.NrStepsSpinner;
 import nl.tue.fingerpaint.client.model.ApplicationState;
+import nl.tue.fingerpaint.client.resources.FingerpaintCellBrowserResources;
 import nl.tue.fingerpaint.client.resources.FingerpaintConstants;
 import nl.tue.fingerpaint.client.resources.FingerpaintResources;
 import nl.tue.fingerpaint.client.serverdata.ServerDataCache;
@@ -176,8 +177,10 @@ public class Fingerpaint implements EntryPoint {
 		 * Create the browser using the model. We specify the default value of
 		 * the hidden root node as "null".
 		 */
-		CellBrowser tree = (new CellBrowser.Builder<Object>(model, null))
-				.build();
+		CellBrowser.Builder<Object> treeBuilder = new CellBrowser.Builder<Object>(model, null);
+		treeBuilder.resources((CellBrowser.Resources) GWT.create(FingerpaintCellBrowserResources.class));
+		CellBrowser tree = treeBuilder.build();
+		
 		tree.getElement().setId("cell");
 
 		// Add the tree to the root layout panel.

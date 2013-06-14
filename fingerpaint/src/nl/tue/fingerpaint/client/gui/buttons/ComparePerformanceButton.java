@@ -59,12 +59,12 @@ public class ComparePerformanceButton extends Button implements ClickHandler {
 		GuiState.compareSelectPopupCellList.setRowData(0, resultNames);
 
 		// Alternate between white and light-gray background colors
-		for (int i = 0; i < resultNames.size(); i += 2) {
-			GuiState.compareSelectPopupCellList.getRowElement(i).addClassName("cellListStyleGray");
-		}
-		for (int i = 1; i < resultNames.size(); i += 2) {
-			GuiState.compareSelectPopupCellList.getRowElement(i).addClassName("cellListStyleWhite");
-		}
+//		for (int i = 0; i < resultNames.size(); i += 2) {
+//			GuiState.compareSelectPopupCellList.getRowElement(i).addClassName("cellListStyleGray");
+//		}
+//		for (int i = 1; i < resultNames.size(); i += 2) {
+//			GuiState.compareSelectPopupCellList.getRowElement(i).addClassName("cellListStyleWhite");
+//		}
 		
 		GuiState.compareSelectPopupPanel
 				.setPopupPositionAndShow(new PopupPanel.PositionCallback() {

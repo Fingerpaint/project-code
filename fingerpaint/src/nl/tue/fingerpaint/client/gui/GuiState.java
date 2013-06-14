@@ -467,6 +467,7 @@ public class GuiState {
 		viewSingleGraphGraphPanel.getElement().setId(
 				"viewSingleGraphGraphPanel");
 
+		compareSelectPopupPanel.setModal(true);
 		compareSelectPopupPanel.ensureDebugId("compareSelectPopupPanel");
 		comparePopupPanel.ensureDebugId("comparePopupPanel");
 		compareGraphPanel.getElement().setId("compareGraphPanel");
