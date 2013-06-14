@@ -40,7 +40,7 @@ public class LoadInitDistCellList extends CellList<String> {
 		super(new TextCell());
 		this.as = appState;
 		setSelectionModel();
-		setKeyboardSelectionPolicy(KeyboardSelectionPolicy.ENABLED);
+		setKeyboardSelectionPolicy(KeyboardSelectionPolicy.DISABLED);
 		setSelectionModel(selectionModel);
 		ensureDebugId("loadInitDistCellList");
 	}

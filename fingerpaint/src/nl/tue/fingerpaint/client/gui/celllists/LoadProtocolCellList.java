@@ -39,7 +39,7 @@ public class LoadProtocolCellList extends CellList<String> {
 		super(new TextCell());
 		this.as = appState;
 		setSelectionHandler();
-		setKeyboardSelectionPolicy(KeyboardSelectionPolicy.ENABLED);
+		setKeyboardSelectionPolicy(KeyboardSelectionPolicy.DISABLED);
 		setSelectionModel(selectionModel);
 		ensureDebugId("loadProtocolCellList");
 	}
