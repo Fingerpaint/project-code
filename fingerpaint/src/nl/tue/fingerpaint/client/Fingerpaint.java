@@ -2,9 +2,12 @@ package nl.tue.fingerpaint.client;
 
 import java.util.ArrayList;
 
+import javax.naming.OperationNotSupportedException;
+
 import nl.tue.fingerpaint.client.gui.CustomTreeModel;
 import nl.tue.fingerpaint.client.gui.GraphVisualisator;
 import nl.tue.fingerpaint.client.gui.GuiState;
+import nl.tue.fingerpaint.client.gui.panels.NotificationPopupPanel;
 import nl.tue.fingerpaint.client.gui.spinners.NrStepsSpinner;
 import nl.tue.fingerpaint.client.model.ApplicationState;
 import nl.tue.fingerpaint.client.resources.FingerpaintConstants;
@@ -429,46 +432,55 @@ public class Fingerpaint implements EntryPoint {
 		final Timer doEvenLaterTimer = new Timer() {
 			@Override
 			public void run() {
-				Simulation simulation = new Simulation(as.getMixerChoice(),
-						protocol, FingerpaintZipper.zip(
-								FingerpaintJsonizer.toString(as
-										.getInitialDistribution()))
-								.substring(1), nrSteps, false);
-
-				TimeoutRpcRequestBuilder timeoutRpcRequestBuilder = new TimeoutRpcRequestBuilder();
-				SimulatorServiceAsync service = GWT
-						.create(SimulatorService.class);
-				((ServiceDefTarget) service)
-						.setRpcRequestBuilder(timeoutRpcRequestBuilder);
-				AsyncCallback<SimulationResult> callback = new AsyncCallback<SimulationResult>() {
-					@Override
-					public void onSuccess(SimulationResult result) {
-						as.getGeometry().drawDistribution(
-								result.getConcentrationVectors()[result
-										.getConcentrationVectors().length - 1]);
-						as.setSegregation(result.getSegregationPoints());
-						setLoadingPanelVisible(false);
-						if (mixingRun) {
-							GuiState.saveResultsButton.setEnabled(true);
-							GuiState.viewSingleGraphButton.setEnabled(true);
+				try {
+					Simulation simulation = new Simulation(as.getGeometryChoice(),
+							as.getMixerChoice(),
+							protocol, FingerpaintZipper.zip(
+									FingerpaintJsonizer.toString(as
+											.getInitialDistribution()))
+									.substring(1), nrSteps, false);
+					
+					TimeoutRpcRequestBuilder timeoutRpcRequestBuilder = new TimeoutRpcRequestBuilder();
+					SimulatorServiceAsync service = GWT
+							.create(SimulatorService.class);
+					((ServiceDefTarget) service)
+							.setRpcRequestBuilder(timeoutRpcRequestBuilder);
+					AsyncCallback<SimulationResult> callback = new AsyncCallback<SimulationResult>() {
+						@Override
+						public void onSuccess(SimulationResult result) {
+							as.getGeometry().drawDistribution(
+									result.getConcentrationVectors()[result
+											.getConcentrationVectors().length - 1]);
+							as.setSegregation(result.getSegregationPoints());
+							setLoadingPanelVisible(false);
+							if (mixingRun) {
+								GuiState.saveResultsButton.setEnabled(true);
+								GuiState.viewSingleGraphButton.setEnabled(true);
+							}
 						}
-					}
 
-					@Override
-					public void onFailure(Throwable caught) {
-						setLoadingPanelVisible(false);
-						if (caught instanceof RequestTimeoutException) {
-							showError(FingerpaintConstants.INSTANCE
-									.simulationRequestTimeout());
-						} else {
-							showError(FingerpaintConstants.INSTANCE
-									.notReachServer());
+						@Override
+						public void onFailure(Throwable caught) {
+							setLoadingPanelVisible(false);
+							if (caught instanceof RequestTimeoutException) {
+								showError(FingerpaintConstants.INSTANCE
+										.simulationRequestTimeout());
+							} else {
+								showError(FingerpaintConstants.INSTANCE
+										.notReachServer());
+							}
 						}
-					}
-				};
-				// Call the service
-				service.simulate(simulation, callback);
-			}
+					};
+					// Call the service
+					service.simulate(simulation, callback);
+				} catch (UnsupportedOperationException e) {
+					setLoadingPanelVisible(false);
+					new NotificationPopupPanel(FingerpaintConstants.INSTANCE
+							.geometryUnsupported())
+					        .show(GuiState.DEFAULT_TIMEOUT);
+				}
+			} 
+			
 		};
 
 		Timer doLaterTimer = new Timer() {

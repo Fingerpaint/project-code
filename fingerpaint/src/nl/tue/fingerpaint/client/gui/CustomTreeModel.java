@@ -1,6 +1,8 @@
 package nl.tue.fingerpaint.client.gui;
 
 import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import nl.tue.fingerpaint.client.Fingerpaint;
 import nl.tue.fingerpaint.client.gui.buttons.CircleDrawingToolToggleButton;
@@ -32,6 +34,7 @@ import nl.tue.fingerpaint.client.model.ApplicationState;
 import nl.tue.fingerpaint.client.model.Geometry.StepAddedListener;
 import nl.tue.fingerpaint.client.model.RectangleGeometry;
 import nl.tue.fingerpaint.client.serverdata.ServerDataCache;
+import nl.tue.fingerpaint.shared.GeometryNames;
 import nl.tue.fingerpaint.shared.model.MixingProtocol;
 import nl.tue.fingerpaint.shared.model.MixingStep;
 
@@ -90,11 +93,22 @@ public class CustomTreeModel implements TreeViewModel {
 	/** Indicate which level was clicked the last. */
 	private int lastClickedLevel = -1;
 
-	private void setUserChoiceValues(String selectedMixer) {
-		// TODO: Actually create a different geometry depending on the
-		// chosen geometry...
-		as.setGeometry(new RectangleGeometry(Window.getClientHeight(),
-				Window.getClientWidth()));
+	/**
+	 * Creates the chosen geometry.
+	 */
+	private void createGeometry() {
+		if (as.getGeometryChoice().equals(GeometryNames.RECT_LONG)) {
+			as.setGeometry(new RectangleGeometry(Window.getClientHeight(),
+					Window.getClientWidth(), 240, 400));
+		} else if (as.getGeometryChoice().equals(GeometryNames.SQR_LONG)) {
+			int size = Math.min(Window.getClientHeight(), Window.getClientWidth());
+			as.setGeometry(new RectangleGeometry(size - 20,	size - 20,
+					240, 240));
+			Logger.getLogger("").log(Level.INFO, "Length of distribution array: " + as.getGeometry().getDistribution().length);
+		} else { // No valid mixer was selected
+			Logger.getLogger("").log(Level.WARNING,
+					"Invalid geometry selected");
+		}
 	}
 
 	/**
@@ -118,15 +132,19 @@ public class CustomTreeModel implements TreeViewModel {
 					public void onSelectionChange(SelectionChangeEvent event) {
 						String selected = selectionModel.getSelectedObject();
 
-						if (selected != null
-								&& lastClickedLevel == NUM_LEVELS - 1) {
-							setUserChoiceValues(selected);
+						if (selected != null) {
+							if (lastClickedLevel == NUM_LEVELS - 1) {
+								as.setMixerChoice(selected);
 
-							// "closes" Cellbrowser widget (clears whole
-							// rootpanel)
-							RootPanel.get().clear();
+								// "closes" Cellbrowser widget (clears whole
+								// rootpanel)
+								RootPanel.get().clear();
 
-							createMixingWidgets();
+								createGeometry();
+								createMixingWidgets();
+							} else if (lastClickedLevel == NUM_LEVELS - 2) {
+								as.setGeometryChoice(selected);
+							}
 						}
 					}
 				});
@@ -160,6 +178,7 @@ public class CustomTreeModel implements TreeViewModel {
 		GuiState.popupPanelPanel.add(GuiState.popupPanelMenu);
 		GuiState.popupPanelPanel.add(GuiState.cursorSizeSpinner);
 		GuiState.toolSelector.add(GuiState.popupPanelPanel);
+		GuiState.toolSelector.setModal(true);
 
 		GuiState.menuPanel.add(GuiState.toolSelectButton);
 

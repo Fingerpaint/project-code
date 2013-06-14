@@ -1,5 +1,6 @@
 package nl.tue.fingerpaint.shared.simulator;
 
+import nl.tue.fingerpaint.shared.GeometryNames;
 import nl.tue.fingerpaint.shared.model.MixingProtocol;
 import nl.tue.fingerpaint.shared.simulator.Simulation;
 import nl.tue.fingerpaint.client.storage.FingerpaintJsonizer;
@@ -16,6 +17,7 @@ import com.google.gwt.junit.client.GWTTestCase;
  */
 public class SimulationTest extends GWTTestCase {
 
+	private final String geom = GeometryNames.RECT_LONG;
 	private final String mixer = "mixer";
 	private final String prot = "T[0.25], B[6.25], -B[8.0], -T[5.5]";
 	private final int[] dist = new int[96000];
@@ -34,8 +36,8 @@ public class SimulationTest extends GWTTestCase {
 		init();
 		
 		try {
-			sim = new Simulation(null, protocol, distribution, runs, vectors);
-			fail("An exceptionj should have been thrown");
+			sim = new Simulation(geom, null, protocol, distribution, runs, vectors);
+			fail("An exception should have been thrown");
 		} catch (NullPointerException e) {
 			assertTrue("NullpointerException was thrown, as expected", true);
 		} catch (Exception e) {
@@ -44,8 +46,8 @@ public class SimulationTest extends GWTTestCase {
 		}
 
 		try {
-			sim = new Simulation(mixer, null, distribution, runs, vectors);
-			fail("An exceptionj should have been thrown");
+			sim = new Simulation(geom, mixer, null, distribution, runs, vectors);
+			fail("An exception should have been thrown");
 		} catch (NullPointerException e) {
 			assertTrue("NullpointerException was thrown, as expected", true);
 		} catch (Exception e) {
@@ -54,13 +56,22 @@ public class SimulationTest extends GWTTestCase {
 		}
 
 		try {
-			sim = new Simulation(mixer, protocol, null, runs, vectors);
-			fail("An exceptionj should have been thrown");
+			sim = new Simulation(geom, mixer, protocol, null, runs, vectors);
+			fail("An exception should have been thrown");
 		} catch (NullPointerException e) {
 			assertTrue("NullpointerException was thrown, as expected", true);
 		} catch (Exception e) {
 			fail(e.toString()
 					+ "was thrown, while a NullPointerException was expected.");
+		}
+		
+		try {
+			sim = new Simulation(GeometryNames.SQR_LONG, mixer, protocol, distribution, runs, vectors);
+			fail("An exception should have been thrown");
+		} catch (UnsupportedOperationException e) {
+		} catch (Exception e) {
+			fail(e.toString()
+					+ " was thrown, while an UnsupportedOperationException was expected");
 		}
 	}
 
@@ -132,7 +143,7 @@ public class SimulationTest extends GWTTestCase {
 		protocol = MixingProtocol.fromString(prot);
 		distribution = FingerpaintZipper.zip(FingerpaintJsonizer
 				.toString(dist));
-		sim = new Simulation(mixer, protocol, distribution, runs, vectors);
+		sim = new Simulation(geom, mixer, protocol, distribution, runs, vectors);
 	}
 
 }

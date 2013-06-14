@@ -1,5 +1,6 @@
 package nl.tue.fingerpaint.shared.simulator;
 
+import nl.tue.fingerpaint.shared.GeometryNames;
 import nl.tue.fingerpaint.shared.model.MixingProtocol;
 import nl.tue.fingerpaint.shared.model.RectangleMixingStep;
 import nl.tue.fingerpaint.shared.simulator.Simulation;
@@ -26,6 +27,7 @@ public class SimulatorServiceTest extends GWTTestCase {
 	private MixingProtocol protocol;
 	private Simulation simulation;
 	private String mixer;
+	private String geom = GeometryNames.RECT_LONG;
 	private int nrSteps;
 	final int size = 96000;
 	private boolean allSteps;
@@ -113,7 +115,7 @@ public class SimulatorServiceTest extends GWTTestCase {
 		nrSteps = 5;
 		this.allSteps = allSteps;
 
-		simulation = new Simulation(mixer, protocol,
+		simulation = new Simulation(geom, mixer, protocol,
 				FingerpaintZipper.zip(
 						FingerpaintJsonizer.toString(concentrationVector))
 						.substring(1), nrSteps, allSteps);
