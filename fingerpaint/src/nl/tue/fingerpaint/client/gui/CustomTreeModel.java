@@ -191,10 +191,10 @@ public class CustomTreeModel implements TreeViewModel {
 		GuiState.exportDistributionButton = new ExportDistributionButton(as);
 		GuiState.mainMenuPanel.add(GuiState.distributionsButton);
 
-		// Initialise the saveResultsButton and add it to the menuPanel
+		// Initialise the results buttons and add a button to access those
+		// to the menu panel.
 		GuiState.saveResultsButton = new SaveResultsButton(fp);
 		GuiState.saveResultsButton.setEnabled(false);
-		GuiState.mainMenuPanel.add(GuiState.saveResultsButton);
 
 		// Initialise panel to save items
 		GuiState.overwriteSaveButton = new OverwriteSaveButton(fp);
@@ -211,24 +211,19 @@ public class CustomTreeModel implements TreeViewModel {
 		GuiState.overwriteSaveVerticalPanel.add(GuiState.overwriteButtonsPanel);
 		GuiState.overwriteButtonsPanel.add(GuiState.closeSaveButton);
 
-		//Initialise the LoadResultsCellList and add the loadResultsButton
-		GuiState.mainMenuPanel.add(GuiState.loadResultsButton);
+		// Initialise the LoadResultsCellList and add the loadResultsButton
 		GuiState.LoadResultsCellList = new LoadResultsCellList(fp, as);
 		
-		// Initialise the removeSavedResultsButton and add it to the
-		// menuPanel
 		GuiState.removeResultsPanel.add(GuiState.removeResultsVerticalPanel);
-		GuiState.mainMenuPanel.add(GuiState.removeSavedResultsButton);
+		
+		GuiState.mainMenuPanel.add(GuiState.resultsButton);
 
+		// Initialise view single graph button
 		GuiState.viewSingleGraphButton = new ViewSingleGraphButton(fp, as);
 		GuiState.exportSingleGraphButton = new ExportSingleGraphButton(fp);
-		GuiState.mainMenuPanel.add(GuiState.viewSingleGraphButton);
 
-		// Initialise the comparePerformanceButton and add it to the
-		// menuPanel
-		// createComparePerformanceButton();
+		// Initialise the comparePerformanceButton
 		GuiState.comparePerformanceButton = new ComparePerformanceButton(fp);
-		GuiState.mainMenuPanel.add(GuiState.comparePerformanceButton);
 
 		// Initialise a spinner for changing the length of a mixing protocol
 		// step and add to menuPanel.

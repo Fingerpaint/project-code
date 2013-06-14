@@ -27,6 +27,7 @@ import nl.tue.fingerpaint.client.gui.buttons.RemoveSavedProtButton;
 import nl.tue.fingerpaint.client.gui.buttons.RemoveSavedResultsButton;
 import nl.tue.fingerpaint.client.gui.buttons.ResetDistButton;
 import nl.tue.fingerpaint.client.gui.buttons.ResetProtocolButton;
+import nl.tue.fingerpaint.client.gui.buttons.ResultsButton;
 import nl.tue.fingerpaint.client.gui.buttons.SaveDistributionButton;
 import nl.tue.fingerpaint.client.gui.buttons.SaveItemPanelButton;
 import nl.tue.fingerpaint.client.gui.buttons.SaveProtocolButton;
@@ -177,18 +178,19 @@ public class GuiState {
 	/** Button to reset the current distribution to completely white. */
 	public static ResetDistButton resetDistButton;
 
-	// -- SAVE MIXING RESULTS WIDGETS -----------------------------------------
+	// -- RESULTS WIDGETS -----------------------------------------
+	/** Button to enter the submenu with results related actions. */
+	public static ResultsButton resultsButton = new ResultsButton();
+	
 	/** Button to save the current mixing result. */
 	public static SaveResultsButton saveResultsButton;
 
-	// -- LOAD MIXING RESULTS WIDGETS -----------------------------------------
 	/** Button to load a previously saved mixing result */
 	public static LoadResultsButton loadResultsButton = new LoadResultsButton();
 	
 	/** CellList to list the to be loaded results */
 	public static LoadResultsCellList LoadResultsCellList;
 	
-	// --- REMOVE RESULTS WIDGETS ---------------------------------------------
 	/** Pop-up panel to handle the removal of results. */
 	public static RemoveResultsPopupPanel removeResultsPanel = new RemoveResultsPopupPanel();
 

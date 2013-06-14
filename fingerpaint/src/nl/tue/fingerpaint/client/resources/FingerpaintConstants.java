@@ -174,21 +174,21 @@ public interface FingerpaintConstants extends Constants {
 	 * @return Localised string that contains the text for the
 	 *         {@link GuiState#saveDistributionButton} button.
 	 */
-	@DefaultStringValue("Save Distribution")
+	@DefaultStringValue("Save")
 	public String btnSaveDist();
 
 	/**
 	 * @return Localised string that contains the text for the
 	 *         {@link GuiState#loadInitDistButton} button.
 	 */
-	@DefaultStringValue("Load Initial Distribution")
+	@DefaultStringValue("Load")
 	public String btnLoadDist();
 	
 	/**
 	 * @return Localised string that contains the text for the
 	 *         {@link GuiState#removeInitDistButton} button.
 	 */
-	@DefaultStringValue("Remove Saved Distributions")
+	@DefaultStringValue("Remove")
 	public String btnRemoveInitDistButton();
 
 	/**
@@ -200,65 +200,72 @@ public interface FingerpaintConstants extends Constants {
 
 	/**
 	 * @return Localised string that contains the text for the
+	 *         {@link GuiState#resultsButton} button.
+	 */
+	@DefaultStringValue("Results")
+	public String btnResults();
+	
+	/**
+	 * @return Localised string that contains the text for the
 	 *         {@link GuiState#saveResultsButton} button.
 	 */
-	@DefaultStringValue("Save Results")
+	@DefaultStringValue("Save")
 	public String btnSaveResults();
 	
 	/**
 	 * @return Localised string that contains the text for the
 	 *         {@link GuiState#loadResultsButton} button.
 	 */
-	@DefaultStringValue("Load Results")
+	@DefaultStringValue("Load")
 	public String btnLoadResults();
 
 	/**
 	 * @return Localised string that contains the text for the
 	 *         {@link GuiState#removeSavedResultsButton} button.
 	 */
-	@DefaultStringValue("Remove Saved Results")
+	@DefaultStringValue("Remove")
 	public String btnRemoveResults();
 
 	/**
 	 * @return Localised string that contains the text for the
 	 *         {@link GuiState#saveProtocolButton} button.
 	 */
-	@DefaultStringValue("Save Protocol")
+	@DefaultStringValue("Save")
 	public String btnSaveProt();
 
 	/**
 	 * @return Localised string that contains the text for the
 	 *         {@link GuiState#loadProtocolButton} button.
 	 */
-	@DefaultStringValue("Load Mixing Protocol")
+	@DefaultStringValue("Load")
 	public String btnLoadProt();
 	
 	/**
 	 * @return Localised string that contains the text for the
 	 *         {@link GuiState#removeSavedProtButton} button.
 	 */
-	@DefaultStringValue("Remove Saved Protocols")
+	@DefaultStringValue("Remove")
 	public String btnRemoveSavedProtButton();
 
 	/**
 	 * @return Localised string that contains the text for the
 	 *         {@link GuiState#resetProtocolButton} button.
 	 */
-	@DefaultStringValue("Reset Protocol")
+	@DefaultStringValue("Clear protocol")
 	public String btnResetProt();
 
 	/**
 	 * @return Localised string that contains the text for the
 	 *         {@link GuiState#mixNowButton} button.
 	 */
-	@DefaultStringValue("Mix Now")
+	@DefaultStringValue("Mix now")
 	public String btnMixNow();
 
 	/**
 	 * @return Localised string that contains the text for the
 	 *         {@link GuiState#viewSingleGraphButton} button.
 	 */
-	@DefaultStringValue("View single graph")
+	@DefaultStringValue("View performance graph")
 	public String btnViewSingleGraph();
 
 	/**
@@ -286,7 +293,7 @@ public interface FingerpaintConstants extends Constants {
 	 * @return Localised string that contains the text for the
 	 *         {@link GuiState#comparePerformanceButton} button.
 	 */
-	@DefaultStringValue("Compare Performance")
+	@DefaultStringValue("Compare performance")
 	public String btnComparePerfomance();
 
 	/**

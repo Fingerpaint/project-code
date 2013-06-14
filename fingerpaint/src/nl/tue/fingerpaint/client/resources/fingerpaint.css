@@ -156,16 +156,26 @@ body {
 	top: 0;
 }
 
-.gwt-Button,.gwt-ToggleButton,button {
+.gwt-Button,
+.gwt-ToggleButton,
+button {
 	border: 0;
 	margin: 2px 2px;
-	width: MENU_BUTTON_WIDTH;
 	padding: 10px 5px;
 	background: MAIN;
 	color: WHITE;
+	text-transform: uppercase;
 }
 
-.gwt-Button[disabled],.gwt-ToggleButton[disabled],button[disabled] {
+#menuPanelWrapper .gwt-Button,
+#menuPanelWrapper .gwt-ToggleButton,
+#menuPanelWrapper button {
+	width: MENU_BUTTON_WIDTH;
+}
+
+.gwt-Button[disabled],
+.gwt-ToggleButton[disabled],
+button[disabled] {
 	color: LIGHT_GRAY;
 }
 
@@ -177,19 +187,29 @@ body {
 	text-align: center;
 }
 
-.gwt-Button:hover,.gwt-ToggleButton:hover, .dp-spinner-upbutton:hover,.dp-spinner-downbutton:hover {
+.gwt-Button:hover,
+.gwt-ToggleButton:hover,
+.dp-spinner-upbutton:hover,
+.dp-spinner-downbutton:hover {
 	background: MAIN_LIGHT;
 	border: 0; /* disable some weird Google styling */
 }
 
-.gwt-Button:active,.gwt-ToggleButton-down, .gwt-ToggleButton:active,.gwt-ToggleButton-down:active,.dp-spinner-upbutton:active,.dp-spinner-downbutton:active {
+.gwt-Button:active,
+.gwt-ToggleButton-down,
+.gwt-ToggleButton:active,
+.gwt-ToggleButton-down:active,
+.dp-spinner-upbutton:active,
+.dp-spinner-downbutton:active {
 	background: -webkit-linear-gradient(bottom, MAIN_LIGHT, MAIN);
 	background: linear-gradient(to top, MAIN_LIGHT, MAIN);
 	border: 0; /* disable some weird Google styling */
 }
 
-.gwt-Button[disabled]:hover,.gwt-ToggleButton[disabled]:hover,.gwt-Button[disabled]:active,.gwt-ToggleButton[disabled]:active
-	{
+.gwt-Button[disabled]:hover,
+.gwt-ToggleButton[disabled]:hover,
+.gwt-Button[disabled]:active,
+.gwt-ToggleButton[disabled]:active {
 	background: MAIN;
 	border: 0; /* disable some weird Google styling */
 }
@@ -223,11 +243,12 @@ cleacdr
 	margin: 2px 0;
 }
 
-.dp-spinner-upbutton,.dp-spinner-downbutton {
+.dp-spinner-upbutton,
+.dp-spinner-downbutton {
 	font-size: 20pt;
 	padding: 2px 5px;
 	height: 45px;
-	width: MENU_SPINNER_BUTTON_WIDTH;
+	width: MENU_SPINNER_BUTTON_WIDTH !important;
 }
 
 .dp-spinner-upbutton {
@@ -284,4 +305,13 @@ cleacdr
 	top: 5px;
 	width: 30px;
 	z-index: TOGGLE_COLOUR_BUTTON_Z_FG;
+}
+
+/* labels */
+#sizeLabel {
+	font-size: 14px;
+	font-weight: bold;
+	margin: 2px;
+	padding-left: 2px;
+	text-transform: uppercase;
 }
