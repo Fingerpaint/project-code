@@ -36,11 +36,8 @@ body {
 	margin: 0;
 }
 
-#compareButton,
-#cancelCompareButton,
-#cancelSaveResultsButton,
-#saveItemPanelButton {
-    width: 80px;
+.panelButton {
+	width: 120px !important;
 }
 
 #cancelCompareButton,
@@ -261,8 +258,8 @@ cleacdr
 }
 
 .dp-spinner-downbutton {
+	padding-bottom: 10px;
 	border-radius: 3px 0 0 3px;
-	margin: 0;
 	margin: 2px 0 2px 2px;
 }
 

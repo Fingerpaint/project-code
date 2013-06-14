@@ -20,6 +20,7 @@ public class CancelSaveResultsButton extends Button implements ClickHandler {
 	public CancelSaveResultsButton() {
 		super(FingerpaintConstants.INSTANCE.btnCancel());
 		addClickHandler(this);
+		addStyleName("panelButton");
 		ensureDebugId("cancelSaveResultsButton");
 	}
 
