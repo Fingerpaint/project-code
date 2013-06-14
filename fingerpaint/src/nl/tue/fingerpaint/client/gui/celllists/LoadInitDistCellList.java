@@ -4,10 +4,12 @@ import java.util.List;
 
 import nl.tue.fingerpaint.client.gui.GuiState;
 import nl.tue.fingerpaint.client.model.ApplicationState;
+import nl.tue.fingerpaint.client.resources.FingerpaintCellListResources;
 import nl.tue.fingerpaint.client.storage.StorageManager;
 import nl.tue.fingerpaint.shared.GeometryNames;
 
 import com.google.gwt.cell.client.TextCell;
+import com.google.gwt.core.shared.GWT;
 import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
@@ -37,7 +39,7 @@ public class LoadInitDistCellList extends CellList<String> {
 	 *            distribution.
 	 */
 	public LoadInitDistCellList(ApplicationState appState) {
-		super(new TextCell());
+		super(new TextCell(), (CellList.Resources) GWT.create(FingerpaintCellListResources.class));
 		this.as = appState;
 		setSelectionModel();
 		setKeyboardSelectionPolicy(KeyboardSelectionPolicy.DISABLED);

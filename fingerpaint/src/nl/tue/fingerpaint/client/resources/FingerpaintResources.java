@@ -22,9 +22,11 @@ public interface FingerpaintResources extends ClientBundle {
 	/**
 	 * @return The main CSS resource of the Fingerpaint application.
 	 */
-	@Source("fingerpaint.css")
+	@Source({"defines.css", "fingerpaint.css"})
 	@CssResource.NotStrict
 	public CssResource css();
+	
+	
 
 	/**
 	 * @return An endless animation that can be used to indicate that the

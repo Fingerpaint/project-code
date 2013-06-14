@@ -47,3 +47,8 @@ fingerpaint/war/WEB-INF/classes/META-INF/jdoconfig.xml
 fingerpaint/war/WEB-INF/classes/META-INF/persistence.xml
 fingerpaint/war/WEB-INF/classes/log4j.properties
 fingerpaint/war/map*
+fingerpaint/build-test/
+fingerpaint/build/
+jetty-container/build/
+fortran-module/build/
+multi-browser-test/build/
