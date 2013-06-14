@@ -412,7 +412,7 @@ public class RectangleGeometry extends Geometry {
 	 * the canvas</p>
 	 * 
 	 * <p>Pre:
-	 * {@code dist.length} == {@link #horizontalCells} * {@LINK #VERTICAL_CELLS}
+	 * {@code dist.length} == height * width of this rectangle
 	 * </p>
 	 * 
 	 * @param dist
