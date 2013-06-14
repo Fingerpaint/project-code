@@ -18,7 +18,7 @@ public class CloseSaveButton extends Button implements ClickHandler {
 	 * overwrite pop-up panel.
 	 */
 	public CloseSaveButton() {
-		super(FingerpaintConstants.INSTANCE.btnClose());
+		super(FingerpaintConstants.INSTANCE.btnCancel());
 		addClickHandler(this);
 		ensureDebugId("closeSaveButton");
 	}
