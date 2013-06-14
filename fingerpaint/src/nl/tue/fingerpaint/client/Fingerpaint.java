@@ -2,8 +2,6 @@ package nl.tue.fingerpaint.client;
 
 import java.util.ArrayList;
 
-import javax.naming.OperationNotSupportedException;
-
 import nl.tue.fingerpaint.client.gui.CustomTreeModel;
 import nl.tue.fingerpaint.client.gui.GraphVisualisator;
 import nl.tue.fingerpaint.client.gui.GuiState;
