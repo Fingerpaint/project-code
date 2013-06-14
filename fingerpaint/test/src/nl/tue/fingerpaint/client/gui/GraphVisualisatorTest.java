@@ -12,7 +12,6 @@ import nl.tue.fingerpaint.testenvironment.StandardCapabilitiesProvider;
 import nl.tue.fingerpaint.testenvironment.TestUtil;
 import nl.tue.multibrowsertest.CrossBrowserTest;
 import nl.tue.multibrowsertest.MultiBrowserTester;
-import nl.tue.multibrowsertest.MultiBrowserTester.ResultTriple;
 import nl.tue.multibrowsertest.MultiBrowserTesterException;
 import nl.tue.multibrowsertest.TestRunner;
 
@@ -74,7 +73,7 @@ public class GraphVisualisatorTest {
 					browsertester, 
 					new URL("http://fingerpaint.campus.tue.nl:4444/wd/hub"), 
 					new StandardCapabilitiesProvider());
-			List<ResultTriple<Boolean>> results = multitester.testAll();
+			multitester.testAll();
 			//ResultTriple<Boolean> results = multitester.testSpecific(new Dimension(800, 1280), DesiredCapabilities.firefox());
 			
 			List<Map<Dimension,Boolean>> screenieResults = multitester.compareLastScreenshots();
@@ -190,7 +189,7 @@ public class GraphVisualisatorTest {
 					browsertester, 
 					new URL("http://fingerpaint.campus.tue.nl:4444/wd/hub"), 
 					new StandardCapabilitiesProvider());
-			List<ResultTriple<Boolean>> results = multitester.testAll();
+			multitester.testAll();
 			//ResultTriple<Boolean> results = multitester.testSpecific(new Dimension(1200, 800), DesiredCapabilities.firefox());
 			
 			List<Map<Dimension,Boolean>> screenieResults = multitester.compareLastScreenshots();
@@ -225,16 +224,4 @@ public class GraphVisualisatorTest {
 		}
 	}
 	
-	/**
-	 * helper function purely to wait, waits t milliseconds
-	 * 
-	 * @param t the waiting time in milliseconds
-	 */
-	private void pause(int t){
-		try {
-			Thread.sleep(t);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-	}
 }

@@ -1,0 +1,37 @@
+.cellBrowserWidget {
+	
+}
+
+.cellBrowserColumn {
+	
+}
+
+.cellBrowserFirstColumn {
+	
+}
+
+.cellBrowserOpenItem {
+	background: MAIN_LIGHT;
+}
+
+.cellBrowserKeyboardSelectedItem {
+	/* no specific styling, see below */
+}
+
+.cellBrowserKeyboardSelectedItem:nth-child\(odd\),
+.cellBrowserEvenItem {
+	background: WHITE;
+	padding: 10px;
+}
+
+.cellBrowserKeyboardSelectedItem:nth-child\(even\),
+.cellBrowserOddItem {
+	background: WHITE;
+	padding: 10px;
+}
+
+.cellBrowserSelectedItem {
+	padding: 10px;
+	background: MAIN !important;
+	color: WHITE;
+}

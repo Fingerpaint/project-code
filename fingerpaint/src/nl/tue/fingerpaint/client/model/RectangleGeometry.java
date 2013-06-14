@@ -18,13 +18,9 @@ import com.google.gwt.dom.client.CanvasElement;
 public class RectangleGeometry extends Geometry {
 
 	/** Number of vertical cells. */
-	protected static final int VERTICAL_CELLS = 240;
+	private int verticalCells = 240;
 	/** Number of horizontal cells. */
-	protected static final int HORIZONTAL_CELLS = 400;
-	/** Width of the drawing area in pixels. */
-	protected int canvasWidth;
-	/** Height of the drawing area in pixels. */
-	protected int canvasHeight;
+	private int horizontalCells = 400;
 
 	/** {@code true} if the top wall is being moved, {@code false} otherwise */
 	protected boolean topWallStep;
@@ -37,10 +33,18 @@ public class RectangleGeometry extends Geometry {
 	 *            The height of the window in which the application is displayed
 	 * @param clientWidth
 	 *            The width of the window in which the application is displayed
+	 * @param vertCells Number of vertical cells.
+	 * @param horCells Number of horizontal cells.
 	 */
-	public RectangleGeometry(int clientHeight, int clientWidth) {
+	public RectangleGeometry(int clientHeight, int clientWidth, int vertCells, int horCells) {
 		super(clientHeight, clientWidth);
+		
+		verticalCells = vertCells;
+		horizontalCells = horCells;
 		topWallStep = true;
+		
+		initialise(clientWidth, clientHeight);
+		initialiseDistribution();
 	}
 
 	// ----Getters and Setters-----------------------------------------
@@ -51,7 +55,7 @@ public class RectangleGeometry extends Geometry {
 	 */
 	@Override
 	public int getBaseHeight() {
-		return VERTICAL_CELLS;
+		return verticalCells;
 	}
 
 	/**
@@ -61,7 +65,7 @@ public class RectangleGeometry extends Geometry {
 	 */
 	@Override
 	public int getBaseWidth() {
-		return HORIZONTAL_CELLS;
+		return horizontalCells;
 	}
 
 	@Override
@@ -83,7 +87,7 @@ public class RectangleGeometry extends Geometry {
 	 */
 	@Override
 	public int[] getDistribution() {
-		int[] dist = new int[HORIZONTAL_CELLS * VERTICAL_CELLS];
+		int[] dist = new int[horizontalCells * verticalCells];
 		ImageData img = context.getImageData(X_OFFSET + 1, TOP_OFFSET + 1,
 				getWidth(), getHeight());
 		CanvasPixelArray data = img.getData();
@@ -94,8 +98,8 @@ public class RectangleGeometry extends Geometry {
 			for (int x = 0; x < width; x += (int) Math.floor(factor)) {
 				// times 4 because we have R, G, B and alpha value per pixel
 				index = (y * width + x) * 4;
-				dist[(int) Math.floor(x / factor) + HORIZONTAL_CELLS
-						* (VERTICAL_CELLS - 1 - (int) Math.floor(y / factor))] = data
+				dist[(int) Math.floor(x / factor) + horizontalCells
+						* (verticalCells - 1 - (int) Math.floor(y / factor))] = data
 						.get(index);
 			}
 		}
@@ -108,16 +112,16 @@ public class RectangleGeometry extends Geometry {
 		clientHeight -= TOP_OFFSET + BOTTOM_OFFSET;
 		clientWidth -= X_OFFSET * 2; // X_OFFSET is used on both sides
 		
-		if (clientHeight >= (clientWidth / (double) HORIZONTAL_CELLS) * VERTICAL_CELLS) {
+		if (clientHeight >= (clientWidth / (double) horizontalCells) * verticalCells) {
 			// width is limiting factor
 			canvasWidth = clientWidth - 2;
-			canvasHeight = (int) Math.floor((canvasWidth / (double) HORIZONTAL_CELLS) * VERTICAL_CELLS);
-			factor = canvasWidth / (double) HORIZONTAL_CELLS;
+			canvasHeight = (int) Math.floor((canvasWidth / (double) horizontalCells) * verticalCells);
+			factor = canvasWidth / (double) horizontalCells;
 		} else {
 			// height is limiting factor
 			canvasHeight = clientHeight - 2;
-			canvasWidth = (int) Math.floor((canvasHeight / (double) VERTICAL_CELLS) * HORIZONTAL_CELLS);
-			factor = canvasHeight / (double) VERTICAL_CELLS;
+			canvasWidth = (int) Math.floor((canvasHeight / (double) verticalCells) * horizontalCells);
+			factor = canvasHeight / (double) verticalCells;
 		}
 	}
 	
@@ -184,7 +188,7 @@ public class RectangleGeometry extends Geometry {
 	 */
 	@Override
 	protected void initialiseDistribution() {
-		distribution = new int[HORIZONTAL_CELLS * VERTICAL_CELLS];
+		distribution = new int[horizontalCells * verticalCells];
 		for (int i = 0; i < distribution.length; i++) {
 			distribution[i] = 255;
 		}
@@ -409,7 +413,7 @@ public class RectangleGeometry extends Geometry {
 	 * the canvas</p>
 	 * 
 	 * <p>Pre:
-	 * {@code dist.length} == {@link #HORIZONTAL_CELLS} * {@LINK #VERTICAL_CELLS}
+	 * {@code dist.length} == height * width of this rectangle
 	 * </p>
 	 * 
 	 * @param dist
@@ -425,8 +429,8 @@ public class RectangleGeometry extends Geometry {
 		int x, y, col, index, sw, sh, w2, h2;
 
 		for (int i = 0; i < l; i++) {
-			x = i % HORIZONTAL_CELLS;
-			y = (VERTICAL_CELLS - 1) - i / HORIZONTAL_CELLS;
+			x = i % horizontalCells;
+			y = (verticalCells - 1) - i / horizontalCells;
 			col = dist[i];
 			sw = (int) Math.floor(x * factor);
 			sh = (int) Math.floor(y * factor);

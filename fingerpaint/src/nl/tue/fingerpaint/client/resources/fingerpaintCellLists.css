@@ -1,0 +1,25 @@
+.cellListWidget {
+	
+}
+
+.cellListKeyboardSelectedItem {
+	/* no specific styling, see below */
+}
+
+.cellListKeyboardSelectedItem:nth-child\(odd\),
+.cellListEvenItem {
+	background: LIGHT_GRAY;
+	padding: 10px;
+}
+
+.cellListKeyboardSelectedItem:nth-child\(even\),
+.cellListOddItem {
+	background: WHITE;
+	padding: 10px;
+}
+
+.cellListSelectedItem {
+	padding: 10px;
+	background: MAIN !important;
+	color: WHITE;
+}

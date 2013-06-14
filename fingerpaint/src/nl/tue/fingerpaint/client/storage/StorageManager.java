@@ -7,7 +7,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import nl.tue.fingerpaint.client.gui.panels.NotificationPopupPanel;
-import nl.tue.fingerpaint.client.resources.FingerpaintConstants;
 import nl.tue.fingerpaint.shared.GeometryNames;
 import nl.tue.fingerpaint.shared.model.MixingProtocol;
 
@@ -29,28 +28,28 @@ import com.google.gwt.storage.client.StorageMap;
  * <ul>
  * <li>{@link #KEY_INITDIST}
  * <ul>
- * <li>{@link GeometryNames#RECT_SHORT}
+ * <li>{@link GeometryNames#RECT}
  * <ul>
  * <li>Name of some saved distribution for a rectangular geometry</li>
  * <li>Other name</li>
  * <li>...</li>
  * </ul>
  * </li>
- * <li>{@link GeometryNames#SQR_SHORT}
+ * <li>{@link GeometryNames#SQR}
  * <ul>
  * <li>Name of saved distribution for a square geometry</li>
  * <li>Other name</li>
  * <li>...</li>
  * </ul>
  * </li>
- * <li>{@link GeometryNames#CIRC_SHORT}
+ * <li>{@link GeometryNames#CIRC}
  * <ul>
  * <li>Name of saved distribution for a circle geometry</li>
  * <li>Other name</li>
  * <li>...</li>
  * </ul>
  * </li>
- * <li>{@link GeometryNames#JOBE_SHORT}
+ * <li>{@link GeometryNames#JOBE}
  * <ul>
  * <li>Name of saved distribution for a journal bearing geometry</li>
  * <li>Other name</li>
@@ -104,6 +103,19 @@ public class StorageManager {
 	 */
 	public static final String KEY_RESULTS = "RES";
 
+	/** Error code for successful saves. */
+	public static final int SAVE_SUCCESSFUL = 0;
+	/** Error code for when the storage is not initialised. */
+	public static final int NOT_INITIALISED_ERROR = 1;
+	/** Error code for when the name is in use. */
+	public static final int NAME_IN_USE_ERROR = 2;
+	/** Error code for when the storage is full. */
+	public static final int QUOTA_EXCEEDED_ERROR = 3;
+	/** Error code for an unknown key in storage. */
+	public static final int NONEXISTANT_KEY_ERROR = 4;
+	/** Error code for other errors. */
+	public static final int UNKNOWN_ERROR = 5;
+
 	// ---- PUBLIC GLOBALS
 	// ------------------------------------------------------------------------
 	/**
@@ -123,8 +135,8 @@ public class StorageManager {
 			KEY_PROTOCOLS, KEY_RESULTS };
 	/** Keys that are used on the second level. */
 	protected String[] secondLevelKeys = new String[] {
-			GeometryNames.CIRC_SHORT, GeometryNames.JOBE_SHORT,
-			GeometryNames.RECT_SHORT, GeometryNames.SQR_SHORT };
+			GeometryNames.CIRC, GeometryNames.JOBE,
+			GeometryNames.RECT, GeometryNames.SQR };
 
 	// ---- CONSTRUCTOR
 	// ---------------------------------------------------------------------------
@@ -367,7 +379,7 @@ public class StorageManager {
 		if (state != INITIALISED) {
 			return null;
 		}
-		
+
 		HashMap<String, Object> firstLevel = FingerpaintJsonizer
 				.hashMapFromString(localStorage.getItem(KEY_RESULTS), false);
 		for (String firstLevelKey : firstLevel.keySet()) {
@@ -389,11 +401,18 @@ public class StorageManager {
 	 *            The name of the distribution.
 	 * @param value
 	 *            The distribution to be saved.
-	 * @return True if the value has been saved, false if the name is already in
-	 *         use (no attempt to overwrite will be made). Will also return
-	 *         false when the storage cannot be used.
+	 * @return <ul>
+	 *         <li>{@code SAVE_SUCCESSFUL} If saving was successful.</li>
+	 *         <li>{@code NOT_INITIALISED_ERROR} If the local storage is not
+	 *         initialised.</li>
+	 *         <li>{@code NAME_IN_USE_ERROR} If the name is already in use.</li>
+	 *         <li>{@code QUOTA_EXCEEDED_ERROR} If the local storage is full.</li>
+	 *         <li>{@code NONEXISTANT_KEY_ERROR} If the key does not exist.</li>
+	 *         <li>{@code UNKNOWN_ERROR} If an error occurs, other than those
+	 *         above.</li>
+	 *         </ul>
 	 */
-	public boolean putDistribution(String geometry, String key, int[] value) {
+	public int putDistribution(String geometry, String key, int[] value) {
 		return putDistribution(geometry, key, value, false);
 	}
 
@@ -410,18 +429,25 @@ public class StorageManager {
 	 * @param overwrite
 	 *            If the value should be overwritten if the name is already in
 	 *            use.
-	 * @return True if the value has been saved, false if the name is already in
-	 *         use (no attempt to overwrite will be made). Will also return
-	 *         false when the storage cannot be used.
+	 * @return <ul>
+	 *         <li>{@code SAVE_SUCCESSFUL} If saving was successful.</li>
+	 *         <li>{@code NOT_INITIALISED_ERROR} If the local storage is not
+	 *         initialised.</li>
+	 *         <li>{@code NAME_IN_USE_ERROR} If the name is already in use.</li>
+	 *         <li>{@code QUOTA_EXCEEDED_ERROR} If the local storage is full.</li>
+	 *         <li>{@code NONEXISTANT_KEY_ERROR} If the key does not exist.</li>
+	 *         <li>{@code UNKNOWN_ERROR} If an error occurs, other than those
+	 *         above.</li>
+	 *         </ul>
 	 */
-	public boolean putDistribution(String geometry, String key, int[] value,
+	public int putDistribution(String geometry, String key, int[] value,
 			boolean overwrite) {
 		if (state != INITIALISED) {
-			return false;
+			return NOT_INITIALISED_ERROR;
 		}
 
 		if (isNameInUse(KEY_INITDIST, geometry, key) && !overwrite) {
-			return false;
+			return NAME_IN_USE_ERROR;
 		}
 
 		HashMap<String, Object> firstLevel = FingerpaintJsonizer
@@ -440,15 +466,15 @@ public class StorageManager {
 						FingerpaintJsonizer.toString(firstLevel));
 			} catch (JavaScriptException e) {
 				if (e.getName().equals("QUOTA_EXCEEDED_ERR")) {
-					new NotificationPopupPanel("Storage capacity exceeded.")
-							.show(3000);
+					return QUOTA_EXCEEDED_ERROR;
 				}
+				return UNKNOWN_ERROR;
 			}
 
-			return true;
+			return SAVE_SUCCESSFUL;
 		}
 
-		return false;
+		return NONEXISTANT_KEY_ERROR;
 	}
 
 	/**
@@ -461,11 +487,18 @@ public class StorageManager {
 	 *            The name of the protocol.
 	 * @param protocol
 	 *            The protocol to be saved.
-	 * @return True if the value has been saved, false if the name is already in
-	 *         use (no attempt to overwrite will be made).
+	 * @return <ul>
+	 *         <li>{@code SAVE_SUCCESSFUL} If saving was successful.</li>
+	 *         <li>{@code NOT_INITIALISED_ERROR} If the local storage is not
+	 *         initialised.</li>
+	 *         <li>{@code NAME_IN_USE_ERROR} If the name is already in use.</li>
+	 *         <li>{@code QUOTA_EXCEEDED_ERROR} If the local storage is full.</li>
+	 *         <li>{@code NONEXISTANT_KEY_ERROR} If the key does not exist.</li>
+	 *         <li>{@code UNKNOWN_ERROR} If an error occurs, other than those
+	 *         above.</li>
+	 *         </ul>
 	 */
-	public boolean putProtocol(String geometry, String key,
-			MixingProtocol protocol) {
+	public int putProtocol(String geometry, String key, MixingProtocol protocol) {
 		return putProtocol(geometry, key, protocol, false);
 	}
 
@@ -483,17 +516,25 @@ public class StorageManager {
 	 * @param overwrite
 	 *            If the value should be overwritten if the name is already in
 	 *            use.
-	 * @return True if the value has been saved, false if the name is already in
-	 *         use (no attempt to overwrite will be made).
+	 * @return <ul>
+	 *         <li>{@code SAVE_SUCCESSFUL} If saving was successful.</li>
+	 *         <li>{@code NOT_INITIALISED_ERROR} If the local storage is not
+	 *         initialised.</li>
+	 *         <li>{@code NAME_IN_USE_ERROR} If the name is already in use.</li>
+	 *         <li>{@code QUOTA_EXCEEDED_ERROR} If the local storage is full.</li>
+	 *         <li>{@code NONEXISTANT_KEY_ERROR} If the key does not exist.</li>
+	 *         <li>{@code UNKNOWN_ERROR} If an error occurs, other than those
+	 *         above.</li>
+	 *         </ul>
 	 */
-	public boolean putProtocol(String geometry, String key,
+	public int putProtocol(String geometry, String key,
 			MixingProtocol protocol, boolean overwrite) {
 		if (state != INITIALISED) {
-			return false;
+			return NOT_INITIALISED_ERROR;
 		}
 
 		if (isNameInUse(KEY_PROTOCOLS, geometry, key) && !overwrite) {
-			return false;
+			return NAME_IN_USE_ERROR;
 		}
 
 		HashMap<String, Object> firstLevel = FingerpaintJsonizer
@@ -510,14 +551,14 @@ public class StorageManager {
 						FingerpaintJsonizer.toString(firstLevel));
 			} catch (JavaScriptException e) {
 				if (e.getName().equals("QUOTA_EXCEEDED_ERR")) {
-					new NotificationPopupPanel("Storage capacity exceeded.")
-							.show(3000);
+					return QUOTA_EXCEEDED_ERROR;
 				}
+				return UNKNOWN_ERROR;
 			}
-			return true;
+			return SAVE_SUCCESSFUL;
 		}
 
-		return false;
+		return NONEXISTANT_KEY_ERROR;
 	}
 
 	/**
@@ -528,10 +569,18 @@ public class StorageManager {
 	 *            The name of the result.
 	 * @param result
 	 *            The result to be saved.
-	 * @return True if the value has been saved, false if the name is already in
-	 *         use (no attempt to overwrite will be made).
+	 * @return <ul>
+	 *         <li>{@code SAVE_SUCCESSFUL} If saving was successful.</li>
+	 *         <li>{@code NOT_INITIALISED_ERROR} If the local storage is not
+	 *         initialised.</li>
+	 *         <li>{@code NAME_IN_USE_ERROR} If the name is already in use.</li>
+	 *         <li>{@code QUOTA_EXCEEDED_ERROR} If the local storage is full.</li>
+	 *         <li>{@code NONEXISTANT_KEY_ERROR} If the key does not exist.</li>
+	 *         <li>{@code UNKNOWN_ERROR} If an error occurs, other than those
+	 *         above.</li>
+	 *         </ul>
 	 */
-	public boolean putResult(String key, ResultStorage result) {
+	public int putResult(String key, ResultStorage result) {
 		return putResult(key, result, false);
 	}
 
@@ -546,35 +595,41 @@ public class StorageManager {
 	 * @param overwrite
 	 *            If the value should be overwritten if the name is already in
 	 *            use.
-	 * @return True if the value has been saved, false if the name is already in
-	 *         use (no attempt to overwrite will be made).
+	 * @return <ul>
+	 *         <li>{@code SAVE_SUCCESSFUL} If saving was successful.</li>
+	 *         <li>{@code NOT_INITIALISED_ERROR} If the local storage is not
+	 *         initialised.</li>
+	 *         <li>{@code NAME_IN_USE_ERROR} If the name is already in use.</li>
+	 *         <li>{@code QUOTA_EXCEEDED_ERROR} If the local storage is full.</li>
+	 *         <li>{@code NONEXISTANT_KEY_ERROR} If the key does not exist.</li>
+	 *         <li>{@code UNKNOWN_ERROR} If an error occurs, other than those
+	 *         above.</li>
+	 *         </ul>
 	 */
-	public boolean putResult(String key, ResultStorage result, boolean overwrite) {
+	public int putResult(String key, ResultStorage result, boolean overwrite) {
 		if (state != INITIALISED) {
-			return false;
+			return NOT_INITIALISED_ERROR;
 		}
 
 		if (isNameInUse(KEY_RESULTS, key, null) && !overwrite) {
-			return false;
+			return NAME_IN_USE_ERROR;
 		}
 		HashMap<String, Object> firstLevel = FingerpaintJsonizer
-				.hashMapFromString(localStorage.getItem(KEY_RESULTS));
+				.hashMapFromString(localStorage.getItem(KEY_RESULTS), false);
 		firstLevel.put(key, FingerpaintJsonizer.toString(result));
 		try {
 			localStorage.setItem(KEY_RESULTS,
 					FingerpaintJsonizer.toString(firstLevel));
 		} catch (JavaScriptException e) {
 			if (e.getName().equals("QUOTA_EXCEEDED_ERR")) {
-				new NotificationPopupPanel(
-						FingerpaintConstants.INSTANCE.capacityExceeded())
-						.show(3000);
+				return QUOTA_EXCEEDED_ERROR;
 			} else {
 				Logger.getLogger("").log(Level.SEVERE,
-						"Unknown error during saving.");
+						"Unknown error during saving: " + e.getDescription());
+				return UNKNOWN_ERROR;
 			}
 		}
-		return true;
-
+		return SAVE_SUCCESSFUL;
 	}
 
 	/**
@@ -590,14 +645,17 @@ public class StorageManager {
 	 */
 	public boolean removeDistribution(String key, String geometry) {
 		HashMap<String, Object> firstLevel = FingerpaintJsonizer
-				.hashMapFromString(localStorage.getItem(KEY_INITDIST));
+				.hashMapFromString(localStorage.getItem(KEY_INITDIST), false);
+
 		if (firstLevel.containsKey(geometry)) {
-			@SuppressWarnings("unchecked")
-			HashMap<String, Object> secondLevel = (HashMap<String, Object>) firstLevel
-					.get(geometry);
+			HashMap<String, Object> secondLevel = FingerpaintJsonizer
+					.hashMapFromJSONObject(
+							((JSONValue) firstLevel.get(geometry)).isObject(),
+							false);
 			for (String secondLevelKey : secondLevel.keySet()) {
 				if (secondLevelKey.equals(key)) {
 					secondLevel.remove(key);
+					firstLevel.put(geometry, FingerpaintJsonizer.toString(secondLevel));
 					try {
 						localStorage.setItem(KEY_INITDIST,
 								FingerpaintJsonizer.toString(firstLevel));
@@ -657,7 +715,7 @@ public class StorageManager {
 	 */
 	public boolean removeResult(String key) {
 		HashMap<String, Object> firstLevel = FingerpaintJsonizer
-				.hashMapFromString(localStorage.getItem(KEY_RESULTS));
+				.hashMapFromString(localStorage.getItem(KEY_RESULTS), false);
 		for (String firstLevelKey : firstLevel.keySet()) {
 			if (firstLevelKey.equals(key)) {
 				firstLevel.remove(key);

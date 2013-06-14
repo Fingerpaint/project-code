@@ -1,11 +1,15 @@
 package nl.tue.fingerpaint.client.gui.buttons;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import nl.tue.fingerpaint.client.Fingerpaint;
 import nl.tue.fingerpaint.client.gui.GuiState;
 import nl.tue.fingerpaint.client.gui.panels.NotificationPopupPanel;
 import nl.tue.fingerpaint.client.gui.panels.SaveItemPopupPanel;
 import nl.tue.fingerpaint.client.gui.textboxes.SaveNameTextBox;
 import nl.tue.fingerpaint.client.resources.FingerpaintConstants;
+import nl.tue.fingerpaint.client.storage.StorageManager;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -36,6 +40,7 @@ public class SaveItemPanelButton extends Button implements ClickHandler {
 		this.fp = parent;
 		addClickHandler(this);
 		setEnabled(false);
+		addStyleName("panelButton");
 		ensureDebugId("saveItemPanelButton");
 	}
 
@@ -46,23 +51,42 @@ public class SaveItemPanelButton extends Button implements ClickHandler {
 	 */
 	@Override
 	public void onClick(ClickEvent event) {
-		boolean success = fp.save(GuiState.saveNameTextBox.getText(), false);
-		if (success) {
-			NotificationPopupPanel np = new NotificationPopupPanel(
-					FingerpaintConstants.INSTANCE.saveSuccess());
-			np.show(GuiState.DEFAULT_TIMEOUT);
+		int result = fp.save(GuiState.saveNameTextBox.getText(), false);
+		
+		switch (result) {
+		case StorageManager.SAVE_SUCCESSFUL:
+			new NotificationPopupPanel(
+					FingerpaintConstants.INSTANCE.saveSuccess())
+			        .show(GuiState.DEFAULT_TIMEOUT);
 			GuiState.saveItemPanel.hide();
 			
 			// Again disable this button, when saving was successful.
 			setEnabled(false);
-		} else {
+			break;
+		case StorageManager.NOT_INITIALISED_ERROR:
+			new NotificationPopupPanel(FingerpaintConstants.INSTANCE.notInitialisedError()).show(GuiState.DEFAULT_TIMEOUT);
+			Logger.getLogger("").log(Level.WARNING, "Local storage is not initialised.");
+			break;
+		case StorageManager.NAME_IN_USE_ERROR:
 			GuiState.overwriteButtonsPanel.remove(GuiState.closeSaveButton);
 			GuiState.overwriteButtonsPanel.add(GuiState.overwriteSaveButton);
 			GuiState.overwriteButtonsPanel.add(GuiState.closeSaveButton);
 
 			GuiState.overwriteSavePanel.center();
 			GuiState.saveItemPanel.hide();
+			break;
+		case StorageManager.QUOTA_EXCEEDED_ERROR:
+			new NotificationPopupPanel(FingerpaintConstants.INSTANCE.quotaExceededError()).show(GuiState.DEFAULT_TIMEOUT);
+			Logger.getLogger("").log(Level.WARNING, "Local storage is full.");
+			break;
+		case StorageManager.NONEXISTANT_KEY_ERROR:
+			new NotificationPopupPanel(FingerpaintConstants.INSTANCE.nonexistantKeyError()).show(GuiState.DEFAULT_TIMEOUT);
+			Logger.getLogger("").log(Level.WARNING, "Key does not exist in local storage.");
+			break;
+		case StorageManager.UNKNOWN_ERROR:
+			new NotificationPopupPanel(FingerpaintConstants.INSTANCE.unknownError()).show(GuiState.DEFAULT_TIMEOUT);
+			Logger.getLogger("").log(Level.WARNING, "Unknown error.");
+			break;
 		}
 	}
-
 }
