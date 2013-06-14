@@ -36,6 +36,19 @@ body {
 	margin: 0;
 }
 
+#compareButton,
+#cancelCompareButton,
+#cancelSaveResultsButton,
+#saveItemPanelButton {
+    width: 80px;
+}
+
+#cancelCompareButton,
+#cancelSaveResultsButton {
+	margin-right: 0px;
+	margin-left: 4px;
+}
+
 .gwt-PopupPanel {
 	border: 2px solid MAIN;
 	padding: 4px 8px 4px 4px;
