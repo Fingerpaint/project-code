@@ -49,13 +49,13 @@ public class RemoveSavedProtButton extends Button implements ClickHandler {
 	@Override
 	public void onClick(ClickEvent event) {
 		GuiState.removeResultsVerticalPanel.clear();
-
-		GuiState.removeResultsVerticalPanel.add(GuiState.protocolFlexTable);
-		GuiState.removeResultsVerticalPanel.add(GuiState.closeResultsButton);
-
+		
 		final ArrayList<String> names = (ArrayList<String>) StorageManager.INSTANCE
 				.getProtocols(GeometryNames.getShortName(as.getGeometryChoice()));
 		GuiState.protocolFlexTable.fillFlexTable(names, GeometryNames.getShortName(as.getGeometryChoice()));
+
+		GuiState.removeResultsVerticalPanel.addList(GuiState.protocolFlexTable);
+		GuiState.removeResultsVerticalPanel.add(GuiState.closeResultsButton);
 
 		GuiState.removeResultsPanel.center();
 	}

@@ -80,9 +80,9 @@ protected RectangleGeometry geom;
 		
 		//test all four corner cases
 		assertTrue("coordinates (1, -1) should be inside the top wall",geom.isInsideTopWall(1, -1));
-		assertTrue("coordinates (1, 1-wallheight) should be inside the top wall",geom.isInsideTopWall(1, 1-geom.HEIGHT_OF_WALL));
+		assertTrue("coordinates (1, 1-wallheight) should be inside the top wall",geom.isInsideTopWall(1, 1-RectangleGeometry.HEIGHT_OF_WALL));
 		assertTrue("coordinates (width-1, -1) should be inside the top wall",geom.isInsideTopWall(geom.getWidth()-1, -1));
-		assertTrue("coordinates (width-1, 1-wallheight) should be inside the top wall",geom.isInsideTopWall(geom.getWidth()-1, 1-geom.HEIGHT_OF_WALL));
+		assertTrue("coordinates (width-1, 1-wallheight) should be inside the top wall",geom.isInsideTopWall(geom.getWidth()-1, 1-RectangleGeometry.HEIGHT_OF_WALL));
 	}
 	
 	/**
@@ -94,9 +94,9 @@ protected RectangleGeometry geom;
 		
 		//test all four corner cases
 		assertTrue("coordinates (1, height+1) should be inside the bottom wall",geom.isInsideBottomWall(1, geom.getHeight()+1));
-		assertTrue("coordinates (1, height+wallheight-1) should be inside the bottom wall",geom.isInsideBottomWall(1, geom.getHeight()+geom.HEIGHT_OF_WALL-1));
+		assertTrue("coordinates (1, height+wallheight-1) should be inside the bottom wall",geom.isInsideBottomWall(1, geom.getHeight()+RectangleGeometry.HEIGHT_OF_WALL-1));
 		assertTrue("coordinates (width-1, height+1) should be inside the bottom wall",geom.isInsideBottomWall(geom.getWidth()-1, geom.getHeight()+1));
-		assertTrue("coordinates (width-1, height+wallheight-1) should be inside the bottom wall",geom.isInsideBottomWall(geom.getWidth()-1, geom.getHeight()+geom.HEIGHT_OF_WALL-1));
+		assertTrue("coordinates (width-1, height+wallheight-1) should be inside the bottom wall",geom.isInsideBottomWall(geom.getWidth()-1, geom.getHeight()+RectangleGeometry.HEIGHT_OF_WALL-1));
 	}
 	
 	//-----Integration tests---------------------------------------------------

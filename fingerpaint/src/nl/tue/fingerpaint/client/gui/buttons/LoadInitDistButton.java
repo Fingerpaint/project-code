@@ -53,9 +53,8 @@ public class LoadInitDistButton extends Button implements ClickHandler {
 						.getGeometryChoice()));
 		GuiState.loadInitDistCellList.fillCellList(geometryDistributions);
 
-		GuiState.loadVerticalPanel.updateNoFilesFoundLabel(GuiState.loadInitDistCellList);
+		GuiState.loadVerticalPanel.addList(GuiState.loadInitDistCellList);
 		GuiState.loadVerticalPanel.remove(GuiState.loadProtocolCellList);
-		GuiState.loadVerticalPanel.add(GuiState.loadInitDistCellList);
 		GuiState.loadVerticalPanel.add(GuiState.closeLoadButton);
 		GuiState.loadPanel.center();
 	}

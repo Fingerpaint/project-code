@@ -134,7 +134,7 @@ public interface FingerpaintConstants extends Constants {
 	/**
 	 * @return Localised string that contains the text for a cancel button.
 	 */
-	@DefaultStringValue("Cancel")
+	@DefaultStringValue("Close")
 	public String btnCancel();
 
 	/**

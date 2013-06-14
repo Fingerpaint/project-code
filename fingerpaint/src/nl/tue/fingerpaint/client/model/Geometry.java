@@ -265,6 +265,9 @@ public abstract class Geometry {
 	 *            The size to set
 	 */
 	public void setDrawingToolSize(int size) {
+		if (size < 1) {
+			size = 1;
+		}
 		tool.setRadius(size);
 		setDrawingTool(tool);
 	}
@@ -362,12 +365,12 @@ public abstract class Geometry {
 	 * 
 	 * @post {@code this.tool} has been set to {@code tool}
 	 */
-	public void setDrawingTool(DrawingTool tool) {
+	public void setDrawingTool(DrawingTool tool) {		
 		this.tool = tool;
 
 		int rad = tool.getRadius();
-		int size = (int) Math.floor((rad * 2 + 1) * factor);
-		this.displacement = (int) Math.floor(rad * factor);
+		int size = (int) Math.floor((rad * 2) * factor);
+		this.displacement = size / 2;
 
 		ImageData data = this.tool.getTool(context.createImageData(size, size),
 				currentColor);

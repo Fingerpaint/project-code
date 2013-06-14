@@ -50,12 +50,12 @@ public class RemoveInitDistButton extends Button implements ClickHandler {
 	public void onClick(ClickEvent event) {		
 		GuiState.removeResultsVerticalPanel.clear();
 		
-		GuiState.removeResultsVerticalPanel.add(GuiState.initDistFlexTable);
-		GuiState.removeResultsVerticalPanel.add(GuiState.closeResultsButton);
-
 		final ArrayList<String> names = (ArrayList<String>) StorageManager.INSTANCE
 				.getDistributions(GeometryNames.getShortName(as.getGeometryChoice()));
 		GuiState.initDistFlexTable.fillFlexTable(names, GeometryNames.getShortName(as.getGeometryChoice()));
+		
+		GuiState.removeResultsVerticalPanel.addList(GuiState.initDistFlexTable);
+		GuiState.removeResultsVerticalPanel.add(GuiState.closeResultsButton);
 
 		GuiState.removeResultsPanel.center();
 	}

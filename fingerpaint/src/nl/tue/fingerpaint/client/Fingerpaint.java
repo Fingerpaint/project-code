@@ -259,10 +259,10 @@ public class Fingerpaint implements EntryPoint {
 	/**
 	 * this method is used to acquire the size of the current cursor in pixels
 	 * 
-	 * @return cursorSizeSpinner.getValue()-1
+	 * @return cursorSizeSpinner.getValue()
 	 */
 	public int getCursorSize() {
-		return (int) GuiState.cursorSizeSpinner.getValue() - 1;
+		return (int) GuiState.cursorSizeSpinner.getValue();
 	}
 
 	/**
