@@ -2,7 +2,6 @@ package nl.tue.fingerpaint.client.gui.drawing;
 
 import static org.junit.Assert.*;
 
-import java.awt.image.BufferedImage;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collection;
@@ -15,14 +14,18 @@ import nl.tue.multibrowsertest.CrossBrowserTest;
 import nl.tue.multibrowsertest.MultiBrowserTester;
 import nl.tue.multibrowsertest.MultiBrowserTesterException;
 import nl.tue.multibrowsertest.TestRunner;
-import nl.tue.multibrowsertest.MultiBrowserTester.ResultTriple;
 
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.remote.DesiredCapabilities;
 
+/**
+ * Class designed to test if the square and circle cursors function properly
+ * Currently nonfunctional
+ * 
+ * @author Group Fingerpaint
+ */
 public class testCursor {
 
 	/**
@@ -78,7 +81,7 @@ public class testCursor {
 	 * Helper method that executes the tests stored in browserTester
 	 * 
 	 * @param browsertester the CrossBrowserTester that contains the desired tests
-	 * @return true iff all tests in the CrossBrowserTester were successful
+	 * @return true if and only if all tests in the CrossBrowserTester were successful
 	 */
 	private boolean testExecutor(CrossBrowserTest<Boolean> browsertester){
 		boolean success = true; //variable to keep track of results
@@ -87,7 +90,7 @@ public class testCursor {
 					browsertester, 
 					new URL("http://fingerpaint.campus.tue.nl:4444/wd/hub"), 
 					new StandardCapabilitiesProvider());
-			List<ResultTriple<Boolean>> results = multitester.testAll();
+			multitester.testAll();
 			//ResultTriple<Boolean> results = multitester.testSpecific(new Dimension(1200, 800), DesiredCapabilities.firefox());
 			
 			List<Map<Dimension,Boolean>> screenieResults = multitester.compareLastScreenshots();
