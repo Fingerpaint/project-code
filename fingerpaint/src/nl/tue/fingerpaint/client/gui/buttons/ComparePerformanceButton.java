@@ -88,7 +88,8 @@ public class ComparePerformanceButton extends Button implements ClickHandler {
 		vertPanel.add(GuiState.compareGraphPanel);
 		vertPanel.add(horPanel);
 
-		// Initialise all components of the first popup panel
+		// Add the first vertical panel of the first popup panel, 
+		// the rest of the initialisation is done dynamically in setupSelectionPopup
 		GuiState.compareSelectPopupPanel.add(compareVerticalPanel);
 		
 	}
