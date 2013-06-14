@@ -212,7 +212,7 @@ public class CustomTreeModel implements TreeViewModel {
 		GuiState.overwriteButtonsPanel.add(GuiState.closeSaveButton);
 
 		//Initialise the LoadResultsCellList and add the loadResultsButton
-		GuiState.menuPanel.add(GuiState.loadResultsButton);
+		GuiState.mainMenuPanel.add(GuiState.loadResultsButton);
 		GuiState.LoadResultsCellList = new LoadResultsCellList(fp, as);
 		
 		// Initialise the removeSavedResultsButton and add it to the
