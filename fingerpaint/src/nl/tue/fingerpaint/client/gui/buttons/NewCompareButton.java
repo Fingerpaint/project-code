@@ -24,6 +24,7 @@ public class NewCompareButton extends Button implements ClickHandler {
 	public NewCompareButton() {
 		super(FingerpaintConstants.INSTANCE.btnNewCompare());
 		addClickHandler(this);
+		addStyleName("panelButton");
 		ensureDebugId("newCompareButton");
 	}
 

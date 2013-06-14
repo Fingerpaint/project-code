@@ -29,6 +29,7 @@ public class ExportMultipleGraphsButton extends Button implements ClickHandler {
 		super(FingerpaintConstants.INSTANCE.btnExportGraphs());
 		this.fp = parent;
 		addClickHandler(this);
+		addStyleName("panelButton");
 		ensureDebugId("exportMultipleGraphsButton");
 	}
 	

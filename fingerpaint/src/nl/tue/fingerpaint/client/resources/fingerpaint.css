@@ -36,11 +36,8 @@ body {
 	margin: 0;
 }
 
-#compareButton,
-#cancelCompareButton,
-#cancelSaveResultsButton,
-#saveItemPanelButton {
-    width: 80px;
+.panelButton {
+	width: 120px !important;
 }
 
 #cancelCompareButton,

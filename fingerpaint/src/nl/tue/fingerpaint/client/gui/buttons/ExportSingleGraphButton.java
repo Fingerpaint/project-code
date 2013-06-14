@@ -31,6 +31,7 @@ public class ExportSingleGraphButton extends Button implements ClickHandler {
 		super(FingerpaintConstants.INSTANCE.btnExportGraph());
 		this.fp = parent;
 		addClickHandler(this);
+		addStyleName("panelButton");
 		ensureDebugId("exportSingleGraphButton");
 	}
 
