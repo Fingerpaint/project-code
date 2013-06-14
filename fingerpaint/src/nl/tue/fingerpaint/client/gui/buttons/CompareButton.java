@@ -56,11 +56,9 @@ public class CompareButton extends Button implements ClickHandler {
 		for (String s : chosenNames) {
 			names.add(s);
 			ResultStorage rs = StorageManager.INSTANCE.getResult(s);
-			if (rs == null) {
-				System.out.println("Ik ben null");
+			if (rs != null) {
+				graphs.add(rs.getSegregation());
 			}
-			// System.out.println(StorageManager.INSTANCE.getResult(s));
-			graphs.add(StorageManager.INSTANCE.getResult(s).getSegregation());
 		}
 
 		GuiState.compareGraphPanel.clear();
