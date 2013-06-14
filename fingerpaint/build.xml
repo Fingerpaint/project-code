@@ -108,32 +108,4 @@
 			<property name="jar.name" value="${gwt.module.name}.jar" />
 		</ant>
 	</target>
-	
-	<target name="deploy" depends="jar">
-	    <java jar="${gwt.module.name}.jar" fork="true"/>
-	</target>
-	
-	<target name="test">
-		<mkdir dir="reports/htmlunit.prod" />
-		<junit fork="yes" printsummary="yes" haltonfailure="yes">
-    		<jvmarg line="-Xmx256m" />
-    		<sysproperty key="gwt.args" value="-prod -standardsMode -logLevel WARN -standardsMode -out www-test" />
-    		<sysproperty key="java.awt.headless" value="true" />
-    		<classpath>
-    		    <pathelement location="src" />
-    		    <pathelement location="test" />
-    		    <path refid="project.class.path" />
-    		    <pathelement location="C:/Users/Lasse Blaauwbroek/Documents/SEP Fingerpaint Project/GWT-compile-test/gwt-2.5.1/validation-api-1.0.0.GA.jar" />
-    		    <pathelement location="C:/Users/Lasse Blaauwbroek/Documents/SEP Fingerpaint Project/GWT-compile-test/gwt-2.5.1/validation-api-1.0.0.GA-sources.jar" />
-    		    <pathelement location="path_to_the_junit_jar" />
-    		</classpath>
-    		<batchtest todir="reports/htmlunit.prod" >
-    		    <fileset dir="test" >
-    		        <include name="**/*Test.java" />
-    		    </fileset>
-    		</batchtest>
-    		<formatter type="plain" />
-    		<formatter type="xml" />
-		</junit>
-	</target>
 </project>
