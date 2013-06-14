@@ -324,5 +324,12 @@ public interface FingerpaintConstants extends Constants {
 	 */
 	@DefaultStringValue("Storage capacity exceeded.")
 	public String capacityExceeded();
-
+	
+	/**
+	 * @return Localised string to indicate that the chosen geometry is
+	 *         unsopported for mixing.
+	 */
+	@DefaultStringValue("The geometry you have chosen is unsupported. Please" +
+			" select another.")
+	public String geometryUnsupported();
 }
