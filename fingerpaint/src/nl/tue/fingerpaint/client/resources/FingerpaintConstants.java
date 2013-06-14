@@ -334,9 +334,37 @@ public interface FingerpaintConstants extends Constants {
 	
 	/**
 	 * @return Localised string to indicate that the chosen geometry is
-	 *         unsopported for mixing.
+	 *         unsupported for mixing.
 	 */
 	@DefaultStringValue("The geometry you have chosen is unsupported. Please" +
 			" select another.")
 	public String geometryUnsupported();
+
+	/**
+	 * @return Localised string for the error message that is shown when a key
+	 *         does not exist in local storage.
+	 */
+	@DefaultStringValue("Local storage error.")
+	public String nonexistantKeyError();
+
+	/**
+	 * @return Localised string for the error message that is shown when the
+	 *         local storage is not initialised.
+	 */
+	@DefaultStringValue("Local storage error.")
+	public String notInitialisedError();
+	
+	/**
+	 * @return Localised string for the error message that is shown when the
+	 * 	       local storage is full.
+	 */
+	@DefaultStringValue("Your storage is full. Please remove some items.")
+	public String quotaExceededError();
+
+	/**
+	 * @return Localised string for the error message that is shown when an
+	 *         unknown error occurs.
+	 */
+	@DefaultStringValue("An unknown error has occurred.")
+	public String unknownError();
 }

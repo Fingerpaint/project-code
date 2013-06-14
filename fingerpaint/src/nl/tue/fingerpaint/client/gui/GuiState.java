@@ -90,6 +90,12 @@ public class GuiState {
 	 */
 	public static final int DEFAULT_TIMEOUT = 2000;
 
+	/**
+	 * Timeout for the somewhat longer message that appears when a geometry
+	 * is unsupported.
+	 */
+	public static final int UNSUPPORTED_GEOM_TIMEOUT = 5000;
+
 	// --- LOADING APPLICATION WIDGETS ----------------------------------------
 	/**
 	 * Panel that covers the entire application and blocks the user from

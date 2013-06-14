@@ -2,8 +2,6 @@ package nl.tue.fingerpaint.shared.simulator;
 
 import java.io.Serializable;
 
-import javax.naming.OperationNotSupportedException;
-
 import nl.tue.fingerpaint.shared.GeometryNames;
 import nl.tue.fingerpaint.shared.model.MixingProtocol;
 

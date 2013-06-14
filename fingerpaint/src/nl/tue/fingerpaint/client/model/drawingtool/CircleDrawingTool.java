@@ -24,38 +24,6 @@ public class CircleDrawingTool extends DrawingTool {
 		super(r);
 	}
 
-	// --Private and protected methods for internal use---------------------
-	/**
-	 * Fills all the pixels in the data array belonging to this pixel with
-	 * regard to the grid. That is, when we have a factor of 3 for example,
-	 * then every pixel is shown on the canvas as  3x3 = 9 pixels. This
-	 * function then fills those 9 pixels.
-	 * 
-	 * @param data
-	 *            The canvas pixel array that holds the canvas data
-	 * @param x
-	 *            The x coordinate to fill
-	 * @param y
-	 *            The y coordinate to fill
-	 * @param factor
-	 *            The factor the canvas is enlarged with
-	 * @param col
-	 *            The colour to fill the pixels with
-	 * @param width
-	 *            The width of the ImageData object belonging to canvas pixel
-	 *            array {@code data}
-	 */
-	private void fillEntirePixel(CanvasPixelArray data, int x, int y,
-			int factor, int col, int width) {
-		for (int w = factor * x; w < factor * x + factor; w++) {
-			for (int h = factor * y; h < factor * y + factor; h++) {
-				int index = (h * width + w) * 4;
-				fillPixel(data, index, col, 255);
-			}
-		}
-
-	}
-
 	// --Public methods for general use--------------------------
 	/**
 	 * Returns an ImageData object representing the circle drawing tool.
@@ -68,26 +36,34 @@ public class CircleDrawingTool extends DrawingTool {
 	@Override
 	public ImageData getTool(ImageData img, Colour colour) {
 		int width = img.getWidth();
-		int factor = width / (radius * 2 + 1);
+		int radius = (int) Math.floor(width / 2.0);
 		int x = radius;
 		int y = radius;
 		CanvasPixelArray data = img.getData();
 		int col = colour.getRed();
 
 		int i = 0, j = radius;
+		int index;
+		
 		while (i <= j) {
-
 			for (int w = x - j; w <= x + j; w++) {
-				fillEntirePixel(data, w, y + i, factor, col, width);
+				index = ((y + i) * width + w) * 4;
+				fillPixel(data, index, col, 255);
 			}
+			
 			for (int w = x - j; w <= x + j; w++) {
-				fillEntirePixel(data, w, y - i, factor, col, width);
+				index = ((y - i) * width + w) * 4;
+				fillPixel(data, index, col, 255);
 			}
+			
 			for (int w = x - i; w <= x + i; w++) {
-				fillEntirePixel(data, w, y + j, factor, col, width);
+				index = ((y + j) * width + w) * 4;
+				fillPixel(data, index, col, 255);
 			}
+			
 			for (int w = x - i; w <= x + i; w++) {
-				fillEntirePixel(data, w, y - j, factor, col, width);
+				index = ((y - j) * width + w) * 4;
+				fillPixel(data, index, col, 255);
 			}
 
 			i++;
