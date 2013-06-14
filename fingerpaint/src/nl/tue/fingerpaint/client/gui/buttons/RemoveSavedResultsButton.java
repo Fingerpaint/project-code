@@ -34,18 +34,14 @@ public class RemoveSavedResultsButton extends Button implements ClickHandler {
 	 */
 	@Override
 	public void onClick(ClickEvent event) {
-		//GuiState.resultsFlexTable.removeFromParent();
-		//GuiState.closeResultsButton.removeFromParent();
-
-		// TODO: remove either below 1 or above 2 lines
 		GuiState.removeResultsVerticalPanel.clear();
-
-		GuiState.removeResultsVerticalPanel.add(GuiState.resultsFlexTable);
-		GuiState.removeResultsVerticalPanel.add(GuiState.closeResultsButton);
 
 		final ArrayList<String> names = (ArrayList<String>) StorageManager.INSTANCE
 				.getResults();
 		GuiState.resultsFlexTable.fillFlexTable(names);
+		
+		GuiState.removeResultsVerticalPanel.addList(GuiState.resultsFlexTable);
+		GuiState.removeResultsVerticalPanel.add(GuiState.closeResultsButton);
 
 		GuiState.removeResultsPanel.center();
 	}

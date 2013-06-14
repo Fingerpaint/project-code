@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import nl.tue.fingerpaint.client.gui.CustomTreeModel;
 import nl.tue.fingerpaint.client.gui.GraphVisualisator;
 import nl.tue.fingerpaint.client.gui.GuiState;
+import nl.tue.fingerpaint.client.gui.panels.NotificationPopupPanel;
 import nl.tue.fingerpaint.client.gui.spinners.NrStepsSpinner;
 import nl.tue.fingerpaint.client.model.ApplicationState;
 import nl.tue.fingerpaint.client.resources.FingerpaintCellBrowserResources;
@@ -126,8 +127,8 @@ public class Fingerpaint implements EntryPoint {
 			@Override
 			public void onResize(ResizeEvent event) {
 				if (as.getGeometry() != null) {
-					as.getGeometry().resize(Window.getClientWidth() - 20,
-							Window.getClientHeight() - 20);
+					as.getGeometry().resize(Window.getClientWidth(),
+							Window.getClientHeight());
 				}
 			}
 		});
@@ -261,10 +262,10 @@ public class Fingerpaint implements EntryPoint {
 	/**
 	 * this method is used to acquire the size of the current cursor in pixels
 	 * 
-	 * @return cursorSizeSpinner.getValue()-1
+	 * @return cursorSizeSpinner.getValue()
 	 */
 	public int getCursorSize() {
-		return (int) GuiState.cursorSizeSpinner.getValue() - 1;
+		return (int) GuiState.cursorSizeSpinner.getValue();
 	}
 
 	/**
@@ -286,9 +287,16 @@ public class Fingerpaint implements EntryPoint {
 	 * @param canOverwrite
 	 *            If we can overwrite an already-existing "file" with the given
 	 *            name or not.
-	 * @return {@code true} if "file" was saved, {@code false} otherwise
+ 	 * @return <ul>
+	 *            <li>{@code SAVE_SUCCESSFUL} If saving was successful.</li>
+	 *            <li>{@code NOT_INITIALISED_ERROR} If the local storage is not initialised.</li>
+	 *            <li>{@code NAME_IN_USE_ERROR} If the name is already in use.</li>
+	 *            <li>{@code QUOTA_EXCEEDED_ERROR} If the local storage is full.</li>
+	 *            <li>{@code NONEXISTANT_KEY_ERROR} If the key does not exist.</li>
+	 *            <li>{@code UNKNOWN_ERROR} If an error occurs, other than those above.</li>
+	 *         </ul> 
 	 */
-	public boolean save(String name, boolean canOverwrite) {
+	public int save(String name, boolean canOverwrite) {
 		if (lastSaveButtonClicked.equals(StorageManager.KEY_INITDIST)) {
 			return StorageManager.INSTANCE.putDistribution(
 					GeometryNames.getShortName(as.getGeometryChoice()), name,
@@ -311,10 +319,10 @@ public class Fingerpaint implements EntryPoint {
 						canOverwrite);
 			} catch (Exception e) {
 				GWT.log("Saving results encountered an error", e);
-				return false;
+				return StorageManager.UNKNOWN_ERROR;
 			}
 		}
-		return false;
+		return StorageManager.UNKNOWN_ERROR;
 	}
 
 	/**
@@ -404,6 +412,7 @@ public class Fingerpaint implements EntryPoint {
 		GuiState.mixNowButton.setEnabled(false);
 		GuiState.saveProtocolButton.setEnabled(false);
 		GuiState.saveResultsButton.setEnabled(false);
+		GuiState.viewSingleGraphButton.setEnabled(false);
 	}
 
 	/**
@@ -415,9 +424,12 @@ public class Fingerpaint implements EntryPoint {
 	 *            The protocol that should be executed.
 	 * @param nrSteps
 	 *            The number of times the protocol should be executed
+	 * @param mixingRun
+	 *            {@code true} if a complete run is executed, {@code false} if
+	 *            this is only a single step.
 	 */
 	public void executeMixingRun(final MixingProtocol protocol,
-			final int nrSteps) {
+			final int nrSteps, final boolean mixingRun) {
 		setLoadingPanelMessage(FingerpaintConstants.INSTANCE.prepareData());
 		setLoadingPanelVisible(true);
 
@@ -428,44 +440,55 @@ public class Fingerpaint implements EntryPoint {
 		final Timer doEvenLaterTimer = new Timer() {
 			@Override
 			public void run() {
-				Simulation simulation = new Simulation(as.getMixerChoice(),
-						protocol, FingerpaintZipper.zip(
-								FingerpaintJsonizer.toString(as
-										.getInitialDistribution()))
-								.substring(1), nrSteps, false);
-
-				TimeoutRpcRequestBuilder timeoutRpcRequestBuilder = new TimeoutRpcRequestBuilder();
-				SimulatorServiceAsync service = GWT
-						.create(SimulatorService.class);
-				((ServiceDefTarget) service)
-						.setRpcRequestBuilder(timeoutRpcRequestBuilder);
-				AsyncCallback<SimulationResult> callback = new AsyncCallback<SimulationResult>() {
-					@Override
-					public void onSuccess(SimulationResult result) {
-						as.getGeometry().drawDistribution(
-								result.getConcentrationVectors()[result
-										.getConcentrationVectors().length - 1]);
-						as.setSegregation(result.getSegregationPoints());						
-						setLoadingPanelVisible(false);
-						as.setMixRunSucces(true);
-					}
-
-					@Override
-					public void onFailure(Throwable caught) {
-						as.setMixRunSucces(false);
-						setLoadingPanelVisible(false);
-						if (caught instanceof RequestTimeoutException) {
-							showError(FingerpaintConstants.INSTANCE
-									.simulationRequestTimeout());
-						} else {
-							showError(FingerpaintConstants.INSTANCE
-									.notReachServer());
+				try {
+					Simulation simulation = new Simulation(as.getGeometryChoice(),
+							as.getMixerChoice(),
+							protocol, FingerpaintZipper.zip(
+									FingerpaintJsonizer.toString(as
+											.getInitialDistribution()))
+									.substring(1), nrSteps, false);
+					
+					TimeoutRpcRequestBuilder timeoutRpcRequestBuilder = new TimeoutRpcRequestBuilder();
+					SimulatorServiceAsync service = GWT
+							.create(SimulatorService.class);
+					((ServiceDefTarget) service)
+							.setRpcRequestBuilder(timeoutRpcRequestBuilder);
+					AsyncCallback<SimulationResult> callback = new AsyncCallback<SimulationResult>() {
+						@Override
+						public void onSuccess(SimulationResult result) {
+							as.getGeometry().drawDistribution(
+									result.getConcentrationVectors()[result
+											.getConcentrationVectors().length - 1]);
+							as.setSegregation(result.getSegregationPoints());
+							setLoadingPanelVisible(false);
+							if (mixingRun) {
+								GuiState.saveResultsButton.setEnabled(true);
+								GuiState.viewSingleGraphButton.setEnabled(true);
+							}
 						}
-					}
-				};
-				// Call the service
-				service.simulate(simulation, callback);
-			}
+
+						@Override
+						public void onFailure(Throwable caught) {
+							setLoadingPanelVisible(false);
+							if (caught instanceof RequestTimeoutException) {
+								showError(FingerpaintConstants.INSTANCE
+										.simulationRequestTimeout());
+							} else {
+								showError(FingerpaintConstants.INSTANCE
+										.notReachServer());
+							}
+						}
+					};
+					// Call the service
+					service.simulate(simulation, callback);
+				} catch (UnsupportedOperationException e) {
+					setLoadingPanelVisible(false);
+					new NotificationPopupPanel(FingerpaintConstants.INSTANCE
+							.geometryUnsupported())
+					        .show(GuiState.UNSUPPORTED_GEOM_TIMEOUT);
+				}
+			} 
+			
 		};
 
 		Timer doLaterTimer = new Timer() {

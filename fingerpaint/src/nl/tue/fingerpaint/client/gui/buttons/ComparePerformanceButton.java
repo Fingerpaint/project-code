@@ -4,11 +4,13 @@ import java.util.ArrayList;
 
 import nl.tue.fingerpaint.client.Fingerpaint;
 import nl.tue.fingerpaint.client.gui.GuiState;
+import nl.tue.fingerpaint.client.gui.labels.NoFilesFoundLabel;
 import nl.tue.fingerpaint.client.resources.FingerpaintConstants;
 import nl.tue.fingerpaint.client.storage.StorageManager;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.PopupPanel;
@@ -23,6 +25,11 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 public class ComparePerformanceButton extends Button implements ClickHandler {
 
 	private Fingerpaint fp;
+	VerticalPanel compareVerticalPanel = new VerticalPanel();
+	HorizontalPanel compareHorizontalPanel = new HorizontalPanel();
+	
+	/** the label for when there are no files found to load */
+	NoFilesFoundLabel noFilesFoundLabel = new NoFilesFoundLabel();
 
 	/**
 	 * Construct a new button that can be used to compare the performance of
@@ -40,7 +47,7 @@ public class ComparePerformanceButton extends Button implements ClickHandler {
 
 		GuiState.compareButton = new CompareButton(fp);
 
-		initialize();
+		initialise();
 
 	}
 
@@ -57,33 +64,23 @@ public class ComparePerformanceButton extends Button implements ClickHandler {
 
 		// Push the data into the widget.
 		GuiState.compareSelectPopupCellList.setRowData(0, resultNames);
+		
+		//reconstruct the selection popup
+		setupSelectionPopup(GuiState.compareSelectPopupCellList);
 
-		// Alternate between white and light-gray background colors
-//		for (int i = 0; i < resultNames.size(); i += 2) {
-//			GuiState.compareSelectPopupCellList.getRowElement(i).addClassName("cellListStyleGray");
-//		}
-//		for (int i = 1; i < resultNames.size(); i += 2) {
-//			GuiState.compareSelectPopupCellList.getRowElement(i).addClassName("cellListStyleWhite");
-//		}
 		
 		GuiState.compareSelectPopupPanel
-				.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
-					public void setPosition(int offsetWidth, int offsetHeight) {
-						GuiState.compareSelectPopupPanel.center();
-					}
-				});
+		.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
+			public void setPosition(int offsetWidth, int offsetHeight) {
+				GuiState.compareSelectPopupPanel.center();
+			}
+		});
 	}
 
-	private void initialize() {
-		// Initialise the cellList to contain all the mixing runs
-		// final ComparePerformanceCellList cellList = new
-		// ComparePerformanceCellList();
-
+	private void initialise() {
 		// Initialise all components of the second popup panel
 		VerticalPanel vertPanel = new VerticalPanel();
 		HorizontalPanel horPanel = new HorizontalPanel();
-		GuiState.closeCompareButton = new CloseCompareButton(
-				GuiState.compareSelectPopupCellList.getSelectionModel());
 		horPanel.add(GuiState.newCompareButton);
 		GuiState.exportMultipleGraphButton = new ExportMultipleGraphsButton(fp);
 		horPanel.add(GuiState.exportMultipleGraphButton);
@@ -92,15 +89,33 @@ public class ComparePerformanceButton extends Button implements ClickHandler {
 		vertPanel.add(GuiState.compareGraphPanel);
 		vertPanel.add(horPanel);
 
-		// Initialise all components of the first popup panel
-		VerticalPanel compareVerticalPanel = new VerticalPanel();
+		// Add the first vertical panel of the first popup panel, 
+		// the rest of the initialisation is done dynamically in setupSelectionPopup
 		GuiState.compareSelectPopupPanel.add(compareVerticalPanel);
-		compareVerticalPanel.add(GuiState.compareSelectPopupCellList);
-		HorizontalPanel compareHorizontalPanel = new HorizontalPanel();
+		
+	}
+	
+	/**
+	 * Method to reconstruct the selection popup, 
+	 * adds the argument list to the popup if it is not empty
+	 * 
+	 * @param list the list to be added to the selection popup
+	 */
+	private void setupSelectionPopup(CellList<String> list){
+		compareVerticalPanel.clear();
+		compareHorizontalPanel.clear();
+		//insert no saves found message if the list is empty, add the list if it is not
+		if(list.getVisibleItemCount() == 0){
+			compareVerticalPanel.add(noFilesFoundLabel);
+		}else{
+			compareVerticalPanel.add(list);
+		}
+
 		compareVerticalPanel.add(compareHorizontalPanel);
-		compareHorizontalPanel.add(GuiState.compareButton);
-		GuiState.cancelCompareButton = new CancelCompareButton(
-				GuiState.compareSelectPopupCellList.getSelectionModel());
+		//omit the compareButton if the list is empty
+		if(list.getVisibleItemCount() != 0){
+			compareHorizontalPanel.add(GuiState.compareButton);
+		}
 		compareHorizontalPanel.add(GuiState.cancelCompareButton);
 	}
 }

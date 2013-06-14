@@ -1,14 +1,11 @@
 package nl.tue.fingerpaint.client.gui.spinners;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.KeyDownEvent;
-import com.google.gwt.event.dom.client.KeyDownHandler;
+import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DoubleBox;
@@ -23,7 +20,7 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
  * @author Pavan Andhukuri
  * @author Group Fingerpaint
  */
-public class NumberSpinner extends Composite {
+public class NumberSpinner extends Composite implements ChangeHandler, KeyUpHandler {
 
 	private DoubleBox numberBox;
 	private double RATE;
@@ -142,14 +139,9 @@ public class NumberSpinner extends Composite {
 
 		numberBox = new DoubleBox();
 		numberBox.setValue(defaultValue);
-		numberBox.addChangeHandler(new ChangeHandler() {
-
-			@Override
-			public void onChange(ChangeEvent event) {
-				roundValue();
-			}
-
-		});
+		
+		numberBox.addChangeHandler(this);
+		numberBox.addKeyUpHandler(this);
 
 		Button upButton = new Button("+");// backup old value: ("▲")
 		upButton.addClickHandler(new ClickHandler() {
@@ -244,16 +236,38 @@ public class NumberSpinner extends Composite {
 	}
 
 	/**
+	 * Returns the given value to a valid value for this spinner.
+	 * @return Value of this spinner, rounded to the nearest valid value.
+	 */
+	private double getRoundedValue() {
+		double result = getValue();
+		
+		if (hasLimits) {
+			if (result < MIN) {
+				result = MIN;
+			} else if (getValue() > MAX) {
+				result = MAX;
+			}
+		}
+		return Math.round(result / RATE) * RATE;
+	}
+	
+	/**
 	 * Rounds the current value of this numberspinner.
 	 */
 	private void roundValue() {
-		if (hasLimits) {
-			if (getValue() < MIN) {
-				setValue(MIN, false);
-			} else if (getValue() > MAX) {
-				setValue(MAX, false);
-			}
+		setValue(getRoundedValue());
+	}
+
+	@Override
+	public void onChange(ChangeEvent event) {
+		roundValue();
+	}
+
+	@Override
+	public void onKeyUp(KeyUpEvent event) {
+		if (spinnerListener != null) {
+			spinnerListener.onValueChange(getRoundedValue());
 		}
-		setValue(Math.round(getValue() / RATE) * RATE, false);
 	}
 }

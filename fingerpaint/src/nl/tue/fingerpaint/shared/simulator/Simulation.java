@@ -2,6 +2,7 @@ package nl.tue.fingerpaint.shared.simulator;
 
 import java.io.Serializable;
 
+import nl.tue.fingerpaint.shared.GeometryNames;
 import nl.tue.fingerpaint.shared.model.MixingProtocol;
 
 /**
@@ -40,21 +41,29 @@ public class Simulation implements Serializable {
 	/**
 	 * Creates a new SimulatorRequest.
 	 * 
+	 * @param geometry
+	 *            The chosen geometry.
 	 * @param mixer
-	 *            The mixer that should be used
+	 *            The mixer that should be used.
 	 * @param protocol
-	 *            The name of the step that should be performed
+	 *            The name of the step that should be performed.
 	 * @param concentrationVector
-	 *            The used concentration vector
+	 *            The used concentration vector.
 	 * @param protocolRuns
-	 *            How many times the protocol should be repeated
+	 *            How many times the protocol should be repeated.
 	 * @param intermediateVectors
-	 *            Wheter or not intermediate concentration vectors should be
-	 *            computed for each protocol run
+	 *            Whether or not intermediate concentration vectors should be
+	 *            computed for each protocol run.
+	 * @throws UnsupportedOperationException
+	 *            If an unsupported geometry was selected.
 	 */
-	public Simulation(final String mixer, final MixingProtocol protocol,
-			final String concentrationVector, final int protocolRuns,
-			final boolean intermediateVectors) {
+	public Simulation(final String geometry, final String mixer,
+			final MixingProtocol protocol, final String concentrationVector,
+			final int protocolRuns, final boolean intermediateVectors) 
+	        throws UnsupportedOperationException {
+		if (geometry != GeometryNames.RECT_LONG) {
+			throw new UnsupportedOperationException("Invalid geometry selected.");
+		}
 		if (mixer == null) {
 			throw new NullPointerException("Argument mixer cannot be null");
 		}

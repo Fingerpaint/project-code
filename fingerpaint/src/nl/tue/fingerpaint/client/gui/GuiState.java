@@ -38,12 +38,15 @@ import nl.tue.fingerpaint.client.gui.celllists.LoadProtocolCellList;
 import nl.tue.fingerpaint.client.gui.flextables.InitDistFlexTable;
 import nl.tue.fingerpaint.client.gui.flextables.ProtocolFlexTable;
 import nl.tue.fingerpaint.client.gui.flextables.ResultsFlexTable;
+import nl.tue.fingerpaint.client.gui.labels.NoFilesFoundLabel;
 import nl.tue.fingerpaint.client.gui.labels.ProtocolLabel;
 import nl.tue.fingerpaint.client.gui.labels.ProtocolRepresentationLabel;
 import nl.tue.fingerpaint.client.gui.labels.SaveMessageLabel;
 import nl.tue.fingerpaint.client.gui.panels.LoadPopupPanel;
+import nl.tue.fingerpaint.client.gui.panels.LoadVerticalPanel;
 import nl.tue.fingerpaint.client.gui.panels.ProtocolPanelContainer;
 import nl.tue.fingerpaint.client.gui.panels.RemoveResultsPopupPanel;
+import nl.tue.fingerpaint.client.gui.panels.RemoveResultsVerticalPanel;
 import nl.tue.fingerpaint.client.gui.panels.SaveItemPopupPanel;
 import nl.tue.fingerpaint.client.gui.panels.ViewSingleGraphPopupPanel;
 import nl.tue.fingerpaint.client.gui.spinners.CursorSizeSpinner;
@@ -86,6 +89,12 @@ public class GuiState {
 	 * a NotificationPanel.
 	 */
 	public static final int DEFAULT_TIMEOUT = 2000;
+
+	/**
+	 * Timeout for the somewhat longer message that appears when a geometry
+	 * is unsupported.
+	 */
+	public static final int UNSUPPORTED_GEOM_TIMEOUT = 5000;
 
 	// --- LOADING APPLICATION WIDGETS ----------------------------------------
 	/**
@@ -174,7 +183,7 @@ public class GuiState {
 	public static RemoveResultsPopupPanel removeResultsPanel = new RemoveResultsPopupPanel();
 
 	/** Vertical panel to hold the flextable and close button. */
-	public static VerticalPanel removeResultsVerticalPanel = new VerticalPanel();
+	public static RemoveResultsVerticalPanel removeResultsVerticalPanel = new RemoveResultsVerticalPanel();
 
 	/** Flextable to hold all the result entries. */
 	public static ResultsFlexTable resultsFlexTable = new ResultsFlexTable();
@@ -318,13 +327,16 @@ public class GuiState {
 	 * Vertical panel to hold the textbox and the cancel button in the load
 	 * pop-up panel.
 	 */
-	public static VerticalPanel loadVerticalPanel = new VerticalPanel();
+	public static LoadVerticalPanel loadVerticalPanel = new LoadVerticalPanel();
 
 	/** Pop-up panel to handle the loading of previously saved items. */
 	public static LoadPopupPanel loadPanel = new LoadPopupPanel();
 
 	/** Button to close the load pop-up menu. */
 	public static CloseLoadButton closeLoadButton = new CloseLoadButton();
+	
+	/** Label to indicate there are no saves found for the selected loading option */
+	public static NoFilesFoundLabel noFilesFoundLabel = new NoFilesFoundLabel();
 
 	// --- STEP SIZE WIDGETS --------------------------------------------------
 	/**
@@ -416,10 +428,14 @@ public class GuiState {
 	public static CompareButton compareButton;
 
 	/** Cancel button inside the compare performance pop-up. */
-	public static CancelCompareButton cancelCompareButton;
+	// Note: this button NEEDS to be initialised AFTER the compareSelectPopupCellList
+	public static CancelCompareButton cancelCompareButton = new CancelCompareButton(
+			GuiState.compareSelectPopupCellList.getSelectionModel());
 
 	/** Close button inside the compare performance pop-up. */
-	public static CloseCompareButton closeCompareButton;
+	// Note: this button NEEDS to be initialised AFTER the compareSelectPopupCellList
+	public static CloseCompareButton closeCompareButton = new CloseCompareButton(
+			GuiState.compareSelectPopupCellList.getSelectionModel());
 
 	/**
 	 * Button inside the compare performance pop-up to start a new comparison.

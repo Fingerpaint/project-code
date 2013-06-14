@@ -42,7 +42,7 @@ public class LoadInitDistCellList extends CellList<String> {
 		super(new TextCell(), (CellList.Resources) GWT.create(FingerpaintCellListResources.class));
 		this.as = appState;
 		setSelectionModel();
-		setKeyboardSelectionPolicy(KeyboardSelectionPolicy.ENABLED);
+		setKeyboardSelectionPolicy(KeyboardSelectionPolicy.DISABLED);
 		setSelectionModel(selectionModel);
 		ensureDebugId("loadInitDistCellList");
 	}

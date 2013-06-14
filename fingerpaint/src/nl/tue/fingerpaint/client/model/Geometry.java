@@ -33,6 +33,11 @@ public abstract class Geometry {
 	protected Context2d context;
 	/** The factor by which the base dimension of the geometry are multiplied */
 	protected double factor;
+	
+	/** Width of the drawing area in pixels. */
+	protected int canvasWidth;
+	/** Height of the drawing area in pixels. */
+	protected int canvasHeight;
 
 	/**
 	 * The height of the wall in the same distance unit as the
@@ -43,17 +48,17 @@ public abstract class Geometry {
 	 * Distance between left border of the canvas and the left border of the
 	 * drawing area.
 	 */
-	protected static final int X_OFFSET = 0;
+	protected static final int X_OFFSET = 4;
 	/**
 	 * Distance between the top border of the canvas and the top border of the
 	 * drawing area.
 	 */
-	protected static final int TOP_OFFSET = HEIGHT_OF_WALL;
+	protected static final int TOP_OFFSET = HEIGHT_OF_WALL + X_OFFSET;
 	/**
 	 * Minimum distance between the bottom border of the canvas and the bottom
 	 * border of the drawing area.
 	 */
-	protected static final int BOTTOM_OFFSET = HEIGHT_OF_WALL;
+	protected static final int BOTTOM_OFFSET = HEIGHT_OF_WALL + X_OFFSET;
 	/**
 	 * Threshold in pixels to decide when a large enough swipe has been carried
 	 * out to define a protocol step.
@@ -123,29 +128,10 @@ public abstract class Geometry {
 	 * @param clientWidth
 	 *            The width of the window in which the application is displayed
 	 */
+	// TODO: Stop the user from initialising a square geometry as we don't have a square mixer matrix yet.
 	protected Geometry(int clientHeight, int clientWidth) {
-		initialiseDistribution();
-
 		drawing = false;
 		definingStep = false;
-
-		// Actually create the canvas element
-		createCanvas(clientHeight, clientWidth);
-		updateSize(clientWidth, clientHeight);
-		
-		// Initialise drawing colour to black
-		setColor(Colour.BLACK);
-		// Initialise drawing tool to a square with radius 3
-		setDrawingTool(new SquareDrawingTool(3));
-
-		// Draw the outline of the walls and the drawing canvas. Then clip the
-		// drawing area.
-		drawWalls();
-		drawGeometryOutline();
-		clipGeometryOutline();
-		
-		// Initialise mouse handlers
-		initialiseNativeHandlers(canvas.getElement());
 	}
 
 	/**
@@ -200,6 +186,26 @@ public abstract class Geometry {
 					e.gesture.touches[0].pageY - e.target.offsetTop - top);
 		});
 	}-*/;
+	
+	protected void initialise(int clientWidth, int clientHeight) {
+		// Actually create the canvas element
+		createCanvas(clientHeight, clientWidth);
+		updateSize(clientWidth, clientHeight);
+		
+		// Initialise drawing colour to black
+		setColor(Colour.BLACK);
+		// Initialise drawing tool to a square with radius 3
+		setDrawingTool(new SquareDrawingTool(3));
+
+		// Draw the outline of the walls and the drawing canvas. Then clip the
+		// drawing area.
+		drawWalls();
+		drawGeometryOutline();
+		clipGeometryOutline();
+		
+		// Initialise mouse handlers
+		initialiseNativeHandlers(canvas.getElement());
+	}
 
 	/**
 	 * Updates the internal size and factor.
@@ -259,6 +265,9 @@ public abstract class Geometry {
 	 *            The size to set
 	 */
 	public void setDrawingToolSize(int size) {
+		if (size < 1) {
+			size = 1;
+		}
 		tool.setRadius(size);
 		setDrawingTool(tool);
 	}
@@ -356,12 +365,12 @@ public abstract class Geometry {
 	 * 
 	 * @post {@code this.tool} has been set to {@code tool}
 	 */
-	public void setDrawingTool(DrawingTool tool) {
+	public void setDrawingTool(DrawingTool tool) {		
 		this.tool = tool;
 
 		int rad = tool.getRadius();
-		int size = (int) Math.floor((rad * 2 + 1) * factor);
-		this.displacement = (int) Math.floor(rad * factor);
+		int size = (int) Math.floor((rad * 2) * factor);
+		this.displacement = size / 2;
 
 		ImageData data = this.tool.getTool(context.createImageData(size, size),
 				currentColor);

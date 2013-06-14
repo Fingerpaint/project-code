@@ -103,8 +103,8 @@ body {
 
 #fingerpaintCanvas {
 	position: fixed;
-	top: 4px;
-	left: 4px;
+	top: 0;
+	left: 0;
 }
 
 #menuPanelWrapper {

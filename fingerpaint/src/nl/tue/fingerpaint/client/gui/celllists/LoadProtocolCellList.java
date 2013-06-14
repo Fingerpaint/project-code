@@ -41,7 +41,7 @@ public class LoadProtocolCellList extends CellList<String> {
 		super(new TextCell(), (CellList.Resources) GWT.create(FingerpaintCellListResources.class));	
 		this.as = appState;
 		setSelectionHandler();
-		setKeyboardSelectionPolicy(KeyboardSelectionPolicy.ENABLED);
+		setKeyboardSelectionPolicy(KeyboardSelectionPolicy.DISABLED);
 		setSelectionModel(selectionModel);
 		ensureDebugId("loadProtocolCellList");
 	}
@@ -88,6 +88,9 @@ public class LoadProtocolCellList extends CellList<String> {
 							GuiState.labelProtocolRepresentation.setText(as
 									.getProtocol().toString());
 							GuiState.mixNowButton.setEnabled(true);
+							
+							GuiState.saveResultsButton.setEnabled(false);
+							GuiState.viewSingleGraphButton.setEnabled(false);
 
 							selectionModel.setSelected(selected, false);
 							GuiState.loadPanel.hide();
