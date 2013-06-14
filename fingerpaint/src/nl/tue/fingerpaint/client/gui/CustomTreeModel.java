@@ -160,6 +160,7 @@ public class CustomTreeModel implements TreeViewModel {
 		GuiState.popupPanelPanel.add(GuiState.popupPanelMenu);
 		GuiState.popupPanelPanel.add(GuiState.cursorSizeSpinner);
 		GuiState.toolSelector.add(GuiState.popupPanelPanel);
+		GuiState.toolSelector.setModal(true);
 
 		GuiState.menuPanel.add(GuiState.toolSelectButton);
 
