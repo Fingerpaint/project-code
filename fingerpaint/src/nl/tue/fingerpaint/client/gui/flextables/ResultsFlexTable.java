@@ -19,12 +19,6 @@ import com.google.gwt.user.client.ui.FlexTable;
  * @author Group Fingerpaint
  */
 public class ResultsFlexTable extends FlexTable {
-	
-	/**
-	 * Reference to this class, so that it can be accessed from within the
-	 * ClickHandler.
-	 */
-	FlexTable thisTable;
 
 	/**
 	 * Construct a new FlexTable that can be used to display all results
@@ -33,8 +27,6 @@ public class ResultsFlexTable extends FlexTable {
 	 */
 	public ResultsFlexTable() {
 		super();
-		
-		thisTable = this;
 
 		setText(0, 0, FingerpaintConstants.INSTANCE.flexFileName());
 		setText(0, 1, FingerpaintConstants.INSTANCE.flexRemove());
@@ -69,7 +61,7 @@ public class ResultsFlexTable extends FlexTable {
 							.show(GuiState.DEFAULT_TIMEOUT);
 					
 					if (results.isEmpty()) {
-						GuiState.removeResultsVerticalPanel.remove(thisTable);
+						GuiState.removeResultsVerticalPanel.remove(GuiState.listScrollPanel);
 						GuiState.removeResultsVerticalPanel.insert(new NoFilesFoundLabel(), 0);
 					}
 				}

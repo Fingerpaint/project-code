@@ -70,6 +70,7 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupPanel;
+import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
@@ -373,6 +374,9 @@ public class GuiState {
 	 * pop-up panel.
 	 */
 	public static LoadVerticalPanel loadVerticalPanel = new LoadVerticalPanel();
+	
+	/** Scroll panel to hold the lists in the the loadVerticalPanel and removeResultsVerticalPanel */
+	public static ScrollPanel listScrollPanel = new ScrollPanel();
 
 	/** Pop-up panel to handle the loading of previously saved items. */
 	public static LoadPopupPanel loadPanel = new LoadPopupPanel();
@@ -532,6 +536,7 @@ public class GuiState {
 		overwriteButtonsPanel.ensureDebugId("overwriteButtonsPanel");
 		overwriteSaveVerticalPanel.ensureDebugId("overwriteSaveVerticalPanel");
 		loadVerticalPanel.ensureDebugId("loadVerticalPanel");
+		listScrollPanel.ensureDebugId("listScrollPanel");
 
 		sizeLabel.ensureDebugId("sizeLabel");
 		sizeProtocolMenuLabel.ensureDebugId("sizeProtocolMenuLabel");

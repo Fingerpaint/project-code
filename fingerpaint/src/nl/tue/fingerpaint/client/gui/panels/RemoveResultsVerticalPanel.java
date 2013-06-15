@@ -1,5 +1,6 @@
 package nl.tue.fingerpaint.client.gui.panels;
 
+import nl.tue.fingerpaint.client.gui.GuiState;
 import nl.tue.fingerpaint.client.gui.labels.NoFilesFoundLabel;
 
 import com.google.gwt.user.client.ui.FlexTable;
@@ -29,10 +30,13 @@ public class RemoveResultsVerticalPanel extends VerticalPanel {
 			throw new NullPointerException();
 		}
 		if(list.getRowCount() == 1){ // only the labels are in the table
+			//remove(GuiState.listScrollPanel);
 			add(noFilesFoundLabel);
 		}else{
 			remove(noFilesFoundLabel);
-			add(list);
+			GuiState.listScrollPanel.setWidget(list);
+			add(GuiState.listScrollPanel);
+			//add(list);
 		}
 	}
 }
