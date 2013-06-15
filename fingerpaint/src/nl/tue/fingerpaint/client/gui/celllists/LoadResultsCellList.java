@@ -132,6 +132,8 @@ public class LoadResultsCellList extends CellList<String> {
 			
 			@Override
 			public void onSuccess(Boolean result) {
+				// Set the state to 'defining protocol' before switching to the protocol menu
+				as.setIsDefiningProtocol(true);
 				MenuLevelSwitcher.showSub1MenuDefineProtocol();
 			}
 			
