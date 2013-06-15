@@ -3,6 +3,7 @@ package nl.tue.fingerpaint.client.gui.flextables;
 import java.util.ArrayList;
 
 import nl.tue.fingerpaint.client.gui.GuiState;
+import nl.tue.fingerpaint.client.gui.labels.NoFilesFoundLabel;
 import nl.tue.fingerpaint.client.gui.panels.NotificationPopupPanel;
 import nl.tue.fingerpaint.client.resources.FingerpaintConstants;
 import nl.tue.fingerpaint.client.storage.StorageManager;
@@ -18,6 +19,12 @@ import com.google.gwt.user.client.ui.FlexTable;
  * @author Group Fingerpaint
  */
 public class ProtocolFlexTable extends FlexTable {
+	
+	/**
+	 * Reference to this class, so that it can be accessed from within the
+	 * ClickHandler.
+	 */
+	FlexTable thisTable;
 
 	/**
 	 * Construct a new FlexTable that can be used to display all results
@@ -26,6 +33,8 @@ public class ProtocolFlexTable extends FlexTable {
 	 */
 	public ProtocolFlexTable() {
 		super();
+		
+		thisTable = this;
 
 		setText(0, 0, FingerpaintConstants.INSTANCE.flexFileName());
 		setText(0, 1, FingerpaintConstants.INSTANCE.flexRemove());
@@ -61,6 +70,11 @@ public class ProtocolFlexTable extends FlexTable {
 					new NotificationPopupPanel(FingerpaintConstants.INSTANCE
 							.deleteSuccess())
 							.show(GuiState.DEFAULT_TIMEOUT);
+					
+					if (protocols.isEmpty()) {
+						GuiState.removeResultsVerticalPanel.remove(thisTable);
+						GuiState.removeResultsVerticalPanel.insert(new NoFilesFoundLabel(), 0);
+					}
 				}
 			});
 			setWidget(row, 1, removeButton);
