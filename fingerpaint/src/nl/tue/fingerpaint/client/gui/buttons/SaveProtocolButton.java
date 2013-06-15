@@ -33,6 +33,8 @@ public class SaveProtocolButton extends Button implements ClickHandler {
 		super(FingerpaintConstants.INSTANCE.btnSaveProt());
 		this.fp = parent;
 		addClickHandler(this);
+		// Initially, saving a protocol is not possible (no protocol has been defined yet).
+		setEnabled(false);
 		ensureDebugId("saveProtocolButton");
 	}
 	
