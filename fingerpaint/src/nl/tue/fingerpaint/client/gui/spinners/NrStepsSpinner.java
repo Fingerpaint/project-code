@@ -44,8 +44,8 @@ public class NrStepsSpinner extends NumberSpinner implements
 	 * @param value The value that should be set.
 	 */
 	@Override
-	public void onValueChange(double value) {
-		as.setNrSteps(value);
+	public void onValueChange(double value, double roundedValue) {
+		as.setNrSteps(roundedValue);
 	}
 
 }

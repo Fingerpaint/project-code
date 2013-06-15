@@ -5,6 +5,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import nl.tue.fingerpaint.client.Fingerpaint;
+import nl.tue.fingerpaint.client.gui.buttons.BackStopDefiningProtocolButton;
 import nl.tue.fingerpaint.client.gui.buttons.CircleDrawingToolToggleButton;
 import nl.tue.fingerpaint.client.gui.buttons.ComparePerformanceButton;
 import nl.tue.fingerpaint.client.gui.buttons.ExportDistributionButton;
@@ -44,7 +45,6 @@ import com.google.gwt.cell.client.ValueUpdater;
 import com.google.gwt.user.cellview.client.CellBrowser;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
@@ -228,13 +228,12 @@ public class CustomTreeModel implements TreeViewModel {
 		// Initialise a spinner for changing the length of a mixing protocol
 		// step and add to menuPanel.
 		GuiState.sizeSpinner = new StepSizeSpinner(as);
+		GuiState.sizeProtocolMenuSpinner = new StepSizeSpinner(as, "sizeProtocolMenuSpinner");
 		GuiState.mainMenuPanel.add(GuiState.sizeLabel);
 		GuiState.mainMenuPanel.add(GuiState.sizeSpinner);
 
-		// Initialise the toggleButton that indicates whether a protocol is
-		// being defined, or single steps have to be executed and add to
-		// menu panel
-		GuiState.toggleDefineProtocol = new ToggleDefineProtocol(fp);
+		// Add a button with which the protocol submenu can be accessed
+		GuiState.toggleDefineProtocol = new ToggleDefineProtocol(as);
 		GuiState.mainMenuPanel.add(GuiState.toggleDefineProtocol);
 
 		// Initialise a spinner for #steps
@@ -253,25 +252,11 @@ public class CustomTreeModel implements TreeViewModel {
 		GuiState.loadProtocolButton = new LoadProtocolButton(as);
 		GuiState.loadProtocolCellList = new LoadProtocolCellList(as);
 
-		// Initialise the loadProtocolButton
-		GuiState.removeSavedProtButton = new RemoveSavedProtButton(as);		
-
-		// Add all the protocol widgets to the menuPanel and hide them
-		// initially.
-		VerticalPanel protocolPanel = new VerticalPanel();
-		protocolPanel.add(GuiState.nrStepsLabel);
-		protocolPanel.add(GuiState.nrStepsSpinner);
-		protocolPanel.add(GuiState.labelProtocolLabel);
-		protocolPanel.add(GuiState.labelProtocolRepresentation);
-		protocolPanel.add(GuiState.mixNowButton);
-		protocolPanel.add(GuiState.resetProtocolButton);
-		protocolPanel.add(GuiState.saveProtocolButton);
-		protocolPanel.add(GuiState.loadProtocolButton);
-		protocolPanel.add(GuiState.removeSavedProtButton);
-		GuiState.protocolPanelContainer.add(protocolPanel);
-		GuiState.mainMenuPanel.add(GuiState.protocolPanelContainer);
-
-		fp.setProtocolWidgetsVisible(false);
+		// Initialise the remove protocol button
+		GuiState.removeSavedProtButton = new RemoveSavedProtButton(as);
+		
+		// Initiliase the button to leave the protocol submenu
+		GuiState.backStopDefiningProtocol = new BackStopDefiningProtocolButton(as);
 
 		// Add canvas and menuPanel to the page
 		RootPanel.get().add(as.getGeometry().getCanvas());
@@ -343,8 +328,7 @@ public class CustomTreeModel implements TreeViewModel {
 	private void addStep(MixingStep step) {
 		GuiState.saveResultsButton.setEnabled(false);
 		GuiState.viewSingleGraphButton.setEnabled(false);
-		GuiState.labelProtocolLabel.setVisible(true);
-		if (!GuiState.toggleDefineProtocol.isHidden()) {
+		if (as.isDefiningProtocol()) {
 			step.setStepSize(as.getStepSize());
 			as.addMixingStep(step);
 			updateProtocolLabel(step);

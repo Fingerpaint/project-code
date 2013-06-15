@@ -14,8 +14,12 @@ public interface NumberSpinnerListener {
 	 * is updated.
 	 * 
 	 * @param value
-	 *            The (new) current value of the spinner.
+	 *            The (new) current value of the spinner. This is the value as
+	 *            it is typed in by the user.
+	 * @param roundedValue
+	 *            The (new) current value of the spinner, rounded to a value
+	 *            that is valid for it.
 	 */
-	public void onValueChange(double value);
+	public void onValueChange(double value, double roundedValue);
 
 }

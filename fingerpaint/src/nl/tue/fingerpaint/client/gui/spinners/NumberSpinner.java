@@ -207,7 +207,7 @@ public class NumberSpinner extends Composite implements ChangeHandler, KeyUpHand
 	public void setValue(double d, boolean round) {
 		numberBox.setValue(d);
 		if (spinnerListener != null) {
-			spinnerListener.onValueChange(d);
+			spinnerListener.onValueChange(d, getRoundedValue(d));
 		}
 
 		if (round) {
@@ -236,12 +236,21 @@ public class NumberSpinner extends Composite implements ChangeHandler, KeyUpHand
 	}
 
 	/**
-	 * Returns the given value to a valid value for this spinner.
+	 * Returns the value of the spinner rounded to a valid value for this spinner.
+	 * 
 	 * @return Value of this spinner, rounded to the nearest valid value.
 	 */
-	private double getRoundedValue() {
-		double result = getValue();
-		
+	public double getRoundedValue() {
+		return getRoundedValue(getValue());
+	}
+	
+	/**
+	 * Returns the given value, rounded so that it is a valid one for this spinner.
+	 * 
+	 * @param value The value to round.
+	 */
+	private double getRoundedValue(double value) {
+		double result = value;
 		if (hasLimits) {
 			if (result < MIN) {
 				result = MIN;
@@ -267,7 +276,7 @@ public class NumberSpinner extends Composite implements ChangeHandler, KeyUpHand
 	@Override
 	public void onKeyUp(KeyUpEvent event) {
 		if (spinnerListener != null) {
-			spinnerListener.onValueChange(getRoundedValue());
+			spinnerListener.onValueChange(getValue(), getRoundedValue());
 		}
 	}
 }

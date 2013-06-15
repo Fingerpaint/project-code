@@ -39,6 +39,10 @@ public class ApplicationState {
 	 * Initially set to 0, to indicate that the spinner has not been loaded yet.
 	 */
 	private int nrSteps = 0;
+	/**
+	 * If the user is defining a protocol or not.
+	 */
+	private boolean isDefiningProtocol = false;
 
 	// --Getters and Setters------------------------------------------------
 	/**
@@ -223,5 +227,25 @@ public class ApplicationState {
 	 */
 	public void drawDistribution() {
 		geom.drawDistribution(initialDistribution);
+	}
+
+	/**
+	 * Return if the user is currently defining a protocol, or not.
+	 * In the latter case he/she can execute single steps directly.
+	 * 
+	 * @return {@code true} if the user is defining a protocol
+	 */
+	public boolean isDefiningProtocol() {
+		return isDefiningProtocol;
+	}
+	
+	/**
+	 * Change if the user is defining a protocol or not.
+	 * 
+	 * @param isDefiningProtocol
+	 *            {@code true} if the user is defining a protocol
+	 */
+	public void setIsDefiningProtocol(boolean isDefiningProtocol) {
+		this.isDefiningProtocol = isDefiningProtocol;
 	}
 }

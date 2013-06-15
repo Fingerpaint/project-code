@@ -30,6 +30,14 @@
 	padding: 10px;
 }
 
+.cellBrowserKeyboardSelectedItem:nth-child\(odd\):hover,
+.cellBrowserEvenItem:hover,
+.cellBrowserKeyboardSelectedItem:nth-child\(even\):hover,
+.cellBrowserOddItem:hover,
+.cellBrowserSelectedItem:hover {
+	cursor: pointer;
+}
+
 .cellBrowserSelectedItem {
 	padding: 10px;
 	background: MAIN !important;

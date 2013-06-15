@@ -95,7 +95,6 @@ public class LoadProtocolCellList extends CellList<String> {
 
 							GuiState.labelProtocolRepresentation
 									.setVisible(true);
-							GuiState.labelProtocolLabel.setVisible(true);
 							GuiState.saveProtocolButton.setEnabled(true);
 						}
 					}
