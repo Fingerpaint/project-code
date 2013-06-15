@@ -102,13 +102,16 @@ public class CustomTreeModel implements TreeViewModel {
 			as.setGeometry(new RectangleGeometry(Window.getClientHeight(),
 					Window.getClientWidth(), 240, 400));
 		} else if (as.getGeometryChoice().equals(GeometryNames.SQR)) {
-			int size = Math.min(Window.getClientHeight(), Window.getClientWidth());
-			as.setGeometry(new RectangleGeometry(size - 20,	size - 20,
-					240, 240));
-			Logger.getLogger("").log(Level.INFO, "Length of distribution array: " + as.getGeometry().getDistribution().length);
+			int size = Math.min(Window.getClientHeight(),
+					Window.getClientWidth());
+			as.setGeometry(new RectangleGeometry(size - 20, size - 20, 240, 240));
+			Logger.getLogger("").log(
+					Level.INFO,
+					"Length of distribution array: "
+							+ as.getGeometry().getDistribution().length);
 		} else { // No valid mixer was selected
-			Logger.getLogger("").log(Level.WARNING,
-					"Invalid geometry selected");
+			Logger.getLogger("")
+					.log(Level.WARNING, "Invalid geometry selected");
 		}
 	}
 
@@ -213,9 +216,9 @@ public class CustomTreeModel implements TreeViewModel {
 
 		// Initialise the LoadResultsCellList and add the loadResultsButton
 		GuiState.LoadResultsCellList = new LoadResultsCellList(fp, as);
-		
+
 		GuiState.removeResultsPanel.add(GuiState.removeResultsVerticalPanel);
-		
+
 		GuiState.mainMenuPanel.add(GuiState.resultsButton);
 
 		// Initialise view single graph button
@@ -228,7 +231,8 @@ public class CustomTreeModel implements TreeViewModel {
 		// Initialise a spinner for changing the length of a mixing protocol
 		// step and add to menuPanel.
 		GuiState.sizeSpinner = new StepSizeSpinner(as);
-		GuiState.sizeProtocolMenuSpinner = new StepSizeSpinner(as, "sizeProtocolMenuSpinner");
+		GuiState.sizeProtocolMenuSpinner = new StepSizeSpinner(as,
+				"sizeProtocolMenuSpinner");
 		GuiState.mainMenuPanel.add(GuiState.sizeLabel);
 		GuiState.mainMenuPanel.add(GuiState.sizeSpinner);
 
@@ -254,19 +258,20 @@ public class CustomTreeModel implements TreeViewModel {
 
 		// Initialise the remove protocol button
 		GuiState.removeSavedProtButton = new RemoveSavedProtButton(as);
-		
+
 		// Initiliase the button to leave the protocol submenu
-		GuiState.backStopDefiningProtocol = new BackStopDefiningProtocolButton(as);
+		GuiState.backStopDefiningProtocol = new BackStopDefiningProtocolButton(
+				as);
 
 		// Add canvas and menuPanel to the page
 		RootPanel.get().add(as.getGeometry().getCanvas());
-		
+
 		GuiState.menuPanelInnerWrapper.add(GuiState.mainMenuPanel);
 		GuiState.menuPanelInnerWrapper.add(GuiState.subLevel1MenuPanel);
 		GuiState.menuPanelInnerWrapper.add(GuiState.subLevel2MenuPanel);
 		GuiState.menuPanelOuterWrapper.add(GuiState.menuPanelInnerWrapper);
 		RootPanel.get().add(GuiState.menuPanelOuterWrapper);
-		
+
 		GuiState.menuToggleButton.refreshMenuSize();
 		RootPanel.get().add(GuiState.menuToggleButton);
 	}
@@ -353,12 +358,10 @@ public class CustomTreeModel implements TreeViewModel {
 	private void updateProtocolLabel(MixingStep step) {
 		String oldProtocol = GuiState.labelProtocolRepresentation.getText();
 		String stepString = step.toString();
-		if (stepString.charAt(0) == 'B' || stepString.charAt(0) == 'T') {
-			stepString = "&nbsp;" + stepString;
-		}
 
 		GuiState.labelProtocolRepresentation.setVisible(true);
 		GuiState.labelProtocolRepresentation.getElement().setInnerHTML(
-				oldProtocol + stepString + " ");
+				oldProtocol.isEmpty() ? stepString : oldProtocol + ", "
+						+ stepString);
 	}
 }
