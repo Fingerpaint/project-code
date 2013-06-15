@@ -112,7 +112,8 @@ public class LoadResultsCellList extends CellList<String> {
 		// load the protocol in the protocol box
 		MixingProtocol prot = result.getMixingProtocol();
 		as.setProtocol(prot);
-		GuiState.labelProtocolRepresentation.setText(as.getProtocol().toString());
+		GuiState.labelProtocolRepresentation.getElement().setInnerHTML(
+				as.getProtocol().toString());
 		GuiState.nrStepsSpinner.setValue(result.getNrSteps());
 
 		// load the distribution and the segregation

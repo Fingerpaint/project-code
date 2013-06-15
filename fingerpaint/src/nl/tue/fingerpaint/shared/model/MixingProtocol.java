@@ -145,15 +145,10 @@ public class MixingProtocol implements Serializable {
 	public String toString() {
 		String result = "";
 		for (MixingStep ms : program) {
-			result += ms.toString() + ", ";
+			result += ms.toString() + " ";
 		}
 
-		// Prevent StringIndexOutOfBoundsException due to empty protocol
-		if (result.length() < 2) {
-			return "";
-		}
-
-		return result.substring(0, result.length() - 2);
+		return result;
 	}
 	
 	/**
@@ -171,9 +166,9 @@ public class MixingProtocol implements Serializable {
 		if (protocol.endsWith("\"")) {
 			protocol = protocol.substring(0, protocol.length() - 1);
 		}
+		String[] steps = protocol.split(" ");
 
 		MixingProtocol result = new MixingProtocol();
-		String[] steps = protocol.split(", ");
 
 		for (int i = 0; i < steps.length; i++) {
 			result.addStep(new RectangleMixingStep(steps[i]));

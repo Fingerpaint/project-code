@@ -357,11 +357,9 @@ public class CustomTreeModel implements TreeViewModel {
 	 */
 	private void updateProtocolLabel(MixingStep step) {
 		String oldProtocol = GuiState.labelProtocolRepresentation.getText();
-		String stepString = step.toString();
 
 		GuiState.labelProtocolRepresentation.setVisible(true);
 		GuiState.labelProtocolRepresentation.getElement().setInnerHTML(
-				oldProtocol.isEmpty() ? stepString : oldProtocol + ", "
-						+ stepString);
+				oldProtocol + step.toString() + " ");
 	}
 }
