@@ -15,6 +15,7 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.view.client.Range;
 
 /**
  * Button that can be used to compare the performance of previously saved mixing
@@ -60,7 +61,7 @@ public class ComparePerformanceButton extends Button implements ClickHandler {
 		ArrayList<String> resultNames = (ArrayList<String>) StorageManager.INSTANCE
 				.getResults();
 
-		GuiState.compareSelectPopupCellList.setRowCount(resultNames.size());
+		GuiState.compareSelectPopupCellList.setVisibleRangeAndClearData(new Range(0, resultNames.size()), true);
 
 		// Push the data into the widget.
 		GuiState.compareSelectPopupCellList.setRowData(0, resultNames);
