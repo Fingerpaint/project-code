@@ -157,7 +157,10 @@ public class GuiState {
 	public static CursorSizeSpinner cursorSizeSpinner;
 
 	/** Button to toggle between black and white drawing colour. */
-	public static ToggleColourButton toggleColor;
+	public static ToggleColourButton toggleColour;
+	
+	/** Button to toggle between black and white drawing colour in the tool submenu. */
+	public static ToggleColourButton toolMenuToggleColour;
 
 	/** Button to change the shape of the selected drawing tool. */
 	public static ToolSelectButton toolSelectButton = new ToolSelectButton();
