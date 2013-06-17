@@ -4,13 +4,15 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import com.google.gwt.junit.client.GWTTestCase;
+
 /**
  * unit tests for the Colour utils class
  * 
  * @author Group Fingerpaint
  *
  */
-public class ColourTest {
+public class ColourTest extends GWTTestCase {
 	
 	/** instance of the to be tested colour */
 	Colour colour;
@@ -77,6 +79,11 @@ public class ColourTest {
 		assertEquals("padding should pad until the correct length", "0002", Colour.pad("2", 4));
 			assertEquals("the padding function should not pad strings " +
 					"larger than the requested size", Colour.pad("42", 1), "42");
+	}
+	
+	@Override
+	public String getModuleName() {
+		return "nl.tue.fingerpaint.Fingerpaint";
 	}
 	
 }

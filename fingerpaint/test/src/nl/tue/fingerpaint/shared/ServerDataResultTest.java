@@ -4,12 +4,14 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import com.google.gwt.junit.client.GWTTestCase;
+
 /**
  * Tests if the getters and setters of ServerDataResult function properly
  * 
  * @author Group Fingerpaint
  */
-public class ServerDataResultTest {
+public class ServerDataResultTest extends GWTTestCase {
 
 	ServerDataResult data;
 	
@@ -54,4 +56,8 @@ public class ServerDataResultTest {
 		assertArrayEquals("the parameterised constructor should store the data", map, data.getMixerGeometryMapping());
 	}
 
+	@Override
+	public String getModuleName() {
+		return "nl.tue.fingerpaint.Fingerpaint";
+	}
 }
