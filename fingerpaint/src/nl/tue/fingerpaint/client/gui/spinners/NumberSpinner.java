@@ -6,6 +6,10 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
+import com.google.gwt.event.dom.client.MouseDownEvent;
+import com.google.gwt.event.dom.client.MouseDownHandler;
+import com.google.gwt.event.dom.client.MouseMoveEvent;
+import com.google.gwt.event.dom.client.MouseMoveHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DoubleBox;
@@ -20,7 +24,8 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
  * @author Pavan Andhukuri
  * @author Group Fingerpaint
  */
-public class NumberSpinner extends Composite implements ChangeHandler, KeyUpHandler {
+public class NumberSpinner extends Composite implements ChangeHandler, KeyUpHandler,
+		MouseDownHandler, MouseMoveHandler {
 
 	private DoubleBox numberBox;
 	private double RATE;
@@ -29,6 +34,7 @@ public class NumberSpinner extends Composite implements ChangeHandler, KeyUpHand
 	private boolean hasLimits;
 	private NumberSpinnerListener spinnerListener;
 	private HorizontalPanel horPanel;
+	private boolean disableScrollDrag = false;
 
 	// ----Constructors--------------------------------------------
 
@@ -142,6 +148,8 @@ public class NumberSpinner extends Composite implements ChangeHandler, KeyUpHand
 		
 		numberBox.addChangeHandler(this);
 		numberBox.addKeyUpHandler(this);
+		numberBox.addMouseDownHandler(this);
+		numberBox.addMouseMoveHandler(this);
 
 		Button upButton = new Button("+");// backup old value: ("▲")
 		upButton.addClickHandler(new ClickHandler() {
@@ -277,6 +285,22 @@ public class NumberSpinner extends Composite implements ChangeHandler, KeyUpHand
 	public void onKeyUp(KeyUpEvent event) {
 		if (spinnerListener != null) {
 			spinnerListener.onValueChange(getValue(), getRoundedValue());
+		}
+	}
+
+	@Override
+	public void onMouseDown(MouseDownEvent event) {
+		// Google Chrome bug fix; http://stackoverflow.com/a/16751089/962603
+		disableScrollDrag = true;
+		numberBox.getElement().getStyle().setProperty("pointerEvents", "none");
+	}
+	
+	@Override
+	public void onMouseMove(MouseMoveEvent event) {
+		// Google Chrome bug fix; http://stackoverflow.com/a/16751089/962603
+		if (disableScrollDrag == true) {
+			numberBox.getElement().getStyle().setProperty("pointerEvents", "auto");
+			disableScrollDrag = false;
 		}
 	}
 }
