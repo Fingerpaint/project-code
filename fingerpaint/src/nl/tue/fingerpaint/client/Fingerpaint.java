@@ -69,6 +69,19 @@ public class Fingerpaint implements EntryPoint {
 	 * protocol) that was clicked last.
 	 */
 	protected String lastSaveButtonClicked;
+	
+	/**
+	 * Timer to execute on resize.
+	 */
+	protected Timer timer = new Timer() {
+		@Override
+		public void run() {
+			if (as.getGeometry() != null) {
+				as.getGeometry().resize(Window.getClientWidth(),
+						Window.getClientHeight());
+			}
+		}
+	};
 
 	/**
 	 * This is the entry point method.
@@ -125,10 +138,8 @@ public class Fingerpaint implements EntryPoint {
 		Window.addResizeHandler(new ResizeHandler() {
 			@Override
 			public void onResize(ResizeEvent event) {
-				if (as.getGeometry() != null) {
-					as.getGeometry().resize(Window.getClientWidth(),
-							Window.getClientHeight());
-				}
+				timer.cancel();
+				timer.schedule(250);
 			}
 		});
 	}
