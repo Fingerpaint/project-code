@@ -4,7 +4,6 @@ import nl.tue.fingerpaint.client.Fingerpaint;
 import nl.tue.fingerpaint.client.gui.GuiState;
 import nl.tue.fingerpaint.client.model.ApplicationState;
 import nl.tue.fingerpaint.client.model.drawingtool.SquareDrawingTool;
-import nl.tue.fingerpaint.client.resources.FingerpaintConstants;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -16,7 +15,7 @@ import com.google.gwt.user.client.ui.ToggleButton;
  * @author Group Fingerpaint
  */
 public class SquareDrawingToolToggleButton extends ToggleButton implements ClickHandler {
-
+	
 	/** Reference to the "parent" class. Used for executing mixing runs. */
 	private Fingerpaint fp;
 	/** Reference to the state of the application, to update stuff there. */
@@ -30,14 +29,14 @@ public class SquareDrawingToolToggleButton extends ToggleButton implements Click
 	 */
 	public SquareDrawingToolToggleButton(Fingerpaint parent,
 			ApplicationState appState) {
-		super(FingerpaintConstants.INSTANCE.btnSquareDraw(), FingerpaintConstants.INSTANCE.btnSquareDraw());
+		super("", "");
 		this.fp = parent;
 		this.as = appState;
 		addClickHandler(this);
 		
 		// Initially, the square drawing tool is selected
 		setDown(true);
-		ensureDebugId("squareDrawingTool");
+		getElement().setId("squareDrawingTool");
 	}
 
 	/**
@@ -55,5 +54,4 @@ public class SquareDrawingToolToggleButton extends ToggleButton implements Click
 			GuiState.circleDrawingTool.setDown(false);
 		}
 	}
-
 }
