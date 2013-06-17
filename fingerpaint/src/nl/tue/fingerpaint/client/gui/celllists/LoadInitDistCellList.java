@@ -10,6 +10,7 @@ import nl.tue.fingerpaint.client.storage.StorageManager;
 import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.user.cellview.client.CellList;
+import com.google.gwt.view.client.Range;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
 
@@ -54,7 +55,7 @@ public class LoadInitDistCellList extends CellList<String> {
 	 *            stored in the local storage.
 	 */
 	public void fillCellList(List<String> geometryDistributions) {
-		setRowCount(geometryDistributions.size(), true);
+		setVisibleRangeAndClearData(new Range(0, geometryDistributions.size()), true);
 		setRowData(0, geometryDistributions);
 		//Alternate between white and light-gray background colors
 		for (int i = 0; i < geometryDistributions.size(); i += 2) {

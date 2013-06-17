@@ -13,6 +13,7 @@ import nl.tue.fingerpaint.shared.model.MixingProtocol;
 import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.view.client.Range;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
 
@@ -64,7 +65,7 @@ public class LoadResultsCellList extends CellList<String> {
 	 *            stored in the local storage.
 	 */
 	public void fillCellList(List<String> results) {
-		setRowCount(results.size(), true);
+		setVisibleRangeAndClearData(new Range(0, results.size()), true);
 		setRowData(0, results);
 		// Alternate between white and light-gray background colors
 		for (int i = 0; i < results.size(); i += 2) {
