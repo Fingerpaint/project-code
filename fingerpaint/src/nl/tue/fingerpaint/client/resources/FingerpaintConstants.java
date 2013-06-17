@@ -154,20 +154,6 @@ public interface FingerpaintConstants extends Constants {
 	 */
 	@DefaultStringValue("Back")
 	public String btnBack();
-	
-	/**
-	 * @return Localised string that contains the text for
-	 *         {@link GuiState#squareDrawingTool}.
-	 */
-	@DefaultStringValue("square")
-	public String btnSquareDraw();
-
-	/**
-	 * @return Localised string that contains the text for
-	 *         {@link GuiState#circleDrawingTool}.
-	 */
-	@DefaultStringValue("circle")
-	public String btnCircleDraw();
 
 	/**
 	 * @return Localised string that contains the text for a save button.

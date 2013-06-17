@@ -4,7 +4,6 @@ import nl.tue.fingerpaint.client.Fingerpaint;
 import nl.tue.fingerpaint.client.gui.GuiState;
 import nl.tue.fingerpaint.client.model.ApplicationState;
 import nl.tue.fingerpaint.client.model.drawingtool.CircleDrawingTool;
-import nl.tue.fingerpaint.client.resources.FingerpaintConstants;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -30,13 +29,13 @@ public class CircleDrawingToolToggleButton extends ToggleButton implements Click
 	 */
 	public CircleDrawingToolToggleButton(Fingerpaint parent,
 			ApplicationState appState) {
-		super(FingerpaintConstants.INSTANCE.btnCircleDraw(), FingerpaintConstants.INSTANCE.btnCircleDraw());
+		super("", "");
 		
 		this.fp = parent;
 		this.as = appState;
 
 		addClickHandler(this);
-		ensureDebugId("circleDrawingTool");
+		getElement().setId("circleDrawingTool");
 	}
 
 	/**
@@ -54,5 +53,4 @@ public class CircleDrawingToolToggleButton extends ToggleButton implements Click
 			GuiState.squareDrawingTool.setDown(false);
 		}
 	}
-
 }

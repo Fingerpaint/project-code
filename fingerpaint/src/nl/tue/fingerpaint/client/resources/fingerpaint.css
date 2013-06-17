@@ -18,8 +18,14 @@
 }
 
 /* (try to) erase Firefox outline */
-a:focus,a:active,button,input[type="reset"]::-moz-focus-inner,input[type="button"]::-moz-focus-inner,input[type="submit"]::-moz-focus-inner,select::-moz-focus-inner,input[type="file"]>input[type="button"]::-moz-focus-inner
-	{
+a:focus,
+a:active,
+button,
+input[type="reset"]::-moz-focus-inner,
+input[type="button"]::-moz-focus-inner,
+input[type="submit"]::-moz-focus-inner,
+select::-moz-focus-inner,
+input[type="file"] > input[type="button"]::-moz-focus-inner {
 	border: 1px dotted transparent;
 	outline: none !important;
 }
@@ -337,4 +343,28 @@ cleacdr
 
 #listScrollPanel {
 	max-height: 250px;
+}
+
+/* drawing tool */
+#squareDrawingTool, #circleDrawingTool {
+	min-height: 45px;
+	padding: 0;
+	position: relative;
+	z-index: TOGGLE_COLOUR_BUTTON_Z;
+}
+
+#squareDrawingTool .html-face,
+#circleDrawingTool .html-face {
+	background: WHITE;
+	height: 35px;
+	left: 50%;
+	margin-left: -17.5px;
+	position: absolute;
+	top: 5px;
+	width: 35px;
+	z-index: TOGGLE_COLOUR_BUTTON_Z_BG;
+}
+
+#circleDrawingTool .html-face {
+	border-radius: 17.5px;
 }
