@@ -1,5 +1,6 @@
 package nl.tue.fingerpaint.client.gui.buttons;
 
+import nl.tue.fingerpaint.client.gui.GuiState;
 import nl.tue.fingerpaint.client.model.ApplicationState;
 import nl.tue.fingerpaint.client.resources.FingerpaintConstants;
 
@@ -39,5 +40,6 @@ public class ResetDistButton extends Button implements ClickHandler {
 	@Override
 	public void onClick(ClickEvent event) {
 		as.getGeometry().resetDistribution();
+		GuiState.viewSingleGraphButton.setEnabled(false);
 	}
 }

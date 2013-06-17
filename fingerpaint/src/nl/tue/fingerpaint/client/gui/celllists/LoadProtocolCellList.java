@@ -10,6 +10,7 @@ import nl.tue.fingerpaint.client.storage.StorageManager;
 import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.user.cellview.client.CellList;
+import com.google.gwt.view.client.Range;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
 
@@ -53,13 +54,7 @@ public class LoadProtocolCellList extends CellList<String> {
 	 *            storage.
 	 */
 	public void fillCellList(List<String> geometryProtocols) {
-		/*
-		 * Set the total row count. This isn't strictly necessary, but it
-		 * affects paging calculations, so its good habit to keep the row count
-		 * up to date.
-		 */
-		setRowCount(geometryProtocols.size(), true);
-
+		setVisibleRangeAndClearData(new Range(0, geometryProtocols.size()), true);
 		// Push the data into the widget.
 		setRowData(0, geometryProtocols);
 
@@ -83,8 +78,8 @@ public class LoadProtocolCellList extends CellList<String> {
 						if (selected != null) {
 							as.setProtocol(StorageManager.INSTANCE.getProtocol(
 									as.getGeometryChoice(), selected));
-							GuiState.labelProtocolRepresentation.setText(as
-									.getProtocol().toString());
+							GuiState.labelProtocolRepresentation.getElement().setInnerHTML(
+									as.getProtocol().toString());
 							GuiState.mixNowButton.setEnabled(true);
 							
 							GuiState.saveResultsButton.setEnabled(false);
@@ -95,7 +90,6 @@ public class LoadProtocolCellList extends CellList<String> {
 
 							GuiState.labelProtocolRepresentation
 									.setVisible(true);
-							GuiState.labelProtocolLabel.setVisible(true);
 							GuiState.saveProtocolButton.setEnabled(true);
 						}
 					}

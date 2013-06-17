@@ -8,21 +8,21 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
 
 /**
- * Button that can be used to enter the submenu with results related
+ * Button that can be used to enter the submenu with protocols related
  * actions.
  * 
  * @author Group Fingerpaint
  */
-public class ResultsButton extends Button implements ClickHandler {
+public class ProtocolsButton extends Button implements ClickHandler {
 
 	/**
 	 * Construct a new button that can be used to enter the submenu with
 	 * distribution related actions.
 	 */
-	public ResultsButton() {
-		super(FingerpaintConstants.INSTANCE.btnResults());
+	public ProtocolsButton() {
+		super(FingerpaintConstants.INSTANCE.btnProtocols());
 		addClickHandler(this);
-		ensureDebugId("resultsButton");
+		ensureDebugId("protocolsButton");
 	}
 
 	/**
@@ -33,7 +33,7 @@ public class ResultsButton extends Button implements ClickHandler {
 	 */
 	@Override
 	public void onClick(ClickEvent event) {
-		MenuLevelSwitcher.showSub1MenuResults();
+		MenuLevelSwitcher.showSub2MenuProtocols();
 	}
 
 }

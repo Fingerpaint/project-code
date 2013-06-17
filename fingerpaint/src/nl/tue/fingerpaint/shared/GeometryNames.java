@@ -5,11 +5,6 @@ package nl.tue.fingerpaint.shared;
  * A class that contains the geometry names for all the different geometries
  * that are used in the Fingerpaint application.
  * </p>
- * <p>
- * The long names are displayed in the cell browser and are used to save the
- * choice for the selected geometry internally. The short version of the
- * geometry names serve as keys for the class {@code StorageManager}.
- * </p>
  * 
  * @author Group Fingerpaint
  */

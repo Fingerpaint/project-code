@@ -6,6 +6,10 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
+import com.google.gwt.event.dom.client.MouseDownEvent;
+import com.google.gwt.event.dom.client.MouseDownHandler;
+import com.google.gwt.event.dom.client.MouseMoveEvent;
+import com.google.gwt.event.dom.client.MouseMoveHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DoubleBox;
@@ -20,7 +24,8 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
  * @author Pavan Andhukuri
  * @author Group Fingerpaint
  */
-public class NumberSpinner extends Composite implements ChangeHandler, KeyUpHandler {
+public class NumberSpinner extends Composite implements ChangeHandler, KeyUpHandler,
+		MouseDownHandler, MouseMoveHandler {
 
 	private DoubleBox numberBox;
 	private double RATE;
@@ -29,6 +34,7 @@ public class NumberSpinner extends Composite implements ChangeHandler, KeyUpHand
 	private boolean hasLimits;
 	private NumberSpinnerListener spinnerListener;
 	private HorizontalPanel horPanel;
+	private boolean disableScrollDrag = false;
 
 	// ----Constructors--------------------------------------------
 
@@ -142,6 +148,8 @@ public class NumberSpinner extends Composite implements ChangeHandler, KeyUpHand
 		
 		numberBox.addChangeHandler(this);
 		numberBox.addKeyUpHandler(this);
+		numberBox.addMouseDownHandler(this);
+		numberBox.addMouseMoveHandler(this);
 
 		Button upButton = new Button("+");// backup old value: ("▲")
 		upButton.addClickHandler(new ClickHandler() {
@@ -207,7 +215,7 @@ public class NumberSpinner extends Composite implements ChangeHandler, KeyUpHand
 	public void setValue(double d, boolean round) {
 		numberBox.setValue(d);
 		if (spinnerListener != null) {
-			spinnerListener.onValueChange(d);
+			spinnerListener.onValueChange(d, getRoundedValue(d));
 		}
 
 		if (round) {
@@ -236,12 +244,21 @@ public class NumberSpinner extends Composite implements ChangeHandler, KeyUpHand
 	}
 
 	/**
-	 * Returns the given value to a valid value for this spinner.
+	 * Returns the value of the spinner rounded to a valid value for this spinner.
+	 * 
 	 * @return Value of this spinner, rounded to the nearest valid value.
 	 */
-	private double getRoundedValue() {
-		double result = getValue();
-		
+	public double getRoundedValue() {
+		return getRoundedValue(getValue());
+	}
+	
+	/**
+	 * Returns the given value, rounded so that it is a valid one for this spinner.
+	 * 
+	 * @param value The value to round.
+	 */
+	private double getRoundedValue(double value) {
+		double result = value;
 		if (hasLimits) {
 			if (result < MIN) {
 				result = MIN;
@@ -267,7 +284,23 @@ public class NumberSpinner extends Composite implements ChangeHandler, KeyUpHand
 	@Override
 	public void onKeyUp(KeyUpEvent event) {
 		if (spinnerListener != null) {
-			spinnerListener.onValueChange(getRoundedValue());
+			spinnerListener.onValueChange(getValue(), getRoundedValue());
+		}
+	}
+
+	@Override
+	public void onMouseDown(MouseDownEvent event) {
+		// Google Chrome bug fix; http://stackoverflow.com/a/16751089/962603
+		disableScrollDrag = true;
+		numberBox.getElement().getStyle().setProperty("pointerEvents", "none");
+	}
+	
+	@Override
+	public void onMouseMove(MouseMoveEvent event) {
+		// Google Chrome bug fix; http://stackoverflow.com/a/16751089/962603
+		if (disableScrollDrag == true) {
+			numberBox.getElement().getStyle().setProperty("pointerEvents", "auto");
+			disableScrollDrag = false;
 		}
 	}
 }

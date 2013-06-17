@@ -103,11 +103,11 @@ public class RectangleMixingStep extends MixingStep implements Serializable {
 	public String toString() {
 		String stepString = "";
 		if (wall && direction) {
-			stepString = "T";
+			stepString = "&nbsp;T";
 		} else if (wall && !direction) {
 			stepString = "-T";
 		} else if (!wall && direction) {
-			stepString = "B";
+			stepString = "&nbsp;B";
 		} else { // (!wall && !direction) {
 			stepString = "-B";
 		}
@@ -124,13 +124,15 @@ public class RectangleMixingStep extends MixingStep implements Serializable {
 	 *            The string to be converted.
 	 */
 	@Override
-	public void fromString(String step) {		
-		if (step.startsWith("-")) {
+	public void fromString(String step) {
+		if (step.startsWith("&nbsp;")) {
+			setDirection(true);
+			step = step.substring(6);
+		} else {
 			setDirection(false);
 			step = step.substring(1);
-		} else {
-			setDirection(true);
 		}
+
 		setWall(step.startsWith("T"));
 		
 		// Remove the letter (B or T) and the brackets ([ and ]) from the string.

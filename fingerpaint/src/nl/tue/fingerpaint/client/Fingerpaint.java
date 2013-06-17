@@ -249,16 +249,6 @@ public class Fingerpaint implements EntryPoint {
 	}
 
 	/**
-	 * Toggles the visibility and availability of all the protocol widgets.
-	 * 
-	 * @param visible
-	 *            If the "define protocol" widgets should be visible or not.
-	 */
-	public void setProtocolWidgetsVisible(boolean visible) {
-		GuiState.protocolPanelContainer.setVisibleAnimated(visible);
-	}
-
-	/**
 	 * this method is used to acquire the size of the current cursor in pixels
 	 * 
 	 * @return cursorSizeSpinner.getValue()
@@ -405,7 +395,6 @@ public class Fingerpaint implements EntryPoint {
 		as.setProtocol(new MixingProtocol());
 		GuiState.labelProtocolRepresentation.setText("");
 		GuiState.labelProtocolRepresentation.setVisible(false);
-		GuiState.labelProtocolLabel.setVisible(false);
 		as.setNrSteps(NrStepsSpinner.DEFAULT_VALUE);
 		GuiState.nrStepsSpinner.setValue(NrStepsSpinner.DEFAULT_VALUE);
 		GuiState.mixNowButton.setEnabled(false);

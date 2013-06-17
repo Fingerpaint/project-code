@@ -4,6 +4,7 @@ import java.util.List;
 
 import nl.tue.fingerpaint.client.Fingerpaint;
 import nl.tue.fingerpaint.client.gui.GuiState;
+import nl.tue.fingerpaint.client.gui.menu.MenuLevelSwitcher;
 import nl.tue.fingerpaint.client.model.ApplicationState;
 import nl.tue.fingerpaint.client.storage.ResultStorage;
 import nl.tue.fingerpaint.client.storage.StorageManager;
@@ -11,6 +12,8 @@ import nl.tue.fingerpaint.shared.model.MixingProtocol;
 
 import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.user.cellview.client.CellList;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.view.client.Range;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
 
@@ -62,7 +65,7 @@ public class LoadResultsCellList extends CellList<String> {
 	 *            stored in the local storage.
 	 */
 	public void fillCellList(List<String> results) {
-		setRowCount(results.size(), true);
+		setVisibleRangeAndClearData(new Range(0, results.size()), true);
 		setRowData(0, results);
 		// Alternate between white and light-gray background colors
 		for (int i = 0; i < results.size(); i += 2) {
@@ -106,14 +109,12 @@ public class LoadResultsCellList extends CellList<String> {
 	 *            the result containing the initial distribution and the
 	 *            protocol
 	 */
-	protected void recompute(ResultStorage result) {
-		
-		//TODO: open the protocol menu
-		
+	protected void recompute(ResultStorage result) {		
 		// load the protocol in the protocol box
 		MixingProtocol prot = result.getMixingProtocol();
 		as.setProtocol(prot);
-		GuiState.labelProtocolRepresentation.setText(as.getProtocol().toString());
+		GuiState.labelProtocolRepresentation.getElement().setInnerHTML(
+				as.getProtocol().toString());
 		GuiState.nrStepsSpinner.setValue(result.getNrSteps());
 
 		// load the distribution and the segregation
@@ -125,7 +126,23 @@ public class LoadResultsCellList extends CellList<String> {
 		GuiState.viewSingleGraphButton.setEnabled(true);
 		GuiState.mixNowButton.setEnabled(true);
 		GuiState.labelProtocolRepresentation.setVisible(true);
-		GuiState.labelProtocolLabel.setVisible(true);
 		GuiState.saveProtocolButton.setEnabled(true);
+		
+		// open protocol menu by first going to the main menu and then opening
+		// the actual protocol menu: this looks nicer :-)
+		MenuLevelSwitcher.go(0, new AsyncCallback<Boolean>() {
+			
+			@Override
+			public void onSuccess(Boolean result) {
+				// Set the state to 'defining protocol' before switching to the protocol menu
+				as.setIsDefiningProtocol(true);
+				MenuLevelSwitcher.showSub1MenuDefineProtocol();
+			}
+			
+			@Override
+			public void onFailure(Throwable caught) {
+				// will not be called
+			}
+		});
 	}
 }

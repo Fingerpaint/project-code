@@ -1,6 +1,7 @@
 package nl.tue.fingerpaint.client.gui;
 
 import nl.tue.fingerpaint.client.gui.buttons.BackMenuButton;
+import nl.tue.fingerpaint.client.gui.buttons.BackStopDefiningProtocolButton;
 import nl.tue.fingerpaint.client.gui.buttons.CancelCompareButton;
 import nl.tue.fingerpaint.client.gui.buttons.CancelSaveResultsButton;
 import nl.tue.fingerpaint.client.gui.buttons.CircleDrawingToolToggleButton;
@@ -22,6 +23,7 @@ import nl.tue.fingerpaint.client.gui.buttons.MenuToggleButton;
 import nl.tue.fingerpaint.client.gui.buttons.MixNowButton;
 import nl.tue.fingerpaint.client.gui.buttons.NewCompareButton;
 import nl.tue.fingerpaint.client.gui.buttons.OverwriteSaveButton;
+import nl.tue.fingerpaint.client.gui.buttons.ProtocolsButton;
 import nl.tue.fingerpaint.client.gui.buttons.RemoveInitDistButton;
 import nl.tue.fingerpaint.client.gui.buttons.RemoveSavedProtButton;
 import nl.tue.fingerpaint.client.gui.buttons.RemoveSavedResultsButton;
@@ -44,13 +46,16 @@ import nl.tue.fingerpaint.client.gui.celllists.LoadResultsCellList;
 import nl.tue.fingerpaint.client.gui.flextables.InitDistFlexTable;
 import nl.tue.fingerpaint.client.gui.flextables.ProtocolFlexTable;
 import nl.tue.fingerpaint.client.gui.flextables.ResultsFlexTable;
+import nl.tue.fingerpaint.client.gui.labels.DistributionsLabel;
+import nl.tue.fingerpaint.client.gui.labels.DrawingToolLabel;
 import nl.tue.fingerpaint.client.gui.labels.NoFilesFoundLabel;
 import nl.tue.fingerpaint.client.gui.labels.ProtocolLabel;
 import nl.tue.fingerpaint.client.gui.labels.ProtocolRepresentationLabel;
+import nl.tue.fingerpaint.client.gui.labels.ProtocolsLabel;
+import nl.tue.fingerpaint.client.gui.labels.ResultsLabel;
 import nl.tue.fingerpaint.client.gui.labels.SaveMessageLabel;
 import nl.tue.fingerpaint.client.gui.panels.LoadPopupPanel;
 import nl.tue.fingerpaint.client.gui.panels.LoadVerticalPanel;
-import nl.tue.fingerpaint.client.gui.panels.ProtocolPanelContainer;
 import nl.tue.fingerpaint.client.gui.panels.RemoveResultsPopupPanel;
 import nl.tue.fingerpaint.client.gui.panels.RemoveResultsVerticalPanel;
 import nl.tue.fingerpaint.client.gui.panels.SaveItemPopupPanel;
@@ -65,6 +70,7 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupPanel;
+import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
@@ -142,6 +148,11 @@ public class GuiState {
 	public static BackMenuButton backMenu2Button = new BackMenuButton();
 
 	// --- DRAWING TOOL WIDGETS -----------------------------------------------
+	/**
+	 * Label to be displayed above the drawing tool related submenu.
+	 */
+	public static DrawingToolLabel drawingToolLabel = new DrawingToolLabel();
+	
 	/** Numberspinner to change the size of the drawing tool. */
 	public static CursorSizeSpinner cursorSizeSpinner;
 
@@ -161,6 +172,11 @@ public class GuiState {
 
 	// --- INITIAL DISTRIBUTION WIDGETS ---------------------------------------
 	/**
+	 * Label to be displayed above the distributions related submenu.
+	 */
+	public static DistributionsLabel distributionsLabel = new DistributionsLabel();
+	
+	/**
 	 * CellList used to select and load one previously saved concentration
 	 * distribution.
 	 */
@@ -179,6 +195,11 @@ public class GuiState {
 	public static ResetDistButton resetDistButton;
 
 	// -- RESULTS WIDGETS -----------------------------------------
+	/**
+	 * Label to be displayed above the results related submenu.
+	 */
+	public static ResultsLabel resultsLabel = new ResultsLabel();
+	
 	/** Button to enter the submenu with results related actions. */
 	public static ResultsButton resultsButton = new ResultsButton();
 	
@@ -226,16 +247,23 @@ public class GuiState {
 	
 	// --- MIXING PROTOCOL WIDGETS --------------------------------------------
 	/**
+	 * Label to be displayed above the protocols related submenu.
+	 */
+	public static ProtocolsLabel protocolsLabel = new ProtocolsLabel();
+	
+	/**
+	 * Button that can be used to access the protocols related submenu.
+	 */
+	public static ProtocolsButton protocolsButton = new ProtocolsButton();
+	
+	/**
 	 * CellList that can be used to load a previously saved mixing protocol.
 	 */
 	public static LoadProtocolCellList loadProtocolCellList;
 
-	/** Container to hold all the widgets related to a mixing protocol. */
-	public static ProtocolPanelContainer protocolPanelContainer = new ProtocolPanelContainer();
-
 	/**
 	 * The numberspinner to define how many times the mixing protocol is
-	 * executed.
+	 * executed that is located in the main menu.
 	 */
 	public static NrStepsSpinner nrStepsSpinner;
 
@@ -278,6 +306,12 @@ public class GuiState {
 	 * in its default state, steps 9wall movements) are executed directly.
 	 */
 	public static ToggleDefineProtocol toggleDefineProtocol;
+	
+	/**
+	 * Button that is used in the submenu with protocol related stuff to go
+	 * back to the main menu.
+	 */
+	public static BackStopDefiningProtocolButton backStopDefiningProtocol;
 
 	// --- SAVE POP-UP MENU WIDGETS -------------------------------------------
 	/** Pop-up panel to handle the saving of the current results. */
@@ -340,6 +374,9 @@ public class GuiState {
 	 * pop-up panel.
 	 */
 	public static LoadVerticalPanel loadVerticalPanel = new LoadVerticalPanel();
+	
+	/** Scroll panel to hold the lists in the the loadVerticalPanel and removeResultsVerticalPanel */
+	public static ScrollPanel listScrollPanel = new ScrollPanel();
 
 	/** Pop-up panel to handle the loading of previously saved items. */
 	public static LoadPopupPanel loadPanel = new LoadPopupPanel();
@@ -352,9 +389,16 @@ public class GuiState {
 
 	// --- STEP SIZE WIDGETS --------------------------------------------------
 	/**
-	 * The numberspinner to define the step size of a single wall movement.
+	 * The numberspinner to define the step size of a single wall movement,
+	 * located in the main menu.
 	 */
 	public static StepSizeSpinner sizeSpinner;
+	
+	/**
+	 * The numberspinner to define the step size of a single wall movement,
+	 * located in the protocol submenu.
+	 */
+	public static StepSizeSpinner sizeProtocolMenuSpinner;
 
 	/**
 	 * Label to be displayed above the {@link #sizeSpinner}, to explain its
@@ -362,6 +406,14 @@ public class GuiState {
 	 */
 	public static Label sizeLabel = new Label(
 			FingerpaintConstants.INSTANCE.lblStepSize());
+	
+	/**
+	 * Label to be displayed above the {@link #sizeProtocolMenuSpinner}, to explain its
+	 * purpose.
+	 */
+	public static Label sizeProtocolMenuLabel = new Label(
+			FingerpaintConstants.INSTANCE.lblStepSize());
+	
 	// ---EXPORT CANVAS IMAGE WIDGET------------------------------------------
 
 	/** Button to export the image of the current distribution. */
@@ -484,8 +536,10 @@ public class GuiState {
 		overwriteButtonsPanel.ensureDebugId("overwriteButtonsPanel");
 		overwriteSaveVerticalPanel.ensureDebugId("overwriteSaveVerticalPanel");
 		loadVerticalPanel.ensureDebugId("loadVerticalPanel");
+		listScrollPanel.ensureDebugId("listScrollPanel");
 
 		sizeLabel.ensureDebugId("sizeLabel");
+		sizeProtocolMenuLabel.ensureDebugId("sizeProtocolMenuLabel");
 
 		viewSingleGraphHorizontalPanel
 				.ensureDebugId("viewSingleGraphHorizontalPanel");

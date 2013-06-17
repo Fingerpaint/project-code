@@ -189,10 +189,12 @@ button[disabled] {
 
 .gwt-Button:hover,
 .gwt-ToggleButton:hover,
+.gwt-ToggleColourButton:hover,
 .dp-spinner-upbutton:hover,
 .dp-spinner-downbutton:hover {
 	background: MAIN_LIGHT;
 	border: 0; /* disable some weird Google styling */
+	cursor: pointer;
 }
 
 .gwt-Button:active,
@@ -226,11 +228,28 @@ cleacdr
 	resize: none;
 }
 
-#protLabel {
+#menuPanelWrapper #protLabel {
+	border: 1px solid MAIN;
+	border-radius: 3px 3px 3px 3px;
 	font-family: monospace;
-	border: 1px solid;
-	border-color: MAIN;
-	padding: 2px;
+	font-size: 12px;
+	font-weight: normal;
+	margin: 2px;
+	padding: 5px;
+	text-transform: none;
+	width: MENU_PROTOCOL_LABEL_WIDTH;
+}
+
+#menuPanelWrapper .menuTitleLabel {
+	background: MAIN_DARK;
+	border-radius: 3px 3px 3px 3px;
+	color: WHITE;
+	font-size: 12px;
+	font-weight: bold;
+	margin: 2px;
+	padding: 5px;
+	text-transform: uppercase;
+	width: MENU_TITLE_LABEL_WIDTH;
 }
 
 .spinnerNumberBox {
@@ -308,10 +327,14 @@ cleacdr
 }
 
 /* labels */
-#sizeLabel {
+#menuPanelWrapper .gwt-Label {
 	font-size: 14px;
 	font-weight: bold;
 	margin: 2px;
 	padding-left: 2px;
 	text-transform: uppercase;
+}
+
+#listScrollPanel {
+	max-height: 250px;
 }

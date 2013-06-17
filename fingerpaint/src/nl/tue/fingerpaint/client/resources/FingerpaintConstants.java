@@ -19,6 +19,14 @@ public interface FingerpaintConstants extends Constants {
 	public static final FingerpaintConstants INSTANCE = GWT
 			.create(FingerpaintConstants.class);
 
+	// --- CONSTANTS FOR CSS/STYLING ------------------------------------------
+	/**
+	 * @return Localised string that is used in the title of the protocol
+	 *         submenu.
+	 */
+	@DefaultStringValue("menuTitleLabel")
+	public String classMenuTitleLabel();
+	
 	// --- CONSTANTS FOR LOADING ----------------------------------------------
 	/**
 	 * @return Localised string that indicates that the application is loading
@@ -66,14 +74,43 @@ public interface FingerpaintConstants extends Constants {
 
 	/**
 	 * @return Localised string that contains the text for the
+	 *         {@link GuiState#drawingToolLabel} label.
+	 */
+	@DefaultStringValue("Change the drawing tool")
+	public String lblTool();
+	
+	/**
+	 * @return Localised string that contains the text for the
+	 *         {@link GuiState#distributionsLabel} label.
+	 */
+	@DefaultStringValue("Distributions")
+	public String lblDistributions();
+	
+	/**
+	 * @return Localised string that contains the text for the
+	 *         {@link GuiState#resultsLabel} label.
+	 */
+	@DefaultStringValue("Mixing run results")
+	public String lblResults();
+	
+	/**
+	 * @return Localised string that contains the text for the
+	 *         {@link GuiState#resultsLabel} label.
+	 */
+	@DefaultStringValue("Protocols")
+	public String lblProtocols();
+	
+	/**
+	 * @return Localised string that contains the text for the
 	 *         {@link GuiState#labelProtocolLabel} label.
 	 */
-	@DefaultStringValue("Protocol:")
+	@DefaultStringValue("Define a protocol")
 	public String lblProtocol();
 
 	/**
 	 * @return Localised string that contains the text for the
-	 *         {@link GuiState#sizeLabel} label.
+	 *         {@link GuiState#sizeLabel} and
+	 *         {@link GuiState#sizeProtocolMenuLabel} labels.
 	 */
 	@DefaultStringValue("Step size")
 	public String lblStepSize();
@@ -82,7 +119,7 @@ public interface FingerpaintConstants extends Constants {
 	 * @return Localised string that contains the text for the
 	 * 			{@link GuiState#noFilesFoundLabel} label
 	 */
-	@DefaultStringValue("No saved files")
+	@DefaultStringValue("No saved files.")
 	public String noFilesFound();
 
 	// -- CONSTANTS FOR SAVE MESSAGES -----------------------------------------
@@ -228,6 +265,13 @@ public interface FingerpaintConstants extends Constants {
 
 	/**
 	 * @return Localised string that contains the text for the
+	 *         {@link GuiState#protocolsButton} button.
+	 */
+	@DefaultStringValue("Protocols")
+	public String btnProtocols();
+	
+	/**
+	 * @return Localised string that contains the text for the
 	 *         {@link GuiState#saveProtocolButton} button.
 	 */
 	@DefaultStringValue("Save")
@@ -312,10 +356,17 @@ public interface FingerpaintConstants extends Constants {
 	
 	/**
 	 * @return Localised string that contains the text for the
-	 *         {@link GuiState#toggleDefineProtocol} toggle button.
+	 *         {@link GuiState#toggleDefineProtocol} button.
 	 */
 	@DefaultStringValue("Define Protocol")
-	public String btnDefProt();	
+	public String btnDefProt();
+	
+	/**
+	 * @return Localised string that contains the text for the
+	 *         {@link GuiState#backStopDefiningProtocol} button.
+	 */
+	@DefaultStringValue("Stop defining Protocol")
+	public String btnStopDefProt();
 
 	// --- CONSTANTS FOR ERRORS -----------------------------------------------
 	/**

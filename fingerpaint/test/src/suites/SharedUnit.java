@@ -5,6 +5,7 @@ import nl.tue.fingerpaint.shared.model.RectangleMixingStepTest;
 import nl.tue.fingerpaint.shared.simulator.SimulationResultTest;
 import nl.tue.fingerpaint.shared.simulator.SimulationTest;
 import nl.tue.fingerpaint.shared.simulator.SimulatorServiceTest;
+import nl.tue.fingerpaint.shared.utils.ColourTest;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
@@ -35,6 +36,8 @@ import com.google.gwt.junit.client.GWTTestCase;
 	RectangleMixingStepTest.class,
 	SimulationResultTest.class, 
 	SimulationTest.class,
+//	ServerDataResultTest.class,
+	ColourTest.class,
 // SimulatorServiceTest.class
 })
 public class SharedUnit extends GWTTestCase {
@@ -44,6 +47,8 @@ public class SharedUnit extends GWTTestCase {
 	 * SimulatorSerivceTest is not executed at the moment, since the Fortran
 	 * module can't find the matrices when executing the test from this
 	 * location.
+	 * 
+	 * ServerDataResultTest does not run because gwt only uses jUnit 3
 	 * 
 	 * All tests that are related to the local storage will possibly fail, as these tests
 	 * are executed by Eclipse in a Firefox version that doesn't support local storage.

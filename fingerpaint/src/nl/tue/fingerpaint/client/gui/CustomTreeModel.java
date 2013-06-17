@@ -5,6 +5,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import nl.tue.fingerpaint.client.Fingerpaint;
+import nl.tue.fingerpaint.client.gui.buttons.BackStopDefiningProtocolButton;
 import nl.tue.fingerpaint.client.gui.buttons.CircleDrawingToolToggleButton;
 import nl.tue.fingerpaint.client.gui.buttons.ComparePerformanceButton;
 import nl.tue.fingerpaint.client.gui.buttons.ExportDistributionButton;
@@ -44,7 +45,6 @@ import com.google.gwt.cell.client.ValueUpdater;
 import com.google.gwt.user.cellview.client.CellBrowser;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
@@ -102,13 +102,16 @@ public class CustomTreeModel implements TreeViewModel {
 			as.setGeometry(new RectangleGeometry(Window.getClientHeight(),
 					Window.getClientWidth(), 240, 400));
 		} else if (as.getGeometryChoice().equals(GeometryNames.SQR)) {
-			int size = Math.min(Window.getClientHeight(), Window.getClientWidth());
-			as.setGeometry(new RectangleGeometry(size - 20,	size - 20,
-					240, 240));
-			Logger.getLogger("").log(Level.INFO, "Length of distribution array: " + as.getGeometry().getDistribution().length);
+			int size = Math.min(Window.getClientHeight(),
+					Window.getClientWidth());
+			as.setGeometry(new RectangleGeometry(size - 20, size - 20, 240, 240));
+			Logger.getLogger("").log(
+					Level.INFO,
+					"Length of distribution array: "
+							+ as.getGeometry().getDistribution().length);
 		} else { // No valid mixer was selected
-			Logger.getLogger("").log(Level.WARNING,
-					"Invalid geometry selected");
+			Logger.getLogger("")
+					.log(Level.WARNING, "Invalid geometry selected");
 		}
 	}
 
@@ -213,9 +216,9 @@ public class CustomTreeModel implements TreeViewModel {
 
 		// Initialise the LoadResultsCellList and add the loadResultsButton
 		GuiState.LoadResultsCellList = new LoadResultsCellList(fp, as);
-		
+
 		GuiState.removeResultsPanel.add(GuiState.removeResultsVerticalPanel);
-		
+
 		GuiState.mainMenuPanel.add(GuiState.resultsButton);
 
 		// Initialise view single graph button
@@ -228,13 +231,13 @@ public class CustomTreeModel implements TreeViewModel {
 		// Initialise a spinner for changing the length of a mixing protocol
 		// step and add to menuPanel.
 		GuiState.sizeSpinner = new StepSizeSpinner(as);
+		GuiState.sizeProtocolMenuSpinner = new StepSizeSpinner(as,
+				"sizeProtocolMenuSpinner");
 		GuiState.mainMenuPanel.add(GuiState.sizeLabel);
 		GuiState.mainMenuPanel.add(GuiState.sizeSpinner);
 
-		// Initialise the toggleButton that indicates whether a protocol is
-		// being defined, or single steps have to be executed and add to
-		// menu panel
-		GuiState.toggleDefineProtocol = new ToggleDefineProtocol(fp);
+		// Add a button with which the protocol submenu can be accessed
+		GuiState.toggleDefineProtocol = new ToggleDefineProtocol(as);
 		GuiState.mainMenuPanel.add(GuiState.toggleDefineProtocol);
 
 		// Initialise a spinner for #steps
@@ -253,35 +256,22 @@ public class CustomTreeModel implements TreeViewModel {
 		GuiState.loadProtocolButton = new LoadProtocolButton(as);
 		GuiState.loadProtocolCellList = new LoadProtocolCellList(as);
 
-		// Initialise the loadProtocolButton
-		GuiState.removeSavedProtButton = new RemoveSavedProtButton(as);		
+		// Initialise the remove protocol button
+		GuiState.removeSavedProtButton = new RemoveSavedProtButton(as);
 
-		// Add all the protocol widgets to the menuPanel and hide them
-		// initially.
-		VerticalPanel protocolPanel = new VerticalPanel();
-		protocolPanel.add(GuiState.nrStepsLabel);
-		protocolPanel.add(GuiState.nrStepsSpinner);
-		protocolPanel.add(GuiState.labelProtocolLabel);
-		protocolPanel.add(GuiState.labelProtocolRepresentation);
-		protocolPanel.add(GuiState.mixNowButton);
-		protocolPanel.add(GuiState.resetProtocolButton);
-		protocolPanel.add(GuiState.saveProtocolButton);
-		protocolPanel.add(GuiState.loadProtocolButton);
-		protocolPanel.add(GuiState.removeSavedProtButton);
-		GuiState.protocolPanelContainer.add(protocolPanel);
-		GuiState.mainMenuPanel.add(GuiState.protocolPanelContainer);
-
-		fp.setProtocolWidgetsVisible(false);
+		// Initiliase the button to leave the protocol submenu
+		GuiState.backStopDefiningProtocol = new BackStopDefiningProtocolButton(
+				as);
 
 		// Add canvas and menuPanel to the page
 		RootPanel.get().add(as.getGeometry().getCanvas());
-		
+
 		GuiState.menuPanelInnerWrapper.add(GuiState.mainMenuPanel);
 		GuiState.menuPanelInnerWrapper.add(GuiState.subLevel1MenuPanel);
 		GuiState.menuPanelInnerWrapper.add(GuiState.subLevel2MenuPanel);
 		GuiState.menuPanelOuterWrapper.add(GuiState.menuPanelInnerWrapper);
 		RootPanel.get().add(GuiState.menuPanelOuterWrapper);
-		
+
 		GuiState.menuToggleButton.refreshMenuSize();
 		RootPanel.get().add(GuiState.menuToggleButton);
 	}
@@ -343,8 +333,7 @@ public class CustomTreeModel implements TreeViewModel {
 	private void addStep(MixingStep step) {
 		GuiState.saveResultsButton.setEnabled(false);
 		GuiState.viewSingleGraphButton.setEnabled(false);
-		GuiState.labelProtocolLabel.setVisible(true);
-		if (!GuiState.toggleDefineProtocol.isHidden()) {
+		if (as.isDefiningProtocol()) {
 			step.setStepSize(as.getStepSize());
 			as.addMixingStep(step);
 			updateProtocolLabel(step);
@@ -368,13 +357,9 @@ public class CustomTreeModel implements TreeViewModel {
 	 */
 	private void updateProtocolLabel(MixingStep step) {
 		String oldProtocol = GuiState.labelProtocolRepresentation.getText();
-		String stepString = step.toString();
-		if (stepString.charAt(0) == 'B' || stepString.charAt(0) == 'T') {
-			stepString = "&nbsp;" + stepString;
-		}
 
 		GuiState.labelProtocolRepresentation.setVisible(true);
 		GuiState.labelProtocolRepresentation.getElement().setInnerHTML(
-				oldProtocol + stepString + " ");
+				oldProtocol + step.toString() + " ");
 	}
 }

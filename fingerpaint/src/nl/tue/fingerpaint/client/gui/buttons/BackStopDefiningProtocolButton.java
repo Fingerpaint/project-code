@@ -9,46 +9,44 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
 
 /**
- * ToggleButton that can be used to indicate if a protocol is being defined. If
- * not in default state, then adding a step will execute it immediately.
+ * Button that can be used to go up one level in the menu structure and stop
+ * defining a protocol.
  * 
  * @author Group Fingerpaint
  */
-public class ToggleDefineProtocol extends Button implements ClickHandler {
+public class BackStopDefiningProtocolButton extends Button implements ClickHandler {
 
 	/**
 	 * Reference to the model. Used to change if the user is defining a
 	 * protocol.
 	 */
 	protected ApplicationState as;
-
+	
 	/**
-	 * Construct a new {@link Button} that can be used to enter a submenu in
-	 * which all protocol related actions are grouped.
+	 * Construct a new button that can be used to go up one level in the menu
+	 * structure and stop defining a protocol.
 	 * 
 	 * @param appState
 	 *            Reference to the model. Used to change if the user is
 	 *            defining a protocol.
-	 * @see ToggleDefineProtocol
 	 */
-	public ToggleDefineProtocol(ApplicationState appState) {
-		super(FingerpaintConstants.INSTANCE.btnDefProt());
+	public BackStopDefiningProtocolButton(ApplicationState appState) {
+		super(FingerpaintConstants.INSTANCE.btnStopDefProt());
 		this.as = appState;
 		addClickHandler(this);
-		ensureDebugId("ToggleDefineProtocol");
+		ensureDebugId("backStopDefiningProtocolButton");
 	}
 
 	/**
-	 * Toggles the protocol widgets as visible or invisible, and resets the
-	 * protocol if the widgets are being hidden.
+	 * Go up one level in the menu and stop defining a protocol.
 	 * 
 	 * @param event
 	 *            The event that has fired.
 	 */
 	@Override
 	public void onClick(ClickEvent event) {
-		// this is set to false in the BackStopDefiningProtocolButton
-		as.setIsDefiningProtocol(true);
-		MenuLevelSwitcher.showSub1MenuDefineProtocol();
+		as.setIsDefiningProtocol(false);
+		MenuLevelSwitcher.goBack();
 	}
+
 }
