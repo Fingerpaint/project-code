@@ -6,7 +6,6 @@ import nl.tue.fingerpaint.client.gui.GuiState;
 import nl.tue.fingerpaint.client.model.ApplicationState;
 import nl.tue.fingerpaint.client.resources.FingerpaintCellListResources;
 import nl.tue.fingerpaint.client.storage.StorageManager;
-import nl.tue.fingerpaint.shared.GeometryNames;
 
 import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.core.shared.GWT;
@@ -83,10 +82,9 @@ public class LoadProtocolCellList extends CellList<String> {
 						String selected = selectionModel.getSelectedObject();
 						if (selected != null) {
 							as.setProtocol(StorageManager.INSTANCE.getProtocol(
-									GeometryNames.getShortName(as
-											.getGeometryChoice()), selected));
-							GuiState.labelProtocolRepresentation.setText(as
-									.getProtocol().toString());
+									as.getGeometryChoice(), selected));
+							GuiState.labelProtocolRepresentation.getElement().setInnerHTML(
+									as.getProtocol().toString());
 							GuiState.mixNowButton.setEnabled(true);
 							
 							GuiState.saveResultsButton.setEnabled(false);
@@ -97,7 +95,6 @@ public class LoadProtocolCellList extends CellList<String> {
 
 							GuiState.labelProtocolRepresentation
 									.setVisible(true);
-							GuiState.labelProtocolLabel.setVisible(true);
 							GuiState.saveProtocolButton.setEnabled(true);
 						}
 					}

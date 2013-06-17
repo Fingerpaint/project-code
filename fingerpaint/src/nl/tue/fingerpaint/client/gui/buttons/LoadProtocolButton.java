@@ -6,7 +6,6 @@ import nl.tue.fingerpaint.client.gui.GuiState;
 import nl.tue.fingerpaint.client.model.ApplicationState;
 import nl.tue.fingerpaint.client.resources.FingerpaintConstants;
 import nl.tue.fingerpaint.client.storage.StorageManager;
-import nl.tue.fingerpaint.shared.GeometryNames;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -49,7 +48,7 @@ public class LoadProtocolButton extends Button implements ClickHandler {
 		GuiState.loadVerticalPanel.clear();
 		
 		List<String> geometryProtocols = StorageManager.INSTANCE
-				.getProtocols(GeometryNames.getShortName(as.getGeometryChoice()));
+				.getProtocols(as.getGeometryChoice());
 		GuiState.loadProtocolCellList.fillCellList(geometryProtocols);
 
 		GuiState.loadVerticalPanel.addList(GuiState.loadProtocolCellList);

@@ -19,6 +19,14 @@ public interface FingerpaintConstants extends Constants {
 	public static final FingerpaintConstants INSTANCE = GWT
 			.create(FingerpaintConstants.class);
 
+	// --- CONSTANTS FOR CSS/STYLING ------------------------------------------
+	/**
+	 * @return Localised string that is used in the title of the protocol
+	 *         submenu.
+	 */
+	@DefaultStringValue("menuTitleLabel")
+	public String classMenuTitleLabel();
+	
 	// --- CONSTANTS FOR LOADING ----------------------------------------------
 	/**
 	 * @return Localised string that indicates that the application is loading
@@ -66,14 +74,43 @@ public interface FingerpaintConstants extends Constants {
 
 	/**
 	 * @return Localised string that contains the text for the
+	 *         {@link GuiState#drawingToolLabel} label.
+	 */
+	@DefaultStringValue("Change the drawing tool")
+	public String lblTool();
+	
+	/**
+	 * @return Localised string that contains the text for the
+	 *         {@link GuiState#distributionsLabel} label.
+	 */
+	@DefaultStringValue("Distributions")
+	public String lblDistributions();
+	
+	/**
+	 * @return Localised string that contains the text for the
+	 *         {@link GuiState#resultsLabel} label.
+	 */
+	@DefaultStringValue("Mixing run results")
+	public String lblResults();
+	
+	/**
+	 * @return Localised string that contains the text for the
+	 *         {@link GuiState#resultsLabel} label.
+	 */
+	@DefaultStringValue("Protocols")
+	public String lblProtocols();
+	
+	/**
+	 * @return Localised string that contains the text for the
 	 *         {@link GuiState#labelProtocolLabel} label.
 	 */
-	@DefaultStringValue("Protocol:")
+	@DefaultStringValue("Define a protocol")
 	public String lblProtocol();
 
 	/**
 	 * @return Localised string that contains the text for the
-	 *         {@link GuiState#sizeLabel} label.
+	 *         {@link GuiState#sizeLabel} and
+	 *         {@link GuiState#sizeProtocolMenuLabel} labels.
 	 */
 	@DefaultStringValue("Step size")
 	public String lblStepSize();
@@ -82,7 +119,7 @@ public interface FingerpaintConstants extends Constants {
 	 * @return Localised string that contains the text for the
 	 * 			{@link GuiState#noFilesFoundLabel} label
 	 */
-	@DefaultStringValue("No saved files")
+	@DefaultStringValue("No saved files.")
 	public String noFilesFound();
 
 	// -- CONSTANTS FOR SAVE MESSAGES -----------------------------------------
@@ -111,6 +148,13 @@ public interface FingerpaintConstants extends Constants {
 	
 
 	// --- CONSTANTS FOR BUTTONS ----------------------------------------------
+	/**
+	 * @return Localised string that contains the text for
+	 *         {@link GuiState#backMenu1Button} and {@link GuiState#backMenu2Button}.
+	 */
+	@DefaultStringValue("Back")
+	public String btnBack();
+	
 	/**
 	 * @return Localised string that contains the text for
 	 *         {@link GuiState#squareDrawingTool}.
@@ -158,93 +202,114 @@ public interface FingerpaintConstants extends Constants {
 
 	/**
 	 * @return Localised string that contains the text for the
+	 *         {@link GuiState#distributionsButton} button.
+	 */
+	@DefaultStringValue("Distributions")
+	public String btnDists();
+	
+	/**
+	 * @return Localised string that contains the text for the
 	 *         {@link GuiState#saveDistributionButton} button.
 	 */
-	@DefaultStringValue("Save Distribution")
+	@DefaultStringValue("Save")
 	public String btnSaveDist();
 
 	/**
 	 * @return Localised string that contains the text for the
 	 *         {@link GuiState#loadInitDistButton} button.
 	 */
-	@DefaultStringValue("Load Initial Distribution")
+	@DefaultStringValue("Load")
 	public String btnLoadDist();
 	
 	/**
 	 * @return Localised string that contains the text for the
 	 *         {@link GuiState#removeInitDistButton} button.
 	 */
-	@DefaultStringValue("Remove Saved Distributions")
+	@DefaultStringValue("Remove")
 	public String btnRemoveInitDistButton();
 
 	/**
 	 * @return Localised string that contains the text for the
 	 *         {@link GuiState#loadInitDistButton} button.
 	 */
-	@DefaultStringValue("Reset Distribution")
+	@DefaultStringValue("Clear canvas")
 	public String btnResetDist();
 
 	/**
 	 * @return Localised string that contains the text for the
+	 *         {@link GuiState#resultsButton} button.
+	 */
+	@DefaultStringValue("Results")
+	public String btnResults();
+	
+	/**
+	 * @return Localised string that contains the text for the
 	 *         {@link GuiState#saveResultsButton} button.
 	 */
-	@DefaultStringValue("Save Results")
+	@DefaultStringValue("Save")
 	public String btnSaveResults();
 	
 	/**
 	 * @return Localised string that contains the text for the
 	 *         {@link GuiState#loadResultsButton} button.
 	 */
-	@DefaultStringValue("Load Results")
+	@DefaultStringValue("Load")
 	public String btnLoadResults();
 
 	/**
 	 * @return Localised string that contains the text for the
 	 *         {@link GuiState#removeSavedResultsButton} button.
 	 */
-	@DefaultStringValue("Remove Saved Results")
+	@DefaultStringValue("Remove")
 	public String btnRemoveResults();
 
 	/**
 	 * @return Localised string that contains the text for the
+	 *         {@link GuiState#protocolsButton} button.
+	 */
+	@DefaultStringValue("Protocols")
+	public String btnProtocols();
+	
+	/**
+	 * @return Localised string that contains the text for the
 	 *         {@link GuiState#saveProtocolButton} button.
 	 */
-	@DefaultStringValue("Save Protocol")
+	@DefaultStringValue("Save")
 	public String btnSaveProt();
 
 	/**
 	 * @return Localised string that contains the text for the
 	 *         {@link GuiState#loadProtocolButton} button.
 	 */
-	@DefaultStringValue("Load Mixing Protocol")
+	@DefaultStringValue("Load")
 	public String btnLoadProt();
 	
 	/**
 	 * @return Localised string that contains the text for the
 	 *         {@link GuiState#removeSavedProtButton} button.
 	 */
-	@DefaultStringValue("Remove Saved Protocols")
+	@DefaultStringValue("Remove")
 	public String btnRemoveSavedProtButton();
 
 	/**
 	 * @return Localised string that contains the text for the
 	 *         {@link GuiState#resetProtocolButton} button.
 	 */
-	@DefaultStringValue("Reset Protocol")
+	@DefaultStringValue("Clear protocol")
 	public String btnResetProt();
 
 	/**
 	 * @return Localised string that contains the text for the
 	 *         {@link GuiState#mixNowButton} button.
 	 */
-	@DefaultStringValue("Mix Now")
+	@DefaultStringValue("Mix now")
 	public String btnMixNow();
 
 	/**
 	 * @return Localised string that contains the text for the
 	 *         {@link GuiState#viewSingleGraphButton} button.
 	 */
-	@DefaultStringValue("View single graph")
+	@DefaultStringValue("View performance graph")
 	public String btnViewSingleGraph();
 
 	/**
@@ -272,7 +337,7 @@ public interface FingerpaintConstants extends Constants {
 	 * @return Localised string that contains the text for the
 	 *         {@link GuiState#comparePerformanceButton} button.
 	 */
-	@DefaultStringValue("Compare Performance")
+	@DefaultStringValue("Compare performance")
 	public String btnComparePerfomance();
 
 	/**
@@ -291,10 +356,17 @@ public interface FingerpaintConstants extends Constants {
 	
 	/**
 	 * @return Localised string that contains the text for the
-	 *         {@link GuiState#toggleDefineProtocol} toggle button.
+	 *         {@link GuiState#toggleDefineProtocol} button.
 	 */
 	@DefaultStringValue("Define Protocol")
-	public String btnDefProt();	
+	public String btnDefProt();
+	
+	/**
+	 * @return Localised string that contains the text for the
+	 *         {@link GuiState#backStopDefiningProtocol} button.
+	 */
+	@DefaultStringValue("Stop defining Protocol")
+	public String btnStopDefProt();
 
 	// --- CONSTANTS FOR ERRORS -----------------------------------------------
 	/**

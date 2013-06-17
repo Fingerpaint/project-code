@@ -23,3 +23,11 @@
 	background: MAIN !important;
 	color: WHITE;
 }
+
+.cellListKeyboardSelectedItem:nth-child\(odd\):hover,
+.cellListEvenItem:hover,
+.cellListKeyboardSelectedItem:nth-child\(even\):hover,
+.cellListOddItem:hover,
+.cellListSelectedItem:hover {
+	cursor: pointer;
+}

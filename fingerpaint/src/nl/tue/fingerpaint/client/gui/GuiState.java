@@ -1,7 +1,10 @@
 package nl.tue.fingerpaint.client.gui;
 
+import nl.tue.fingerpaint.client.gui.buttons.BackMenuButton;
+import nl.tue.fingerpaint.client.gui.buttons.BackStopDefiningProtocolButton;
 import nl.tue.fingerpaint.client.gui.buttons.CancelCompareButton;
 import nl.tue.fingerpaint.client.gui.buttons.CancelSaveResultsButton;
+import nl.tue.fingerpaint.client.gui.buttons.CircleDrawingToolToggleButton;
 import nl.tue.fingerpaint.client.gui.buttons.CloseCompareButton;
 import nl.tue.fingerpaint.client.gui.buttons.CloseLoadButton;
 import nl.tue.fingerpaint.client.gui.buttons.CloseResultsButton;
@@ -9,6 +12,7 @@ import nl.tue.fingerpaint.client.gui.buttons.CloseSaveButton;
 import nl.tue.fingerpaint.client.gui.buttons.CloseSingleGraphViewButton;
 import nl.tue.fingerpaint.client.gui.buttons.CompareButton;
 import nl.tue.fingerpaint.client.gui.buttons.ComparePerformanceButton;
+import nl.tue.fingerpaint.client.gui.buttons.DistributionsButton;
 import nl.tue.fingerpaint.client.gui.buttons.ExportDistributionButton;
 import nl.tue.fingerpaint.client.gui.buttons.ExportMultipleGraphsButton;
 import nl.tue.fingerpaint.client.gui.buttons.ExportSingleGraphButton;
@@ -19,11 +23,13 @@ import nl.tue.fingerpaint.client.gui.buttons.MenuToggleButton;
 import nl.tue.fingerpaint.client.gui.buttons.MixNowButton;
 import nl.tue.fingerpaint.client.gui.buttons.NewCompareButton;
 import nl.tue.fingerpaint.client.gui.buttons.OverwriteSaveButton;
+import nl.tue.fingerpaint.client.gui.buttons.ProtocolsButton;
 import nl.tue.fingerpaint.client.gui.buttons.RemoveInitDistButton;
 import nl.tue.fingerpaint.client.gui.buttons.RemoveSavedProtButton;
 import nl.tue.fingerpaint.client.gui.buttons.RemoveSavedResultsButton;
 import nl.tue.fingerpaint.client.gui.buttons.ResetDistButton;
 import nl.tue.fingerpaint.client.gui.buttons.ResetProtocolButton;
+import nl.tue.fingerpaint.client.gui.buttons.ResultsButton;
 import nl.tue.fingerpaint.client.gui.buttons.SaveDistributionButton;
 import nl.tue.fingerpaint.client.gui.buttons.SaveItemPanelButton;
 import nl.tue.fingerpaint.client.gui.buttons.SaveProtocolButton;
@@ -40,13 +46,16 @@ import nl.tue.fingerpaint.client.gui.celllists.LoadResultsCellList;
 import nl.tue.fingerpaint.client.gui.flextables.InitDistFlexTable;
 import nl.tue.fingerpaint.client.gui.flextables.ProtocolFlexTable;
 import nl.tue.fingerpaint.client.gui.flextables.ResultsFlexTable;
+import nl.tue.fingerpaint.client.gui.labels.DistributionsLabel;
+import nl.tue.fingerpaint.client.gui.labels.DrawingToolLabel;
 import nl.tue.fingerpaint.client.gui.labels.NoFilesFoundLabel;
 import nl.tue.fingerpaint.client.gui.labels.ProtocolLabel;
 import nl.tue.fingerpaint.client.gui.labels.ProtocolRepresentationLabel;
+import nl.tue.fingerpaint.client.gui.labels.ProtocolsLabel;
+import nl.tue.fingerpaint.client.gui.labels.ResultsLabel;
 import nl.tue.fingerpaint.client.gui.labels.SaveMessageLabel;
 import nl.tue.fingerpaint.client.gui.panels.LoadPopupPanel;
 import nl.tue.fingerpaint.client.gui.panels.LoadVerticalPanel;
-import nl.tue.fingerpaint.client.gui.panels.ProtocolPanelContainer;
 import nl.tue.fingerpaint.client.gui.panels.RemoveResultsPopupPanel;
 import nl.tue.fingerpaint.client.gui.panels.RemoveResultsVerticalPanel;
 import nl.tue.fingerpaint.client.gui.panels.SaveItemPopupPanel;
@@ -61,8 +70,8 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupPanel;
+import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
-import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
@@ -114,32 +123,36 @@ public class GuiState {
 
 	// --- MENU WIDGETS -------------------------------------------------------
 	/** Vertical panel to contain all menu items. */
-	public static VerticalPanel menuPanel = new VerticalPanel();
+	public static VerticalPanel mainMenuPanel = new VerticalPanel();
 
-	/** Wrapper for the {@link #menuPanel}, used in animation. */
-	public static SimplePanel menuPanelWrapper = new SimplePanel();
+	/** Vertical panel to contain all menu items on the first submenu level. */
+	public static VerticalPanel subLevel1MenuPanel = new VerticalPanel();
+	
+	/** Vertical panel to contain all menu items on the second submenu level. */
+	public static VerticalPanel subLevel2MenuPanel = new VerticalPanel();
+	
+	/** Wrapper for the {@link #mainMenuPanel}, used in animation of hiding menu. */
+	public static FlowPanel menuPanelOuterWrapper = new FlowPanel();
+	
+	/** Wrapper for the {@link #menuPanelOuterWrapper}, used in animation of submenus. */
+	public static FlowPanel menuPanelInnerWrapper = new FlowPanel();
 
 	/** Button to toggle whether the menu is visible. */
 	public static MenuToggleButton menuToggleButton = new MenuToggleButton(
-			menuPanelWrapper);
+			menuPanelOuterWrapper);
+	
+	/** Button that is used in the first menu level to go up one level. */
+	public static BackMenuButton backMenu1Button = new BackMenuButton();
+	
+	/** Button that is used in the second menu level to go up one level. */
+	public static BackMenuButton backMenu2Button = new BackMenuButton();
 
 	// --- DRAWING TOOL WIDGETS -----------------------------------------------
 	/**
-	 * Pop-up panel which contains options for selecting a different drawing
-	 * tool. Also, the size of the drawing tool can be changed trough an element
-	 * in this panel.
+	 * Label to be displayed above the drawing tool related submenu.
 	 */
-	public static PopupPanel toolSelector = new PopupPanel(true);
-
-	/**
-	 * Panel in the pop-up panel to separate the tool selection and size
-	 * selection options for the drawing tool.
-	 */
-	public static HorizontalPanel popupPanelPanel = new HorizontalPanel();
-
-	/** Panel in the pop-up panel that contains the different drawing tools. */
-	public static VerticalPanel popupPanelMenu = new VerticalPanel();
-
+	public static DrawingToolLabel drawingToolLabel = new DrawingToolLabel();
+	
 	/** Numberspinner to change the size of the drawing tool. */
 	public static CursorSizeSpinner cursorSizeSpinner;
 
@@ -147,7 +160,6 @@ public class GuiState {
 	public static ToggleColourButton toggleColor;
 
 	/** Button to change the shape of the selected drawing tool. */
-	// TODO: Change this to a button on which the current tool is drawn
 	public static ToolSelectButton toolSelectButton = new ToolSelectButton();
 
 	/** Button to select the square-shaped drawing tool. */
@@ -156,17 +168,23 @@ public class GuiState {
 
 	/** Button to select the circle-shaped drawing tool. */
 	// TODO: Change this to a button on which a circle is drawn
-	public static ToggleButton circleDrawingTool = new ToggleButton(
-			FingerpaintConstants.INSTANCE.btnCircleDraw(),
-			FingerpaintConstants.INSTANCE.btnCircleDraw());
+	public static CircleDrawingToolToggleButton circleDrawingTool;
 
 	// --- INITIAL DISTRIBUTION WIDGETS ---------------------------------------
+	/**
+	 * Label to be displayed above the distributions related submenu.
+	 */
+	public static DistributionsLabel distributionsLabel = new DistributionsLabel();
+	
 	/**
 	 * CellList used to select and load one previously saved concentration
 	 * distribution.
 	 */
 	public static LoadInitDistCellList loadInitDistCellList;
 
+	/** Button to enter the submenu with distribution related actions. */
+	public static DistributionsButton distributionsButton = new DistributionsButton();
+	
 	/** Button to save an initial concentration distribution. */
 	public static SaveDistributionButton saveDistributionButton;
 
@@ -176,18 +194,24 @@ public class GuiState {
 	/** Button to reset the current distribution to completely white. */
 	public static ResetDistButton resetDistButton;
 
-	// -- SAVE MIXING RESULTS WIDGETS -----------------------------------------
+	// -- RESULTS WIDGETS -----------------------------------------
+	/**
+	 * Label to be displayed above the results related submenu.
+	 */
+	public static ResultsLabel resultsLabel = new ResultsLabel();
+	
+	/** Button to enter the submenu with results related actions. */
+	public static ResultsButton resultsButton = new ResultsButton();
+	
 	/** Button to save the current mixing result. */
 	public static SaveResultsButton saveResultsButton;
 
-	// -- LOAD MIXING RESULTS WIDGETS -----------------------------------------
 	/** Button to load a previously saved mixing result */
 	public static LoadResultsButton loadResultsButton = new LoadResultsButton();
 	
 	/** CellList to list the to be loaded results */
 	public static LoadResultsCellList LoadResultsCellList;
 	
-	// --- REMOVE RESULTS WIDGETS ---------------------------------------------
 	/** Pop-up panel to handle the removal of results. */
 	public static RemoveResultsPopupPanel removeResultsPanel = new RemoveResultsPopupPanel();
 
@@ -223,16 +247,23 @@ public class GuiState {
 	
 	// --- MIXING PROTOCOL WIDGETS --------------------------------------------
 	/**
+	 * Label to be displayed above the protocols related submenu.
+	 */
+	public static ProtocolsLabel protocolsLabel = new ProtocolsLabel();
+	
+	/**
+	 * Button that can be used to access the protocols related submenu.
+	 */
+	public static ProtocolsButton protocolsButton = new ProtocolsButton();
+	
+	/**
 	 * CellList that can be used to load a previously saved mixing protocol.
 	 */
 	public static LoadProtocolCellList loadProtocolCellList;
 
-	/** Container to hold all the widgets related to a mixing protocol. */
-	public static ProtocolPanelContainer protocolPanelContainer = new ProtocolPanelContainer();
-
 	/**
 	 * The numberspinner to define how many times the mixing protocol is
-	 * executed.
+	 * executed that is located in the main menu.
 	 */
 	public static NrStepsSpinner nrStepsSpinner;
 
@@ -275,6 +306,12 @@ public class GuiState {
 	 * in its default state, steps 9wall movements) are executed directly.
 	 */
 	public static ToggleDefineProtocol toggleDefineProtocol;
+	
+	/**
+	 * Button that is used in the submenu with protocol related stuff to go
+	 * back to the main menu.
+	 */
+	public static BackStopDefiningProtocolButton backStopDefiningProtocol;
 
 	// --- SAVE POP-UP MENU WIDGETS -------------------------------------------
 	/** Pop-up panel to handle the saving of the current results. */
@@ -337,6 +374,9 @@ public class GuiState {
 	 * pop-up panel.
 	 */
 	public static LoadVerticalPanel loadVerticalPanel = new LoadVerticalPanel();
+	
+	/** Scroll panel to hold the lists in the the loadVerticalPanel and removeResultsVerticalPanel */
+	public static ScrollPanel listScrollPanel = new ScrollPanel();
 
 	/** Pop-up panel to handle the loading of previously saved items. */
 	public static LoadPopupPanel loadPanel = new LoadPopupPanel();
@@ -349,9 +389,16 @@ public class GuiState {
 
 	// --- STEP SIZE WIDGETS --------------------------------------------------
 	/**
-	 * The numberspinner to define the step size of a single wall movement.
+	 * The numberspinner to define the step size of a single wall movement,
+	 * located in the main menu.
 	 */
 	public static StepSizeSpinner sizeSpinner;
+	
+	/**
+	 * The numberspinner to define the step size of a single wall movement,
+	 * located in the protocol submenu.
+	 */
+	public static StepSizeSpinner sizeProtocolMenuSpinner;
 
 	/**
 	 * Label to be displayed above the {@link #sizeSpinner}, to explain its
@@ -359,6 +406,14 @@ public class GuiState {
 	 */
 	public static Label sizeLabel = new Label(
 			FingerpaintConstants.INSTANCE.lblStepSize());
+	
+	/**
+	 * Label to be displayed above the {@link #sizeProtocolMenuSpinner}, to explain its
+	 * purpose.
+	 */
+	public static Label sizeProtocolMenuLabel = new Label(
+			FingerpaintConstants.INSTANCE.lblStepSize());
+	
 	// ---EXPORT CANVAS IMAGE WIDGET------------------------------------------
 
 	/** Button to export the image of the current distribution. */
@@ -464,13 +519,12 @@ public class GuiState {
 		loadingPanelMessage.getElement()
 				.setId(GuiState.LOADINGPANEL_MESSAGE_ID);
 
-		menuPanel.getElement().setId("menuPanel");
-		menuPanelWrapper.getElement().setId("menuPanelWrapper");
+		mainMenuPanel.getElement().setId("menuPanel");
+		GuiState.subLevel1MenuPanel.getElement().setId("menuSub1Panel");
+		GuiState.subLevel2MenuPanel.getElement().setId("menuSub2Panel");
+		menuPanelInnerWrapper.getElement().setId("menuPanelInnerWrapper");
+		menuPanelOuterWrapper.getElement().setId("menuPanelWrapper");
 
-		toolSelector.ensureDebugId("toolSelector");
-		popupPanelPanel.getElement().setId("popupPanelPanel");
-
-		popupPanelMenu.ensureDebugId("popupPanelMenu");
 		removeResultsVerticalPanel.ensureDebugId("removeResultsVerticalPanel");
 
 		nrStepsLabel.ensureDebugId("nrStepsLabel");
@@ -482,8 +536,10 @@ public class GuiState {
 		overwriteButtonsPanel.ensureDebugId("overwriteButtonsPanel");
 		overwriteSaveVerticalPanel.ensureDebugId("overwriteSaveVerticalPanel");
 		loadVerticalPanel.ensureDebugId("loadVerticalPanel");
+		listScrollPanel.ensureDebugId("listScrollPanel");
 
 		sizeLabel.ensureDebugId("sizeLabel");
+		sizeProtocolMenuLabel.ensureDebugId("sizeProtocolMenuLabel");
 
 		viewSingleGraphHorizontalPanel
 				.ensureDebugId("viewSingleGraphHorizontalPanel");

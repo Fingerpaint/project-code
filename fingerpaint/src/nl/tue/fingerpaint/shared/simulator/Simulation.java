@@ -61,7 +61,7 @@ public class Simulation implements Serializable {
 			final MixingProtocol protocol, final String concentrationVector,
 			final int protocolRuns, final boolean intermediateVectors) 
 	        throws UnsupportedOperationException {
-		if (geometry != GeometryNames.RECT_LONG) {
+		if (geometry != GeometryNames.RECT) {
 			throw new UnsupportedOperationException("Invalid geometry selected.");
 		}
 		if (mixer == null) {

@@ -5,18 +5,18 @@ import nl.tue.fingerpaint.client.resources.FingerpaintConstants;
 import com.google.gwt.user.client.ui.Label;
 
 /**
- * Header for the protocol representation.
+ * Header for the drawing tool submenu.
  * 
  * @author Group Fingerpaint
  */
-public class ProtocolLabel extends Label {
+public class DrawingToolLabel extends Label {
 
 	/**
-	 * Construct the {@link ProtocolLabel}.
+	 * Construct the {@link DrawingToolLabel}.
 	 */
-	public ProtocolLabel() {
-		super(FingerpaintConstants.INSTANCE.lblProtocol());
-		ensureDebugId("labelProtocolLabel");
+	public DrawingToolLabel() {
+		super(FingerpaintConstants.INSTANCE.lblTool());
+		ensureDebugId("drawingToolLabel");
 		getElement().setClassName(FingerpaintConstants.INSTANCE.classMenuTitleLabel());
 	}
 	

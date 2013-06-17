@@ -40,6 +40,7 @@ public class SaveItemPanelButton extends Button implements ClickHandler {
 		this.fp = parent;
 		addClickHandler(this);
 		setEnabled(false);
+		addStyleName("panelButton");
 		ensureDebugId("saveItemPanelButton");
 	}
 

@@ -6,7 +6,6 @@ import nl.tue.fingerpaint.client.gui.GuiState;
 import nl.tue.fingerpaint.client.model.ApplicationState;
 import nl.tue.fingerpaint.client.resources.FingerpaintConstants;
 import nl.tue.fingerpaint.client.storage.StorageManager;
-import nl.tue.fingerpaint.shared.GeometryNames;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -51,8 +50,8 @@ public class LoadInitDistButton extends Button implements ClickHandler {
 		GuiState.loadVerticalPanel.clear();
 		// Get all initial distributions for current geometry
 		List<String> geometryDistributions = StorageManager.INSTANCE
-				.getDistributions(GeometryNames.getShortName(as
-						.getGeometryChoice()));
+				.getDistributions(as
+						.getGeometryChoice());
 		GuiState.loadInitDistCellList.fillCellList(geometryDistributions);
 
 		GuiState.loadVerticalPanel.addList(GuiState.loadInitDistCellList);

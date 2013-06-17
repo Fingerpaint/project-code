@@ -164,9 +164,11 @@ public class NumberSpinnerTest extends GWTTestCase {
 		numberSpinner.setSpinnerListener(new NumberSpinnerListener() {
 
 			@Override
-			public void onValueChange(double value) {
+			public void onValueChange(double value, double roundedValue) {
 				assertEquals("The actual value is not equal to 42.0.", 42.0,
 						value);
+				assertEquals("The rounded value is not equal to 42.0.", 42.0,
+						roundedValue);
 				setFired(true);
 			}
 		});

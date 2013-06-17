@@ -3,6 +3,7 @@ package nl.tue.fingerpaint.client.gui.flextables;
 import java.util.ArrayList;
 
 import nl.tue.fingerpaint.client.gui.GuiState;
+import nl.tue.fingerpaint.client.gui.labels.NoFilesFoundLabel;
 import nl.tue.fingerpaint.client.gui.panels.NotificationPopupPanel;
 import nl.tue.fingerpaint.client.resources.FingerpaintConstants;
 import nl.tue.fingerpaint.client.storage.StorageManager;
@@ -59,13 +60,17 @@ public class InitDistFlexTable extends FlexTable {
 					initDists.remove(removedIndex);
 					StorageManager.INSTANCE.removeDistribution(name, geom);
 					removeRow(removedIndex + 1);
-					
+
 					new NotificationPopupPanel(FingerpaintConstants.INSTANCE
-							.deleteSuccess())
-							.show(GuiState.DEFAULT_TIMEOUT);
+							.deleteSuccess()).show(GuiState.DEFAULT_TIMEOUT);
+					
+					if (initDists.isEmpty()) {
+						GuiState.removeResultsVerticalPanel.remove(GuiState.listScrollPanel);
+						GuiState.removeResultsVerticalPanel.insert(new NoFilesFoundLabel(), 0);
+					}
 				}
 			});
-			setWidget(row, 1, removeButton);			
+			setWidget(row, 1, removeButton);
 		}
 	}
 }

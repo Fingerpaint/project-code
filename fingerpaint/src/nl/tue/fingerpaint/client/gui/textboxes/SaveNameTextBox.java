@@ -46,11 +46,13 @@ public class SaveNameTextBox extends TextBox implements KeyPressHandler {
 			cancelKey();
 		} else if (inputCharacter.matches("[A-Za-z0-9]")) {
 			textlength++;
+			GuiState.saveItemPanelButton.setEnabled(textlength > 0);
 		} else if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_BACKSPACE) {
 			textlength--;
+			GuiState.saveItemPanelButton.setEnabled(textlength > 0);
 		} else if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER) {
 			GuiState.saveItemPanelButton.click();
 		}
-		GuiState.saveItemPanelButton.setEnabled(textlength > 0);
+		
 	}
 }

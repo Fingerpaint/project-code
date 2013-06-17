@@ -6,7 +6,6 @@ import nl.tue.fingerpaint.client.gui.GuiState;
 import nl.tue.fingerpaint.client.model.ApplicationState;
 import nl.tue.fingerpaint.client.resources.FingerpaintConstants;
 import nl.tue.fingerpaint.client.storage.StorageManager;
-import nl.tue.fingerpaint.shared.GeometryNames;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -51,8 +50,8 @@ public class RemoveInitDistButton extends Button implements ClickHandler {
 		GuiState.removeResultsVerticalPanel.clear();
 		
 		final ArrayList<String> names = (ArrayList<String>) StorageManager.INSTANCE
-				.getDistributions(GeometryNames.getShortName(as.getGeometryChoice()));
-		GuiState.initDistFlexTable.fillFlexTable(names, GeometryNames.getShortName(as.getGeometryChoice()));
+				.getDistributions(as.getGeometryChoice());
+		GuiState.initDistFlexTable.fillFlexTable(names, as.getGeometryChoice());
 		
 		GuiState.removeResultsVerticalPanel.addList(GuiState.initDistFlexTable);
 		GuiState.removeResultsVerticalPanel.add(GuiState.closeResultsButton);

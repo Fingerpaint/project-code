@@ -17,7 +17,6 @@ import nl.tue.fingerpaint.client.storage.FingerpaintJsonizer;
 import nl.tue.fingerpaint.client.storage.FingerpaintZipper;
 import nl.tue.fingerpaint.client.storage.ResultStorage;
 import nl.tue.fingerpaint.client.storage.StorageManager;
-import nl.tue.fingerpaint.shared.GeometryNames;
 import nl.tue.fingerpaint.shared.model.MixingProtocol;
 import nl.tue.fingerpaint.shared.simulator.Simulation;
 import nl.tue.fingerpaint.shared.simulator.SimulationResult;
@@ -250,16 +249,6 @@ public class Fingerpaint implements EntryPoint {
 	}
 
 	/**
-	 * Toggles the visibility and availability of all the protocol widgets.
-	 * 
-	 * @param visible
-	 *            If the "define protocol" widgets should be visible or not.
-	 */
-	public void setProtocolWidgetsVisible(boolean visible) {
-		GuiState.protocolPanelContainer.setVisibleAnimated(visible);
-	}
-
-	/**
 	 * this method is used to acquire the size of the current cursor in pixels
 	 * 
 	 * @return cursorSizeSpinner.getValue()
@@ -299,11 +288,11 @@ public class Fingerpaint implements EntryPoint {
 	public int save(String name, boolean canOverwrite) {
 		if (lastSaveButtonClicked.equals(StorageManager.KEY_INITDIST)) {
 			return StorageManager.INSTANCE.putDistribution(
-					GeometryNames.getShortName(as.getGeometryChoice()), name,
+					as.getGeometryChoice(), name,
 					as.getGeometry().getDistribution(), canOverwrite);
 		} else if (lastSaveButtonClicked.equals(StorageManager.KEY_PROTOCOLS)) {
 			return StorageManager.INSTANCE.putProtocol(
-					GeometryNames.getShortName(as.getGeometryChoice()), name,
+					as.getGeometryChoice(), name,
 					as.getProtocol(), canOverwrite);
 		} else if (lastSaveButtonClicked.equals(StorageManager.KEY_RESULTS)) {
 			ResultStorage result = new ResultStorage();
@@ -406,7 +395,6 @@ public class Fingerpaint implements EntryPoint {
 		as.setProtocol(new MixingProtocol());
 		GuiState.labelProtocolRepresentation.setText("");
 		GuiState.labelProtocolRepresentation.setVisible(false);
-		GuiState.labelProtocolLabel.setVisible(false);
 		as.setNrSteps(NrStepsSpinner.DEFAULT_VALUE);
 		GuiState.nrStepsSpinner.setValue(NrStepsSpinner.DEFAULT_VALUE);
 		GuiState.mixNowButton.setEnabled(false);

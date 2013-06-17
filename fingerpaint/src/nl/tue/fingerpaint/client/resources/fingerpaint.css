@@ -36,6 +36,16 @@ body {
 	margin: 0;
 }
 
+.panelButton {
+	width: 120px !important;
+}
+
+#cancelCompareButton,
+#cancelSaveResultsButton {
+	margin-right: 0px;
+	margin-left: 4px;
+}
+
 .gwt-PopupPanel {
 	border: 2px solid MAIN;
 	padding: 4px 8px 4px 4px;
@@ -68,8 +78,6 @@ body {
 	left: 0;
 	right: 0;
 	margin-top: 42px;
-	/* half the size of the loading image, plus extra margin (15px) */
-	width: 100%;
 	text-align: center;
 	font-weight: bold;
 	color: WHITE;
@@ -107,6 +115,10 @@ body {
 	left: 0;
 }
 
+#menuPanelInnerWrapper {
+	width: MENU_TOTAL_WIDTH;
+}
+
 #menuPanelWrapper {
 	position: absolute;
 	right: 8px;
@@ -117,7 +129,9 @@ body {
 	padding-bottom: 4px;
 }
 
-#menuPanel {
+#menuPanel, #menuSub1Panel, #menuSub2Panel {
+	display: inline-block;
+	vertical-align: top;
 	width: MENU_WIDTH;
 }
 
@@ -125,7 +139,6 @@ body {
 	width: MENU_WIDTH;
 }
 
-}
 #menuToggleButton {
 	border-radius: 20px;
 	margin: 0;
@@ -143,16 +156,26 @@ body {
 	top: 0;
 }
 
-.gwt-Button,.gwt-ToggleButton,button {
+.gwt-Button,
+.gwt-ToggleButton,
+button {
 	border: 0;
 	margin: 2px 2px;
-	width: 100%;
 	padding: 10px 5px;
 	background: MAIN;
 	color: WHITE;
+	text-transform: uppercase;
 }
 
-.gwt-Button[disabled],.gwt-ToggleButton[disabled],button[disabled] {
+#menuPanelWrapper .gwt-Button,
+#menuPanelWrapper .gwt-ToggleButton,
+#menuPanelWrapper button {
+	width: MENU_BUTTON_WIDTH;
+}
+
+.gwt-Button[disabled],
+.gwt-ToggleButton[disabled],
+button[disabled] {
 	color: LIGHT_GRAY;
 }
 
@@ -164,19 +187,31 @@ body {
 	text-align: center;
 }
 
-.gwt-Button:hover,.gwt-ToggleButton:hover, .dp-spinner-upbutton:hover,.dp-spinner-downbutton:hover {
+.gwt-Button:hover,
+.gwt-ToggleButton:hover,
+.gwt-ToggleColourButton:hover,
+.dp-spinner-upbutton:hover,
+.dp-spinner-downbutton:hover {
 	background: MAIN_LIGHT;
 	border: 0; /* disable some weird Google styling */
+	cursor: pointer;
 }
 
-.gwt-Button:active,.gwt-ToggleButton-down, .gwt-ToggleButton:active,.gwt-ToggleButton-down:active,.dp-spinner-upbutton:active,.dp-spinner-downbutton:active {
+.gwt-Button:active,
+.gwt-ToggleButton-down,
+.gwt-ToggleButton:active,
+.gwt-ToggleButton-down:active,
+.dp-spinner-upbutton:active,
+.dp-spinner-downbutton:active {
 	background: -webkit-linear-gradient(bottom, MAIN_LIGHT, MAIN);
 	background: linear-gradient(to top, MAIN_LIGHT, MAIN);
 	border: 0; /* disable some weird Google styling */
 }
 
-.gwt-Button[disabled]:hover,.gwt-ToggleButton[disabled]:hover,.gwt-Button[disabled]:active,.gwt-ToggleButton[disabled]:active
-	{
+.gwt-Button[disabled]:hover,
+.gwt-ToggleButton[disabled]:hover,
+.gwt-Button[disabled]:active,
+.gwt-ToggleButton[disabled]:active {
 	background: MAIN;
 	border: 0; /* disable some weird Google styling */
 }
@@ -193,37 +228,58 @@ cleacdr
 	resize: none;
 }
 
-#protLabel {
+#menuPanelWrapper #protLabel {
+	border: 1px solid MAIN;
+	border-radius: 3px 3px 3px 3px;
 	font-family: monospace;
-	border: 1px solid;
-	border-color: MAIN;
-	padding: 2px;
+	font-size: 12px;
+	font-weight: normal;
+	margin: 2px;
+	padding: 5px;
+	text-transform: none;
+	width: MENU_PROTOCOL_LABEL_WIDTH;
+}
+
+#menuPanelWrapper .menuTitleLabel {
+	background: MAIN_DARK;
+	border-radius: 3px 3px 3px 3px;
+	color: WHITE;
+	font-size: 12px;
+	font-weight: bold;
+	margin: 2px;
+	padding: 5px;
+	text-transform: uppercase;
+	width: MENU_TITLE_LABEL_WIDTH;
 }
 
 .spinnerNumberBox {
 	background: none repeat scroll 0 0 WHITE;
 	border: 1px solid MAIN;
 	font-size: 32px;
-	height: 45px;
+	height: 43px;
 	text-align: right;
-	width: 100%;
+	width: MENU_SPINNER_WIDTH;
+	margin: 2px 0;
 }
 
-.dp-spinner-upbutton,.dp-spinner-downbutton {
+.dp-spinner-upbutton,
+.dp-spinner-downbutton {
 	font-size: 20pt;
 	padding: 2px 5px;
 	height: 45px;
-	width: 65px;
+	width: MENU_SPINNER_BUTTON_WIDTH !important;
 }
 
 .dp-spinner-upbutton {
-	margin-top: 0px;
-	margin-bottom: 1px;
+	border-radius: 0 3px 3px 0;
+	margin: 0;
+	margin: 2px 2px 2px 0;
 }
 
 .dp-spinner-downbutton {
-	margin-top: 1px;
-	margin-bottom: 0px;
+	padding-bottom: 10px;
+	border-radius: 3px 0 0 3px;
+	margin: 2px 0 2px 2px;
 }
 
 .dp-spinner-horizontalpanel {
@@ -268,4 +324,17 @@ cleacdr
 	top: 5px;
 	width: 30px;
 	z-index: TOGGLE_COLOUR_BUTTON_Z_FG;
+}
+
+/* labels */
+#menuPanelWrapper .gwt-Label {
+	font-size: 14px;
+	font-weight: bold;
+	margin: 2px;
+	padding-left: 2px;
+	text-transform: uppercase;
+}
+
+#listScrollPanel {
+	max-height: 250px;
 }

@@ -6,7 +6,6 @@ import nl.tue.fingerpaint.client.gui.GuiState;
 import nl.tue.fingerpaint.client.model.ApplicationState;
 import nl.tue.fingerpaint.client.resources.FingerpaintCellListResources;
 import nl.tue.fingerpaint.client.storage.StorageManager;
-import nl.tue.fingerpaint.shared.GeometryNames;
 
 import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.core.shared.GWT;
@@ -80,9 +79,8 @@ public class LoadInitDistCellList extends CellList<String> {
 							// get the selected initial distribution, and
 							// set it in the AS
 							int[] dist = StorageManager.INSTANCE
-									.getDistribution(GeometryNames
-											.getShortName(as
-													.getGeometryChoice()),
+									.getDistribution(as
+													.getGeometryChoice(),
 											selected);
 							as.setInitialDistribution(dist);
 							as.drawDistribution();

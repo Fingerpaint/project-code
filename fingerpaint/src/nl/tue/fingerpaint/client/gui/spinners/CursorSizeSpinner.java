@@ -38,11 +38,12 @@ public class CursorSizeSpinner extends NumberSpinner implements
 	/**
 	 * Sets the size of the drawing tool to {@code value}.
 	 * 
-	 * @param value The desired value that should be set.
+	 * @param value The actual, unrounded, value of the spinner. Not used.
+	 * @param roundedValue The desired value that should be set.
 	 */
 	@Override
-	public void onValueChange(double value) {
-		as.getGeometry().setDrawingToolSize((int) value);
+	public void onValueChange(double value, double roundedValue) {
+		as.getGeometry().setDrawingToolSize((int) roundedValue);
 	}
 
 }

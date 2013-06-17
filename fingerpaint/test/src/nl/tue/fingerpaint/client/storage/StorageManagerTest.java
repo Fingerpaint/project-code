@@ -36,7 +36,7 @@ public class StorageManagerTest extends GWTTestCase {
 	private final String resKey = "result1";
 	private final String protKey = "testprot1";
 	private final String distKey = "testdist1";
-	private final String geometry = GeometryNames.RECT_SHORT;
+	private final String geometry = GeometryNames.RECT;
 
 	private final int startIndex = 532;
 	private final int endIndex = 9428;
@@ -229,7 +229,7 @@ public class StorageManagerTest extends GWTTestCase {
 	private void initResultStorage() {
 		storage = new ResultStorage();
 		
-		final String geom = GeometryNames.RECT_LONG;
+		final String geom = GeometryNames.RECT;
 		final String mix = "Default";
 		final int steps = 20;
 		final double[] segr = new double[] { 0.1, 0.2, 0.3, 0.7, 0.6, 0.8, 0.8,

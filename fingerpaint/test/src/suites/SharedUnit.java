@@ -1,6 +1,5 @@
 package suites;
 
-import nl.tue.fingerpaint.shared.GeometryNamesTest;
 import nl.tue.fingerpaint.shared.model.MixingProtocolTest;
 import nl.tue.fingerpaint.shared.model.RectangleMixingStepTest;
 import nl.tue.fingerpaint.shared.simulator.SimulationResultTest;
@@ -38,7 +37,6 @@ import com.google.gwt.junit.client.GWTTestCase;
 	SimulationResultTest.class, 
 	SimulationTest.class,
 //	ServerDataResultTest.class,
-	GeometryNamesTest.class,
 	ColourTest.class,
 // SimulatorServiceTest.class
 })

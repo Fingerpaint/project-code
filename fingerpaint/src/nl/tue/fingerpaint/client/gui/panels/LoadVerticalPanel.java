@@ -1,5 +1,6 @@
 package nl.tue.fingerpaint.client.gui.panels;
 
+import nl.tue.fingerpaint.client.gui.GuiState;
 import nl.tue.fingerpaint.client.gui.labels.NoFilesFoundLabel;
 
 import com.google.gwt.user.cellview.client.CellList;
@@ -29,10 +30,13 @@ public class LoadVerticalPanel extends VerticalPanel {
 			throw new NullPointerException();
 		}
 		if(list.getVisibleItemCount() == 0){
+			//remove(GuiState.listScrollPanel);
 			add(noFilesFoundLabel);
 		}else{
 			remove(noFilesFoundLabel);
-			add(list);
+			GuiState.listScrollPanel.setWidget(list);
+			add(GuiState.listScrollPanel);
+		//	add(list);
 		}
 	}
 }
