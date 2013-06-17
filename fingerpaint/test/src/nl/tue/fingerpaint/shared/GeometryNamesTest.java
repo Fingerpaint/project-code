@@ -4,12 +4,14 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import com.google.gwt.junit.client.GWTTestCase;
+
 /**
  * Test class to test if geometryNames correctly matches long lames with short names
  * 
  * @author Group Fingerpaint
  */
-public class GeometryNamesTest {
+public class GeometryNamesTest extends GWTTestCase {
 
 	/**
 	 * Tests if getShortName returns the correct short name
@@ -41,4 +43,8 @@ public class GeometryNamesTest {
 				GeometryNames.getShortName("This is short"), null);
 	}
 
+	@Override
+	public String getModuleName() {
+		return "nl.tue.fingerpaint.Fingerpaint";
+	}
 }
