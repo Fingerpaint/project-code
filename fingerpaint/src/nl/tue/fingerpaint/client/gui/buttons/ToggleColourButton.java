@@ -171,5 +171,9 @@ public class ToggleColourButton extends Button implements ClickHandler {
 				GuiState.toggleColour.setBackgroundColour(bgCol);
 			}
 		}
+		
+		// Update the colours of the drawing tool buttons
+		GuiState.squareDrawingTool.setColour(fgCol);
+		GuiState.circleDrawingTool.setColour(fgCol);
 	}
 }
