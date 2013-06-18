@@ -1,19 +1,17 @@
 package nl.tue.fingerpaint.client.gui.buttons;
 
+import io.ashton.fastpress.client.fast.PressEvent;
+import io.ashton.fastpress.client.fast.PressHandler;
 import nl.tue.fingerpaint.client.Fingerpaint;
 import nl.tue.fingerpaint.client.model.ApplicationState;
 import nl.tue.fingerpaint.client.resources.FingerpaintConstants;
-
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.ui.Button;
 
 /**
  * Button that can be used to execute the current mixing protocol.
  * 
  * @author Group Fingerpaint
  */
-public class MixNowButton extends Button implements ClickHandler {
+public class MixNowButton extends FastButton implements PressHandler {
 	/**
 	 * Reference to the entrypoint. Used to execute the current mixing protocol.
 	 */
@@ -40,7 +38,7 @@ public class MixNowButton extends Button implements ClickHandler {
 		super(FingerpaintConstants.INSTANCE.btnMixNow());
 		this.fp = parent;
 		this.as = appState;
-		addClickHandler(this);
+		addPressHandler(this);
 		setEnabled(false);
 		ensureDebugId("mixNowButton");
 	}
@@ -52,7 +50,7 @@ public class MixNowButton extends Button implements ClickHandler {
 	 *            The event that has fired.
 	 */
 	@Override
-	public void onClick(ClickEvent event) {
+	public void onPress(PressEvent event) {
 		fp.executeMixingRun(as.getProtocol(), as.getNrSteps(), true);
 
 	}

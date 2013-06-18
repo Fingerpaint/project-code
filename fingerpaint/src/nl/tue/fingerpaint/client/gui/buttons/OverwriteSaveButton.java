@@ -1,20 +1,18 @@
 package nl.tue.fingerpaint.client.gui.buttons;
 
+import io.ashton.fastpress.client.fast.PressEvent;
+import io.ashton.fastpress.client.fast.PressHandler;
 import nl.tue.fingerpaint.client.Fingerpaint;
 import nl.tue.fingerpaint.client.gui.GuiState;
 import nl.tue.fingerpaint.client.gui.panels.NotificationPopupPanel;
 import nl.tue.fingerpaint.client.resources.FingerpaintConstants;
-
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.ui.Button;
 
 /**
  * Button that can be used to overwrite the item that is currently being saved.
  * 
  * @author Group Fingerpaint
  */
-public class OverwriteSaveButton extends Button implements ClickHandler {
+public class OverwriteSaveButton extends FastButton implements PressHandler {
 	/**
 	 * Reference to the entrypoint. Used to overwrite the item that is currently
 	 * being saved.
@@ -33,7 +31,7 @@ public class OverwriteSaveButton extends Button implements ClickHandler {
 	public OverwriteSaveButton(Fingerpaint parent) {
 		super(FingerpaintConstants.INSTANCE.btnOverwrite());
 		this.fp = parent;
-		addClickHandler(this);
+		addPressHandler(this);
 		ensureDebugId("overwriteSaveButton");
 	}
 
@@ -43,7 +41,7 @@ public class OverwriteSaveButton extends Button implements ClickHandler {
 	 * @param event The event that has fired.
 	 */
 	@Override
-	public void onClick(ClickEvent event) {
+	public void onPress(PressEvent event) {
 		fp.save(GuiState.saveNameTextBox.getText(), true);
 
 		NotificationPopupPanel np = new NotificationPopupPanel(

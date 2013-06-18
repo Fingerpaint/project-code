@@ -1,14 +1,14 @@
 package nl.tue.fingerpaint.client.gui.buttons;
 
+import io.ashton.fastpress.client.fast.PressEvent;
+import io.ashton.fastpress.client.fast.PressHandler;
+
 import java.util.Set;
 
 import nl.tue.fingerpaint.client.gui.GuiState;
 import nl.tue.fingerpaint.client.resources.FingerpaintConstants;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.cellview.client.CellList;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.view.client.MultiSelectionModel;
 
 /**
@@ -16,7 +16,7 @@ import com.google.gwt.view.client.MultiSelectionModel;
  * 
  * @author Group Fingerpaint
  */
-public class CloseCompareButton extends Button implements ClickHandler {
+public class CloseCompareButton extends FastButton implements PressHandler {
 
 	/**
 	 * SelectionModel of the {@link CellList} that is used to make a selection
@@ -36,7 +36,7 @@ public class CloseCompareButton extends Button implements ClickHandler {
 	public CloseCompareButton(final MultiSelectionModel<String> selectionModel) {
 		super(FingerpaintConstants.INSTANCE.btnClose());
 		this.selectionModel = selectionModel;
-		addClickHandler(this);
+		addPressHandler(this);
 		addStyleName("panelButton");
 		ensureDebugId("closeCompareButton");
 	}
@@ -46,7 +46,7 @@ public class CloseCompareButton extends Button implements ClickHandler {
 	 * @param event The event that has fired.
 	 */
 	@Override
-	public void onClick(ClickEvent event) {
+	public void onPress(PressEvent event) {
 		Set<String> selected = selectionModel.getSelectedSet();
 		for (String s : selected) {
 			selectionModel.setSelected(s, false);

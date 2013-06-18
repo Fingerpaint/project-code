@@ -1,18 +1,16 @@
 package nl.tue.fingerpaint.client.gui.buttons;
 
+import io.ashton.fastpress.client.fast.PressEvent;
+import io.ashton.fastpress.client.fast.PressHandler;
 import nl.tue.fingerpaint.client.Fingerpaint;
 import nl.tue.fingerpaint.client.resources.FingerpaintConstants;
-
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.ui.Button;
 
 /**
  * Button to reset the current mixing protocol.
  * 
  * @author Group Fingerpaint
  */
-public class ResetProtocolButton extends Button implements ClickHandler {
+public class ResetProtocolButton extends FastButton implements PressHandler {
 	/**
 	 * Reference to the entrypoint. Used to reset the protocol and hide all related
 	 * widgets.
@@ -30,7 +28,7 @@ public class ResetProtocolButton extends Button implements ClickHandler {
 	public ResetProtocolButton(Fingerpaint parent) {
 		super(FingerpaintConstants.INSTANCE.btnResetProt());
 		this.fp = parent;
-		addClickHandler(this);
+		addPressHandler(this);
 		ensureDebugId("resetProtocolButton");
 	}
 	/**
@@ -38,7 +36,7 @@ public class ResetProtocolButton extends Button implements ClickHandler {
 	 * @param event The event that has fired.
 	 */ 
 	@Override
-	public void onClick(ClickEvent event) {
+	public void onPress(PressEvent event) {
 		fp.resetProtocol();
 	}
 

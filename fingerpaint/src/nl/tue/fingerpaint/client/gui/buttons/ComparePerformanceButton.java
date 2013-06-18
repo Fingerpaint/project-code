@@ -1,5 +1,8 @@
 package nl.tue.fingerpaint.client.gui.buttons;
 
+import io.ashton.fastpress.client.fast.PressEvent;
+import io.ashton.fastpress.client.fast.PressHandler;
+
 import java.util.ArrayList;
 
 import nl.tue.fingerpaint.client.Fingerpaint;
@@ -8,10 +11,7 @@ import nl.tue.fingerpaint.client.gui.labels.NoFilesFoundLabel;
 import nl.tue.fingerpaint.client.resources.FingerpaintConstants;
 import nl.tue.fingerpaint.client.storage.StorageManager;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.cellview.client.CellList;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -23,7 +23,7 @@ import com.google.gwt.view.client.Range;
  * 
  * @author Group Fingerpaint
  */
-public class ComparePerformanceButton extends Button implements ClickHandler {
+public class ComparePerformanceButton extends FastButton implements PressHandler {
 
 	private Fingerpaint fp;
 	private VerticalPanel compareVerticalPanel = new VerticalPanel();
@@ -43,7 +43,7 @@ public class ComparePerformanceButton extends Button implements ClickHandler {
 	public ComparePerformanceButton(Fingerpaint parent) {
 		super(FingerpaintConstants.INSTANCE.btnComparePerfomance());
 		this.fp = parent;
-		addClickHandler(this);
+		addPressHandler(this);
 		ensureDebugId("comparePerformanceButton");
 
 		GuiState.compareButton = new CompareButton(fp);
@@ -57,7 +57,7 @@ public class ComparePerformanceButton extends Button implements ClickHandler {
 	 * @param event The event that has fired.
 	 */
 	@Override
-	public void onClick(ClickEvent event) {
+	public void onPress(PressEvent event) {
 		ArrayList<String> resultNames = (ArrayList<String>) StorageManager.INSTANCE
 				.getResults();
 

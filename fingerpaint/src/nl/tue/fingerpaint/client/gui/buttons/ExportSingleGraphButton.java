@@ -1,11 +1,9 @@
 package nl.tue.fingerpaint.client.gui.buttons;
 
+import io.ashton.fastpress.client.fast.PressEvent;
+import io.ashton.fastpress.client.fast.PressHandler;
 import nl.tue.fingerpaint.client.Fingerpaint;
 import nl.tue.fingerpaint.client.resources.FingerpaintConstants;
-
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.ui.Button;
 
 /**
  * Button that can be used to export the image of the current mixing
@@ -13,7 +11,7 @@ import com.google.gwt.user.client.ui.Button;
  * 
  * @author Group Fingerpaint
  */
-public class ExportSingleGraphButton extends Button implements ClickHandler {
+public class ExportSingleGraphButton extends FastButton implements PressHandler {
 	/**
 	 * Reference to the entrypoint. Used to call the export functionality.
 	 */
@@ -30,7 +28,7 @@ public class ExportSingleGraphButton extends Button implements ClickHandler {
 	public ExportSingleGraphButton(Fingerpaint parent) {
 		super(FingerpaintConstants.INSTANCE.btnExportGraph());
 		this.fp = parent;
-		addClickHandler(this);
+		addPressHandler(this);
 		addStyleName("panelButton");
 		ensureDebugId("exportSingleGraphButton");
 	}
@@ -40,7 +38,7 @@ public class ExportSingleGraphButton extends Button implements ClickHandler {
 	 * @param event The event that has fired.
 	 */
 	@Override
-	public void onClick(ClickEvent event) {
+	public void onPress(PressEvent event) {
 		fp.exportGraph(false);
 	}
 

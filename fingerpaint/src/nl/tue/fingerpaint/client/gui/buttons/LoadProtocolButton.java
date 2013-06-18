@@ -1,5 +1,8 @@
 package nl.tue.fingerpaint.client.gui.buttons;
 
+import io.ashton.fastpress.client.fast.PressEvent;
+import io.ashton.fastpress.client.fast.PressHandler;
+
 import java.util.List;
 
 import nl.tue.fingerpaint.client.gui.GuiState;
@@ -7,16 +10,12 @@ import nl.tue.fingerpaint.client.model.ApplicationState;
 import nl.tue.fingerpaint.client.resources.FingerpaintConstants;
 import nl.tue.fingerpaint.client.storage.StorageManager;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.ui.Button;
-
 /**
  * Button that can be used to load a protocol from the local storage.
  * 
  * @author Group Fingerpaint
  */
-public class LoadProtocolButton extends Button implements ClickHandler {
+public class LoadProtocolButton extends FastButton implements PressHandler {
 
 	/**
 	 * Reference to the model. Used to get the currently selected geometry.
@@ -34,7 +33,7 @@ public class LoadProtocolButton extends Button implements ClickHandler {
 	public LoadProtocolButton(ApplicationState appState) {
 		super(FingerpaintConstants.INSTANCE.btnLoadProt());
 		this.as = appState;
-		addClickHandler(this);
+		addPressHandler(this);
 		ensureDebugId("loadProtocolButton");
 	}
 
@@ -43,7 +42,7 @@ public class LoadProtocolButton extends Button implements ClickHandler {
 	 * @param event The event that has fired.
 	 */
 	@Override
-	public void onClick(ClickEvent event) {
+	public void onPress(PressEvent event) {
 		
 		GuiState.loadVerticalPanel.clear();
 		

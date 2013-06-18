@@ -1,5 +1,8 @@
 package nl.tue.fingerpaint.client.gui.buttons;
 
+import io.ashton.fastpress.client.fast.PressEvent;
+import io.ashton.fastpress.client.fast.PressHandler;
+
 import java.util.ArrayList;
 
 import nl.tue.fingerpaint.client.gui.GuiState;
@@ -7,16 +10,12 @@ import nl.tue.fingerpaint.client.model.ApplicationState;
 import nl.tue.fingerpaint.client.resources.FingerpaintConstants;
 import nl.tue.fingerpaint.client.storage.StorageManager;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.ui.Button;
-
 /**
  * Button to initiate the removal of a saved mixing protocol
  * 
  * @author Group Fingerpaint
  */
-public class RemoveSavedProtButton extends Button implements ClickHandler {
+public class RemoveSavedProtButton extends FastButton implements PressHandler {
 
 	/**
 	 * Reference to the model. Used to get the saved protocols for the current
@@ -34,7 +33,7 @@ public class RemoveSavedProtButton extends Button implements ClickHandler {
 	 */
 	public RemoveSavedProtButton(ApplicationState appState) {
 		super(FingerpaintConstants.INSTANCE.btnRemoveSavedProtButton());
-		addClickHandler(this);
+		addPressHandler(this);
 		this.as = appState;
 		this.getElement().setId("removeSavedProtButton");
 	}
@@ -46,7 +45,7 @@ public class RemoveSavedProtButton extends Button implements ClickHandler {
 	 *            The event that has fired.
 	 */
 	@Override
-	public void onClick(ClickEvent event) {
+	public void onPress(PressEvent event) {
 		GuiState.removeResultsVerticalPanel.clear();
 		
 		final ArrayList<String> names = (ArrayList<String>) StorageManager.INSTANCE

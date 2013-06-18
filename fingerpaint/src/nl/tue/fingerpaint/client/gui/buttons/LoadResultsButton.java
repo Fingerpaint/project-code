@@ -1,13 +1,13 @@
 package nl.tue.fingerpaint.client.gui.buttons;
 
+import io.ashton.fastpress.client.fast.PressEvent;
+import io.ashton.fastpress.client.fast.PressHandler;
+
 import java.util.List;
 
 import nl.tue.fingerpaint.client.gui.GuiState;
 import nl.tue.fingerpaint.client.resources.FingerpaintConstants;
 import nl.tue.fingerpaint.client.storage.StorageManager;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.ui.Button;
 
 /**
  * Button that can be used to load (and recompute) results from the local
@@ -15,7 +15,7 @@ import com.google.gwt.user.client.ui.Button;
  * 
  * @author Group Fingerpaint
  */
-public class LoadResultsButton extends Button implements ClickHandler {
+public class LoadResultsButton extends FastButton implements PressHandler {
 
 	/**
 	 * Construct a new button that can be used to load a result from the local
@@ -23,7 +23,7 @@ public class LoadResultsButton extends Button implements ClickHandler {
 	 */
 	public LoadResultsButton() {
 		super(FingerpaintConstants.INSTANCE.btnLoadResults());
-		addClickHandler(this);
+		addPressHandler(this);
 		ensureDebugId("loadResultsButton");
 	}
 
@@ -34,7 +34,7 @@ public class LoadResultsButton extends Button implements ClickHandler {
 	 *            The event that has fired.
 	 */
 	@Override
-	public void onClick(ClickEvent event) {
+	public void onPress(PressEvent event) {
 
 		GuiState.loadVerticalPanel.clear();
 

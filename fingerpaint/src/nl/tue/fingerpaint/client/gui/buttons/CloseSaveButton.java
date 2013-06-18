@@ -1,25 +1,23 @@
 package nl.tue.fingerpaint.client.gui.buttons;
 
+import io.ashton.fastpress.client.fast.PressEvent;
+import io.ashton.fastpress.client.fast.PressHandler;
 import nl.tue.fingerpaint.client.gui.GuiState;
 import nl.tue.fingerpaint.client.resources.FingerpaintConstants;
-
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.ui.Button;
 
 /**
  * Button that can be used to close the save results or overwrite pop-up panel.
  * 
  * @author Group Fingerpaint
  */
-public class CloseSaveButton extends Button implements ClickHandler {
+public class CloseSaveButton extends FastButton implements PressHandler {
 	/**
 	 * Construct a new button that can be used to close the save results or
 	 * overwrite pop-up panel.
 	 */
 	public CloseSaveButton() {
 		super(FingerpaintConstants.INSTANCE.btnCancel());
-		addClickHandler(this);
+		addPressHandler(this);
 		ensureDebugId("closeSaveButton");
 	}
 
@@ -29,7 +27,7 @@ public class CloseSaveButton extends Button implements ClickHandler {
 	 * @param event The event that has fired.
 	 */
 	@Override
-	public void onClick(ClickEvent event) {
+	public void onPress(PressEvent event) {
 		GuiState.overwriteSavePanel.hide();
 		GuiState.overwriteSavePanel.remove(GuiState.overwriteSaveButton);
 		GuiState.saveItemPanel.show();

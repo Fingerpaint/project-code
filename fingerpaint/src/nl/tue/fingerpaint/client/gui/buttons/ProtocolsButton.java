@@ -1,11 +1,9 @@
 package nl.tue.fingerpaint.client.gui.buttons;
 
+import io.ashton.fastpress.client.fast.PressEvent;
+import io.ashton.fastpress.client.fast.PressHandler;
 import nl.tue.fingerpaint.client.gui.menu.MenuLevelSwitcher;
 import nl.tue.fingerpaint.client.resources.FingerpaintConstants;
-
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.ui.Button;
 
 /**
  * Button that can be used to enter the submenu with protocols related
@@ -13,7 +11,7 @@ import com.google.gwt.user.client.ui.Button;
  * 
  * @author Group Fingerpaint
  */
-public class ProtocolsButton extends Button implements ClickHandler {
+public class ProtocolsButton extends FastButton implements PressHandler {
 
 	/**
 	 * Construct a new button that can be used to enter the submenu with
@@ -21,7 +19,7 @@ public class ProtocolsButton extends Button implements ClickHandler {
 	 */
 	public ProtocolsButton() {
 		super(FingerpaintConstants.INSTANCE.btnProtocols());
-		addClickHandler(this);
+		addPressHandler(this);
 		ensureDebugId("protocolsButton");
 	}
 
@@ -32,7 +30,7 @@ public class ProtocolsButton extends Button implements ClickHandler {
 	 *            The event that has fired.
 	 */
 	@Override
-	public void onClick(ClickEvent event) {
+	public void onPress(PressEvent event) {
 		MenuLevelSwitcher.showSub2MenuProtocols();
 	}
 

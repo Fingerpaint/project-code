@@ -1,21 +1,20 @@
 package nl.tue.fingerpaint.client.gui.buttons;
 
+import io.ashton.fastpress.client.fast.PressEvent;
+import io.ashton.fastpress.client.fast.PressHandler;
 import nl.tue.fingerpaint.client.gui.GuiState;
 import nl.tue.fingerpaint.client.model.ApplicationState;
 import nl.tue.fingerpaint.shared.utils.Colour;
 
 import com.google.gwt.dom.client.DivElement;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.ui.Button;
 
 /**
  * Button that can be used to change the drawing colour.
  * 
  * @author Group Fingerpaint
  */
-public class ToggleColourButton extends Button implements ClickHandler {
+public class ToggleColourButton extends FastButton implements PressHandler {
 
 	/** Identifier for the ToggleColourButton in the main menu. */
 	public static final String TOGGLE_COLOUR = "toggleColour";
@@ -65,7 +64,7 @@ public class ToggleColourButton extends Button implements ClickHandler {
 		this.fgCol = Colour.BLACK;
 		this.bgCol = Colour.WHITE;
 
-		addClickHandler(this);
+		addPressHandler(this);
 
 		// Set class of button element
 		setStyleName(STYLENAME);
@@ -91,7 +90,7 @@ public class ToggleColourButton extends Button implements ClickHandler {
 	 * @param event The event that has fired.
 	 */
 	@Override
-	public void onClick(ClickEvent event) {
+	public void onPress(PressEvent event) {
 		toggleColour();
 		as.getGeometry().setColor(fgCol);
 	}

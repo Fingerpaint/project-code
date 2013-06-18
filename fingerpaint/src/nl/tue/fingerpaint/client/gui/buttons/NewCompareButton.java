@@ -1,20 +1,19 @@
 package nl.tue.fingerpaint.client.gui.buttons;
 
+import io.ashton.fastpress.client.fast.PressEvent;
+import io.ashton.fastpress.client.fast.PressHandler;
+
 import java.util.Set;
 
 import nl.tue.fingerpaint.client.gui.GuiState;
 import nl.tue.fingerpaint.client.resources.FingerpaintConstants;
-
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.ui.Button;
 
 /**
  * Button that can be used to start a new comparison.
  * 
  * @author Group Fingerpaint
  */
-public class NewCompareButton extends Button implements ClickHandler {
+public class NewCompareButton extends FastButton implements PressHandler {
 
 	/**
 	 * Construct a new button that can be used to start a new comparison. When
@@ -23,7 +22,7 @@ public class NewCompareButton extends Button implements ClickHandler {
 	 */
 	public NewCompareButton() {
 		super(FingerpaintConstants.INSTANCE.btnNewCompare());
-		addClickHandler(this);
+		addPressHandler(this);
 		addStyleName("panelButton");
 		ensureDebugId("newCompareButton");
 	}
@@ -33,7 +32,7 @@ public class NewCompareButton extends Button implements ClickHandler {
 	 * @param event The event that has fired.
 	 */
 	@Override
-	public void onClick(ClickEvent event) {
+	public void onPress(PressEvent event) {
 		Set<String> selected = GuiState.compareSelectPopupCellList
 				.getSelectionModel().getSelectedSet();
 		for (String s : selected) {

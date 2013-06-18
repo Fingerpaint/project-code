@@ -1,5 +1,7 @@
 package nl.tue.fingerpaint.client.gui.buttons;
 
+import io.ashton.fastpress.client.fast.PressEvent;
+import io.ashton.fastpress.client.fast.PressHandler;
 import nl.tue.fingerpaint.client.gui.animation.RotationAnimation;
 import nl.tue.fingerpaint.client.gui.animation.SizeAnimation;
 import nl.tue.fingerpaint.client.resources.FingerpaintResources;
@@ -7,11 +9,8 @@ import nl.tue.fingerpaint.shared.utils.Utils;
 
 import com.google.gwt.dom.client.ImageElement;
 import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
 
 /**
@@ -19,7 +18,7 @@ import com.google.gwt.user.client.ui.FlowPanel;
  * 
  * @author Group Fingerpaint
  */
-public class MenuToggleButton extends Button implements ClickHandler {
+public class MenuToggleButton extends FastButton implements PressHandler {
 
 	/** The ID of the button element. */
 	public static final String ELEMENT_ID = "menuToggleButton";
@@ -56,17 +55,17 @@ public class MenuToggleButton extends Button implements ClickHandler {
 		
 		// Set variables
 		this.menuPanel = menuPanelWrapper;
-		addClickHandler(this);
+		addPressHandler(this);
 		this.menuAnimation = new SizeAnimation(menuPanelWrapper.getElement(), SizeAnimation.ANIMATE_WIDTH);
 		this.buttonAnimation = new RotationAnimation(imgEl, SHOWN_ANGLE);
 	}
-
+	
 	/**
 	 * Toggles the visibility of the main menu.
 	 * @param event The event that has fired.
 	 */
 	@Override
-	public void onClick(ClickEvent event) {
+	public void onPress(PressEvent event) {
 		if (shown) {
 			buttonAnimation.doRotate(DURATION, HIDDEN_ANGLE, false);
 			menuAnimation.doHide(DURATION);

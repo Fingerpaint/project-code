@@ -1,19 +1,17 @@
 package nl.tue.fingerpaint.client.gui.buttons;
 
+import io.ashton.fastpress.client.fast.PressEvent;
+import io.ashton.fastpress.client.fast.PressHandler;
 import nl.tue.fingerpaint.client.gui.GuiState;
 import nl.tue.fingerpaint.client.model.ApplicationState;
 import nl.tue.fingerpaint.client.resources.FingerpaintConstants;
-
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.ui.Button;
 
 /**
  * Button to reset the current distribution to completely white.
  * 
  * @author Group Fingerpaint
  */
-public class ResetDistButton extends Button implements ClickHandler {
+public class ResetDistButton extends FastButton implements PressHandler {
 
 	/** Reference to the model. Used to reset the current distribution. */
 	protected ApplicationState as;
@@ -29,7 +27,7 @@ public class ResetDistButton extends Button implements ClickHandler {
 	public ResetDistButton(ApplicationState appState) {
 		super(FingerpaintConstants.INSTANCE.btnResetDist());
 		this.as = appState;
-		addClickHandler(this);
+		addPressHandler(this);
 		ensureDebugId("resetDistButton");
 	}
 
@@ -38,7 +36,7 @@ public class ResetDistButton extends Button implements ClickHandler {
 	 * @param event The event that has fired.
 	 */
 	@Override
-	public void onClick(ClickEvent event) {
+	public void onPress(PressEvent event) {
 		as.getGeometry().resetDistribution();
 		GuiState.viewSingleGraphButton.setEnabled(false);
 	}

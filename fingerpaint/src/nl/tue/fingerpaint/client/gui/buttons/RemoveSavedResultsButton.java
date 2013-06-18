@@ -1,28 +1,27 @@
 package nl.tue.fingerpaint.client.gui.buttons;
 
+import io.ashton.fastpress.client.fast.PressEvent;
+import io.ashton.fastpress.client.fast.PressHandler;
+
 import java.util.ArrayList;
 
 import nl.tue.fingerpaint.client.gui.GuiState;
 import nl.tue.fingerpaint.client.resources.FingerpaintConstants;
 import nl.tue.fingerpaint.client.storage.StorageManager;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.ui.Button;
-
 /**
  * Button that can be used to remove previously saved mixing results.
  * 
  * @author Group Fingerpaint
  */
-public class RemoveSavedResultsButton extends Button implements ClickHandler {
+public class RemoveSavedResultsButton extends FastButton implements PressHandler {
 	/**
 	 * Construct a new button that can be used to remove previously saved mixing
 	 * results.
 	 */
 	public RemoveSavedResultsButton() {
 		super(FingerpaintConstants.INSTANCE.btnRemoveResults());
-		addClickHandler(this);
+		addPressHandler(this);
 		ensureDebugId("removeSavedResultsButton");
 	}
 
@@ -33,7 +32,7 @@ public class RemoveSavedResultsButton extends Button implements ClickHandler {
 	 *            The event that has fired.
 	 */
 	@Override
-	public void onClick(ClickEvent event) {
+	public void onPress(PressEvent event) {
 		GuiState.removeResultsVerticalPanel.clear();
 
 		final ArrayList<String> names = (ArrayList<String>) StorageManager.INSTANCE

@@ -1,19 +1,17 @@
 package nl.tue.fingerpaint.client.gui.buttons;
 
+import io.ashton.fastpress.client.fast.PressEvent;
+import io.ashton.fastpress.client.fast.PressHandler;
 import nl.tue.fingerpaint.client.Fingerpaint;
 import nl.tue.fingerpaint.client.resources.FingerpaintConstants;
 import nl.tue.fingerpaint.client.storage.StorageManager;
-
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.ui.Button;
 
 /**
  * Button that can be used to save a mixing protocol.
  * 
  * @author Group Fingerpaint
  */
-public class SaveProtocolButton extends Button implements ClickHandler {
+public class SaveProtocolButton extends FastButton implements PressHandler {
 	
 	/**
 	 * Reference to the entrypoint. Used to change which save button has been clicked
@@ -32,7 +30,7 @@ public class SaveProtocolButton extends Button implements ClickHandler {
 	public SaveProtocolButton(Fingerpaint parent){
 		super(FingerpaintConstants.INSTANCE.btnSaveProt());
 		this.fp = parent;
-		addClickHandler(this);
+		addPressHandler(this);
 		// Initially, saving a protocol is not possible (no protocol has been defined yet).
 		setEnabled(false);
 		ensureDebugId("saveProtocolButton");
@@ -43,7 +41,7 @@ public class SaveProtocolButton extends Button implements ClickHandler {
 	 * @param event The event that has fired.
 	 */
 	@Override
-	public void onClick(ClickEvent event) {
+	public void onPress(PressEvent event) {
 		fp.setLastClicked(StorageManager.KEY_PROTOCOLS);
 		fp.showSavePanel();
 	}

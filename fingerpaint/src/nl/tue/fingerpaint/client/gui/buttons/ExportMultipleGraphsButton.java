@@ -1,18 +1,16 @@
 package nl.tue.fingerpaint.client.gui.buttons;
 
+import io.ashton.fastpress.client.fast.PressEvent;
+import io.ashton.fastpress.client.fast.PressHandler;
 import nl.tue.fingerpaint.client.Fingerpaint;
 import nl.tue.fingerpaint.client.resources.FingerpaintConstants;
-
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.ui.Button;
 
 /**
  * Button that can be used to export multiple graphs.
  * 
  * @author Group Fingerpaint
  */
-public class ExportMultipleGraphsButton extends Button implements ClickHandler {
+public class ExportMultipleGraphsButton extends FastButton implements PressHandler {
 	
 	/**
 	 * Reference to the entrypoint. Used to export the graphs.
@@ -28,7 +26,7 @@ public class ExportMultipleGraphsButton extends Button implements ClickHandler {
 	public ExportMultipleGraphsButton(Fingerpaint parent) {
 		super(FingerpaintConstants.INSTANCE.btnExportGraphs());
 		this.fp = parent;
-		addClickHandler(this);
+		addPressHandler(this);
 		addStyleName("panelButton");
 		ensureDebugId("exportMultipleGraphsButton");
 	}
@@ -38,7 +36,7 @@ public class ExportMultipleGraphsButton extends Button implements ClickHandler {
 	 * @param event The event that has fired. 
 	 */
 	@Override
-	public void onClick(ClickEvent event) {
+	public void onPress(PressEvent event) {
 		fp.exportGraph(true);
 	}
 
