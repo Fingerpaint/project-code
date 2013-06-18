@@ -51,7 +51,7 @@ public class SaveNameTextBox extends TextBox implements KeyPressHandler {
 			textlength--;
 			GuiState.saveItemPanelButton.setEnabled(textlength > 0);
 		} else if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER) {
-			GuiState.saveItemPanelButton.click();
+			GuiState.saveItemPanelButton.getButton().click();
 		}
 		
 	}

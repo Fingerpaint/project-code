@@ -1,18 +1,16 @@
 package nl.tue.fingerpaint.client.gui.buttons;
 
+import io.ashton.fastpress.client.fast.PressEvent;
+import io.ashton.fastpress.client.fast.PressHandler;
 import nl.tue.fingerpaint.client.gui.menu.MenuLevelSwitcher;
 import nl.tue.fingerpaint.client.resources.FingerpaintConstants;
-
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.ui.Button;
 
 /**
  * Button that can be used to go up one level in the menu structure.
  * 
  * @author Group Fingerpaint
  */
-public class BackMenuButton extends Button implements ClickHandler {
+public class BackMenuButton extends FastButton implements PressHandler {
 
 	/**
 	 * Construct a new button that can be used to go up one level in the menu
@@ -20,7 +18,7 @@ public class BackMenuButton extends Button implements ClickHandler {
 	 */
 	public BackMenuButton() {
 		super(FingerpaintConstants.INSTANCE.btnBack());
-		addClickHandler(this);
+		addPressHandler(this);
 		ensureDebugId("backMenuButton");
 	}
 
@@ -31,7 +29,7 @@ public class BackMenuButton extends Button implements ClickHandler {
 	 *            The event that has fired.
 	 */
 	@Override
-	public void onClick(ClickEvent event) {
+	public void onPress(PressEvent event) {
 		MenuLevelSwitcher.goBack();
 	}
 

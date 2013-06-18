@@ -1,19 +1,17 @@
 package nl.tue.fingerpaint.client.gui.buttons;
 
+import io.ashton.fastpress.client.fast.PressEvent;
+import io.ashton.fastpress.client.fast.PressHandler;
 import nl.tue.fingerpaint.client.Fingerpaint;
 import nl.tue.fingerpaint.client.resources.FingerpaintConstants;
 import nl.tue.fingerpaint.client.storage.StorageManager;
-
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.ui.Button;
 
 /**
  * Button to save an initial concentration distribution.
  * 
  * @author Group Fingerpaint
  */
-public class SaveDistributionButton extends Button implements ClickHandler {
+public class SaveDistributionButton extends FastButton implements PressHandler {
 
 	/**
 	 * Reference to the entrypoint. Used to change which save button has been clicked
@@ -32,7 +30,7 @@ public class SaveDistributionButton extends Button implements ClickHandler {
 	public SaveDistributionButton(Fingerpaint parent) {
 		super(FingerpaintConstants.INSTANCE.btnSaveDist());
 		this.fp = parent;
-		addClickHandler(this);
+		addPressHandler(this);
 		ensureDebugId("saveDistributionButton");
 	}
 	/**
@@ -40,7 +38,7 @@ public class SaveDistributionButton extends Button implements ClickHandler {
 	 * @param event The event that has fired.
 	 */ 
 	@Override
-	public void onClick(ClickEvent event) {
+	public void onPress(PressEvent event) {
 		fp.setLastClicked(StorageManager.KEY_INITDIST);
 		fp.showSavePanel();
 	}

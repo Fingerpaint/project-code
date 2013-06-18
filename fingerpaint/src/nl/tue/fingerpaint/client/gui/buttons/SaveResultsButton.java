@@ -1,19 +1,17 @@
 package nl.tue.fingerpaint.client.gui.buttons;
 
+import io.ashton.fastpress.client.fast.PressEvent;
+import io.ashton.fastpress.client.fast.PressHandler;
 import nl.tue.fingerpaint.client.Fingerpaint;
 import nl.tue.fingerpaint.client.resources.FingerpaintConstants;
 import nl.tue.fingerpaint.client.storage.StorageManager;
-
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.ui.Button;
 
 /**
  * Button that can be used to save a mixing run.
  * 
  * @author Group Fingerpaint
  */
-public class SaveResultsButton extends Button implements ClickHandler {
+public class SaveResultsButton extends FastButton implements PressHandler {
 
 	/**
 	 * Reference to the entrypoint. Used to change which save button has been clicked
@@ -32,7 +30,7 @@ public class SaveResultsButton extends Button implements ClickHandler {
 	public SaveResultsButton(Fingerpaint parent) {
 		super(FingerpaintConstants.INSTANCE.btnSaveResults());
 		this.fp = parent;
-		addClickHandler(this);
+		addPressHandler(this);
 		ensureDebugId("saveResultsButton");
 	}
 
@@ -41,7 +39,7 @@ public class SaveResultsButton extends Button implements ClickHandler {
 	 * @param event The event that has fired.
 	 */
 	@Override
-	public void onClick(ClickEvent event) {
+	public void onPress(PressEvent event) {
 		fp.setLastClicked(StorageManager.KEY_RESULTS);
 		fp.showSavePanel();
 	}

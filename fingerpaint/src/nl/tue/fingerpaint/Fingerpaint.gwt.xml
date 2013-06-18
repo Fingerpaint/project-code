@@ -30,6 +30,8 @@
 
 	<!-- Enables debugging options, remove in the final version -->
 	<inherits name="com.google.gwt.user.Debug" />
+	
+	<inherits name="io.ashton.fastpress.Gwt_fast_press" />
 
 	<!-- gwt-log -->
 	<inherits name="com.google.gwt.logging.Logging" />

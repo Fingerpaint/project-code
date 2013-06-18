@@ -1,25 +1,23 @@
 package nl.tue.fingerpaint.client.gui.buttons;
 
+import io.ashton.fastpress.client.fast.PressEvent;
+import io.ashton.fastpress.client.fast.PressHandler;
 import nl.tue.fingerpaint.client.gui.menu.MenuLevelSwitcher;
 import nl.tue.fingerpaint.client.resources.FingerpaintConstants;
-
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.ui.Button;
 
 /**
  * Button that can be used to change the drawing tool.
  * 
  * @author Group Fingerpaint
  */
-public class ToolSelectButton extends Button implements ClickHandler {
+public class ToolSelectButton extends FastButton implements PressHandler {
 
 	/**
 	 * Construct the {@link ToolSelectButton}.
 	 */
 	public ToolSelectButton() {
 		super(FingerpaintConstants.INSTANCE.btnSelectTool());
-		addClickHandler(this);
+		addPressHandler(this);
 		ensureDebugId("toolSelectButton");
 	}
 
@@ -28,7 +26,7 @@ public class ToolSelectButton extends Button implements ClickHandler {
 	 * @param event The event that has fired.
 	 */
 	@Override
-	public void onClick(ClickEvent event) {
+	public void onPress(PressEvent event) {
 		MenuLevelSwitcher.showSub1MenuToolSelector();
 	}
 }

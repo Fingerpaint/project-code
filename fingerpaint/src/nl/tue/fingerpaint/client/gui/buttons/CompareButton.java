@@ -1,5 +1,8 @@
 package nl.tue.fingerpaint.client.gui.buttons;
 
+import io.ashton.fastpress.client.fast.PressEvent;
+import io.ashton.fastpress.client.fast.PressHandler;
+
 import java.util.ArrayList;
 import java.util.Set;
 
@@ -9,10 +12,7 @@ import nl.tue.fingerpaint.client.resources.FingerpaintConstants;
 import nl.tue.fingerpaint.client.storage.ResultStorage;
 import nl.tue.fingerpaint.client.storage.StorageManager;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Button;
 
 /**
  * Button that can be used to compare the performance of the selected mixing
@@ -20,7 +20,7 @@ import com.google.gwt.user.client.ui.Button;
  * 
  * @author Group Fingerpaint
  */
-public class CompareButton extends Button implements ClickHandler {
+public class CompareButton extends FastButton implements PressHandler {
 	/**
 	 * Reference to the entrypoint. Used to call the create graph functionality.
 	 */
@@ -37,7 +37,7 @@ public class CompareButton extends Button implements ClickHandler {
 	public CompareButton(Fingerpaint parent) {
 		super(FingerpaintConstants.INSTANCE.btnCompare());
 		this.fp = parent;
-		addClickHandler(this);
+		addPressHandler(this);
 		addStyleName("panelButton");
 		ensureDebugId("compareButton");
 	}
@@ -49,7 +49,7 @@ public class CompareButton extends Button implements ClickHandler {
 	 * @param event The event that has fired.
 	 */
 	@Override
-	public void onClick(ClickEvent event) {
+	public void onPress(PressEvent event) {
 		ArrayList<String> names = new ArrayList<String>();
 		ArrayList<double[]> graphs = new ArrayList<double[]>();
 		Set<String> chosenNames = GuiState.compareSelectPopupCellList

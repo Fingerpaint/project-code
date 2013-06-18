@@ -3,10 +3,10 @@ package nl.tue.fingerpaint.client.storage;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
+import nl.tue.fingerpaint.client.gui.GuiState;
 import nl.tue.fingerpaint.client.gui.panels.NotificationPopupPanel;
+import nl.tue.fingerpaint.client.resources.FingerpaintConstants;
 import nl.tue.fingerpaint.shared.GeometryNames;
 import nl.tue.fingerpaint.shared.model.MixingProtocol;
 
@@ -160,11 +160,10 @@ public class StorageManager {
 					try {
 						localStorage.setItem(firstLevelKey, FingerpaintJsonizer
 								.toString(new HashMap<String, Object>()));
-					} catch (JavaScriptException e) {
-						if (e.getName().equals("QUOTA_EXCEEDED_ERR")) {
-							new NotificationPopupPanel(
-									"Storage capacity exceeded.").show(3000);
-						}
+					} catch (Exception e) {
+						new NotificationPopupPanel(
+								FingerpaintConstants.INSTANCE.unknownError()).
+								show(GuiState.DEFAULT_TIMEOUT);
 					}
 				} else {
 					HashMap<String, Object> secondLevel = new HashMap<String, Object>();
@@ -174,11 +173,10 @@ public class StorageManager {
 					try {
 						localStorage.setItem(firstLevelKey,
 								FingerpaintJsonizer.toString(secondLevel));
-					} catch (JavaScriptException e) {
-						if (e.getName().equals("QUOTA_EXCEEDED_ERR")) {
-							new NotificationPopupPanel(
-									"Storage capacity exceeded.").show(3000);
-						}
+					} catch (Exception e) {
+						new NotificationPopupPanel(
+								FingerpaintConstants.INSTANCE.unknownError()).
+								show(GuiState.DEFAULT_TIMEOUT);
 					}
 				}
 			} else if (!firstLevelKey.equals(KEY_RESULTS)) {
@@ -195,11 +193,10 @@ public class StorageManager {
 					try {
 						localStorage.setItem(firstLevelKey,
 								FingerpaintJsonizer.toString(secondLevel));
-					} catch (JavaScriptException e) {
-						if (e.getName().equals("QUOTA_EXCEEDED_ERR")) {
-							new NotificationPopupPanel(
-									"Storage capacity exceeded.").show(3000);
-						}
+					} catch (Exception e) {
+						new NotificationPopupPanel(
+								FingerpaintConstants.INSTANCE.unknownError()).
+								show(GuiState.DEFAULT_TIMEOUT);
 					}
 				}
 			}
@@ -465,12 +462,10 @@ public class StorageManager {
 				localStorage.setItem(KEY_INITDIST,
 						FingerpaintJsonizer.toString(firstLevel));
 			} catch (JavaScriptException e) {
-				if (e.getName().equals("QUOTA_EXCEEDED_ERR")) {
-					return QUOTA_EXCEEDED_ERROR;
-				}
+				return QUOTA_EXCEEDED_ERROR;
+			} catch (Exception e) {
 				return UNKNOWN_ERROR;
 			}
-
 			return SAVE_SUCCESSFUL;
 		}
 
@@ -550,9 +545,8 @@ public class StorageManager {
 				localStorage.setItem(KEY_PROTOCOLS,
 						FingerpaintJsonizer.toString(firstLevel));
 			} catch (JavaScriptException e) {
-				if (e.getName().equals("QUOTA_EXCEEDED_ERR")) {
-					return QUOTA_EXCEEDED_ERROR;
-				}
+				return QUOTA_EXCEEDED_ERROR;
+			} catch (Exception e) {
 				return UNKNOWN_ERROR;
 			}
 			return SAVE_SUCCESSFUL;
@@ -621,13 +615,9 @@ public class StorageManager {
 			localStorage.setItem(KEY_RESULTS,
 					FingerpaintJsonizer.toString(firstLevel));
 		} catch (JavaScriptException e) {
-			if (e.getName().equals("QUOTA_EXCEEDED_ERR")) {
-				return QUOTA_EXCEEDED_ERROR;
-			} else {
-				Logger.getLogger("").log(Level.SEVERE,
-						"Unknown error during saving: " + e.getDescription());
-				return UNKNOWN_ERROR;
-			}
+			return QUOTA_EXCEEDED_ERROR;
+		} catch (Exception e) {
+			return UNKNOWN_ERROR;
 		}
 		return SAVE_SUCCESSFUL;
 	}
@@ -659,9 +649,10 @@ public class StorageManager {
 					try {
 						localStorage.setItem(KEY_INITDIST,
 								FingerpaintJsonizer.toString(firstLevel));
-					} catch (JavaScriptException e) {
-						new NotificationPopupPanel("Storage capacity exceeded.")
-								.show(3000);
+					} catch (Exception e) {
+						new NotificationPopupPanel(
+								FingerpaintConstants.INSTANCE.unknownError()).
+								show(GuiState.DEFAULT_TIMEOUT);
 					}
 					return true;
 				}
@@ -694,9 +685,10 @@ public class StorageManager {
 					try {
 						localStorage.setItem(KEY_PROTOCOLS,
 								FingerpaintJsonizer.toString(firstLevel));
-					} catch (JavaScriptException e) {
-						new NotificationPopupPanel("Storage capacity exceeded.")
-								.show(3000);
+					} catch (Exception e) {
+						new NotificationPopupPanel(
+								FingerpaintConstants.INSTANCE.unknownError()).
+								show(GuiState.DEFAULT_TIMEOUT);
 					}
 					return true;
 				}
@@ -722,11 +714,10 @@ public class StorageManager {
 				try {
 					localStorage.setItem(KEY_RESULTS,
 							FingerpaintJsonizer.toString(firstLevel));
-				} catch (JavaScriptException e) {
-					if (e.getName().equals("QUOTA_EXCEEDED_ERR")) {
-						new NotificationPopupPanel("Storage capacity exceeded.")
-								.show(3000);
-					}
+				} catch (Exception e) {
+					new NotificationPopupPanel(
+							FingerpaintConstants.INSTANCE.unknownError()).
+							show(GuiState.DEFAULT_TIMEOUT);
 				}
 				return true;
 			}

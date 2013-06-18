@@ -1,5 +1,8 @@
 package nl.tue.fingerpaint.client.gui.buttons;
 
+import io.ashton.fastpress.client.fast.PressEvent;
+import io.ashton.fastpress.client.fast.PressHandler;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -11,10 +14,6 @@ import nl.tue.fingerpaint.client.gui.textboxes.SaveNameTextBox;
 import nl.tue.fingerpaint.client.resources.FingerpaintConstants;
 import nl.tue.fingerpaint.client.storage.StorageManager;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.ui.Button;
-
 /**
  * Button that can be used to actually initiate a saving action.
  * 
@@ -22,7 +21,7 @@ import com.google.gwt.user.client.ui.Button;
  * @see SaveItemPopupPanel
  * @see SaveNameTextBox
  */
-public class SaveItemPanelButton extends Button implements ClickHandler {
+public class SaveItemPanelButton extends FastButton implements PressHandler {
 
 	/**
 	 * Reference to the entrypoint. Used to save items.
@@ -38,7 +37,7 @@ public class SaveItemPanelButton extends Button implements ClickHandler {
 	public SaveItemPanelButton(Fingerpaint parent) {
 		super(FingerpaintConstants.INSTANCE.btnSave());
 		this.fp = parent;
-		addClickHandler(this);
+		addPressHandler(this);
 		setEnabled(false);
 		addStyleName("panelButton");
 		ensureDebugId("saveItemPanelButton");
@@ -50,7 +49,7 @@ public class SaveItemPanelButton extends Button implements ClickHandler {
 	 * @param event The event that has fired.
 	 */
 	@Override
-	public void onClick(ClickEvent event) {
+	public void onPress(PressEvent event) {
 		int result = fp.save(GuiState.saveNameTextBox.getText(), false);
 		
 		switch (result) {

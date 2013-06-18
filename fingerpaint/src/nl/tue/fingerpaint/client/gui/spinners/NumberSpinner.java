@@ -1,16 +1,17 @@
 package nl.tue.fingerpaint.client.gui.spinners;
 
+import io.ashton.fastpress.client.fast.PressEvent;
+import io.ashton.fastpress.client.fast.PressHandler;
+import nl.tue.fingerpaint.client.gui.buttons.FastButton;
+
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.dom.client.MouseMoveEvent;
 import com.google.gwt.event.dom.client.MouseMoveHandler;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DoubleBox;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -151,9 +152,9 @@ public class NumberSpinner extends Composite implements ChangeHandler, KeyUpHand
 		numberBox.addMouseDownHandler(this);
 		numberBox.addMouseMoveHandler(this);
 
-		Button upButton = new Button("+");// backup old value: ("▲")
-		upButton.addClickHandler(new ClickHandler() {
-			public void onClick(ClickEvent event) {
+		FastButton upButton = new FastButton("+");// backup old value: ("▲")
+		upButton.addPressHandler(new PressHandler() {
+			public void onPress(PressEvent event) {
 				if (!hasLimits || getValue() <= MAX - RATE) {
 					setValue(getValue() + RATE);
 				}
@@ -161,9 +162,9 @@ public class NumberSpinner extends Composite implements ChangeHandler, KeyUpHand
 		});
 		upButton.setStyleName("dp-spinner-upbutton");
 
-		Button downButton = new Button("-");// backup old value: ("‭▼")
-		downButton.addClickHandler(new ClickHandler() {
-			public void onClick(ClickEvent event) {
+		FastButton downButton = new FastButton("-");// backup old value: ("‭▼")
+		downButton.addPressHandler(new PressHandler() {
+			public void onPress(PressEvent event) {
 				if (!hasLimits || getValue() >= MIN + RATE) {
 					setValue(getValue() - RATE);
 				}

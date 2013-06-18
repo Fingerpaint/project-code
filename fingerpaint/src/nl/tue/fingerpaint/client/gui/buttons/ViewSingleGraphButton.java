@@ -1,5 +1,8 @@
 package nl.tue.fingerpaint.client.gui.buttons;
 
+import io.ashton.fastpress.client.fast.PressEvent;
+import io.ashton.fastpress.client.fast.PressHandler;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -8,10 +11,7 @@ import nl.tue.fingerpaint.client.gui.GuiState;
 import nl.tue.fingerpaint.client.model.ApplicationState;
 import nl.tue.fingerpaint.client.resources.FingerpaintConstants;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Button;
 
 /**
  * Button that can be used to view the performance of the previously executed
@@ -19,7 +19,7 @@ import com.google.gwt.user.client.ui.Button;
  * 
  * @author Group Fingerpaint
  */
-public class ViewSingleGraphButton extends Button implements ClickHandler {
+public class ViewSingleGraphButton extends FastButton implements PressHandler {
 	/**
 	 * Reference to the entrypoint. Used to call the functionality of the graph
 	 * visualisator.
@@ -47,7 +47,7 @@ public class ViewSingleGraphButton extends Button implements ClickHandler {
 		super(FingerpaintConstants.INSTANCE.btnViewSingleGraph());
 		this.fp = parent;
 		this.as = appState;
-		addClickHandler(this);
+		addPressHandler(this);
 		setEnabled(false);
 		ensureDebugId("viewSingleGraphButton");
 	}
@@ -57,7 +57,7 @@ public class ViewSingleGraphButton extends Button implements ClickHandler {
 	 * @param event The event that has fired.
 	 */
 	@Override
-	public void onClick(ClickEvent event) {
+	public void onPress(PressEvent event) {
 		ArrayList<double[]> performance = new ArrayList<double[]>();
 		performance.add(as.getSegregation());
 

@@ -351,20 +351,22 @@ cleacdr
 	padding: 0;
 	position: relative;
 	z-index: TOGGLE_COLOUR_BUTTON_Z;
+	width: TOGGLE_COLOUR_BUTTON_WIDTH !important;
 }
 
 #squareDrawingTool .html-face,
 #circleDrawingTool .html-face {
 	background: WHITE;
-	height: 35px;
+	box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+	height: 30px;
 	left: 50%;
-	margin-left: -17.5px;
+	margin-left: -15px;
 	position: absolute;
-	top: 5px;
-	width: 35px;
+	top: 7.5px;
+	width: 30px;
 	z-index: TOGGLE_COLOUR_BUTTON_Z_BG;
 }
 
 #circleDrawingTool .html-face {
-	border-radius: 17.5px;
+	border-radius: 15px;
 }

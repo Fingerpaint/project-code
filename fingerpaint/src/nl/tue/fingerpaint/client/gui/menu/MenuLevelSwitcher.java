@@ -1,6 +1,7 @@
 package nl.tue.fingerpaint.client.gui.menu;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 
 import nl.tue.fingerpaint.client.gui.GuiState;
 import nl.tue.fingerpaint.client.gui.animation.Direction;
@@ -165,8 +166,11 @@ public class MenuLevelSwitcher {
 	public static void showSub1MenuToolSelector() {
 		GuiState.subLevel1MenuPanel.clear();		
 		GuiState.subLevel1MenuPanel.add(GuiState.drawingToolLabel);
-		GuiState.subLevel1MenuPanel.add(GuiState.squareDrawingTool);
-		GuiState.subLevel1MenuPanel.add(GuiState.circleDrawingTool);
+		GuiState.subLevel1MenuPanel.add(GuiState.toolMenuToggleColour);
+		HorizontalPanel hp = new HorizontalPanel();
+		hp.add(GuiState.squareDrawingTool);
+		hp.add(GuiState.circleDrawingTool);
+		GuiState.subLevel1MenuPanel.add(hp);
 		GuiState.subLevel1MenuPanel.add(GuiState.cursorSizeSpinner);
 		GuiState.subLevel1MenuPanel.add(GuiState.backMenu1Button);
 		
