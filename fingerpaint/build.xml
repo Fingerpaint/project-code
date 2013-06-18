@@ -11,6 +11,8 @@
 	<property name="server.lib.dir" value="${lib.dir}/server" />
 	<property name="client.lib.dir" value="${lib.dir}/client" />
 	<property name="gwt.lib.dir" value="lib/gwt" />
+	<property name="run.server.description" value="Fingerpaint server" />
+	<property environment="env" />
     
     <path id="server.classpath">       
         <fileset dir="${server.lib.dir}">
@@ -43,23 +45,37 @@
         <delete dir="${build.dir}" />
     </target>
 	
-	<target name="native-with-java-home" depends="prepare" if="java.jdk.home" 
-		unless="no.native">
-		<echo message="Java home: ${java.home}" />
+	<condition property="no.native.or.java.home">
+	    <or>
+	        <isset property="no.native" />
+	        <isset property="env.JAVA_HOME" />
+	    </or>
+	</condition>
+	
+	<condition property="ask.java.jdk.home">
+		<not>
+            <or>
+                <isset property="no.native.or.java.home" />
+                <isset property="java.jdk.home" />
+            </or>
+		</not>
+    </condition>
+	
+	<target name="check-java-jdk-home" if="ask.java.jdk.home">
+		<input message="Give the location of the java jdk home" 
+			addproperty="java.jdk.home" />
+	</target>
+	
+	<target name="native-with-java-home" depends="prepare, check-java-jdk-home" 
+		unless="no.native.or.java.home">
+		<echo message="Java home: ${java.jdk.home}" />
 	    <exec executable="make" dir=".">
 	        <arg value="all" />
 	    	<env key="JAVA_HOME" path="${java.jdk.home}"/>
 	    </exec>
 	</target>
 	
-	<condition property="no.native.or.java.home">
-	    <or>
-	    	<isset property="no.native" />
-	    	<isset property="java.jdk.home" />
-	    </or>
-	</condition>
-	
-	<target name="native" depends="prepare" unless="no.native.or.java.home">
+	<target name="native" depends="prepare" if="env.JAVA_HOME" unless="no.native">
 	    <exec executable="make" dir=".">
 	    	<arg value="all" />
 	    </exec>
@@ -123,4 +139,30 @@
 			<property name="jar.name" value="${gwt.module.name}.jar" />
 		</ant>
 	</target>
+	
+	<target name="deploy">
+		<java fork="true" spawn="true" jar="Fingerpaint.jar" />
+	</target>
+	
+	<condition property="isUnix">  
+	    <os family="unix" />
+	</condition>
+	<condition property="isWindows">
+	    <os family="windows" />
+	</condition>
+	
+	<target name="windows-run" if="isWindows">
+        <exec executable="cmd" spawn="true" dir="${basedir}">
+		    <arg line="/k start " />
+		    <arg value="&quot;${run.server.description}&quot;" />
+            <arg line="java -jar ${gwt.module.name}.jar"/>
+	    </exec>
+	</target>
+	
+	<target name="unix-run" if="isUnix">
+		<java jar="${gwt.module.name}.jar" spawn="true" fork="true" />
+	</target>
+	
+    <target name="run" depends="jar, windows-run, unix-run" />
+	
 </project>
