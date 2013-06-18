@@ -109,7 +109,7 @@
 
     <target name="war" depends="gwt-compile"
     	description="Create a deployable war file">
-        <war basedir="${build.dir}/war" destfile="${build.dir}/jetty-container/${gwt.module.name.dir}.war" 
+        <war basedir="${build.dir}/war" destfile="${gwt.module.name.dir}.war" 
         	webxml="${build.dir}/war/WEB-INF/web.xml">
         </war>
     </target>
