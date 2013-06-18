@@ -10,7 +10,7 @@
 @def MENU_BUTTON_WIDTH 230px; /* MENU_WIDTH - padding (= 2 * 5) */
 @def MENU_TITLE_LABEL_WIDTH 220px; /* MENU_BUTTON_WIDTH - padding (= 2 * 5) */
 @def MENU_PROTOCOL_LABEL_WIDTH 218px; /* MENU_WIDTH - padding (= 2 * 5) - border (= 2 * 1) */
-@def TOGGLE_COLOUR_BUTTON_WIDTH 113px;
+@def TOGGLE_COLOUR_BUTTON_WIDTH 113px; /* I don't know, this looks good */
 @def MENU_SPINNER_WIDTH 118px; /* border = 2 * 1 */
 @def MENU_SPINNER_BUTTON_WIDTH 55px; /* padding = 2 * 5 */
 
