@@ -36,7 +36,7 @@ public class CircleDrawingTool extends DrawingTool {
 	@Override
 	public ImageData getTool(ImageData img, Colour colour) {
 		int width = img.getWidth();
-		int radius = (int) Math.floor(width / 2.0);
+		int radius = (width - 1) / 2;
 		int x = radius;
 		int y = radius;
 		CanvasPixelArray data = img.getData();
