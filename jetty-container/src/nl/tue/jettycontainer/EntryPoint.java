@@ -9,9 +9,15 @@ import org.eclipse.jetty.util.resource.ResourceCollection;
 import org.eclipse.jetty.webapp.WebAppContext;
 
 public class EntryPoint {
+
+	private static final int PORT = 80;
 	
 	public void startServer() throws MalformedURLException, IOException {
-	    Server server = new Server(80);
+		startServer(PORT);
+	}
+
+	public void startServer(int portNumber) throws MalformedURLException, IOException {
+	    Server server = new Server(portNumber);
 	    
 	    WebAppContext context = new WebAppContext();
 	    context.setInitParameter("org.eclipse.jetty.servlet.Default.dirAllowed", "false");
@@ -34,7 +40,16 @@ public class EntryPoint {
 	}
  
 	public static void main(String[] args) throws Exception {
+		int portNumber = PORT;
+		if (args.length > 0) {
+			try {
+				portNumber = Integer.parseInt(args[0]);
+			} catch (NumberFormatException nfe) {
+				// okay, use default port
+			}
+		}
+
 		EntryPoint entryPoint = new EntryPoint();
-		entryPoint.startServer();
+		entryPoint.startServer(portNumber);
 	}
 }
