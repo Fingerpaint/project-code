@@ -37,7 +37,7 @@ public class SquareDrawingToolToggleButton extends FastToggleButton implements P
 		this.as = appState;
 		
 		// Initially, the square drawing tool is selected
-		toggleButton.setDown(true);
+		getToggleButton().setDown(true);
 		
 		// Initialise to default foreground colour
 		setColour(Colour.BLACK);
@@ -55,8 +55,8 @@ public class SquareDrawingToolToggleButton extends FastToggleButton implements P
 		as.getGeometry().setDrawingTool(
 				new SquareDrawingTool(fp.getCursorSize()));
 
-		toggleButton.setDown(true);
-		GuiState.circleDrawingTool.toggleButton.setDown(false);
+		getToggleButton().setDown(true);
+		GuiState.circleDrawingTool.getToggleButton().setDown(false);
 		// Update faces of all buttons, because that is changed now
 		GuiState.toolMenuToggleColour.update(ToggleColourButton.UPDATE_BOTH);
 	}

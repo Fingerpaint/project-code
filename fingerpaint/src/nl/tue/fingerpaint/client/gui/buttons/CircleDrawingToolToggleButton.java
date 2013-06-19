@@ -38,7 +38,7 @@ public class CircleDrawingToolToggleButton extends FastToggleButton implements P
 		this.as = appState;
 		
 		// Initially, the circle drawing tool is not selected
-		toggleButton.setDown(false);
+		getToggleButton().setDown(false);
 		
 		// Initialise to default foreground colour
 		setColour(Colour.BLACK);
@@ -56,8 +56,8 @@ public class CircleDrawingToolToggleButton extends FastToggleButton implements P
 		as.getGeometry().setDrawingTool(
 				new CircleDrawingTool(fp.getCursorSize()));
 
-		toggleButton.setDown(true);
-		GuiState.squareDrawingTool.toggleButton.setDown(false);
+		getToggleButton().setDown(true);
+		GuiState.squareDrawingTool.getToggleButton().setDown(false);
 		// Update faces of all buttons, because that is changed now
 		GuiState.toolMenuToggleColour.update(ToggleColourButton.UPDATE_BOTH);
 	}

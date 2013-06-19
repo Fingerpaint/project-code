@@ -15,7 +15,7 @@ import com.google.gwt.user.client.ui.Button;
  * 
  * <p>
  * Note: this class basically wraps a {@link Button} element that can be
- * accessed trough the {@link #button} field.
+ * accessed trough the {@link #getButton()} method.
  * </p>
  * 
  * @author Group Fingerpaint
@@ -23,7 +23,7 @@ import com.google.gwt.user.client.ui.Button;
 public class FastButton extends FastPressElement {
 
 	/** Button that is wrapped. */
-	protected Button button;
+	private Button button;
 	
 	/**
 	 * Create a new button with no text in it.
@@ -66,6 +66,11 @@ public class FastButton extends FastPressElement {
 	@Override
 	public Element getElement() {
 		return button.getElement();
+	}
+	
+	@Override
+	public void setEnabled(boolean enabled) {
+		button.setEnabled(enabled);
 	}
 	
 	@Override

@@ -15,7 +15,7 @@ import com.google.gwt.user.client.ui.ToggleButton;
  * 
  * <p>
  * Note: this class basically wraps a {@link ToggleButton} element that can be
- * accessed trough the {@link #toggleButton} field.
+ * accessed trough the {@link #getToggleButton()} field.
  * </p>
  * 
  * @author Group Fingerpaint
@@ -23,7 +23,7 @@ import com.google.gwt.user.client.ui.ToggleButton;
 public class FastToggleButton extends FastPressElement {
 
 	/** {@code ToggleButton} that is wrapped. */
-	protected ToggleButton toggleButton;
+	private ToggleButton toggleButton;
 	
 	/**
 	 * Create a new button with no text in it.
@@ -58,6 +58,20 @@ public class FastToggleButton extends FastPressElement {
 	@Override
 	public Element getElement() {
 		return toggleButton.getElement();
+	}
+	
+	/**
+	 * Return a reference to the actual {@link ToggleButton} wrapped by this class.
+	 * 
+	 * @return a reference to the wrapped {@link ToggleButton}
+	 */
+	public ToggleButton getToggleButton() {
+		return toggleButton;
+	}
+	
+	@Override
+	public void setEnabled(boolean enabled) {
+		toggleButton.setEnabled(enabled);
 	}
 	
 	@Override
