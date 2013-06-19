@@ -6,7 +6,6 @@ import nl.tue.fingerpaint.shared.model.RectangleMixingStep;
 import com.google.gwt.canvas.dom.client.CanvasPixelArray;
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.canvas.dom.client.ImageData;
-import com.google.gwt.dom.client.CanvasElement;
 
 /**
  * Class that represents the rectangular geometry. Keeps the internal

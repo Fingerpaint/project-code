@@ -30,7 +30,7 @@ public class FileExporter {
 	/**
 	 * Exports the canvas to a png image
 	 * 
-	 * @param svg SVG image as a string.
+	 * @param canvas Canvas to export
 	 */
 	public static void exportCanvasImage(Canvas canvas) {
 		promptCanvasDownload(canvas.getCanvasElement());
