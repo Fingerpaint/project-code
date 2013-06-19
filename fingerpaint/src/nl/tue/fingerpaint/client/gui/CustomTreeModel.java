@@ -176,24 +176,24 @@ public class CustomTreeModel implements TreeViewModel {
 		// Also intialise the widgets in the submenu that this button toggles
 		GuiState.squareDrawingTool = new SquareDrawingToolToggleButton(fp, as);
 		GuiState.circleDrawingTool = new CircleDrawingToolToggleButton(fp, as);
-		GuiState.mainMenuPanel.add(GuiState.toolSelectButton);
+		GuiState.menuPanels[0].add(GuiState.toolSelectButton);
 
 		// Initialise toggleButton and add to
 		// menuPanel
 		GuiState.toggleColour = new ToggleColourButton(as, ToggleColourButton.TOGGLE_COLOUR);
 		GuiState.toolMenuToggleColour = new ToggleColourButton(as, ToggleColourButton.TOGGLE_COLOUR_TOOL_MENU);
-		GuiState.mainMenuPanel.add(GuiState.toggleColour);
+		GuiState.menuPanels[0].add(GuiState.toggleColour);
 
 		// Initialise the distribution buttons and add a button to access those
 		// to the menu panel. Also add the 'clear canvas' to the main menu
 		GuiState.resetDistButton = new ResetDistButton(as);
-		GuiState.mainMenuPanel.add(GuiState.resetDistButton);
+		GuiState.menuPanels[0].add(GuiState.resetDistButton);
 		GuiState.saveDistributionButton = new SaveDistributionButton(fp);
 		GuiState.loadInitDistButton = new LoadInitDistButton(as);
 		GuiState.loadInitDistCellList = new LoadInitDistCellList(as);
 		GuiState.removeInitDistButton = new RemoveInitDistButton(as);
 		GuiState.exportDistributionButton = new ExportDistributionButton(as);
-		GuiState.mainMenuPanel.add(GuiState.distributionsButton);
+		GuiState.menuPanels[0].add(GuiState.distributionsButton);
 
 		// Initialise the results buttons and add a button to access those
 		// to the menu panel.
@@ -220,7 +220,7 @@ public class CustomTreeModel implements TreeViewModel {
 
 		GuiState.removeResultsPanel.add(GuiState.removeResultsVerticalPanel);
 
-		GuiState.mainMenuPanel.add(GuiState.resultsButton);
+		GuiState.menuPanels[0].add(GuiState.resultsButton);
 
 		// Initialise view single graph button
 		GuiState.viewSingleGraphButton = new ViewSingleGraphButton(fp, as);
@@ -234,12 +234,12 @@ public class CustomTreeModel implements TreeViewModel {
 		GuiState.sizeSpinner = new StepSizeSpinner(as);
 		GuiState.sizeProtocolMenuSpinner = new StepSizeSpinner(as,
 				"sizeProtocolMenuSpinner");
-		GuiState.mainMenuPanel.add(GuiState.sizeLabel);
-		GuiState.mainMenuPanel.add(GuiState.sizeSpinner);
+		GuiState.menuPanels[0].add(GuiState.sizeLabel);
+		GuiState.menuPanels[0].add(GuiState.sizeSpinner);
 
 		// Add a button with which the protocol submenu can be accessed
 		GuiState.toggleDefineProtocol = new ToggleDefineProtocol(as);
-		GuiState.mainMenuPanel.add(GuiState.toggleDefineProtocol);
+		GuiState.menuPanels[0].add(GuiState.toggleDefineProtocol);
 
 		// Initialise a spinner for #steps
 		GuiState.nrStepsSpinner = new NrStepsSpinner(as);
@@ -267,9 +267,9 @@ public class CustomTreeModel implements TreeViewModel {
 		// Add canvas and menuPanel to the page
 		RootPanel.get().add(as.getGeometry().getCanvas());
 
-		GuiState.menuPanelInnerWrapper.add(GuiState.mainMenuPanel);
-		GuiState.menuPanelInnerWrapper.add(GuiState.subLevel1MenuPanel);
-		GuiState.menuPanelInnerWrapper.add(GuiState.subLevel2MenuPanel);
+		for (int i = 0; i < GuiState.menuPanels.length; i++) {
+			GuiState.menuPanelInnerWrapper.add(GuiState.menuPanels[i]);
+		}
 		GuiState.menuPanelOuterWrapper.add(GuiState.menuPanelInnerWrapper);
 		RootPanel.get().add(GuiState.menuPanelOuterWrapper);
 

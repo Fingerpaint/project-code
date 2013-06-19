@@ -351,7 +351,7 @@ public interface FingerpaintConstants extends Constants {
 	 * @return Localised string that contains the text for the
 	 *         {@link GuiState#backStopDefiningProtocol} button.
 	 */
-	@DefaultStringValue("Stop defining Protocol")
+	@DefaultStringValue("Back")
 	public String btnStopDefProt();
 
 	// --- CONSTANTS FOR ERRORS -----------------------------------------------

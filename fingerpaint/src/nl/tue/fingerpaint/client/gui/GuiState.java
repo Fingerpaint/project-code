@@ -123,15 +123,13 @@ public class GuiState {
 
 	// --- MENU WIDGETS -------------------------------------------------------
 	/** Vertical panel to contain all menu items. */
-	public static VerticalPanel mainMenuPanel = new VerticalPanel();
-
-	/** Vertical panel to contain all menu items on the first submenu level. */
-	public static VerticalPanel subLevel1MenuPanel = new VerticalPanel();
+	public static VerticalPanel[] menuPanels = new VerticalPanel[] {
+		new VerticalPanel(), // main menu
+		new VerticalPanel(), // submenu level 1
+		new VerticalPanel()  // submenu level 2
+	};
 	
-	/** Vertical panel to contain all menu items on the second submenu level. */
-	public static VerticalPanel subLevel2MenuPanel = new VerticalPanel();
-	
-	/** Wrapper for the {@link #mainMenuPanel}, used in animation of hiding menu. */
+	/** Wrapper for the main menu ({@link #menuPanels}[0]), used in animation of hiding menu. */
 	public static FlowPanel menuPanelOuterWrapper = new FlowPanel();
 	
 	/** Wrapper for the {@link #menuPanelOuterWrapper}, used in animation of submenus. */
@@ -166,11 +164,9 @@ public class GuiState {
 	public static ToolSelectButton toolSelectButton = new ToolSelectButton();
 
 	/** Button to select the square-shaped drawing tool. */
-	// TODO: Change this to a button on which a square is drawn
 	public static SquareDrawingToolToggleButton squareDrawingTool;
 
 	/** Button to select the circle-shaped drawing tool. */
-	// TODO: Change this to a button on which a circle is drawn
 	public static CircleDrawingToolToggleButton circleDrawingTool;
 
 	// --- INITIAL DISTRIBUTION WIDGETS ---------------------------------------
@@ -522,9 +518,9 @@ public class GuiState {
 		loadingPanelMessage.getElement()
 				.setId(GuiState.LOADINGPANEL_MESSAGE_ID);
 
-		mainMenuPanel.getElement().setId("menuPanel");
-		GuiState.subLevel1MenuPanel.getElement().setId("menuSub1Panel");
-		GuiState.subLevel2MenuPanel.getElement().setId("menuSub2Panel");
+		menuPanels[0].getElement().setId("menuPanel");
+		menuPanels[1].getElement().setId("menuSub1Panel");
+		menuPanels[2].getElement().setId("menuSub2Panel");
 		menuPanelInnerWrapper.getElement().setId("menuPanelInnerWrapper");
 		menuPanelOuterWrapper.getElement().setId("menuPanelWrapper");
 
