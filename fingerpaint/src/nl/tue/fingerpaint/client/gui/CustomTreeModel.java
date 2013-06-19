@@ -182,7 +182,7 @@ public class CustomTreeModel implements TreeViewModel {
 		// menuPanel
 		GuiState.toggleColour = new ToggleColourButton(as, ToggleColourButton.TOGGLE_COLOUR);
 		GuiState.toolMenuToggleColour = new ToggleColourButton(as, ToggleColourButton.TOGGLE_COLOUR_TOOL_MENU);
-		GuiState.menuPanels[0].add(GuiState.toggleColour);
+		// GuiState.menuPanels[0].add(GuiState.toggleColour);
 
 		// Initialise the distribution buttons and add a button to access those
 		// to the menu panel. Also add the 'clear canvas' to the main menu
