@@ -25,7 +25,6 @@
             <include name="**/*.jar" />
         </fileset>
     	<pathelement location="${src.dir}" />
-    	
     </path>
 	
 	<path id="client.src.classpath">       
@@ -140,29 +139,22 @@
 		</ant>
 	</target>
 	
-	<target name="deploy">
-		<java fork="true" spawn="true" jar="Fingerpaint.jar" />
+	<target name="deploy" depends="war"
+		description="Compile the war and deploy to a jetty instance">
+		
 	</target>
 	
-	<condition property="isUnix">  
-	    <os family="unix" />
-	</condition>
-	<condition property="isWindows">
-	    <os family="windows" />
-	</condition>
-	
-	<target name="windows-run" if="isWindows">
-        <exec executable="cmd" spawn="true" dir="${basedir}">
-		    <arg line="/k start " />
-		    <arg value="&quot;${run.server.description}&quot;" />
-            <arg line="java -jar ${gwt.module.name}.jar"/>
-	    </exec>
-	</target>
-	
-	<target name="unix-run" if="isUnix">
-		<java jar="${gwt.module.name}.jar" spawn="true" fork="true" />
-	</target>
-	
-    <target name="run" depends="jar, windows-run, unix-run" />
+    <target name="run" depends="gwt-compile"
+    	description="Compile the jar and run the application">
+    	<ant antfile="../jetty-container/build.xml" inheritall="false"
+    		target="run" useNativeBasedir="true">
+    		<property name="war.dir" location="${build.dir}/war" />
+    		<property name="jar.dir" location="." />
+            <property name="jar.name" value="${gwt.module.name}.jar" />
+    		<property name="run.port.number" value="${run.port.number}" />
+    		<property name="run.server.description" 
+    			value="${run.server.description}" />
+        </ant>
+    </target>
 	
 </project>

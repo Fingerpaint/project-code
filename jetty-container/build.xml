@@ -26,12 +26,27 @@
         </javac>
     </target>
 	
+	<target name="input-war-dir" unless="war.dir">
+		   <input message="Input the name of the war directory" 
+		   	addproperty="war.dir" />
+	</target>
+	
+	<target name="input-jar-dir" unless="jar.dir">
+		   <input message="Input the name of the jar directory" 
+		   	addproperty="jar.dir" />
+	</target>
+	
+	<target name="input-jar-name" unless="jar.name">
+           <input message="Input the name of the jar file" 
+            addproperty="jar.name" />
+    </target>
     
-    <target name="jar" depends="compile" description="Create jarfile.">
+    <target name="jar" 
+    	depends="compile, input-war-dir, input-jar-dir, input-jar-name" 
+    	description="Create jarfile.">
         <fail message="Property war.dir needs to be set to a valid directory">
             <condition>
                 <not>
-                	
                     <available file="${war.dir}" type="dir" />
                 </not>
     		</condition>
@@ -71,4 +86,25 @@
             </manifest>
         </jar>
     </target>
+	
+	<condition property="isUnix">  
+        <os family="unix" />
+    </condition>
+    <condition property="isWindows">
+        <os family="windows" />
+    </condition>
+    
+    <target name="windows-run" depends="input-jar-name" if="isWindows">
+        <exec executable="cmd" spawn="true" dir="${jar.dir}">
+            <arg line="/k start " />
+            <arg value="&quot;${run.server.description}&quot;" />
+            <arg line="java -jar ${jar.name} ${run.port.number}"/>
+        </exec>
+    </target>
+    
+    <target name="unix-run" depends="input-jar-name" if="isUnix">
+        <java jar="${jar.name}" spawn="true" fork="true" />
+    </target>
+	
+	<target name="run" depends="jar, windows-run, unix-run" />
 </project>
