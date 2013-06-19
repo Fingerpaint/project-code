@@ -2,14 +2,17 @@ package nl.tue.fingerpaint.client.gui;
 
 import java.util.ArrayList;
 
+import nl.tue.fingerpaint.shared.utils.Colour;
+
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.visualization.client.AbstractDataTable;
 import com.google.gwt.visualization.client.AbstractDataTable.ColumnType;
 import com.google.gwt.visualization.client.DataTable;
 import com.google.gwt.visualization.client.DataView;
-import com.google.gwt.visualization.client.visualizations.LineChart;
-import com.google.gwt.visualization.client.visualizations.LineChart.Options;
+import com.google.gwt.visualization.client.visualizations.corechart.AxisOptions;
+import com.google.gwt.visualization.client.visualizations.corechart.LineChart;
+import com.google.gwt.visualization.client.visualizations.corechart.Options;
 
 /**
  * <p>
@@ -145,8 +148,29 @@ public class GraphVisualisator {
 		options.setHeight(height);
 		options.setWidth(width);
 		options.setTitle("Mixing Performance");
-		options.setTitleX("Number of steps");
-		options.setTitleY("Mixing performance");
+		
+		// horizontal axis
+		AxisOptions horAxisOptions = AxisOptions.create();
+		horAxisOptions.setTitle("Number of Steps");
+		options.setHAxisOptions(horAxisOptions);
+		
+		// vertical axis
+		AxisOptions verAxisOptions = AxisOptions.create();
+		verAxisOptions.setTitle("Mixing Performance");
+		verAxisOptions.setIsLogScale(true);
+		verAxisOptions.setMinValue(0);
+		verAxisOptions.setMaxValue(1);
+		
+		Options verGrid = Options.create();
+	    verGrid.set("color", Colour.GRAY.toHexString());
+	    verAxisOptions.set("gridlines", verGrid);
+	    
+		Options verMinorGrid = Options.create();
+		verMinorGrid.set("color", Colour.LIGHT_GRAY.toHexString());
+	    verAxisOptions.set("minorGridlines", verMinorGrid);
+		
+		options.setVAxisOptions(verAxisOptions);
+		
 		return options;
 	}
 

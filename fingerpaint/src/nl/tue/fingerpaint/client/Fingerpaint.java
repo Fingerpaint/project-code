@@ -79,7 +79,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.view.client.TreeViewModel;
 import com.google.gwt.visualization.client.VisualizationUtils;
-import com.google.gwt.visualization.client.visualizations.LineChart;
+import com.google.gwt.visualization.client.visualizations.corechart.CoreChart;
 
 /**
  * This is the entry point of the Fingerpaint application.
@@ -553,7 +553,7 @@ public class Fingerpaint implements EntryPoint {
 		try {
 			VisualizationUtils.loadVisualizationApi(graphVisualisator
 					.createGraph(panel, names, performance, onLoad,
-							graphHeight, graphWidth), LineChart.PACKAGE);
+							graphHeight, graphWidth), CoreChart.PACKAGE);
 		} catch (Exception e) {
 			Window.alert(FingerpaintConstants.INSTANCE.loadingGraphFailed());
 			e.printStackTrace();
