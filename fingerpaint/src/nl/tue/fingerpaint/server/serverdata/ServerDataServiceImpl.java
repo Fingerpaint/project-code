@@ -1,6 +1,7 @@
 package nl.tue.fingerpaint.server.serverdata;
 
 import nl.tue.fingerpaint.shared.GeometryNames;
+import nl.tue.fingerpaint.shared.MixerNames;
 import nl.tue.fingerpaint.shared.ServerDataResult;
 import nl.tue.fingerpaint.shared.serverdata.ServerDataService;
 
@@ -28,7 +29,7 @@ public class ServerDataServiceImpl extends RemoteServiceServlet implements
 	public ServerDataResult getServerData() {
 		return new ServerDataResult(
 				new String[] { GeometryNames.RECT, GeometryNames.SQR },
-				new String[] { "Default", "Default" },
+				new String[] { MixerNames.RectMixers.DEFAULT, MixerNames.SqrMixers.DEFAULT },
 				new int[] { 0, 1 }
 			);
 	}
