@@ -10,6 +10,7 @@ import nl.tue.fingerpaint.client.storage.StorageManager;
 import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.user.cellview.client.CellList;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.view.client.Range;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
@@ -74,23 +75,38 @@ public class LoadProtocolCellList extends CellList<String> {
 		selectionModel
 				.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
 					public void onSelectionChange(SelectionChangeEvent event) {
-						String selected = selectionModel.getSelectedObject();
+						final String selected = selectionModel.getSelectedObject();
+						
 						if (selected != null) {
-							as.setProtocol(StorageManager.INSTANCE.getProtocol(
-									as.getGeometryChoice(), selected));
-							GuiState.labelProtocolRepresentation.getElement().setInnerHTML(
-									as.getProtocol().toString());
-							GuiState.mixNowButton.setEnabled(true);
+							// close popup to show we are busy loading
+							GuiState.loadPanel.setIsLoading();
 							
-							GuiState.saveResultsButton.setEnabled(false);
-							GuiState.viewSingleGraphButton.setEnabled(false);
-
-							selectionModel.setSelected(selected, false);
-							GuiState.loadPanel.hide();
-
-							GuiState.labelProtocolRepresentation
-									.setVisible(true);
-							GuiState.saveProtocolButton.setEnabled(true);
+							// Now wait a bit until this has happened, before
+							// loading a distribution from the storage, as that
+							// is very CPU intensive
+							Timer runLater = new Timer() {
+								@Override
+								public void run() {
+									as.setProtocol(StorageManager.INSTANCE
+											.getProtocol(as.getGeometryChoice(),
+													selected));
+									GuiState.labelProtocolRepresentation
+											.getElement().setInnerHTML(
+													as.getProtocol().toString());
+									GuiState.mixNowButton.setEnabled(true);
+									
+									GuiState.saveResultsButton.setEnabled(false);
+									GuiState.viewSingleGraphButton.setEnabled(false);
+		
+									selectionModel.setSelected(selected, false);
+									GuiState.loadPanel.hide();
+		
+									GuiState.labelProtocolRepresentation
+											.setVisible(true);
+									GuiState.saveProtocolButton.setEnabled(true);
+								}
+							};
+							runLater.schedule(100);
 						}
 					}
 				});

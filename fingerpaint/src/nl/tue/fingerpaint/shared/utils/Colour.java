@@ -14,6 +14,8 @@ public class Colour {
 
     /** White colour. */
     public static final Colour WHITE = new Colour(255, 255, 255);
+    /** Near-white gray colour. */
+    public static final Colour WHITE_GRAYISH = new Colour(240, 240, 240);
     /** Light gray colour. */
     public static final Colour LIGHT_GRAY = new Colour(192, 192, 192);
     /** Gray colour. */

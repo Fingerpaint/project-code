@@ -20,4 +20,5 @@
 @eval MAIN nl.tue.fingerpaint.shared.utils.Colour.TUE_BLUE.toHexString();
 @eval MAIN_DARK nl.tue.fingerpaint.shared.utils.Colour.TUE_DARK_BLUE.toHexString();
 @eval WHITE nl.tue.fingerpaint.shared.utils.Colour.WHITE.toHexString();
+@eval WHITE_GRAYISH nl.tue.fingerpaint.shared.utils.Colour.WHITE_GRAYISH.toHexString();
 @eval LIGHT_GRAY nl.tue.fingerpaint.shared.utils.Colour.LIGHT_GRAY.toHexString();

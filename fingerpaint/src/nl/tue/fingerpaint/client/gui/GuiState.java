@@ -379,6 +379,9 @@ public class GuiState {
 
 	/** Pop-up panel to handle the loading of previously saved items. */
 	public static LoadPopupPanel loadPanel = new LoadPopupPanel();
+	
+	/** Label that can be used to indicate that some action is taking place. */
+	public static Label loadLabel = new Label(FingerpaintConstants.INSTANCE.lblLoad());
 
 	/** Button to close the load pop-up menu. */
 	public static CloseLoadButton closeLoadButton = new CloseLoadButton();

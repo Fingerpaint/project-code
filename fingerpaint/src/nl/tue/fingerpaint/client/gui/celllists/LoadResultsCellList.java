@@ -12,6 +12,7 @@ import nl.tue.fingerpaint.shared.model.MixingProtocol;
 
 import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.user.cellview.client.CellList;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.view.client.Range;
 import com.google.gwt.view.client.SelectionChangeEvent;
@@ -83,19 +84,30 @@ public class LoadResultsCellList extends CellList<String> {
 		selectionModel
 				.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
 					public void onSelectionChange(SelectionChangeEvent event) {
-						String selected = selectionModel.getSelectedObject();
+						final String selected = selectionModel.getSelectedObject();
 
 						if (selected != null) {
-
-							// get the selected results, and recompute them
-							ResultStorage result = StorageManager.INSTANCE
-									.getResult(selected);
-
-							// recompute the result and repaint
-							recompute(result);
-
-							selectionModel.setSelected(selected, false);
-							GuiState.loadPanel.removeFromParent();
+							// close popup to show we are busy loading
+							GuiState.loadPanel.setIsLoading();
+							
+							// Now wait a bit until this has happened, before
+							// loading a distribution from the storage, as that
+							// is very CPU intensive
+							Timer runLater = new Timer() {
+								@Override
+								public void run() {
+									// get the selected results, and recompute them
+									ResultStorage result = StorageManager.INSTANCE
+											.getResult(selected);
+		
+									// recompute the result and repaint
+									recompute(result);
+		
+									selectionModel.setSelected(selected, false);
+									GuiState.loadPanel.removeFromParent();
+								}
+							};
+							runLater.schedule(100);
 						}
 					}
 				});

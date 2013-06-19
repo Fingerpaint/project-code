@@ -38,20 +38,36 @@ public class NotificationPopupPanel {
 	}
 
 	/**
+	 * Hides this NotificationPanel.
+	 */
+	public void hide() {
+		panel.hide();
+	}
+	
+	/**
 	 * Shows this NotificationPanel for the {@code timeout} milliseconds.
 	 * 
 	 * @param timeOut
 	 *            The amount of time, in milliseconds, this panel is shown.
+	 *            When less than 0, the panel will be shown indefinitely.
+	 *            (That is, until it is hidden manually.)
+	 *            When exactly 0, the panel will not be shown.
 	 */
 	public void show(int timeOut) {
+		if (timeOut == 0) {
+			return;
+		}
+		
 		panel.center();
-
-		Timer t = new Timer() {
-			public void run() {
-				panel.hide();
-			}
-		};
-
-		t.schedule(timeOut);
+		
+		if (timeOut > 0) {			
+			Timer t = new Timer() {
+				public void run() {
+					panel.hide();
+				}
+			};
+	
+			t.schedule(timeOut);
+		}
 	}
 }

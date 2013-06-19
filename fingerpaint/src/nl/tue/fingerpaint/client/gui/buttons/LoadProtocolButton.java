@@ -5,6 +5,8 @@ import io.ashton.fastpress.client.fast.PressHandler;
 
 import java.util.List;
 
+import com.google.gwt.user.client.Timer;
+
 import nl.tue.fingerpaint.client.gui.GuiState;
 import nl.tue.fingerpaint.client.model.ApplicationState;
 import nl.tue.fingerpaint.client.resources.FingerpaintConstants;
@@ -43,16 +45,22 @@ public class LoadProtocolButton extends FastButton implements PressHandler {
 	 */
 	@Override
 	public void onPress(PressEvent event) {
+		GuiState.loadPanel.setIsLoading();
+		Timer runLater = new Timer() {
+			@Override
+			public void run() {
+				GuiState.loadVerticalPanel.clear();
+				
+				List<String> geometryProtocols = StorageManager.INSTANCE
+						.getProtocols(as.getGeometryChoice());
+				GuiState.loadProtocolCellList.fillCellList(geometryProtocols);
 		
-		GuiState.loadVerticalPanel.clear();
-		
-		List<String> geometryProtocols = StorageManager.INSTANCE
-				.getProtocols(as.getGeometryChoice());
-		GuiState.loadProtocolCellList.fillCellList(geometryProtocols);
-
-		GuiState.loadVerticalPanel.addList(GuiState.loadProtocolCellList);
-		GuiState.loadVerticalPanel.add(GuiState.closeLoadButton);
-		GuiState.loadPanel.center();
+				GuiState.loadVerticalPanel.addList(GuiState.loadProtocolCellList);
+				GuiState.loadVerticalPanel.add(GuiState.closeLoadButton);
+				GuiState.loadPanel.center();
+			}
+		};
+		runLater.schedule(100);
 	}
 
 }
