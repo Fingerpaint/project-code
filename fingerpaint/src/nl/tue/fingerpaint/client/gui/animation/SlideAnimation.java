@@ -110,7 +110,8 @@ public class SlideAnimation extends Animation {
 					(Window.getClientHeight() - elPos.getY()) * progress, Unit.PX);
 			break;
 		case LEFT :
-			subject.getStyle().setLeft(elPos.getX() * progress, Unit.PX);
+			subject.getStyle().setLeft(elPos.getX() -
+					(elPos.getX() + subject.getOffsetWidth()) * progress, Unit.PX);
 			break;
 		}
 	}
