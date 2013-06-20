@@ -1,6 +1,6 @@
 package nl.tue.fingerpaint.server.simulator;
 
-import static org.junit.Assert.assertTrue;
+import junit.framework.TestCase;
 
 import org.junit.Test;
 
@@ -9,7 +9,7 @@ import org.junit.Test;
  * 
  * @author Group Fingerpaint
  */
-public class NativeCommunicatorTest {
+public class NativeCommunicatorTest extends TestCase {
 
 	/**
 	 * A test that runs a simulation and checks whether the received segregation
@@ -29,7 +29,8 @@ public class NativeCommunicatorTest {
 		NativeCommunicator c = NativeCommunicator.getInstance();
 		double segregation = c.simulate(
 				"Rectangle400x240", "Default", concentrationVector, 40, "TL");
-		assertTrue(segregation == 0.8296319009181);
+		assertTrue("Segregation " + segregation + " was incorrect", 
+				segregation == 0.8296319009181);
 	}
 
 }
