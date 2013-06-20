@@ -26,6 +26,16 @@ public class SimulatorServiceImpl extends RemoteServiceServlet implements
 	 * Random serial version uid
 	 */
 	private static final long serialVersionUID = 3842884820635044977L;
+	
+	@Override
+	protected void doUnexpectedFailure(Throwable e) {
+		// We do not react to IOExceptions, because they will probably amount
+		// to a timeout, which can occur is the server is very busy with a lot
+		// of heavy mixing requests
+		if (!(e instanceof IOException)) {
+			throw new Error(e);
+		}
+	}
 
 	/**
 	 * Simulates a result.
