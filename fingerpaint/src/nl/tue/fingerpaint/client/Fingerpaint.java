@@ -58,6 +58,7 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.debug.client.DebugInfo;
 import com.google.gwt.dom.client.IFrameElement;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ResizeEvent;
@@ -172,6 +173,10 @@ public class Fingerpaint implements EntryPoint {
 		// class
 		GuiState.setIDs();
 
+		// Update the max-height of the scrollpanel
+		GuiState.listScrollPanel.getElement().getStyle()
+				.setProperty("maxHeight", Window.getClientHeight() - 100, Unit.PX);
+		
 		// switch between portrait and canvas view
 		Window.addResizeHandler(new ResizeHandler() {
 			@Override
@@ -179,7 +184,11 @@ public class Fingerpaint implements EntryPoint {
 				timer.cancel();
 				timer.schedule(250);
 				
+				// Make sure all visible popup panels remain centered
 				centerPopupPanels();
+				// Update the max-height of the scrollpanel
+				GuiState.listScrollPanel.getElement().getStyle()
+						.setProperty("maxHeight", Window.getClientHeight() - 100, Unit.PX);
 			}
 		});
 	}
