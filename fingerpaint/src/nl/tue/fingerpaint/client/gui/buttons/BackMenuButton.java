@@ -12,14 +12,30 @@ import nl.tue.fingerpaint.client.resources.FingerpaintConstants;
  */
 public class BackMenuButton extends FastButton implements PressHandler {
 
+	/** Class name for every button of this type. */
+	public static final String STYLE_NAME = "backMenuButton";
+	
+	/**
+	 * Construct a new button that can be used to go up one level in the menu
+	 * structure, with a default ID.
+	 */
+	public BackMenuButton() {
+		this(null);
+	}
+	
 	/**
 	 * Construct a new button that can be used to go up one level in the menu
 	 * structure.
+	 * 
+	 * @param id
+	 *            The ID for the button. When {@code null}, "backMenuButton" is
+	 *            used as the ID for the element.
 	 */
-	public BackMenuButton() {
+	public BackMenuButton(String id) {
 		super(FingerpaintConstants.INSTANCE.btnBack());
 		addPressHandler(this);
-		ensureDebugId("backMenuButton");
+		getElement().setId((id == null ? "backMenuButton" : id));
+		getElement().addClassName(STYLE_NAME);
 	}
 
 	/**

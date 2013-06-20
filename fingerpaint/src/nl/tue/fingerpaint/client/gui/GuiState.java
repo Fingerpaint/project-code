@@ -140,10 +140,10 @@ public class GuiState {
 			menuPanelOuterWrapper);
 	
 	/** Button that is used in the first menu level to go up one level. */
-	public static BackMenuButton backMenu1Button = new BackMenuButton();
+	public static BackMenuButton backMenu1Button = new BackMenuButton("backMenu1Button");
 	
 	/** Button that is used in the second menu level to go up one level. */
-	public static BackMenuButton backMenu2Button = new BackMenuButton();
+	public static BackMenuButton backMenu2Button = new BackMenuButton("backMenu2Button");
 
 	// --- DRAWING TOOL WIDGETS -----------------------------------------------
 	/**

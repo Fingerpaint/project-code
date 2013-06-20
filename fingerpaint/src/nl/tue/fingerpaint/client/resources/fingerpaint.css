@@ -172,6 +172,10 @@ button {
 	text-transform: uppercase;
 }
 
+.backMenuButton {
+	background: MAIN_SUPPORT;
+}
+
 #menuPanelWrapper .gwt-Button,
 #menuPanelWrapper .gwt-ToggleButton,
 #menuPanelWrapper button {

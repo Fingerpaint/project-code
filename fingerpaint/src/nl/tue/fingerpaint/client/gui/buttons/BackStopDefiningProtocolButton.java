@@ -33,6 +33,7 @@ public class BackStopDefiningProtocolButton extends FastButton implements PressH
 		this.as = appState;
 		addPressHandler(this);
 		ensureDebugId("backStopDefiningProtocolButton");
+		getElement().addClassName(BackMenuButton.STYLE_NAME);
 	}
 
 	/**
