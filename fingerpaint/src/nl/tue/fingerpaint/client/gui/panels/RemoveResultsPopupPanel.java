@@ -19,6 +19,7 @@ public class RemoveResultsPopupPanel extends PopupPanel {
 	public RemoveResultsPopupPanel() {
 		super();
 		setModal(true);
+		setGlassEnabled(true);
 		ensureDebugId("removeResultsPanel");
 	}
 

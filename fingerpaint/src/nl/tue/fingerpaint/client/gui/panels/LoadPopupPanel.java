@@ -38,6 +38,7 @@ public class LoadPopupPanel extends PopupPanel {
 	public LoadPopupPanel() {
 		super();
 		setModal(true);
+		setGlassEnabled(true);
 		isLoading = false;
 		add(GuiState.loadVerticalPanel);
 		ensureDebugId("loadPanel");

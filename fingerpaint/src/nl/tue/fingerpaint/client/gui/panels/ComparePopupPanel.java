@@ -18,6 +18,7 @@ public class ComparePopupPanel extends PopupPanel {
 	public ComparePopupPanel() {
 		super();
 		setModal(true);
+		setGlassEnabled(true);
 	}
 
 }

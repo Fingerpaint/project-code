@@ -54,8 +54,11 @@ import nl.tue.fingerpaint.client.gui.labels.ProtocolRepresentationLabel;
 import nl.tue.fingerpaint.client.gui.labels.ProtocolsLabel;
 import nl.tue.fingerpaint.client.gui.labels.ResultsLabel;
 import nl.tue.fingerpaint.client.gui.labels.SaveMessageLabel;
+import nl.tue.fingerpaint.client.gui.panels.ComparePopupPanel;
+import nl.tue.fingerpaint.client.gui.panels.CompareSelectPopupPanel;
 import nl.tue.fingerpaint.client.gui.panels.LoadPopupPanel;
 import nl.tue.fingerpaint.client.gui.panels.LoadVerticalPanel;
+import nl.tue.fingerpaint.client.gui.panels.OverwriteSavePopupPanel;
 import nl.tue.fingerpaint.client.gui.panels.RemoveResultsPopupPanel;
 import nl.tue.fingerpaint.client.gui.panels.RemoveResultsVerticalPanel;
 import nl.tue.fingerpaint.client.gui.panels.SaveItemPopupPanel;
@@ -69,7 +72,6 @@ import nl.tue.fingerpaint.client.resources.FingerpaintConstants;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -350,7 +352,7 @@ public class GuiState {
 	 * Pop-up panel that appears after the Save button in the save pop-up panel
 	 * has been pressed.
 	 */
-	public static PopupPanel overwriteSavePanel = new PopupPanel();
+	public static OverwriteSavePopupPanel overwriteSavePanel = new OverwriteSavePopupPanel();
 
 	/**
 	 * Horizontal panel to hold the OK or Overwrite/Cancel button(s) in the
@@ -468,13 +470,13 @@ public class GuiState {
 	 * Pop-up panel to display all the previously stored mixing runs with
 	 * performance. It also contains the Compare and Close buttons.
 	 */
-	public static PopupPanel compareSelectPopupPanel = new PopupPanel();
+	public static CompareSelectPopupPanel compareSelectPopupPanel = new CompareSelectPopupPanel();
 
 	/**
 	 * Pop-up panel that displays the simple panel with the performance graph
 	 * and New Comparison and Close buttons.
 	 */
-	public static PopupPanel comparePopupPanel = new PopupPanel();
+	public static ComparePopupPanel comparePopupPanel = new ComparePopupPanel();
 
 	/**
 	 * Simple panel that displays a graph with the mixing performance of the
@@ -550,7 +552,6 @@ public class GuiState {
 		viewSingleGraphGraphPanel.getElement().setId(
 				"viewSingleGraphGraphPanel");
 
-		compareSelectPopupPanel.setModal(true);
 		compareSelectPopupPanel.ensureDebugId("compareSelectPopupPanel");
 		comparePopupPanel.ensureDebugId("comparePopupPanel");
 		compareGraphPanel.getElement().setId("compareGraphPanel");

@@ -22,6 +22,7 @@ public class OverwriteSavePopupPanel extends PopupPanel {
 	public OverwriteSavePopupPanel() {
 		super();
 		setModal(true);
+		setGlassEnabled(true);
 	}
 
 }

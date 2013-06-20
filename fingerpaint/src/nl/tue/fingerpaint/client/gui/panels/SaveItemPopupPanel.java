@@ -18,6 +18,7 @@ public class SaveItemPopupPanel extends PopupPanel {
 	public SaveItemPopupPanel() {
 		super();
 		setModal(true);
+		setGlassEnabled(true);
 		ensureDebugId("saveItemPanel");
 	}
 
