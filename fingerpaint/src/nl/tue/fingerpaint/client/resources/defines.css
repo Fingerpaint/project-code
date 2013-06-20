@@ -23,3 +23,5 @@
 @eval WHITE nl.tue.fingerpaint.shared.utils.Colour.WHITE.toHexString();
 @eval WHITE_GRAYISH nl.tue.fingerpaint.shared.utils.Colour.WHITE_GRAYISH.toHexString();
 @eval LIGHT_GRAY nl.tue.fingerpaint.shared.utils.Colour.LIGHT_GRAY.toHexString();
+@eval GREEN nl.tue.fingerpaint.shared.utils.Colour.PMS_375.toHexString();
+@eval LIGHT_GREEN nl.tue.fingerpaint.shared.utils.Colour.PMS_396.toHexString();

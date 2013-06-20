@@ -373,3 +373,19 @@ cleacdr
 #circleDrawingTool .html-face {
 	border-radius: 15px;
 }
+
+/* notification panel style */
+.popupPanelNotification,
+.popupPanelLoadingNotification {
+	background: GREEN;
+	border: 0 none;
+	color: WHITE;
+	font-size: 20px;
+	font-weight: bold;
+	margin: 4px 0 0 4px;
+	padding: 20px;
+}
+
+.popupPanelLoadingNotification {
+	background: MAIN;
+}

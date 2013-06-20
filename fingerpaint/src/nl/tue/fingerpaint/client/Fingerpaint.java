@@ -178,10 +178,50 @@ public class Fingerpaint implements EntryPoint {
 			public void onResize(ResizeEvent event) {
 				timer.cancel();
 				timer.schedule(250);
+				
+				centerPopupPanels();
 			}
 		});
 	}
 
+	/**
+	 * <p>
+	 * Center all currently visible {@link PopupPanel PopupPanels} both
+	 * horizontally and vertically in the screen.
+	 * </p>
+	 * 
+	 * <p>
+	 * Also positions the notifications where they belong.
+	 * </p>
+	 */
+	public void centerPopupPanels() {
+		if (GuiState.removeResultsPanel.isShowing()) {
+			GuiState.removeResultsPanel.center();
+		}
+		if (GuiState.saveItemPanel.isShowing()) {
+			GuiState.saveItemPanel.center();
+		}
+		if (GuiState.overwriteSavePanel.isShowing()) {
+			GuiState.overwriteSavePanel.center();
+		}
+		if (GuiState.loadPanel.isShowing()) {
+			if (GuiState.loadPanel.isLoading()) {
+				GuiState.loadPanel.setTopLeft();
+			} else {
+				GuiState.loadPanel.center();
+			}
+		}
+		if (GuiState.viewSingleGraphPopupPanel.isShowing()) {
+			GuiState.viewSingleGraphPopupPanel.center();
+		}
+		if (GuiState.compareSelectPopupPanel.isShowing()) {
+			GuiState.compareSelectPopupPanel.center();
+		}
+		if (GuiState.comparePopupPanel.isShowing()) {
+			GuiState.comparePopupPanel.center();
+		}
+	}
+	
 	/**
 	 * Returns the String that describes which save button has been clicked
 	 * last.

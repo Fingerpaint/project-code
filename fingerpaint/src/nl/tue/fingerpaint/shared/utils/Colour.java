@@ -24,22 +24,6 @@ public class Colour {
     public static final Colour DARK_GRAY = new Colour(64, 64, 64);
     /** Black colour. */
     public static final Colour BLACK = new Colour(0, 0, 0);
-    /** Red colour. */
-    public static final Colour RED = new Colour(255, 0, 0);
-    /** Pink colour. */
-    public static final Colour PINK = new Colour(255, 175, 175);
-    /** Orange colour. */
-    public static final Colour ORANGE = new Colour(255, 200, 0);
-    /** Yellow colour. */
-    public static final Colour YELLOW = new Colour(255, 255, 0);
-    /** Green colour. */
-    public static final Colour GREEN = new Colour(0, 255, 0);
-    /** Magenta colour. */
-    public static final Colour MAGENTA = new Colour(255, 0, 255);
-    /** Cyan colour. */
-    public static final Colour CYAN = new Colour(0, 255, 255);
-    /** Blue colour. */
-    public static final Colour BLUE = new Colour(0, 0, 255);
     /** TUe pink colour. */
     public static final Colour TUE_PURPLE = new Colour(214, 0, 123);
     /** TUe light blue colour. */
@@ -52,6 +36,10 @@ public class Colour {
     public static final Colour PMS_GREEN = new Colour(0, 172, 130);
     /** TUe support colour: blue-ish colour. */
     public static final Colour PMS_3135 = new Colour(0, 146, 181);
+    /** TUe support colour: green colour. */
+    public static final Colour PMS_375 = new Colour(132, 210, 0);
+    /** TUe support colour: light green colour. */
+    public static final Colour PMS_396 = new Colour(206, 223, 0);
 	
 	/**
 	 * The red component of this colour.

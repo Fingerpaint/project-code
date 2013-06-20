@@ -14,6 +14,15 @@ import com.google.gwt.user.client.ui.PopupPanel;
 public class LoadPopupPanel extends PopupPanel {
 
 	/**
+	 * Classname that is added to the element when this panel is showing a
+	 * loading notification.
+	 */
+	public static final String LOADING_CLASS = "popupPanelLoadingNotification";
+	
+	/** If the panel is showing a loading indication or not. */
+	private boolean isLoading;
+	
+	/**
 	 * <p>
 	 * Construct a new {@link LoadPopupPanel} that can be used to show all available "things"
 	 * in the local storage.
@@ -29,10 +38,28 @@ public class LoadPopupPanel extends PopupPanel {
 	public LoadPopupPanel() {
 		super();
 		setModal(true);
+		isLoading = false;
 		add(GuiState.loadVerticalPanel);
 		ensureDebugId("loadPanel");
 	}
-
+	
+	/**
+	 * Given that the popup is showing, put it at the top left of the screen.
+	 */
+	public void setTopLeft() {
+		setPopupPosition(0, 0);
+	}
+	
+	/**
+	 * Return if this panel is currently showing a loading indication or not.
+	 * 
+	 * @return {@code true} if a loading indication is showing, {@code false}
+	 *         otherwise
+	 */
+	public boolean isLoading() {
+		return isLoading;
+	}
+	
 	/**
 	 * Clear this panel, put a label indicating that some loading action is
 	 * taking place in the panel and center it.
@@ -44,9 +71,11 @@ public class LoadPopupPanel extends PopupPanel {
 		center();
 		clear();
 		add(GuiState.loadLabel);
-		center();
+		setTopLeft();
 		
 		setAnimationEnabled(animationsEnabled);
+		isLoading = true;
+		getElement().addClassName(LOADING_CLASS);
 	}
 
 	@Override
@@ -56,5 +85,7 @@ public class LoadPopupPanel extends PopupPanel {
 		
 		super.show();
 		center();
+		isLoading = false;
+		getElement().removeClassName(LOADING_CLASS);
 	}
 }
