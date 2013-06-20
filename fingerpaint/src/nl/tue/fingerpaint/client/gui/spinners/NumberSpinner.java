@@ -12,6 +12,8 @@ import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.dom.client.MouseMoveEvent;
 import com.google.gwt.event.dom.client.MouseMoveHandler;
+import com.google.gwt.event.dom.client.MouseOutEvent;
+import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DoubleBox;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -26,7 +28,7 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
  * @author Group Fingerpaint
  */
 public class NumberSpinner extends Composite implements ChangeHandler, KeyUpHandler,
-		MouseDownHandler, MouseMoveHandler {
+		MouseDownHandler, MouseMoveHandler, MouseOutHandler {
 
 	private DoubleBox numberBox;
 	private double RATE;
@@ -151,6 +153,7 @@ public class NumberSpinner extends Composite implements ChangeHandler, KeyUpHand
 		numberBox.addKeyUpHandler(this);
 		numberBox.addMouseDownHandler(this);
 		numberBox.addMouseMoveHandler(this);
+		numberBox.addMouseOutHandler(this);
 
 		FastButton upButton = new FastButton("+");// backup old value: ("▲")
 		upButton.addPressHandler(new PressHandler() {
@@ -299,9 +302,17 @@ public class NumberSpinner extends Composite implements ChangeHandler, KeyUpHand
 	@Override
 	public void onMouseMove(MouseMoveEvent event) {
 		// Google Chrome bug fix; http://stackoverflow.com/a/16751089/962603
-		if (disableScrollDrag == true) {
+		if (disableScrollDrag) {
 			numberBox.getElement().getStyle().setProperty("pointerEvents", "auto");
 			disableScrollDrag = false;
 		}
+	}
+	
+	@Override
+	public void onMouseOut(MouseOutEvent event) {
+		// Improved on the Google Chrome bug fix: when leaving the input with
+		// mouse down, pointerEvents would still be disabled
+		disableScrollDrag = false;
+		numberBox.getElement().getStyle().setProperty("pointerEvents", "auto");
 	}
 }
