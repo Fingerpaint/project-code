@@ -1,8 +1,6 @@
 package nl.tue.fingerpaint.shared;
 
-import static org.junit.Assert.*;
-
-import org.junit.Test;
+import org.testng.annotations.Test;
 
 import com.google.gwt.junit.client.GWTTestCase;
 
@@ -22,19 +20,44 @@ public class ServerDataResultTest extends GWTTestCase {
 	public void testConstructor() {
 		//test the empty constructor
 		data = new ServerDataResult();
-		assertArrayEquals("the empty constructor should create empty lists", new String[]{}, data.getGeometries());
-		assertArrayEquals("the empty constructor should create empty lists", new String[]{}, data.getMixers());
-		assertArrayEquals("the empty constructor should create empty lists", new int[]{}, data.getMixerGeometryMapping());
+		assertTrue("the empty constructor should create empty lists", assertArrayEquals(new String[]{}, data.getGeometries()));
+		assertTrue("the empty constructor should create empty lists", assertArrayEquals(new String[]{}, data.getMixers()));
+		assertTrue("the empty constructor should create empty lists", assertArrayEquals(new int[]{}, data.getMixerGeometryMapping()));
 		
 		//test the parameterised constructor
 		String[] geos = new String[]{"har-har-har"};
 		String[] mixers = new String[]{"kekeke"};
 		int[] map = new int[]{42};
 		data = new ServerDataResult(geos, mixers, map);
-		assertArrayEquals("the parameterised constructor should store the data", geos, data.getGeometries());
-		assertArrayEquals("the parameterised constructor should store the data", mixers, data.getMixers());
-		assertArrayEquals("the parameterised constructor should store the data", map, data.getMixerGeometryMapping());
+		assertTrue("the parameterised constructor should store the data", assertArrayEquals(geos, data.getGeometries()));
+		assertTrue("the parameterised constructor should store the data", assertArrayEquals(mixers, data.getMixers()));
+		assertTrue("the parameterised constructor should store the data", assertArrayEquals(map, data.getMixerGeometryMapping()));
 	}
+	
+	private <C> boolean assertArrayEquals(C[] a, C[] b) {
+		if (a.length != b.length) {
+			return false;
+		}
+		for (int i = 0; i < a.length; i++) {
+			if (!a[i].equals(b[i])) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	private boolean assertArrayEquals(int[] a, int[] b) {
+		if (a.length != b.length) {
+			return false;
+		}
+		for (int i = 0; i < a.length; i++) {
+			if (a[i] != b[i]) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 	
 	/**
 	 * Tests if the setters set the variables
@@ -51,9 +74,9 @@ public class ServerDataResultTest extends GWTTestCase {
 		data.setMixerGeometryMapping(map);
 		data.setMixers(mixers);
 		
-		assertArrayEquals("the parameterised constructor should store the data", geos, data.getGeometries());
-		assertArrayEquals("the parameterised constructor should store the data", mixers, data.getMixers());
-		assertArrayEquals("the parameterised constructor should store the data", map, data.getMixerGeometryMapping());
+		assertTrue("the parameterised constructor should store the data", assertArrayEquals(geos, data.getGeometries()));
+		assertTrue("the parameterised constructor should store the data", assertArrayEquals(mixers, data.getMixers()));
+		assertTrue("the parameterised constructor should store the data", assertArrayEquals(map, data.getMixerGeometryMapping()));
 	}
 
 	@Override

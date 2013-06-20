@@ -19,7 +19,7 @@ public class SimulationTest extends GWTTestCase {
 
 	private final String geom = GeometryNames.RECT;
 	private final String mixer = "mixer";
-	private final String prot = "T[0.25], B[6.25], -B[8.0], -T[5.5]";
+	private final String prot = "&nbsp;T[0.25] &nbsp;B[6.25] -B[8] -T[5.5] ";
 	private final int[] dist = new int[96000];
 	private final int runs = 10;
 	private boolean vectors = false;

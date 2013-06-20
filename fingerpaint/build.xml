@@ -5,13 +5,19 @@
 	<property name="package.dir.prefix" value="nl/tue/fingerpaint" />
     <property name="gwt.module.name" value="Fingerpaint" />
 	<property name="gwt.module.name.dir" value="fingerpaint" />
+	<property name="gwt.junit.module.name.dir" value="nl.tue.fingerpaint.Fingerpaint.JUnit" />
     <property name="src.dir" value="src" />
+	<property name="test.src.dir" value="test/src" />
     <property name="build.dir" value="build" />
     <property name="lib.dir" value="lib" />
+	<property name="test.lib.dir" value="test/lib" />
 	<property name="server.lib.dir" value="${lib.dir}/server" />
 	<property name="client.lib.dir" value="${lib.dir}/client" />
 	<property name="gwt.lib.dir" value="lib/gwt" />
 	<property name="run.server.description" value="Fingerpaint server" />
+	<property name="jetty-container-project" value="../jetty-container" />
+	<property name="multi-browser-test-project" value="../multi-browser-test" />
+	<property name="multi-browser-test.jar.name" value="multi-browser-test"/>
 	<property environment="env" />
     
     <path id="server.classpath">       
@@ -27,12 +33,17 @@
     	<pathelement location="${src.dir}" />
     </path>
 	
-	<path id="client.src.classpath">       
-	    <fileset dir="${gwt.lib.dir}">
-	        <include name="**/*.jar" />
-	    </fileset>
-	</path>
-    
+	<path id="test.classpath">
+		<fileset dir="${gwt.lib.dir}">
+            <include name="**/*.jar" />
+        </fileset>
+        <fileset dir="${test.lib.dir}">
+            <include name="**/*.jar" />
+        </fileset>
+		<path location="${multi-browser-test-project}/${multi-browser-test.jar.name}.jar" />
+		<pathelement location="${build.dir}/war/WEB-INF/classes" />
+    </path>
+	
     <target name="prepare" description="prepare the build dir">
         <mkdir dir="${build.dir}"/>
     	<mkdir dir="${build.dir}/war/WEB-INF/classes" />
@@ -67,7 +78,6 @@
 	
 	<target name="native-with-java-home" depends="prepare, check-java-jdk-home" 
 		unless="no.native.or.java.home">
-		<echo message="Java home: ${java.jdk.home}" />
 	    <exec executable="make" dir=".">
 	        <arg value="all" />
 	    	<env key="JAVA_HOME" path="${java.jdk.home}"/>
@@ -117,21 +127,18 @@
         	<arg line="${gwt.args}" />
         	<arg value="${package.prefix}.${gwt.module.name}" />
          </java>
-        <copy todir="${build.dir}/war/${gwt.module.name.dir}">
-            <fileset dir="${client.lib.dir}"/>
-        </copy>
      </target>
 
-    <target name="war" depends="gwt-compile"
+    <target name="war" depends="clean, gwt-compile"
     	description="Create a deployable war file">
-        <war basedir="${build.dir}/war" destfile="${gwt.module.name.dir}.war" 
+        <war basedir="${build.dir}/war" destfile="${gwt.module.name}.war" 
         	webxml="${build.dir}/war/WEB-INF/web.xml">
         </war>
     </target>
 	
-	<target name="jar" depends="gwt-compile" 
+	<target name="jar" depends="clean, gwt-compile" 
 		description="Create one executable jarfile.">
-		<ant antfile="../jetty-container/build.xml" inheritall="false" 
+		<ant antfile="${jetty-container-project}/build.xml" inheritall="false" 
 			useNativeBasedir="true" target="jar">
 			<property name="war.dir" location="${build.dir}/war" />
 			<property name="jar.dir" location="." />
@@ -139,14 +146,9 @@
 		</ant>
 	</target>
 	
-	<target name="deploy" depends="war"
-		description="Compile the war and deploy to a jetty instance">
-		
-	</target>
-	
-    <target name="run" depends="gwt-compile"
+    <target name="run" depends="clean, gwt-compile"
     	description="Compile the jar and run the application">
-    	<ant antfile="../jetty-container/build.xml" inheritall="false"
+    	<ant antfile="${jetty-container-project}/build.xml" inheritall="false"
     		target="run" useNativeBasedir="true">
     		<property name="war.dir" location="${build.dir}/war" />
     		<property name="jar.dir" location="." />
@@ -155,6 +157,39 @@
     		<property name="run.server.description" 
     			value="${run.server.description}" />
         </ant>
+    </target>
+	
+    <target name="multi-browser-test-compile" depends="server-compile">
+        <ant antfile="${multi-browser-test-project}/build.xml" inheritall="false"
+            target="jar" useNativeBasedir="true" />
+        <copy file="${multi-browser-test-project}/${multi-browser-test.jar.name}.jar"
+            tofile="${build.dir}/war/WEB-INF/lib/${multi-browser-test.jar.name}.jar" />
+        </target>
+   
+    <target name="tests-compile" depends="server-compile, multi-browser-test-compile">
+        <javac srcdir="${src.dir}" destdir="${build.dir}/war/WEB-INF/classes" includeantruntime="false">
+            <include name="${package.dir.prefix}/client/**" />
+            <classpath refid="gwt.classpath" />
+   	    </javac>
+        <javac srcdir="${test.src.dir}" includeantruntime="false"
+            destdir="${build.dir}/war/WEB-INF/classes">
+            <classpath refid="test.classpath" />
+        </javac>
+    </target>
+
+    <target name="test" depends="clean, tests-compile" description="Run production mode tests">
+        <junit showoutput="yes" fork="yes" haltonfailure="yes">
+            <jvmarg line="-Xmx256m" />
+            <sysproperty key="gwt.args" value="-prod -war ${build.dir}/war -deploy ${build.dir}/deploy -extra ${build.dir}/extra -runStyle Manual:1 -logLevel WARN" />
+            <classpath>
+                <pathelement location="test/src" />
+                <pathelement location="${build.dir}/war/WEB-INF/classes" />
+            </classpath>
+       	    <classpath refid="gwt.classpath" />
+       	    <classpath refid="test.classpath" />
+            <test name="nl.tue.fingerpaint.suites.MasterSuite" />
+            <formatter type="plain" usefile="false" />
+        </junit>
     </target>
 	
 </project>

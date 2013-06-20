@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<project name="multi-browser-test" basedir="." default="jar">
+
+    <property name="src.dir" value="src"/>
+    <property name="build.dir" value="build"/>   
+    <property name="lib.dir" value="lib"/>
+	<property name="jar.name" value="multi-browser-test"/>
+    
+    <path id="project.classpath">       
+        <fileset dir="${lib.dir}">
+            <include name="**/*.jar"/>
+        </fileset>
+    </path>
+    
+    <target name="prepare">
+        <mkdir dir="${build.dir}/classes/"/>
+    </target>
+   
+    <target name="clean">
+        <delete dir="${build.dir}"/>
+    </target>
+    
+    <target name="compile" depends="prepare" description="Compile source">
+        <javac srcdir="${src.dir}" destdir="${build.dir}/classes" 
+            includeantruntime="false">
+            <classpath refid="project.classpath"/>
+        </javac>
+    </target>
+    
+    <target name="jar" depends="compile" description="Create jarfile.">
+        <jar jarfile="${jar.name}.jar" basedir="${build.dir}/classes/" />
+    </target>
+</project>

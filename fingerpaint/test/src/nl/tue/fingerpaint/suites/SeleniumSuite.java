@@ -1,6 +1,8 @@
-package suites;
+package nl.tue.fingerpaint.suites;
 
 
+import junit.framework.Test;
+import junit.framework.TestSuite;
 import nl.tue.fingerpaint.client.gui.GraphVisualisatorTest;
 
 import org.junit.runner.RunWith;
@@ -18,12 +20,9 @@ import org.junit.runners.Suite.SuiteClasses;
  * 
  * @author Group Fingerpaint
  */
-@RunWith(Suite.class)
-
-//Run all the tests of each of the following classes:
-@SuiteClasses({
-	GraphVisualisatorTest.class
-	})
-public class Selenium {
-	// empty on purpose
+public class SeleniumSuite extends TestSuite {
+	public static Test suite() {
+	    TestSuite suite = new TestSuite("Selenium Tests");
+	    return suite;
+	  }
 }

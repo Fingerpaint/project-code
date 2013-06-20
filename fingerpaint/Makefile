@@ -4,6 +4,7 @@ MAKE=make
 TARGETDIR=build/war/WEB-INF/lib
 SOURCEDIR=src/nl/tue/fingerpaint/server/simulator
 BUILDDIR=build/native
+FORTRANMODULE=../fortran-module
 
 ifndef JAVA_HOME
     $(error JAVA_HOME is not set)
@@ -25,11 +26,11 @@ endif
 
 all: link
 
-link: ${BUILDDIR}/nl_tue_fingerpaint_server_simulator_NativeCommunicator.o ../fortran-module/add_module.o
-	$(CC) $(LINKFLAGS) -shared ../fortran-module/add_module.o $(BUILDDIR)/nl_tue_fingerpaint_server_simulator_NativeCommunicator.o -o $(TARGETDIR)/$(LINKOUTPUTNAME) $(LINKLIBFLAGS)
+link: ${BUILDDIR}/nl_tue_fingerpaint_server_simulator_NativeCommunicator.o $(FORTRANMODULE)/add_module.o
+	$(CC) $(LINKFLAGS) -shared $(FORTRANMODULE)/add_module.o $(BUILDDIR)/nl_tue_fingerpaint_server_simulator_NativeCommunicator.o -o $(TARGETDIR)/$(LINKOUTPUTNAME) $(LINKLIBFLAGS)
 	
 ${BUILDDIR}/nl_tue_fingerpaint_server_simulator_NativeCommunicator.o: $(SOURCEDIR)/nl_tue_fingerpaint_server_simulator_NativeCommunicator.c
 	$(CC) $(LINKCFLAGS) -shared $(SOURCEDIR)/nl_tue_fingerpaint_server_simulator_NativeCommunicator.c -c -o $@
 	
-../fortran-module/add_module.o:
-	$(MAKE) -C ../fortran-module/ add_module.o
+$(FORTRANMODULE)/add_module.o:
+	$(MAKE) -C $(FORTRANMODULE)add_module.o
