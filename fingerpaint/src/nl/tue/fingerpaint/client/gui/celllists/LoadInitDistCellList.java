@@ -10,6 +10,7 @@ import nl.tue.fingerpaint.client.storage.StorageManager;
 import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.user.cellview.client.CellList;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.view.client.Range;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
@@ -73,21 +74,32 @@ public class LoadInitDistCellList extends CellList<String> {
 		selectionModel
 				.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
 					public void onSelectionChange(SelectionChangeEvent event) {
-						String selected = selectionModel.getSelectedObject();
+						final String selected = selectionModel.getSelectedObject();
 
 						if (selected != null) {
+							// close popup to show we are busy loading
+							GuiState.loadPanel.setIsLoading();
+							
+							// Now wait a bit until this has happened, before
+							// loading a distribution from the storage, as that
+							// is very CPU intensive
+							Timer runLater = new Timer() {
+								@Override
+								public void run() {
+									// get the selected initial distribution, and
+									// set it in the AS
+									int[] dist = StorageManager.INSTANCE
+											.getDistribution(as
+															.getGeometryChoice(),
+													selected);
+									as.setInitialDistribution(dist);
+									as.drawDistribution();
 
-							// get the selected initial distribution, and
-							// set it in the AS
-							int[] dist = StorageManager.INSTANCE
-									.getDistribution(as
-													.getGeometryChoice(),
-											selected);
-							as.setInitialDistribution(dist);
-							as.drawDistribution();
-
-							selectionModel.setSelected(selected, false);
-							GuiState.loadPanel.removeFromParent();
+									selectionModel.setSelected(selected, false);
+									GuiState.loadPanel.hide();
+								}
+							};
+							runLater.schedule(100);
 						}
 					}
 				});

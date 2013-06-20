@@ -14,10 +14,12 @@
 @def MENU_SPINNER_WIDTH 118px; /* border = 2 * 1 */
 @def MENU_SPINNER_BUTTON_WIDTH 55px; /* padding = 2 * 5 */
 
- /* -- MORE CONSTANTS -- */
+/* -- MORE CONSTANTS -- */
 @eval BLACK nl.tue.fingerpaint.shared.utils.Colour.BLACK.toHexString();
 @eval MAIN_LIGHT nl.tue.fingerpaint.shared.utils.Colour.TUE_LIGHT_BLUE.toHexString();
 @eval MAIN nl.tue.fingerpaint.shared.utils.Colour.TUE_BLUE.toHexString();
 @eval MAIN_DARK nl.tue.fingerpaint.shared.utils.Colour.TUE_DARK_BLUE.toHexString();
+@eval MAIN_SUPPORT nl.tue.fingerpaint.shared.utils.Colour.PMS_GREEN.toHexString();
 @eval WHITE nl.tue.fingerpaint.shared.utils.Colour.WHITE.toHexString();
+@eval WHITE_GRAYISH nl.tue.fingerpaint.shared.utils.Colour.WHITE_GRAYISH.toHexString();
 @eval LIGHT_GRAY nl.tue.fingerpaint.shared.utils.Colour.LIGHT_GRAY.toHexString();

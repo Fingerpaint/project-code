@@ -96,7 +96,7 @@ public class MarginAnimation extends Animation {
 		
 		run(durationMillis);
 	}
-
+	
 	@Override
 	protected void onComplete() {
 		super.onComplete();

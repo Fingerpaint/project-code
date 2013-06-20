@@ -33,4 +33,28 @@ public class LoadPopupPanel extends PopupPanel {
 		ensureDebugId("loadPanel");
 	}
 
+	/**
+	 * Clear this panel, put a label indicating that some loading action is
+	 * taking place in the panel and center it.
+	 */
+	public void setIsLoading() {
+		boolean animationsEnabled = isAnimationEnabled();
+		setAnimationEnabled(false);
+		
+		center();
+		clear();
+		add(GuiState.loadLabel);
+		center();
+		
+		setAnimationEnabled(animationsEnabled);
+	}
+
+	@Override
+	public void show() {
+		clear();
+		add(GuiState.loadVerticalPanel);
+		
+		super.show();
+		center();
+	}
 }

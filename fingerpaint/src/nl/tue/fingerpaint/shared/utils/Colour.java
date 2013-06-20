@@ -14,6 +14,8 @@ public class Colour {
 
     /** White colour. */
     public static final Colour WHITE = new Colour(255, 255, 255);
+    /** Near-white gray colour. */
+    public static final Colour WHITE_GRAYISH = new Colour(240, 240, 240);
     /** Light gray colour. */
     public static final Colour LIGHT_GRAY = new Colour(192, 192, 192);
     /** Gray colour. */
@@ -46,6 +48,10 @@ public class Colour {
     public static final Colour TUE_BLUE = new Colour(0, 102, 204);
     /** TUe dark blue colour. */
     public static final Colour TUE_DARK_BLUE = new Colour(16, 16, 115);
+    /** TUe support colour: aqua-ish colour. */
+    public static final Colour PMS_GREEN = new Colour(0, 172, 130);
+    /** TUe support colour: blue-ish colour. */
+    public static final Colour PMS_3135 = new Colour(0, 146, 181);
 	
 	/**
 	 * The red component of this colour.

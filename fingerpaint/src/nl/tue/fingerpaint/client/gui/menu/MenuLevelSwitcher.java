@@ -1,11 +1,12 @@
 package nl.tue.fingerpaint.client.gui.menu;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.HorizontalPanel;
-
 import nl.tue.fingerpaint.client.gui.GuiState;
 import nl.tue.fingerpaint.client.gui.animation.Direction;
 import nl.tue.fingerpaint.client.gui.animation.MarginAnimation;
+
+import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 
 /**
  * This class provides some static utility functions to switch to/from a menu on
@@ -58,8 +59,12 @@ public class MenuLevelSwitcher {
 	 *            Callback to call when animation has completed.
 	 *            Ignored when {@code null}.
 	 */
-	public static void go(int level, final AsyncCallback<Boolean> callback) {
-		int mainMenuPanelWidth = GuiState.mainMenuPanel.getOffsetWidth();
+	public static void go(final int level, final AsyncCallback<Boolean> callback) {
+		int mainMenuPanelWidth = GuiState.menuPanels[0].getOffsetWidth();
+		
+		// clear height of menupanel that we animate to
+		GuiState.menuPanels[level].getElement().getStyle().clearHeight();
+		
 		if (level >= 0) {
 			MENU_ANIMATION.doAnimate(level * -mainMenuPanelWidth,
 					MENU_SWITCH_DURATION,
@@ -67,6 +72,13 @@ public class MenuLevelSwitcher {
 				
 				@Override
 				public void onSuccess(Boolean result) {
+					for (int i = 0; i < GuiState.menuPanels.length; i++) {
+						if (i != level) {
+							GuiState.menuPanels[i].getElement().getStyle().
+									setHeight(10, Unit.PX);
+						}
+					}
+					
 					if (callback != null) {
 						callback.onSuccess(result);
 					}
@@ -109,18 +121,18 @@ public class MenuLevelSwitcher {
 	 * and remove protocols.
 	 */
 	public static void showSub1MenuDefineProtocol() {
-		GuiState.subLevel1MenuPanel.clear();
-		GuiState.subLevel1MenuPanel.add(GuiState.labelProtocolLabel);
-		GuiState.subLevel1MenuPanel.add(GuiState.mixNowButton);
-		GuiState.subLevel1MenuPanel.add(GuiState.viewSingleGraphButton);
-		GuiState.subLevel1MenuPanel.add(GuiState.sizeProtocolMenuLabel);
-		GuiState.subLevel1MenuPanel.add(GuiState.sizeProtocolMenuSpinner);
-		GuiState.subLevel1MenuPanel.add(GuiState.nrStepsLabel);
-		GuiState.subLevel1MenuPanel.add(GuiState.nrStepsSpinner);
-		GuiState.subLevel1MenuPanel.add(GuiState.labelProtocolRepresentation);
-		GuiState.subLevel1MenuPanel.add(GuiState.resetProtocolButton);
-		GuiState.subLevel1MenuPanel.add(GuiState.protocolsButton);
-		GuiState.subLevel1MenuPanel.add(GuiState.backStopDefiningProtocol);
+		GuiState.menuPanels[1].clear();
+		GuiState.menuPanels[1].add(GuiState.labelProtocolLabel);
+		GuiState.menuPanels[1].add(GuiState.mixNowButton);
+		GuiState.menuPanels[1].add(GuiState.viewSingleGraphButton);
+		GuiState.menuPanels[1].add(GuiState.sizeProtocolMenuLabel);
+		GuiState.menuPanels[1].add(GuiState.sizeProtocolMenuSpinner);
+		GuiState.menuPanels[1].add(GuiState.nrStepsLabel);
+		GuiState.menuPanels[1].add(GuiState.nrStepsSpinner);
+		GuiState.menuPanels[1].add(GuiState.labelProtocolRepresentation);
+		GuiState.menuPanels[1].add(GuiState.resetProtocolButton);
+		GuiState.menuPanels[1].add(GuiState.protocolsButton);
+		GuiState.menuPanels[1].add(GuiState.backStopDefiningProtocol);
 		
 		level = 1;
 		go(level);
@@ -131,13 +143,13 @@ public class MenuLevelSwitcher {
 	 * export distributions.
 	 */
 	public static void showSub1MenuDistributions() {
-		GuiState.subLevel1MenuPanel.clear();
-		GuiState.subLevel1MenuPanel.add(GuiState.distributionsLabel);
-		GuiState.subLevel1MenuPanel.add(GuiState.saveDistributionButton);
-		GuiState.subLevel1MenuPanel.add(GuiState.loadInitDistButton);
-		GuiState.subLevel1MenuPanel.add(GuiState.removeInitDistButton);
-		GuiState.subLevel1MenuPanel.add(GuiState.exportDistributionButton);
-		GuiState.subLevel1MenuPanel.add(GuiState.backMenu1Button);
+		GuiState.menuPanels[1].clear();
+		GuiState.menuPanels[1].add(GuiState.distributionsLabel);
+		GuiState.menuPanels[1].add(GuiState.saveDistributionButton);
+		GuiState.menuPanels[1].add(GuiState.loadInitDistButton);
+		GuiState.menuPanels[1].add(GuiState.removeInitDistButton);
+		GuiState.menuPanels[1].add(GuiState.exportDistributionButton);
+		GuiState.menuPanels[1].add(GuiState.backMenu1Button);
 		
 		level = 1;
 		go(level);
@@ -148,13 +160,13 @@ public class MenuLevelSwitcher {
 	 * results.
 	 */
 	public static void showSub1MenuResults() {
-		GuiState.subLevel1MenuPanel.clear();
-		GuiState.subLevel1MenuPanel.add(GuiState.resultsLabel);
-		GuiState.subLevel1MenuPanel.add(GuiState.saveResultsButton);
-		GuiState.subLevel1MenuPanel.add(GuiState.loadResultsButton);
-		GuiState.subLevel1MenuPanel.add(GuiState.removeSavedResultsButton);	
-		GuiState.subLevel1MenuPanel.add(GuiState.comparePerformanceButton);
-		GuiState.subLevel1MenuPanel.add(GuiState.backMenu1Button);
+		GuiState.menuPanels[1].clear();
+		GuiState.menuPanels[1].add(GuiState.resultsLabel);
+		GuiState.menuPanels[1].add(GuiState.saveResultsButton);
+		GuiState.menuPanels[1].add(GuiState.loadResultsButton);
+		GuiState.menuPanels[1].add(GuiState.removeSavedResultsButton);	
+		GuiState.menuPanels[1].add(GuiState.comparePerformanceButton);
+		GuiState.menuPanels[1].add(GuiState.backMenu1Button);
 		
 		level = 1;
 		go(level);
@@ -164,15 +176,15 @@ public class MenuLevelSwitcher {
 	 * Switch to the level 1 menu in which a user can change the drawing tool.
 	 */
 	public static void showSub1MenuToolSelector() {
-		GuiState.subLevel1MenuPanel.clear();		
-		GuiState.subLevel1MenuPanel.add(GuiState.drawingToolLabel);
-		GuiState.subLevel1MenuPanel.add(GuiState.toolMenuToggleColour);
+		GuiState.menuPanels[1].clear();		
+		GuiState.menuPanels[1].add(GuiState.drawingToolLabel);
+		GuiState.menuPanels[1].add(GuiState.toolMenuToggleColour);
 		HorizontalPanel hp = new HorizontalPanel();
 		hp.add(GuiState.squareDrawingTool);
 		hp.add(GuiState.circleDrawingTool);
-		GuiState.subLevel1MenuPanel.add(hp);
-		GuiState.subLevel1MenuPanel.add(GuiState.cursorSizeSpinner);
-		GuiState.subLevel1MenuPanel.add(GuiState.backMenu1Button);
+		GuiState.menuPanels[1].add(hp);
+		GuiState.menuPanels[1].add(GuiState.cursorSizeSpinner);
+		GuiState.menuPanels[1].add(GuiState.backMenu1Button);
 		
 		level = 1;
 		go(level);
@@ -183,12 +195,12 @@ public class MenuLevelSwitcher {
 	 * protocols.
 	 */
 	public static void showSub2MenuProtocols() {
-		GuiState.subLevel2MenuPanel.clear();
-		GuiState.subLevel2MenuPanel.add(GuiState.protocolsLabel);
-		GuiState.subLevel2MenuPanel.add(GuiState.saveProtocolButton);
-		GuiState.subLevel2MenuPanel.add(GuiState.loadProtocolButton);
-		GuiState.subLevel2MenuPanel.add(GuiState.removeSavedProtButton);
-		GuiState.subLevel2MenuPanel.add(GuiState.backMenu2Button);
+		GuiState.menuPanels[2].clear();
+		GuiState.menuPanels[2].add(GuiState.protocolsLabel);
+		GuiState.menuPanels[2].add(GuiState.saveProtocolButton);
+		GuiState.menuPanels[2].add(GuiState.loadProtocolButton);
+		GuiState.menuPanels[2].add(GuiState.removeSavedProtButton);
+		GuiState.menuPanels[2].add(GuiState.backMenu2Button);
 		
 		level = 2;
 		go(level);

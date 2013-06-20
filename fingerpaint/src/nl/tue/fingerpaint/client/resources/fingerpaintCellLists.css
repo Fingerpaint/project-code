@@ -8,7 +8,7 @@
 
 .cellListKeyboardSelectedItem:nth-child\(odd\),
 .cellListEvenItem {
-	background: LIGHT_GRAY;
+	background: WHITE_GRAYISH;
 	padding: 10px;
 }
 

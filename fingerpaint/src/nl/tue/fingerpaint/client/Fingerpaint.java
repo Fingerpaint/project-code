@@ -5,9 +5,37 @@ import java.util.ArrayList;
 import nl.tue.fingerpaint.client.gui.CustomTreeModel;
 import nl.tue.fingerpaint.client.gui.GraphVisualisator;
 import nl.tue.fingerpaint.client.gui.GuiState;
+import nl.tue.fingerpaint.client.gui.buttons.BackStopDefiningProtocolButton;
+import nl.tue.fingerpaint.client.gui.buttons.CircleDrawingToolToggleButton;
+import nl.tue.fingerpaint.client.gui.buttons.ComparePerformanceButton;
+import nl.tue.fingerpaint.client.gui.buttons.ExportDistributionButton;
+import nl.tue.fingerpaint.client.gui.buttons.ExportSingleGraphButton;
+import nl.tue.fingerpaint.client.gui.buttons.LoadInitDistButton;
+import nl.tue.fingerpaint.client.gui.buttons.LoadProtocolButton;
+import nl.tue.fingerpaint.client.gui.buttons.MixNowButton;
+import nl.tue.fingerpaint.client.gui.buttons.OverwriteSaveButton;
+import nl.tue.fingerpaint.client.gui.buttons.RemoveInitDistButton;
+import nl.tue.fingerpaint.client.gui.buttons.RemoveSavedProtButton;
+import nl.tue.fingerpaint.client.gui.buttons.ResetDistButton;
+import nl.tue.fingerpaint.client.gui.buttons.ResetProtocolButton;
+import nl.tue.fingerpaint.client.gui.buttons.SaveDistributionButton;
+import nl.tue.fingerpaint.client.gui.buttons.SaveItemPanelButton;
+import nl.tue.fingerpaint.client.gui.buttons.SaveProtocolButton;
+import nl.tue.fingerpaint.client.gui.buttons.SaveResultsButton;
+import nl.tue.fingerpaint.client.gui.buttons.SquareDrawingToolToggleButton;
+import nl.tue.fingerpaint.client.gui.buttons.ToggleColourButton;
+import nl.tue.fingerpaint.client.gui.buttons.ToggleDefineProtocol;
+import nl.tue.fingerpaint.client.gui.buttons.ViewSingleGraphButton;
+import nl.tue.fingerpaint.client.gui.celllists.LoadInitDistCellList;
+import nl.tue.fingerpaint.client.gui.celllists.LoadProtocolCellList;
+import nl.tue.fingerpaint.client.gui.celllists.LoadResultsCellList;
 import nl.tue.fingerpaint.client.gui.panels.NotificationPopupPanel;
+import nl.tue.fingerpaint.client.gui.spinners.CursorSizeSpinner;
 import nl.tue.fingerpaint.client.gui.spinners.NrStepsSpinner;
+import nl.tue.fingerpaint.client.gui.spinners.StepSizeSpinner;
 import nl.tue.fingerpaint.client.model.ApplicationState;
+import nl.tue.fingerpaint.client.model.Geometry.StepAddedListener;
+import nl.tue.fingerpaint.client.model.RectangleGeometry;
 import nl.tue.fingerpaint.client.resources.FingerpaintCellBrowserResources;
 import nl.tue.fingerpaint.client.resources.FingerpaintConstants;
 import nl.tue.fingerpaint.client.resources.FingerpaintResources;
@@ -17,7 +45,10 @@ import nl.tue.fingerpaint.client.storage.FingerpaintJsonizer;
 import nl.tue.fingerpaint.client.storage.FingerpaintZipper;
 import nl.tue.fingerpaint.client.storage.ResultStorage;
 import nl.tue.fingerpaint.client.storage.StorageManager;
+import nl.tue.fingerpaint.shared.GeometryNames;
+import nl.tue.fingerpaint.shared.MixerNames;
 import nl.tue.fingerpaint.shared.model.MixingProtocol;
+import nl.tue.fingerpaint.shared.model.MixingStep;
 import nl.tue.fingerpaint.shared.simulator.Simulation;
 import nl.tue.fingerpaint.shared.simulator.SimulationResult;
 import nl.tue.fingerpaint.shared.simulator.SimulatorService;
@@ -48,7 +79,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.view.client.TreeViewModel;
 import com.google.gwt.visualization.client.VisualizationUtils;
-import com.google.gwt.visualization.client.visualizations.LineChart;
+import com.google.gwt.visualization.client.visualizations.corechart.CoreChart;
 
 /**
  * This is the entry point of the Fingerpaint application.
@@ -115,7 +146,14 @@ public class Fingerpaint implements EntryPoint {
 			@Override
 			public void onSuccess(String result) {
 				setLoadingPanelVisible(false);
-				loadMenu();
+				// Here, we load the mixing widgets immediately.
+				// If more geometries/mixers are added to the application,
+				// loadMenu() should be called here instead of below code
+				as.setGeometryChoice(GeometryNames.RECT);
+				as.setMixerChoice(MixerNames.RectMixers.DEFAULT);
+				as.setGeometry(new RectangleGeometry(Window.getClientHeight(),
+					Window.getClientWidth(), 240, 400));
+				createMixingWidgets();
 			}
 
 			@Override
@@ -353,6 +391,129 @@ public class Fingerpaint implements EntryPoint {
 	}
 
 	/**
+	 * Initialise the widgets for the mixing interface.
+	 */
+	public void createMixingWidgets() {
+		// Initialise a listener for when a new step is entered to the
+		// protocol
+		StepAddedListener l = new StepAddedListener() {
+			@Override
+			public void onStepAdded(MixingStep step) {
+				addStep(step);
+			}
+		};
+		as.getGeometry().addStepAddedListener(l);
+
+		// Initialise the cursorSizeSpinner so it can be added to the tool
+		// selector popup
+		GuiState.cursorSizeSpinner = new CursorSizeSpinner(as);
+
+		// Initialise the toolSelectButton and add it to the menu panel
+		// Also intialise the widgets in the submenu that this button toggles
+		GuiState.squareDrawingTool = new SquareDrawingToolToggleButton(this, as);
+		GuiState.circleDrawingTool = new CircleDrawingToolToggleButton(this, as);
+		GuiState.menuPanels[0].add(GuiState.toolSelectButton);
+
+		// Initialise toggleButton and add to
+		// menuPanel
+		GuiState.toggleColour = new ToggleColourButton(as, ToggleColourButton.TOGGLE_COLOUR);
+		GuiState.toolMenuToggleColour = new ToggleColourButton(as, ToggleColourButton.TOGGLE_COLOUR_TOOL_MENU);
+		// GuiState.menuPanels[0].add(GuiState.toggleColour);
+
+		// Initialise the distribution buttons and add a button to access those
+		// to the menu panel. Also add the 'clear canvas' to the main menu
+		GuiState.resetDistButton = new ResetDistButton(as);
+		GuiState.menuPanels[0].add(GuiState.resetDistButton);
+		GuiState.saveDistributionButton = new SaveDistributionButton(this);
+		GuiState.loadInitDistButton = new LoadInitDistButton(as);
+		GuiState.loadInitDistCellList = new LoadInitDistCellList(as);
+		GuiState.removeInitDistButton = new RemoveInitDistButton(as);
+		GuiState.exportDistributionButton = new ExportDistributionButton(as);
+		GuiState.menuPanels[0].add(GuiState.distributionsButton);
+
+		// Initialise the results buttons and add a button to access those
+		// to the menu panel.
+		GuiState.saveResultsButton = new SaveResultsButton(this);
+		GuiState.saveResultsButton.setEnabled(false);
+
+		// Initialise panel to save items
+		GuiState.overwriteSaveButton = new OverwriteSaveButton(this);
+		GuiState.saveItemPanelButton = new SaveItemPanelButton(this);
+		GuiState.saveItemPanel.add(GuiState.saveItemVerticalPanel);
+		GuiState.saveItemVerticalPanel.add(GuiState.saveNameTextBox);
+		GuiState.saveItemVerticalPanel.add(GuiState.saveButtonsPanel);
+		GuiState.saveButtonsPanel.add(GuiState.saveItemPanelButton);
+		GuiState.saveButtonsPanel.add(GuiState.cancelSaveResultsButton);
+
+		// Initialise panel to overwrite already saved items
+		GuiState.overwriteSavePanel.add(GuiState.overwriteSaveVerticalPanel);
+		GuiState.overwriteSaveVerticalPanel.add(GuiState.saveMessageLabel);
+		GuiState.overwriteSaveVerticalPanel.add(GuiState.overwriteButtonsPanel);
+		GuiState.overwriteButtonsPanel.add(GuiState.closeSaveButton);
+
+		// Initialise the LoadResultsCellList and add the loadResultsButton
+		GuiState.LoadResultsCellList = new LoadResultsCellList(this, as);
+
+		GuiState.removeResultsPanel.add(GuiState.removeResultsVerticalPanel);
+
+		GuiState.menuPanels[0].add(GuiState.resultsButton);
+
+		// Initialise view single graph button
+		GuiState.viewSingleGraphButton = new ViewSingleGraphButton(this, as);
+		GuiState.exportSingleGraphButton = new ExportSingleGraphButton(this);
+
+		// Initialise the comparePerformanceButton
+		GuiState.comparePerformanceButton = new ComparePerformanceButton(this);
+
+		// Initialise a spinner for changing the length of a mixing protocol
+		// step and add to menuPanel.
+		GuiState.sizeSpinner = new StepSizeSpinner(as);
+		GuiState.sizeProtocolMenuSpinner = new StepSizeSpinner(as,
+				"sizeProtocolMenuSpinner");
+		GuiState.menuPanels[0].add(GuiState.sizeLabel);
+		GuiState.menuPanels[0].add(GuiState.sizeSpinner);
+
+		// Add a button with which the protocol submenu can be accessed
+		GuiState.toggleDefineProtocol = new ToggleDefineProtocol(as);
+		GuiState.menuPanels[0].add(GuiState.toggleDefineProtocol);
+
+		// Initialise a spinner for #steps
+		GuiState.nrStepsSpinner = new NrStepsSpinner(as);
+
+		// Initialise the resetProtocol button
+		GuiState.resetProtocolButton = new ResetProtocolButton(this);
+
+		// Initialise the saveProtocolButton and add it to the menuPanel
+		GuiState.saveProtocolButton = new SaveProtocolButton(this);
+
+		// Initialise the mixNow button
+		GuiState.mixNowButton = new MixNowButton(this, as);
+
+		// Initialise the loadProtocolButton
+		GuiState.loadProtocolButton = new LoadProtocolButton(as);
+		GuiState.loadProtocolCellList = new LoadProtocolCellList(as);
+
+		// Initialise the remove protocol button
+		GuiState.removeSavedProtButton = new RemoveSavedProtButton(as);
+
+		// Initiliase the button to leave the protocol submenu
+		GuiState.backStopDefiningProtocol = new BackStopDefiningProtocolButton(
+				as);
+
+		// Add canvas and menuPanel to the page
+		RootPanel.get().add(as.getGeometry().getCanvas());
+
+		for (int i = 0; i < GuiState.menuPanels.length; i++) {
+			GuiState.menuPanelInnerWrapper.add(GuiState.menuPanels[i]);
+		}
+		GuiState.menuPanelOuterWrapper.add(GuiState.menuPanelInnerWrapper);
+		RootPanel.get().add(GuiState.menuPanelOuterWrapper);
+
+		GuiState.menuToggleButton.refreshMenuSize();
+		RootPanel.get().add(GuiState.menuToggleButton);
+	}
+	
+	/**
 	 * Adds a linechart-graph of the {@code performance} to {@code panel}
 	 * 
 	 * @param panel
@@ -392,7 +553,7 @@ public class Fingerpaint implements EntryPoint {
 		try {
 			VisualizationUtils.loadVisualizationApi(graphVisualisator
 					.createGraph(panel, names, performance, onLoad,
-							graphHeight, graphWidth), LineChart.PACKAGE);
+							graphHeight, graphWidth), CoreChart.PACKAGE);
 		} catch (Exception e) {
 			Window.alert(FingerpaintConstants.INSTANCE.loadingGraphFailed());
 			e.printStackTrace();
@@ -501,5 +662,46 @@ public class Fingerpaint implements EntryPoint {
 			}
 		};
 		doLaterTimer.schedule(100);
+	}
+	
+	/**
+	 * If the {@code Define Protocol} checkbox is ticked, this method adds a new
+	 * {@code MixingStep} to the mixing protocol, and updates the text area
+	 * {@code taProtocolRepresentation} accordingly.
+	 * 
+	 * @param step
+	 *            The {@code MixingStep} to be added.
+	 */
+	private void addStep(MixingStep step) {
+		GuiState.saveResultsButton.setEnabled(false);
+		GuiState.viewSingleGraphButton.setEnabled(false);
+		if (as.isDefiningProtocol()) {
+			step.setStepSize(as.getStepSize());
+			as.addMixingStep(step);
+			updateProtocolLabel(step);
+			GuiState.mixNowButton.setEnabled(true);
+			GuiState.saveProtocolButton.setEnabled(true);
+		} else {
+			MixingProtocol protocol = new MixingProtocol();
+			step.setStepSize(as.getStepSize());
+			protocol.addStep(step);
+			executeMixingRun(protocol, 1, false);
+		}
+	}
+
+	/**
+	 * Updates the protocol label to show the textual representation of
+	 * {@code step} and adds this to the existing steps in the protocol.
+	 * 
+	 * @param step
+	 *            The new {@code Step} of which the textual representation
+	 *            should be added.
+	 */
+	private void updateProtocolLabel(MixingStep step) {
+		String oldProtocol = GuiState.labelProtocolRepresentation.getText();
+
+		GuiState.labelProtocolRepresentation.setVisible(true);
+		GuiState.labelProtocolRepresentation.getElement().setInnerHTML(
+				oldProtocol + step.toString() + " ");
 	}
 }

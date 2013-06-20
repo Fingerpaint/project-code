@@ -5,6 +5,8 @@ import io.ashton.fastpress.client.fast.PressHandler;
 
 import java.util.List;
 
+import com.google.gwt.user.client.Timer;
+
 import nl.tue.fingerpaint.client.gui.GuiState;
 import nl.tue.fingerpaint.client.resources.FingerpaintConstants;
 import nl.tue.fingerpaint.client.storage.StorageManager;
@@ -35,15 +37,21 @@ public class LoadResultsButton extends FastButton implements PressHandler {
 	 */
 	@Override
 	public void onPress(PressEvent event) {
-
-		GuiState.loadVerticalPanel.clear();
-
-		List<String> geometryResults = StorageManager.INSTANCE.getResults();
-		GuiState.LoadResultsCellList.fillCellList(geometryResults);
-
-		GuiState.loadVerticalPanel.addList(GuiState.LoadResultsCellList);
-		GuiState.loadVerticalPanel.add(GuiState.closeLoadButton);
-		GuiState.loadPanel.center();
+		GuiState.loadPanel.setIsLoading();
+		Timer runLater = new Timer() {
+			@Override
+			public void run() {
+				GuiState.loadVerticalPanel.clear();
+		
+				List<String> geometryResults = StorageManager.INSTANCE.getResults();
+				GuiState.LoadResultsCellList.fillCellList(geometryResults);
+		
+				GuiState.loadVerticalPanel.addList(GuiState.LoadResultsCellList);
+				GuiState.loadVerticalPanel.add(GuiState.closeLoadButton);
+				GuiState.loadPanel.show();
+			}
+		};
+		runLater.schedule(100);
 	}
 
 }

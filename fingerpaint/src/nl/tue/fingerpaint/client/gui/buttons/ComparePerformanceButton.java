@@ -12,8 +12,8 @@ import nl.tue.fingerpaint.client.resources.FingerpaintConstants;
 import nl.tue.fingerpaint.client.storage.StorageManager;
 
 import com.google.gwt.user.cellview.client.CellList;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.view.client.Range;
 
@@ -58,24 +58,26 @@ public class ComparePerformanceButton extends FastButton implements PressHandler
 	 */
 	@Override
 	public void onPress(PressEvent event) {
-		ArrayList<String> resultNames = (ArrayList<String>) StorageManager.INSTANCE
-				.getResults();
+		GuiState.loadPanel.setIsLoading();
+		Timer runLater = new Timer() {
+			@Override
+			public void run() {
+				ArrayList<String> resultNames = (ArrayList<String>) StorageManager.INSTANCE
+						.getResults();
 
-		GuiState.compareSelectPopupCellList.setVisibleRangeAndClearData(new Range(0, resultNames.size()), true);
+				GuiState.compareSelectPopupCellList.setVisibleRangeAndClearData(new Range(0, resultNames.size()), true);
 
-		// Push the data into the widget.
-		GuiState.compareSelectPopupCellList.setRowData(0, resultNames);
-		
-		//reconstruct the selection popup
-		setupSelectionPopup(GuiState.compareSelectPopupCellList);
+				// Push the data into the widget.
+				GuiState.compareSelectPopupCellList.setRowData(0, resultNames);
+				
+				//reconstruct the selection popup
+				setupSelectionPopup(GuiState.compareSelectPopupCellList);
 
-		
-		GuiState.compareSelectPopupPanel
-		.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
-			public void setPosition(int offsetWidth, int offsetHeight) {
+				GuiState.loadPanel.hide();
 				GuiState.compareSelectPopupPanel.center();
 			}
-		});
+		};
+		runLater.schedule(100);
 	}
 
 	private void initialise() {

@@ -20,7 +20,7 @@
 
 .cellBrowserKeyboardSelectedItem:nth-child\(odd\),
 .cellBrowserEvenItem {
-	background: WHITE;
+	background: WHITE_GRAYISH;
 	padding: 10px;
 }
 

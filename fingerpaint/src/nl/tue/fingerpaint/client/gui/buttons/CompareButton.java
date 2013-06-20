@@ -12,6 +12,7 @@ import nl.tue.fingerpaint.client.resources.FingerpaintConstants;
 import nl.tue.fingerpaint.client.storage.ResultStorage;
 import nl.tue.fingerpaint.client.storage.StorageManager;
 
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**
@@ -50,6 +51,27 @@ public class CompareButton extends FastButton implements PressHandler {
 	 */
 	@Override
 	public void onPress(PressEvent event) {
+		// close popup to show we are busy loading
+		GuiState.compareSelectPopupPanel.hide();
+		GuiState.loadPanel.setIsLoading();
+		
+		// Now wait a bit until this has happened, before
+		// loading a distribution from the storage, as that
+		// is very CPU intensive
+		Timer runLater = new Timer() {
+			@Override
+			public void run() {
+				loadGraph();
+			}
+		};
+		runLater.schedule(100);
+	}
+	
+	/**
+	 * Load wanted results from storage and show a graph, comparing their
+	 * performance.
+	 */
+	private void loadGraph() {
 		ArrayList<String> names = new ArrayList<String>();
 		ArrayList<double[]> graphs = new ArrayList<double[]>();
 		Set<String> chosenNames = GuiState.compareSelectPopupCellList
@@ -72,7 +94,7 @@ public class CompareButton extends FastButton implements PressHandler {
 
 					@Override
 					public void onSuccess(Boolean result) {
-						GuiState.compareSelectPopupPanel.hide();
+						GuiState.loadPanel.hide();
 						GuiState.comparePopupPanel.center();
 					}
 				});
