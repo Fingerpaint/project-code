@@ -43,7 +43,7 @@ body {
 }
 
 .panelButton {
-	width: 120px !important;
+	width: 150px !important;
 }
 
 #cancelCompareButton,
@@ -99,6 +99,12 @@ body {
 .removeListHeader {
 	background-color: MAIN;
 	color: WHITE;
+}
+
+.removeList tbody tr td:nth-child\(2\) button {
+  display: block;
+  margin: 0 auto;
+  width: 30px;
 }
 
 .center {
@@ -388,4 +394,10 @@ cleacdr
 
 .popupPanelLoadingNotification {
 	background: MAIN;
+}
+
+/* input in the popup used to input a name for an item to be saved */
+#saveNameTextBox {
+	margin-bottom: 4px;
+	width: 300px;
 }
