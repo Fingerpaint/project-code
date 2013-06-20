@@ -57,7 +57,7 @@ public class LoadProtocolButton extends FastButton implements PressHandler {
 		
 				GuiState.loadVerticalPanel.addList(GuiState.loadProtocolCellList);
 				GuiState.loadVerticalPanel.add(GuiState.closeLoadButton);
-				GuiState.loadPanel.center();
+				GuiState.loadPanel.show();
 			}
 		};
 		runLater.schedule(100);
