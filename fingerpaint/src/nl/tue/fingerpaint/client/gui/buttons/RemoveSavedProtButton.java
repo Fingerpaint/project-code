@@ -5,6 +5,8 @@ import io.ashton.fastpress.client.fast.PressHandler;
 
 import java.util.ArrayList;
 
+import com.google.gwt.user.client.Timer;
+
 import nl.tue.fingerpaint.client.gui.GuiState;
 import nl.tue.fingerpaint.client.model.ApplicationState;
 import nl.tue.fingerpaint.client.resources.FingerpaintConstants;
@@ -46,16 +48,24 @@ public class RemoveSavedProtButton extends FastButton implements PressHandler {
 	 */
 	@Override
 	public void onPress(PressEvent event) {
-		GuiState.removeResultsVerticalPanel.clear();
+		GuiState.loadPanel.setIsLoading();
+		Timer runLater = new Timer() {
+			@Override
+			public void run() {
+				GuiState.removeResultsVerticalPanel.clear();
+				
+				final ArrayList<String> names = (ArrayList<String>) StorageManager.INSTANCE
+						.getProtocols(as.getGeometryChoice());
+				GuiState.protocolFlexTable.fillFlexTable(names, as.getGeometryChoice());
 		
-		final ArrayList<String> names = (ArrayList<String>) StorageManager.INSTANCE
-				.getProtocols(as.getGeometryChoice());
-		GuiState.protocolFlexTable.fillFlexTable(names, as.getGeometryChoice());
-
-		GuiState.removeResultsVerticalPanel.addList(GuiState.protocolFlexTable);
-		GuiState.removeResultsVerticalPanel.add(GuiState.closeResultsButton);
-
-		GuiState.removeResultsPanel.center();
+				GuiState.removeResultsVerticalPanel.addList(GuiState.protocolFlexTable);
+				GuiState.removeResultsVerticalPanel.add(GuiState.closeResultsButton);
+		
+				GuiState.loadPanel.hide();
+				GuiState.removeResultsPanel.center();
+			}
+		};
+		runLater.schedule(100);
 	}
 
 }

@@ -5,6 +5,8 @@ import io.ashton.fastpress.client.fast.PressHandler;
 
 import java.util.ArrayList;
 
+import com.google.gwt.user.client.Timer;
+
 import nl.tue.fingerpaint.client.gui.GuiState;
 import nl.tue.fingerpaint.client.model.ApplicationState;
 import nl.tue.fingerpaint.client.resources.FingerpaintConstants;
@@ -45,16 +47,24 @@ public class RemoveInitDistButton extends FastButton implements PressHandler {
 	 *            The event that has fired.
 	 */
 	@Override
-	public void onPress(PressEvent event) {		
-		GuiState.removeResultsVerticalPanel.clear();
+	public void onPress(PressEvent event) {
+		GuiState.loadPanel.setIsLoading();
+		Timer runLater = new Timer() {
+			@Override
+			public void run() {
+				GuiState.removeResultsVerticalPanel.clear();
+				
+				final ArrayList<String> names = (ArrayList<String>) StorageManager.INSTANCE
+						.getDistributions(as.getGeometryChoice());
+				GuiState.initDistFlexTable.fillFlexTable(names, as.getGeometryChoice());
+				
+				GuiState.removeResultsVerticalPanel.addList(GuiState.initDistFlexTable);
+				GuiState.removeResultsVerticalPanel.add(GuiState.closeResultsButton);
 		
-		final ArrayList<String> names = (ArrayList<String>) StorageManager.INSTANCE
-				.getDistributions(as.getGeometryChoice());
-		GuiState.initDistFlexTable.fillFlexTable(names, as.getGeometryChoice());
-		
-		GuiState.removeResultsVerticalPanel.addList(GuiState.initDistFlexTable);
-		GuiState.removeResultsVerticalPanel.add(GuiState.closeResultsButton);
-
-		GuiState.removeResultsPanel.center();
+				GuiState.loadPanel.hide();
+				GuiState.removeResultsPanel.center();
+			}
+		};
+		runLater.schedule(100);
 	}
 }

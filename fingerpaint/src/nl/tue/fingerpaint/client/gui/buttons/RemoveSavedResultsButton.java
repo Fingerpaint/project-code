@@ -5,6 +5,8 @@ import io.ashton.fastpress.client.fast.PressHandler;
 
 import java.util.ArrayList;
 
+import com.google.gwt.user.client.Timer;
+
 import nl.tue.fingerpaint.client.gui.GuiState;
 import nl.tue.fingerpaint.client.resources.FingerpaintConstants;
 import nl.tue.fingerpaint.client.storage.StorageManager;
@@ -33,16 +35,24 @@ public class RemoveSavedResultsButton extends FastButton implements PressHandler
 	 */
 	@Override
 	public void onPress(PressEvent event) {
-		GuiState.removeResultsVerticalPanel.clear();
-
-		final ArrayList<String> names = (ArrayList<String>) StorageManager.INSTANCE
-				.getResults();
-		GuiState.resultsFlexTable.fillFlexTable(names);
+		GuiState.loadPanel.setIsLoading();
+		Timer runLater = new Timer() {
+			@Override
+			public void run() {
+				GuiState.removeResultsVerticalPanel.clear();
 		
-		GuiState.removeResultsVerticalPanel.addList(GuiState.resultsFlexTable);
-		GuiState.removeResultsVerticalPanel.add(GuiState.closeResultsButton);
-
-		GuiState.removeResultsPanel.center();
+				final ArrayList<String> names = (ArrayList<String>) StorageManager.INSTANCE
+						.getResults();
+				GuiState.resultsFlexTable.fillFlexTable(names);
+				
+				GuiState.removeResultsVerticalPanel.addList(GuiState.resultsFlexTable);
+				GuiState.removeResultsVerticalPanel.add(GuiState.closeResultsButton);
+		
+				GuiState.loadPanel.hide();
+				GuiState.removeResultsPanel.center();
+			}
+		};
+		runLater.schedule(100);
 	}
 
 }
