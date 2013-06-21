@@ -20,9 +20,11 @@ public class FileExporter {
 	 */
 	public static void exportSvgImage(String svg) {
 		// Add tags to indicate that this should be an svg image
-		svg = svg.substring(0, 4)
-				+ " xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\""
-				+ svg.substring(4, svg.length());
+		if (!svg.contains("xmlns")) {
+			svg = svg.substring(0, 4)
+					+ " xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\""
+					+ svg.substring(4, svg.length());
+		}
 		
 		promptSvgDownload(svg);
 	}
