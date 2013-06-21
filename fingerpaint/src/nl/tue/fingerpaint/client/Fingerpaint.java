@@ -88,6 +88,26 @@ import com.google.gwt.visualization.client.visualizations.corechart.CoreChart;
  * @author Group Fingerpaint
  */
 public class Fingerpaint implements EntryPoint {
+	
+	/**
+	 * Time to wait before actually resizing the canvas.
+	 * In the mean, all new requests to resize the canvas
+	 * are ignored. Basically, resize events are queued
+	 * and batch processed.
+	 */
+	public static final int CANVAS_RESIZE_INTERVAL = 20;
+	/**
+	 * Number of times the canvas resize timer will run before
+	 * stopping itself when no resize events occur.
+	 */
+	public static final int CANVAS_RESIZE_STOP_AFTER_IDLE = 10;
+	/** Indicate if the canvas needs to be resized or not. */
+	private boolean resizeCanvas = false;
+	/** Indicate if the canvas resize timer is running or not. */
+	private boolean resizeCanvasRunning = false;
+	/** Count how many times the resize timer has run idle. */
+	private int resizeCanvasRunCount = 0;
+	
 	// ---- PROTECTED GLOBALS
 	// ---------------------------------------------------------------------
 	/** Class to keep track of everything the user has selected */
@@ -108,9 +128,16 @@ public class Fingerpaint implements EntryPoint {
 	protected Timer timer = new Timer() {
 		@Override
 		public void run() {
-			if (as.getGeometry() != null) {
+			if (resizeCanvas && as.getGeometry() != null) {
 				as.getGeometry().resize(Window.getClientWidth(),
 						Window.getClientHeight());
+				resizeCanvas = false;
+			} else {
+				resizeCanvasRunCount++;
+				if (resizeCanvasRunCount >= CANVAS_RESIZE_STOP_AFTER_IDLE) {
+					timer.cancel();
+					resizeCanvasRunning = false;
+				}
 			}
 		}
 	};
@@ -181,8 +208,13 @@ public class Fingerpaint implements EntryPoint {
 		Window.addResizeHandler(new ResizeHandler() {
 			@Override
 			public void onResize(ResizeEvent event) {
-				timer.cancel();
-				timer.schedule(250);
+				resizeCanvas = true;
+				
+				if (!resizeCanvasRunning) {
+					resizeCanvasRunning = true;
+					resizeCanvasRunCount = 0;
+					timer.scheduleRepeating(CANVAS_RESIZE_INTERVAL);
+				}
 				
 				// Make sure all visible popup panels remain centered
 				centerPopupPanels();

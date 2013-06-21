@@ -10,6 +10,7 @@ import nl.tue.fingerpaint.shared.utils.Colour;
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.ImageData;
+import com.google.gwt.dom.client.CanvasElement;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.ImageElement;
 import com.google.gwt.user.client.Timer;
@@ -27,12 +28,14 @@ public abstract class Geometry {
 	/** Internal representation of the geometry */
 	protected int[] distribution;
 
-	/** The canvas to draw on */
+	/** The canvas to draw on. */
 	protected Canvas canvas;
-	/** The context belonging to the canvas */
+	/** The canvas that holds the internal representation. */
+	protected Canvas internalCanvas;
+	/** The context belonging to the canvas. */
 	protected Context2d context;
-	/** The factor by which the base dimension of the geometry are multiplied */
-	protected double factor;
+	/** The context belonging to the internal canvas. */
+	protected Context2d internalContext;
 	
 	/** Width of the drawing area in pixels. */
 	protected int canvasWidth;
@@ -109,9 +112,19 @@ public abstract class Geometry {
 	/** The total width of a single arrow */
 	protected static int STRIPE_SLOPE = 5;
 
+	/**
+	 * Timer used to repaint the canvas while drawing a line.
+	 */
+	private Timer paintTimer = new Timer() {
+		@Override
+		public void run() {
+			repaint();
+		}
+	};
+	
 	/** The timer used for animating wall movement */
 	private Timer animationTimer;
-	/** The time between two 'frames' of the animation, in milliseconds */
+	/** The time between two 'frames' of the animation, in milliseconds. */
 	private static int REFRESH_INTERVAL = 20;
 	/** The distance to move a wall in a single animation 'frame' */
 	private static int ANIMATION_DISTANCE = 3;
@@ -128,7 +141,6 @@ public abstract class Geometry {
 	 * @param clientWidth
 	 *            The width of the window in which the application is displayed
 	 */
-	// TODO: Stop the user from initialising a square geometry as we don't have a square mixer matrix yet.
 	protected Geometry(int clientHeight, int clientWidth) {
 		drawing = false;
 		definingStep = false;
@@ -192,10 +204,12 @@ public abstract class Geometry {
 	 * 
 	 * @param clientWidth Width of canvas.
 	 * @param clientHeight Height of canvas.
+	 * @param internalWidth Actual width of the canvas (internally).
+	 * @param internalHeight Actual height of the canvas (internally).
 	 */
-	protected void initialise(int clientWidth, int clientHeight) {
+	protected void initialise(int clientWidth, int clientHeight, int internalWidth, int internalHeight) {
 		// Actually create the canvas element
-		createCanvas(clientHeight, clientWidth);
+		createCanvas(clientHeight, clientWidth, internalHeight, internalWidth);
 		updateSize(clientWidth, clientHeight);
 		
 		// Initialise drawing colour to black
@@ -203,18 +217,15 @@ public abstract class Geometry {
 		// Initialise drawing tool to a square with radius 3
 		setDrawingTool(new SquareDrawingTool(3));
 
-		// Draw the outline of the walls and the drawing canvas. Then clip the
-		// drawing area.
-		drawWalls();
-		drawGeometryOutline();
-		clipGeometryOutline();
+		repaint();
 		
 		// Initialise mouse handlers
 		initialiseNativeHandlers(canvas.getElement());
 	}
 
 	/**
-	 * Updates the internal size and factor.
+	 * Updates the internal canvas size, which is dependent on the actual
+	 * (physical) size of the canvas. This size is given as parameters.
 	 * 
 	 * @param clientWidth The width of the canvas element.
 	 * @param clientHeight The height of the canvas element.
@@ -222,15 +233,22 @@ public abstract class Geometry {
 	protected abstract void updateSize(int clientWidth, int clientHeight);
 	
 	/**
-	 * Resizes the canvas to adjust to mobile-device orientation changes.
+	 * Update the contents of the canvas with those of the internal representation.
+	 */
+	public void repaint() {
+		CanvasElement internal = internalContext.getCanvas();
+		context.drawImage(internal, 0, 0, internal.getWidth(), internal.getHeight(),
+				0, 0, context.getCanvas().getWidth(), context.getCanvas().getHeight());
+	}
+	
+	/**
+	 * Resizes the canvas. Does <i>not</i> resize the internal width or height.
 	 * 
 	 * @param clientWidth The width of the canvas element.
 	 * @param clientHeight The height of the canvas element.
 	 * 
 	 */
 	public void resize(int clientWidth, int clientHeight){
-		int[] dist = getDistribution();		
-
 		drawing = false;
 		definingStep = false;
 		
@@ -244,14 +262,7 @@ public abstract class Geometry {
 		context.save();
 		
 		updateSize(clientWidth, clientHeight);
-
-		// Draw the outline of the walls and the drawing canvas. Then clip the
-		// drawing area.
-		drawWalls();
-		drawGeometryOutline();
-		clipGeometryOutline();
-
-		drawDistribution(dist);		
+		repaint();
 	}
 	
 	// ----Getters and Setters---------------------------------------
@@ -338,30 +349,14 @@ public abstract class Geometry {
 	 * 
 	 * @return total height of the drawing area
 	 */
-	public int getHeight() {
-		return (int) Math.ceil(factor * getBaseHeight());
-	}
+	abstract public int getHeight();
 
 	/**
 	 * Returns the total width of the drawing area
 	 * 
 	 * @return total width of the drawing area
 	 */
-	public int getWidth() {
-		return (int) Math.ceil(factor * getBaseWidth());
-	}
-
-	/**
-	 * Sets the factor to multiply the outline of the geometry with.
-	 * 
-	 * @param factor
-	 *            The factor to set
-	 * 
-	 * @post The multiply factor has been set to @param{factor}
-	 */
-	public void setFactor(int factor) {
-		this.factor = factor;
-	}
+	abstract public int getWidth();
 
 	/**
 	 * Sets the drawing tool
@@ -375,7 +370,7 @@ public abstract class Geometry {
 		this.tool = tool;
 
 		int rad = tool.getRadius();
-		int size = (int) Math.floor((rad * 2) * factor);
+		int size = (int) Math.floor((rad * 2));
 		this.displacement = size / 2;
 
 		ImageData data = this.tool.getTool(context.createImageData(size, size),
@@ -396,8 +391,12 @@ public abstract class Geometry {
 	 *            The height of the canvas to be created
 	 * @param width
 	 *            The width of the canvas to be created
+	 * @param internalHeight
+	 *            The internal (actual) height of the canvas to be created
+	 * @param internalWidth
+	 *            The internal (actual) width of the canvas to be created
 	 */
-	protected void createCanvas(int height, int width) {
+	protected void createCanvas(int height, int width, int internalHeight, int internalWidth) {
 		// Create the canvas
 		canvas = Canvas.createIfSupported();
 
@@ -423,6 +422,15 @@ public abstract class Geometry {
 		// original state
 		context = canvas.getContext2d();
 		context.save();
+		
+		// Initialise internal canvas - we know it is supported here
+		internalCanvas = Canvas.createIfSupported();
+		internalCanvas.setWidth(internalWidth + "px");
+		internalCanvas.setCoordinateSpaceWidth(internalWidth);
+		internalCanvas.setHeight(internalHeight + "px");
+		internalCanvas.setCoordinateSpaceHeight(internalHeight);
+		
+		internalContext = internalCanvas.getContext2d();
 	}
 
 	/**
@@ -445,16 +453,16 @@ public abstract class Geometry {
 			previousX = x;
 			previousY = y;
 
-			x = getValidCoord(x);
-			y = getValidCoord(y);
+			x = getInternalXCoord(x);
+			y = getInternalYCoord(y);
 
 			// Draw the first image of the drawing tool
-			context.drawImage(toolImage, 0, 0,
+			internalContext.drawImage(toolImage, 0, 0,
 					toolImage.getWidth(), toolImage.getHeight(),
-					x - displacement + X_OFFSET, y - displacement + TOP_OFFSET,
+					x - displacement, y - displacement,
 					toolImage.getWidth(), toolImage.getHeight()
 				);
-
+			paintTimer.scheduleRepeating(REFRESH_INTERVAL);
 		} else if (isInsideWall(x, y)) {
 			// cancel current animation if there is one
 			if (animationTimer != null) {
@@ -494,6 +502,11 @@ public abstract class Geometry {
 		x -= X_OFFSET;
 		y -= TOP_OFFSET;
 
+		if (drawing) {
+			paintTimer.cancel();
+			repaint();
+		}
+		
 		if (definingStep) {
 			stopDefineMixingStep(x, y);
 		}
@@ -688,11 +701,11 @@ public abstract class Geometry {
 		}
 		int numerator = longest >> 1;
 		for (int i = 0; i <= longest; i++) {
-			int x3 = getValidCoord(x1);
-			int y3 = getValidCoord(y1);
-			context.drawImage(toolImage, 0, 0,
+			int x3 = getInternalXCoord(x1);
+			int y3 = getInternalYCoord(y1);
+			internalContext.drawImage(toolImage, 0, 0,
 					toolImage.getWidth(), toolImage.getHeight(),
-					x3 - displacement + X_OFFSET, y3 - displacement + TOP_OFFSET,
+					x3 - displacement, y3 - displacement,
 					toolImage.getWidth(), toolImage.getHeight()
 				);
 			numerator += shortest;
@@ -783,16 +796,27 @@ public abstract class Geometry {
 	}
 
 	/**
-	 * Converts a value to a valid coordinate, meaning the a value representing
-	 * the top left pixel of a 'grid-pixel'
+	 * Convert an X-coordinate in the actual drawing area into a valid X-
+	 * coordinate in the internal canvas.
 	 * 
-	 * @param c
-	 *            The coordinate to convert
-	 * 
-	 * @return The valid coordinate belonging to input c
+	 * @param canvasX X-coordinate in the drawing area of the canvas.
+	 * @return The given X-coordinate, translated to the internal canvas size.
 	 */
-	protected int getValidCoord(int c) {
-		return (int) Math.floor(((c - 1) / factor) * factor + 1);
+	public int getInternalXCoord(int canvasX) {
+		int result = (int) (canvasX / (double) getWidth() * getBaseWidth());
+		return result;
+	}
+	
+	/**
+	 * Convert an Y-coordinate in the actual drawing area into a valid Y-
+	 * coordinate in the internal canvas.
+	 * 
+	 * @param canvasY Y-coordinate in the drawing area of the canvas.
+	 * @return The given Y-coordinate, translated to the internal canvas size.
+	 */
+	public int getInternalYCoord(int canvasY) {
+		int result = (int) (canvasY / (double) getHeight() * getBaseHeight());
+		return result;
 	}
 
 	// --Public methods for general use---------------------------------
