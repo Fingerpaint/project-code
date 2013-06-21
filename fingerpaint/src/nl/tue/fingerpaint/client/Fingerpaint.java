@@ -354,10 +354,8 @@ public class Fingerpaint implements EntryPoint {
 		String id = multiple ? "compareGraphPanel"
 				: "viewSingleGraphGraphPanel";
 
-		String svg = IFrameElement
-				.as(DOM.getElementById(id).getElementsByTagName("iframe")
-						.getItem(0)).getContentDocument()
-				.getElementById("chartArea").getInnerHTML();
+		String svg = DOM.getElementById(id).getFirstChildElement()
+						.getFirstChildElement().getFirstChildElement().getInnerHTML();
 
 		FileExporter.exportSvgImage(svg);
 	}

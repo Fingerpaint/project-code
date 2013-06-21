@@ -28,7 +28,7 @@ public class NativeCommunicatorTest extends TestCase {
 		}
 		NativeCommunicator c = NativeCommunicator.getInstance();
 		double segregation = c.simulate(
-				"Rectangle400x240", "Default", concentrationVector, 40, "TL");
+				"Rectangle 400x240", "Default", concentrationVector, 40, "TL");
 		assertTrue("Segregation " + segregation + " was incorrect", 
 				segregation == 0.8296319009181);
 	}
