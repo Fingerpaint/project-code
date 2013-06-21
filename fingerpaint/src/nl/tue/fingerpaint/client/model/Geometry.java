@@ -25,9 +25,6 @@ import com.google.gwt.user.client.ui.RootPanel;
  */
 public abstract class Geometry {
 
-	/** Internal representation of the geometry */
-	protected int[] distribution;
-
 	/** The canvas to draw on. */
 	protected Canvas canvas;
 	/** The canvas that holds the internal representation. */
@@ -584,13 +581,6 @@ public abstract class Geometry {
 	 *            The x-distance to the initial position
 	 */
 	protected abstract void fillWall(int x);
-
-	/**
-	 * Initialises the distribution of the drawing area
-	 * 
-	 * @post {@code distribution} is initialised
-	 */
-	abstract protected void initialiseDistribution();
 
 	/**
 	 * Draws the outline around the walls
