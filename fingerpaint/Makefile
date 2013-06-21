@@ -33,4 +33,4 @@ ${BUILDDIR}/nl_tue_fingerpaint_server_simulator_NativeCommunicator.o: $(SOURCEDI
 	$(CC) $(LINKCFLAGS) -shared $(SOURCEDIR)/nl_tue_fingerpaint_server_simulator_NativeCommunicator.c -c -o $@
 	
 $(FORTRANMODULE)/add_module.o:
-	$(MAKE) -C $(FORTRANMODULE)add_module.o
+	$(MAKE) -C $(FORTRANMODULE)

@@ -278,7 +278,7 @@ subroutine simulate (geometry, len_geometry, mixer, len_mixer, &
     character(len_step_name) , intent(in) :: step_name ! the id of the step-type that needs to be made
     real(8) , intent(out) :: segregation ! the segregation
     
-    if (geometry=="Rectangle400x240") then
+    if (geometry=="Rectangle 400x240") then
         if (mixer == "Default") then
             if (step_name=="TR") then
                 call conc_final(step_size,1,1,concentration_vector)
