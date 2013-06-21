@@ -855,4 +855,16 @@ public abstract class Geometry {
 	public void removeStepAddedListener(StepAddedListener l) {
 		stepAddedListeners.remove(l);
 	}
+
+	/**
+	 * Put the given image on the canvas. This image is not scaled, but put
+	 * on the canvas as it is.
+	 * 
+	 * @param img
+	 *            The image to put on the canvas.
+	 */
+	public void putImage(ImageElement img) {
+		internalContext.drawImage(img, 0, 0);
+		repaint();
+	}
 }

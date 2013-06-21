@@ -41,4 +41,11 @@ public interface FingerpaintResources extends ClientBundle {
 	 */
 	@Source("plus.png")
 	public ImageResource plusImage();
+	
+	/**
+	 * @return An image that can be put on the canvas when the application
+	 *         loads. It provids instructions on how to use the application.
+	 */
+	@Source("StartupCanvasImage.png")
+	public ImageResource startupImage();
 }

@@ -58,9 +58,12 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.debug.client.DebugInfo;
 import com.google.gwt.dom.client.IFrameElement;
+import com.google.gwt.dom.client.ImageElement;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.LoadEvent;
+import com.google.gwt.event.dom.client.LoadHandler;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.http.client.RequestTimeoutException;
@@ -182,6 +185,18 @@ public class Fingerpaint implements EntryPoint {
 				as.setGeometry(new RectangleGeometry(Window.getClientHeight(),
 					Window.getClientWidth(), 240, 400));
 				createMixingWidgets();
+				
+				// Put instructions image on canvas
+				final Image startupImg = new Image();
+				startupImg.addLoadHandler(new LoadHandler() {
+					@Override
+					public void onLoad(LoadEvent event) {
+						startupImg.removeFromParent();
+						as.getGeometry().putImage(ImageElement.as(startupImg.getElement()));
+					}
+				});
+				startupImg.setUrl(FingerpaintResources.INSTANCE.startupImage().getSafeUri());
+				RootPanel.get().add(startupImg);
 			}
 
 			@Override
