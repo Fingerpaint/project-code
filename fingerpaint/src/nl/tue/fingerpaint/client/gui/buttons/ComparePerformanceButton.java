@@ -95,7 +95,6 @@ public class ComparePerformanceButton extends FastButton implements PressHandler
 		// Add the first vertical panel of the first popup panel, 
 		// the rest of the initialisation is done dynamically in setupSelectionPopup
 		GuiState.compareSelectPopupPanel.add(compareVerticalPanel);
-		
 	}
 	
 	/**
@@ -108,10 +107,11 @@ public class ComparePerformanceButton extends FastButton implements PressHandler
 		compareVerticalPanel.clear();
 		compareHorizontalPanel.clear();
 		//insert no saves found message if the list is empty, add the list if it is not
-		if(list.getVisibleItemCount() == 0){
+		if (list.getVisibleItemCount() == 0) {
 			compareVerticalPanel.add(noFilesFoundLabel);
-		}else{
-			compareVerticalPanel.add(list);
+		} else {
+			GuiState.listScrollPanel.setWidget(list);
+			compareVerticalPanel.add(GuiState.listScrollPanel);
 		}
 
 		compareVerticalPanel.add(compareHorizontalPanel);
