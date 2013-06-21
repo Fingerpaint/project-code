@@ -352,6 +352,7 @@ cleacdr
 
 #listScrollPanel {
 	max-height: 250px;
+	overflow-x: hidden !important;
 }
 
 /* drawing tool */
