@@ -25,9 +25,6 @@ import com.google.gwt.user.client.ui.RootPanel;
  */
 public abstract class Geometry {
 
-	/** Internal representation of the geometry */
-	protected int[] distribution;
-
 	/** The canvas to draw on. */
 	protected Canvas canvas;
 	/** The canvas that holds the internal representation. */
@@ -321,16 +318,6 @@ public abstract class Geometry {
 	abstract public int[] getDistribution();
 
 	/**
-	 * Sets the distribution to {@code dist}
-	 * 
-	 * @param dist
-	 *            The distribution to set
-	 */
-	public void setDistribution(int[] dist) {
-		this.distribution = dist;
-	}
-
-	/**
 	 * Returns the base height of the geometry
 	 * 
 	 * @return The minimum height of this geometry
@@ -594,13 +581,6 @@ public abstract class Geometry {
 	 *            The x-distance to the initial position
 	 */
 	protected abstract void fillWall(int x);
-
-	/**
-	 * Initialises the distribution of the drawing area
-	 * 
-	 * @post {@code distribution} is initialised
-	 */
-	abstract protected void initialiseDistribution();
 
 	/**
 	 * Draws the outline around the walls
@@ -874,5 +854,17 @@ public abstract class Geometry {
 	 */
 	public void removeStepAddedListener(StepAddedListener l) {
 		stepAddedListeners.remove(l);
+	}
+
+	/**
+	 * Put the given image on the canvas. This image is not scaled, but put
+	 * on the canvas as it is.
+	 * 
+	 * @param img
+	 *            The image to put on the canvas.
+	 */
+	public void putImage(ImageElement img) {
+		internalContext.drawImage(img, 0, 0);
+		repaint();
 	}
 }

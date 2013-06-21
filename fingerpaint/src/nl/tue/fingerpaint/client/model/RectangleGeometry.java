@@ -45,7 +45,7 @@ public class RectangleGeometry extends Geometry {
 		topWallStep = true;
 		
 		initialise(clientWidth, clientHeight, horCells, vertCells);
-		initialiseDistribution();
+		resetDistribution();
 	}
 
 	// ----Getters and Setters-----------------------------------------
@@ -188,20 +188,6 @@ public class RectangleGeometry extends Geometry {
 	protected boolean isInsideBottomWall(int x, int y) {
 		return (x > 0 && x <= getWidth() && y > getHeight() && y <= getHeight()
 				+ HEIGHT_OF_WALL);
-	}
-
-	/**
-	 * Creates vector (array) of length 240 * 400. Initialises colour to all
-	 * white (1)
-	 * 
-	 * @post {@code representationVector} is initialised
-	 */
-	@Override
-	protected void initialiseDistribution() {
-		distribution = new int[horizontalCells * verticalCells];
-		for (int i = 0; i < distribution.length; i++) {
-			distribution[i] = 255;
-		}
 	}
 
 	/**
@@ -436,24 +422,17 @@ public class RectangleGeometry extends Geometry {
 		CanvasPixelArray data = img.getData();
 		int width = getBaseWidth();
 		int l = dist.length;
-		int x, y, col, index, sw, sh, w2, h2;
-
+		int x, y, col, index;
+		
 		for (int i = 0; i < l; i++) {
 			x = i % horizontalCells;
 			y = (verticalCells - 1) - i / horizontalCells;
 			col = dist[i];
-			sw = x;
-			sh = y;
-			w2 = x + 1;
-			h2 = y + 1;
-			for (int w = sw; w < w2; w++) {
-				for (int h = sh; h < h2; h++) {
-					index = (h * width + w) * 4;
-					data.set(index, col);
-					data.set(++index, col);
-					data.set(++index, col);
-				}
-			}
+
+			index = (y * width + x) * 4;
+			data.set(index, col);
+			data.set(++index, col);
+			data.set(++index, col);
 		}
 		internalContext.putImageData(img, 0, 0);
 		repaint();
