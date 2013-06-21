@@ -2,10 +2,12 @@ package nl.tue.fingerpaint.client.model;
 
 import nl.tue.fingerpaint.shared.model.MixingStep;
 import nl.tue.fingerpaint.shared.model.RectangleMixingStep;
+import nl.tue.fingerpaint.shared.utils.Colour;
 
 import com.google.gwt.canvas.dom.client.CanvasPixelArray;
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.canvas.dom.client.ImageData;
+import com.google.gwt.dom.client.CanvasElement;
 
 /**
  * Class that represents the rectangular geometry. Keeps the internal
@@ -42,7 +44,7 @@ public class RectangleGeometry extends Geometry {
 		horizontalCells = horCells;
 		topWallStep = true;
 		
-		initialise(clientWidth, clientHeight);
+		initialise(clientWidth, clientHeight, horCells, vertCells);
 		initialiseDistribution();
 	}
 
@@ -87,18 +89,18 @@ public class RectangleGeometry extends Geometry {
 	@Override
 	public int[] getDistribution() {
 		int[] dist = new int[horizontalCells * verticalCells];
-		ImageData img = context.getImageData(X_OFFSET + 1, TOP_OFFSET + 1,
-				getWidth(), getHeight());
+		ImageData img = internalContext.getImageData(0, 0,
+				getBaseWidth(), getBaseHeight());
 		CanvasPixelArray data = img.getData();
 		int width = img.getWidth();
 		int height = img.getHeight();
 		int index;
-		for (int y = height; y >= 0; y -= (int) Math.floor(factor)) {
-			for (int x = 0; x < width; x += (int) Math.floor(factor)) {
+		for (int y = height; y >= 0; y--) {
+			for (int x = 0; x < width; x++) {
 				// times 4 because we have R, G, B and alpha value per pixel
 				index = (y * width + x) * 4;
-				dist[(int) Math.floor(x / factor) + horizontalCells
-						* (verticalCells - 1 - (int) Math.floor(y / factor))] = data
+				dist[x + horizontalCells
+						* (verticalCells - 1 - y)] = data
 						.get(index);
 			}
 		}
@@ -106,6 +108,13 @@ public class RectangleGeometry extends Geometry {
 	}
 
 	// ----Implemented abstract methods from superclass----------------
+	@Override
+	public void repaint() {
+		CanvasElement internal = internalContext.getCanvas();
+		context.drawImage(internal, 0, 0, internal.getWidth(), internal.getHeight(),
+				X_OFFSET + 1, TOP_OFFSET + 1, getWidth(), getHeight());
+	}
+	
 	@Override
 	protected void updateSize(int clientWidth, int clientHeight) {
 		clientHeight -= TOP_OFFSET + BOTTOM_OFFSET;
@@ -115,13 +124,15 @@ public class RectangleGeometry extends Geometry {
 			// width is limiting factor
 			canvasWidth = clientWidth - 2;
 			canvasHeight = (int) Math.floor((canvasWidth / (double) horizontalCells) * verticalCells);
-			factor = canvasWidth / (double) horizontalCells;
 		} else {
 			// height is limiting factor
 			canvasHeight = clientHeight - 2;
 			canvasWidth = (int) Math.floor((canvasHeight / (double) verticalCells) * horizontalCells);
-			factor = canvasHeight / (double) verticalCells;
 		}
+		
+		drawWalls();
+		drawGeometryOutline();
+		clipGeometryOutline();
 	}
 	
 	/**
@@ -420,10 +431,10 @@ public class RectangleGeometry extends Geometry {
 	 */
 	@Override
 	public void drawDistribution(int[] dist) {
-		ImageData img = context.getImageData(X_OFFSET + 1, TOP_OFFSET + 1,
-				getWidth(), getHeight());
+		ImageData img = internalContext.getImageData(0, 0,
+				getBaseWidth(), getBaseHeight());
 		CanvasPixelArray data = img.getData();
-		int width = getWidth();
+		int width = getBaseWidth();
 		int l = dist.length;
 		int x, y, col, index, sw, sh, w2, h2;
 
@@ -431,10 +442,10 @@ public class RectangleGeometry extends Geometry {
 			x = i % horizontalCells;
 			y = (verticalCells - 1) - i / horizontalCells;
 			col = dist[i];
-			sw = (int) Math.floor(x * factor);
-			sh = (int) Math.floor(y * factor);
-			w2 = (int) Math.floor((x + 1) * factor);
-			h2 = (int) Math.floor((y + 1) * factor);
+			sw = x;
+			sh = y;
+			w2 = x + 1;
+			h2 = y + 1;
 			for (int w = sw; w < w2; w++) {
 				for (int h = sh; h < h2; h++) {
 					index = (h * width + w) * 4;
@@ -444,7 +455,8 @@ public class RectangleGeometry extends Geometry {
 				}
 			}
 		}
-		context.putImageData(img, X_OFFSET + 1, TOP_OFFSET + 1);
+		internalContext.putImageData(img, 0, 0);
+		repaint();
 	}
 
 	/**
@@ -457,7 +469,6 @@ public class RectangleGeometry extends Geometry {
 		int[] dist = getDistribution();
 		int width = getBaseWidth();
 		int height = getBaseHeight();
-		int d = (int) Math.floor(factor);
 		StringBuilder sb = new StringBuilder();
 		sb.append("<svg>");
 		
@@ -467,8 +478,8 @@ public class RectangleGeometry extends Geometry {
 			String col = intToHexString(dist[i]);		
 			sb.append("<rect fill=\""
 					+ col + "\" height=\""
-					+ d + "\" stroke=\"none\" width=\"" + d + "\" x=\""
-					+ (x * d) + "\" y=\"" + (y * d) + "\"/>");			
+					+ 1 + "\" stroke=\"none\" width=\"" + 1 + "\" x=\""
+					+ x + "\" y=\"" + y + "\"/>");			
 		}
 		sb.append( "</svg>");
 		return sb.toString();
@@ -494,7 +505,9 @@ public class RectangleGeometry extends Geometry {
 	 */
 	@Override
 	public void resetDistribution() {
-		context.setFillStyle(CssColor.make("white"));
+		context.setFillStyle(Colour.WHITE.toHexString());
 		context.fillRect(X_OFFSET + 1, TOP_OFFSET + 1, getWidth(), getHeight());
+		internalContext.setFillStyle(Colour.WHITE.toHexString());
+		internalContext.fillRect(0, 0, getBaseWidth(), getBaseHeight());
 	}
 }
