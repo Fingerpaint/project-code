@@ -321,16 +321,6 @@ public abstract class Geometry {
 	abstract public int[] getDistribution();
 
 	/**
-	 * Sets the distribution to {@code dist}
-	 * 
-	 * @param dist
-	 *            The distribution to set
-	 */
-	public void setDistribution(int[] dist) {
-		this.distribution = dist;
-	}
-
-	/**
 	 * Returns the base height of the geometry
 	 * 
 	 * @return The minimum height of this geometry
