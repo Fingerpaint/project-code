@@ -393,8 +393,13 @@ cleacdr
 	padding: 20px;
 }
 
+.popupPanelNotificationInfo,
 .popupPanelLoadingNotification {
 	background: MAIN;
+}
+
+.popupPanelNotificationError {
+	background: RED;
 }
 
 /* input in the popup used to input a name for an item to be saved */

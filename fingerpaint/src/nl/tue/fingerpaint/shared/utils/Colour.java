@@ -40,6 +40,8 @@ public class Colour {
     public static final Colour PMS_375 = new Colour(132, 210, 0);
     /** TUe support colour: light green colour. */
     public static final Colour PMS_396 = new Colour(206, 223, 0);
+    /** TUe red colour. */
+    public static final Colour PMS_WARM_RED = new Colour(247, 49, 49);
 	
 	/**
 	 * The red component of this colour.

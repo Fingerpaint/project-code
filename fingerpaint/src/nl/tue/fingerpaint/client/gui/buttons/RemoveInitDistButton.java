@@ -48,7 +48,7 @@ public class RemoveInitDistButton extends FastButton implements PressHandler {
 	 */
 	@Override
 	public void onPress(PressEvent event) {
-		GuiState.loadPanel.setIsLoading();
+		GuiState.loadPanel.setIsLoading(FingerpaintConstants.INSTANCE.lblRemoving());
 		Timer runLater = new Timer() {
 			@Override
 			public void run() {

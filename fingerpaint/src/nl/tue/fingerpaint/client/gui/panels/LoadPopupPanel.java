@@ -1,6 +1,7 @@
 package nl.tue.fingerpaint.client.gui.panels;
 
 import nl.tue.fingerpaint.client.gui.GuiState;
+import nl.tue.fingerpaint.client.resources.FingerpaintConstants;
 
 import com.google.gwt.user.client.ui.PopupPanel;
 
@@ -63,9 +64,28 @@ public class LoadPopupPanel extends PopupPanel {
 	
 	/**
 	 * Clear this panel, put a label indicating that some loading action is
-	 * taking place in the panel and center it.
+	 * taking place in the panel and show it if it was not visible.
 	 */
 	public void setIsLoading() {
+		setIsLoading(null);
+	}
+	
+	/**
+	 * Clear this panel, put a label indicating that some action is
+	 * taking place in the panel and show it if it was not visible.
+	 * 
+	 * @param msg
+	 *            The message to show. A default message is used when
+	 *            {@code null}. This message indicates that a loading
+	 *            action is taking place.
+	 */
+	public void setIsLoading(String msg) {
+		if (msg == null) {
+			GuiState.loadLabel.setText(FingerpaintConstants.INSTANCE.lblLoad());
+		} else {
+			GuiState.loadLabel.setText(msg);
+		}
+		
 		boolean animationsEnabled = isAnimationEnabled();
 		setAnimationEnabled(false);
 		
@@ -79,6 +99,11 @@ public class LoadPopupPanel extends PopupPanel {
 		getElement().addClassName(LOADING_CLASS);
 	}
 
+	/**
+	 * Put the {@link GuiState#loadVerticalPanel} in this panel
+	 * and show/center it. Also removes the loading class and
+	 * all related loading stuff from the panel.
+	 */
 	@Override
 	public void show() {
 		clear();

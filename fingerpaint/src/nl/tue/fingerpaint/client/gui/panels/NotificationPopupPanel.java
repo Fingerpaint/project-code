@@ -17,8 +17,39 @@ public class NotificationPopupPanel {
 	
 	/** Duration of animation to show/hide a notification. */
 	public static final int ANIMATION_DURATION = 200;
-	/** Classname that is added to this panel. */
+	/**
+	 * Classname that is always added to this panel.
+	 */
 	public static final String NOTIFICATION_CLASS = "popupPanelNotification";
+	/**
+	 * Classname that is added to this panel when it holds an info message.
+	 */
+	public static final String NOTIFICATION_CLASS_INFO = "popupPanelNotificationInfo";
+	/**
+	 * Classname that is added to this panel when it holds an error message.
+	 */
+	public static final String NOTIFICATION_CLASS_ERROR = "popupPanelNotificationError";
+	/**
+	 * Classname that is added to this panel when it holds a message to
+	 * indicate success.
+	 */
+	public static final String NOTIFICATION_CLASS_SUCCESS = "popupPanelNotificationSuccess";
+	
+	/**
+	 * Identifier that can be used in {@link #NotificationPopupPanel(String, int)}
+	 * to construct a notification with an information message.
+	 */
+	public static final int TYPE_INFO = 0;
+	/**
+	 * Identifier that can be used in {@link #NotificationPopupPanel(String, int)}
+	 * to construct a notification with an error message.
+	 */
+	public static final int TYPE_ERROR = 1;
+	/**
+	 * Identifier that can be used in {@link #NotificationPopupPanel(String, int)}
+	 * to construct a notification with a message indicating success.
+	 */
+	public static final int TYPE_SUCCESS = 2;
 	
 	/**
 	 * How long the notification panel will be visible.
@@ -42,12 +73,38 @@ public class NotificationPopupPanel {
 	 *            The message to show in the notification.
 	 */
 	public NotificationPopupPanel(String message) {
+		this(message, TYPE_SUCCESS);
+	}
+	
+	/**
+	 * Creates a {@link NotificationPopupPanel} with the message {@code message}.
+	 * 
+	 * @param message
+	 *            The message to show in the notification.
+	 * @param msgType
+	 *            The type of the message. Should be either {@link #TYPE_INFO},
+	 *            {@link #TYPE_ERROR} or {@link #TYPE_SUCCESS}. When not one of
+	 *            these three, {@link #TYPE_SUCCESS} is used.
+	 */
+	public NotificationPopupPanel(String message, int msgType) {
+		if (msgType != TYPE_INFO && msgType != TYPE_ERROR &&
+				msgType != TYPE_SUCCESS) {
+			msgType = TYPE_SUCCESS;
+		}
+		
 		messageLabel = new Label(message);
 		panel = new PopupPanel();
 		panel.add(messageLabel);
 		panel.setAnimationEnabled(false);
 		panel.setModal(false);
 		panel.getElement().addClassName(NOTIFICATION_CLASS);
+		if (msgType == TYPE_INFO) {
+			panel.getElement().addClassName(NOTIFICATION_CLASS_INFO);
+		} else if (msgType == TYPE_ERROR) {
+			panel.getElement().addClassName(NOTIFICATION_CLASS_ERROR);
+		} else if (msgType == TYPE_SUCCESS) {
+			panel.getElement().addClassName(NOTIFICATION_CLASS_SUCCESS);
+		}
 		panelAnimation = new SlideAnimation(panel.getElement(), Direction.LEFT);
 	}
 

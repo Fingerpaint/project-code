@@ -74,6 +74,22 @@ public interface FingerpaintConstants extends Constants {
 	
 	/**
 	 * @return Localised string that contains the text for the
+	 *         {@link GuiState#loadLabel} label when it is used
+	 *         to indicate that a save action is running.
+	 */
+	@DefaultStringValue("Saving...")
+	public String lblSaving();
+	
+	/**
+	 * @return Localised string that contains the text for the
+	 *         {@link GuiState#loadLabel} label when it is used
+	 *         to indicate that a remove action is running.
+	 */
+	@DefaultStringValue("Removing...")
+	public String lblRemoving();
+	
+	/**
+	 * @return Localised string that contains the text for the
 	 *         {@link GuiState#nrStepsLabel} label.
 	 */
 	@DefaultStringValue("Number of steps")
@@ -144,6 +160,14 @@ public interface FingerpaintConstants extends Constants {
 	@DefaultStringValue("This name is already in use. "
 			+ "Choose whether to overwrite existing file or to cancel.")
 	public String nameInUse();
+	
+	/**
+	 * @return Localised string that is used in an error notification that is
+	 *         shown when a save did not succeed due to the chosen name being
+	 *         in use already.
+	 */
+	@DefaultStringValue("This name is already in use.")
+	public String nameInUseError();
 	
 	// -- CONSTANTS FOR DELETE MESSAGES -----------------------------------------
 	/**

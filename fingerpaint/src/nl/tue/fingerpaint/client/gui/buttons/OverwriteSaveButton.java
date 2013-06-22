@@ -4,8 +4,9 @@ import io.ashton.fastpress.client.fast.PressEvent;
 import io.ashton.fastpress.client.fast.PressHandler;
 import nl.tue.fingerpaint.client.Fingerpaint;
 import nl.tue.fingerpaint.client.gui.GuiState;
-import nl.tue.fingerpaint.client.gui.panels.NotificationPopupPanel;
 import nl.tue.fingerpaint.client.resources.FingerpaintConstants;
+
+import com.google.gwt.user.client.Timer;
 
 /**
  * Button that can be used to overwrite the item that is currently being saved.
@@ -42,15 +43,19 @@ public class OverwriteSaveButton extends FastButton implements PressHandler {
 	 */
 	@Override
 	public void onPress(PressEvent event) {
-		fp.save(GuiState.saveNameTextBox.getText(), true);
-
-		NotificationPopupPanel np = new NotificationPopupPanel(
-				FingerpaintConstants.INSTANCE.saveSuccess());
-		np.show(GuiState.DEFAULT_TIMEOUT);
+		GuiState.loadPanel.setIsLoading(FingerpaintConstants.INSTANCE.lblSaving());
 		GuiState.overwriteSavePanel.hide();
-		
-		// Upon successful overwrite, disable the save button.
-		GuiState.saveItemPanelButton.setEnabled(false);
+		Timer doLater = new Timer() {
+			@Override
+			public void run() {
+				GuiState.saveItemPanelButton.save(true);
+				GuiState.loadPanel.hide();
+				
+				// Upon successful overwrite, disable the save button.
+				GuiState.saveItemPanelButton.setEnabled(false);
+			}
+		};
+		doLater.schedule(100);
 	}
 
 }
