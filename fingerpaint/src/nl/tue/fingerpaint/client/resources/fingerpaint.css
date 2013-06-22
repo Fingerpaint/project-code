@@ -212,6 +212,10 @@ button[disabled] {
 	cursor: pointer;
 }
 
+.backMenuButton:hover {
+	background: MAIN_SUPPORT_LIGHT;
+}
+
 .gwt-Button:active,
 .gwt-ToggleButton-down,
 .gwt-ToggleButton:active,
@@ -220,6 +224,12 @@ button[disabled] {
 .dp-spinner-downbutton:active {
 	background: -webkit-linear-gradient(bottom, MAIN_LIGHT, MAIN);
 	background: linear-gradient(to top, MAIN_LIGHT, MAIN);
+	border: 0; /* disable some weird Google styling */
+}
+
+.backMenuButton:active {
+	background: -webkit-linear-gradient(bottom, MAIN_SUPPORT_LIGHT, MAIN_SUPPORT);
+	background: linear-gradient(to top, MAIN_SUPPORT_LIGHT, MAIN_SUPPORT);
 	border: 0; /* disable some weird Google styling */
 }
 
