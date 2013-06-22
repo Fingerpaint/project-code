@@ -1,0 +1,28 @@
+
+================================================================================ 
+PDFDoclet announces the PDFDoclet 0.7.0 release 
+================================================================================ 
+
+Changes in this version include:
+
+--------------------------------------------------------------------------------
+  New Features:
+--------------------------------------------------------------------------------
+- Made index more compact by printing all page numbers of members (methods, 
+  classes, fields) with same name on the same line (like: doSomething 23, 35, 
+  88). 
+- Added link to title page in outline (navigation frame). 
+
+--------------------------------------------------------------------------------
+  Fixed bugs:
+--------------------------------------------------------------------------------
+- Implemented handling of "doc-files" subdirectory. Issue: 848194. 
+- Fixed problem with doclet hanging if a file (usually an image) was not 
+  found due to an invalid path. Now the doclet just ignores the image in 
+  those cases and completes the rest of the javadoc. 
+- Fixed problem of parameter names and their descriptions not being on the 
+  same line. Issue: 845938. 
+- Fixed "dontspec"-config problem with field summaries. Issue: 848304. 
+
+================================================================================
+(c) PDFDoclet

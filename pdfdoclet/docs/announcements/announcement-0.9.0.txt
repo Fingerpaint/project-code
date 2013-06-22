@@ -1,0 +1,40 @@
+
+================================================================================ 
+PDFDoclet announces the PDFDoclet 0.9.0 release 
+================================================================================ 
+
+Changes in this version include:
+
+--------------------------------------------------------------------------------
+  New Features:
+--------------------------------------------------------------------------------
+- Added support for custom filtering. It is now possible to create PDF output 
+  only for certain classes / methods / members, based on custom tags. See the 
+  "Usage" page of the HTML documentation for details. The main reason for 
+  this feature is to allow to create extracts of an API based, for example, 
+  on project or developer names etc. 
+- Added support for printing any custom tags (such as "@todo"). A custom tag 
+  like "@todo" will be ignored, though, as long as there is no label defined 
+  for it in the configuration. A label definition for a custom "todo" tag 
+  could be: labels.tag.todo=To Do: 
+
+--------------------------------------------------------------------------------
+  Fixed bugs:
+--------------------------------------------------------------------------------
+- "workdir" was processed as a configuration property only, but not as a 
+  commandline argument. Issue: 1183868. 
+- A-tags (links) without a "href" field caused a NullPointerException in the 
+  TagA class. Issue: 1186422. 
+- Added printing of fields and methods inherited from any interface in the 
+  "... inherited" tables. 
+
+--------------------------------------------------------------------------------
+  Changes:
+--------------------------------------------------------------------------------
+- Cleaned up the "test-pdf" example sources. 
+- Added note about custom tag to FAQ. 
+- Some refactoring (extracted some large methods from the main class 
+  "PDFDoclet" which has now, at long last, achieved a reasonable size. 
+
+================================================================================
+(c) PDFDoclet

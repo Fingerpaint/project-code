@@ -1,0 +1,24 @@
+
+================================================================================ 
+PDFDoclet announces the PDFDoclet 0.8.1 release 
+================================================================================ 
+
+Changes in this version include:
+
+--------------------------------------------------------------------------------
+  Fixed bugs:
+--------------------------------------------------------------------------------
+- The annoying missing-blanks-problem has finally gone away. The secret lied 
+  in using JTidy differently (and maybe also in using a more current version 
+  of JTidy). I won't go in much detail here, but I'll just say that it should 
+  no longer be necessary to encode blanks or insert them before an ending tag 
+  just to get them out in the PDF. Issue: 849061. 
+- ClassCastException caused by open list tags has been solved by the fact 
+  that JTidy now actually tidies up the HTML. Issue: 1058391. 
+- Implemented better error handling for IOException which occurs if the PDF 
+  file cannot be opened for writing. 
+- Shut up JTidy. This was necessary because currently i'm using a snapshot 
+  release of JTidy which creates lots of debug output. 
+
+================================================================================
+(c) PDFDoclet

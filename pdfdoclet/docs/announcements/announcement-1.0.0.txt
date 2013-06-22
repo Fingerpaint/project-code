@@ -1,0 +1,49 @@
+
+================================================================================ 
+PDFDoclet announces the PDFDoclet 1.0.0 release 
+================================================================================ 
+
+Changes in this version include:
+
+--------------------------------------------------------------------------------
+  New Features:
+--------------------------------------------------------------------------------
+- Added support for importing pages from PDF files in appendices, before the 
+  overview and for the title page. 
+- Added support for including custom HTML files as appendices before the 
+  index. 
+- Added support for anchors (&amp;lt;a name="..." &amp;gt;) 
+- Added support for custom bookmark entries, using special anchors (&amp;lt;a 
+  name="pdfbookmark" label="...." &amp;gt;). This is especially useful if an 
+  overview is used which spans several printed pages. Together with the HTML 
+  comment used to trigger page breaks, this feature helps to improve the 
+  structure and usability of the generated PDF. 
+- Configuration switch "inherited.summary.table" added for enabling / 
+  disabling printing of summary tables for inherited methods and fields. The 
+  property also allows to print only summary tables for elements inherited 
+  within the scope of the API, but not of methods, fields etc. inherited from 
+  standard classes such as "java.lang.Object". 
+- Added parameters for overriding labels of bookmark entries for fields, 
+  constructor and methods outlines. 
+
+--------------------------------------------------------------------------------
+  Fixed bugs:
+--------------------------------------------------------------------------------
+- Handling of "author", "version" and "since" parameters / properties didn't 
+  work correctly anymore. This has been fixed, so that printing of those tags 
+  can be suppressed again. 
+
+--------------------------------------------------------------------------------
+  Changes:
+--------------------------------------------------------------------------------
+- Massively improved bookmarking code in order to support the "-group" 
+  parameter and allow for a more detailled bookmark tree per class entry 
+  (links to constructors, fields and methods). 
+- Bulleted lists are now displayed with an actual bullet symbol instead of a 
+  dash character. 
+- Added some leading space for regions of PREformatted text, just as in HTML 
+  pages. 
+- Minor layout / spacing improvements. 
+
+================================================================================
+(c) PDFDoclet

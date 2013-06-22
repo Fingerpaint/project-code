@@ -1,0 +1,79 @@
+
+================================================================================ 
+PDFDoclet announces the PDFDoclet 0.8.0 release 
+================================================================================ 
+
+Changes in this version include:
+
+--------------------------------------------------------------------------------
+  New Features:
+--------------------------------------------------------------------------------
+- Switched to Maven as the build tool. 
+- Implemented creation of single Jar file which contains all dependencies to 
+  make javadoc execution easier. 
+- Constant values are now printed in field summaries. 
+- Implemented printing of inherited methods and fields in summary of 
+  interfaces (which extend another interface). 
+- Support for {@inheritDoc} inline tag Implemented for both method doc blocks 
+  and tags Issue: 913036. 
+- New "font.." parameters (see README) allow to use other fonts by embedding 
+  TrueType fonts (ttf). 
+
+--------------------------------------------------------------------------------
+  Fixed bugs:
+--------------------------------------------------------------------------------
+- NullPointerException fixed which occurred if an image tag had no "src" 
+  attribute (for example due to a typo, like "srx=") 
+- Overview pages had no header and footer and therefore no page numbering. 
+  This has been fixed. Issue: 972464. 
+- Until now, in method signatures, only for the return type a link was 
+  created, but not for the parameters. Now, the parameters are links too 
+  (depending on their type, of course). Issue: 894692. 
+- Implemented correct support for @see tags and inline links like {@link ..}, 
+  inluding correct linking to the actual member (method, variable), not just 
+  the containing class. Issue: 931060. 
+- Change the boomark entry of the title In the outline frame (the bookmarks), 
+  the labels were somewhat inconsistent ("Title Page", but "Overview" and 
+  "Index", not "Overview Page" etc.). The defaults are now consistent 
+  (without "page"). The labels can also be customized with 3 new 
+  configuration properties: "label.bookmarks.index", "label.bookmarks.title" 
+  and "label.bookmarks.overview" Issue: 894560. 
+- Changed IConstants.LB_EXCEP_TAG value to "Throws:". The label "Exceptions:" 
+  was replaced by "Throws:" Issue: 894449. 
+- Allow all options to be set in the config file or as params. All 
+  configuration values may now be specified either in a property file or as 
+  commandline arguments. There is a new section in the README file which 
+  explains all configuration properties. Issue: 894506. 
+- Several still hard-coded parameter names or values replaced Issue: 
+  894488,894544,894478. 
+- Add an 'Overview' entry into the bookmarks The "overview.html" page now 
+  also has its own entry in the bookmarks, just behind the "Title Page" 
+  entry. Issue: 894562. 
+- When the first sentence contained package names like "java.util...", only 
+  the part of the text up to the first dot "." was taken as the first 
+  sentence (used in the summary tables). Issue: 895216. 
+- NullPointerException for unvalued attribute HTML-tag attributes without 
+  values, such as NOWRAP in a TABLE, created a NullPointerException. This has 
+  been fixed. Issue: 895261. 
+- Parameters in bookmarks stopping after the first one Methods in bookmarks 
+  now contain all parameters, but only their types (to keep the bookmarks 
+  short), like this: doSomething(String,Properties) Issue: 894673. 
+- Error messages need some context info In debug mode, the member (method, 
+  variable..) currently being processed is now also printed. This makes it 
+  easier to locate HTML problems mentioned by JTidy warnings. Issue: 895226. 
+- Some mixed case text has been fixed for better consistency. Issue: 894708. 
+
+--------------------------------------------------------------------------------
+  Changes:
+--------------------------------------------------------------------------------
+- Java 1.4 is now required. This is due to the fact that PDFDoclet now uses 
+  some methods of the doclet API available only from 1.4 on. Sorry, if that's 
+  a problem to anyone. However, I think that nowadays Java 1.4 should be 
+  available on almost any platform. If not, maybe it's possible to run it 
+  with Java 1.2/1.3 and just include the "tools.jar" from 1.4 in the 
+  classpath. I've no idea if that's possible, just an idea that came to my 
+  mind. You may try that if you're really desperate... 
+- Included the most current snapshot release of JTidy. 
+
+================================================================================
+(c) PDFDoclet

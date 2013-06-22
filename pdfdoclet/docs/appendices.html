@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html><head><title>PDFDoclet - Filtering</title><style type="text/css" media="all">
+          @import url("./style/maven-base.css");
+          
+			    @import url("./style/maven-theme.css");</style><link rel="stylesheet" href="./style/print.css" type="text/css" media="print"></link><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"></meta><meta name="author" content="Marcel Schoen"></meta><meta name="email" content="marcelschoen@users.sourceforge.net"></meta></head><body class="composite"><div id="banner"><a href="http://sourceforge.net/projects/pdfdoclet" id="organizationLogo"><img alt="PDFDoclet" src="http://sourceforge.net/sflogo.php?group_id=55507"></img></a><a href="https://sourceforge.net/project/showfiles.php?group_id=55507" id="projectLogo"><span>PDFDoclet</span></a><div class="clear"><hr></hr></div></div><div id="breadcrumbs"><div class="xleft">
+                	Last published: 10 December 2005, 20:13:40
+                  | Doc for 1.0.2</div><div class="xright">
+        
+        <a href="links.html">Links</a>
+      </div><div class="clear"><hr></hr></div></div><div id="leftColumn"><div id="navcolumn"><div id="menuUsage"><h5>Usage</h5><ul><li class="none"><a href="running.html">Running PDFDoclet</a></li><li class="none"><a href="configuration.html">Configuration</a></li><li class="none"><a href="titlepage.html">Title Page</a></li><li class="none"><strong><a href="appendices.html">Appendices</a></strong></li><li class="none"><a href="bookmarks.html">Bookmarks</a></li><li class="none"><a href="overview.html">Overview</a></li><li class="none"><a href="customtags.html">Custom Tags</a></li><li class="none"><a href="filtering.html">Filtering</a></li><li class="none"><a href="printing.html">Printing</a></li><li class="none"><a href="fonts.html">Fonts</a></li></ul></div><div id="menuMiscellaneous"><h5>Miscellaneous</h5><ul><li class="none"><a href="features.html">Features</a></li><li class="none"><a href="htmltags.html">Supported Tags</a></li><li class="none"><a href="samples.html">Examples</a></li><li class="none"><a href="todo.html">Todo</a></li><li class="none"><a href="faq.html">FAQ</a></li><li class="none"><a href="credits.html">Credits</a></li><li class="none"><a href="build-information.html">Build information</a></li></ul></div><div id="menuDownloads"><h5>Downloads</h5><ul><li class="none"><a href="http://sourceforge.net/project/showfiles.php?group_id=55507&amp;package_id=75371" class="externalLink" title="External Link">Binary packages (for users)</a></li><li class="none"><a href="http://sourceforge.net/project/showfiles.php?group_id=55507&amp;package_id=50692" class="externalLink" title="External Link">Project source tarball</a></li></ul></div><div id="menuProject_Documentation"><h5>Project Documentation</h5><ul><li class="none"><a href="index.html">About PDFDoclet</a></li><li class="collapsed"><a href="project-info.html">Project Info</a></li><li class="collapsed"><a href="maven-reports.html">Project Reports</a></li><li class="none"><a href="http://maven.apache.org/development-process.html" class="externalLink" title="External Link">Development Process</a></li></ul></div><a href="http://maven.apache.org/" title="Built by Maven" id="poweredBy"><img alt="Built by Maven" src="./images/logos/maven-button-1.png"></img></a></div></div><div id="bodyColumn"><div class="contentBox"><div class="section"><a name="Appendices"></a><h2>Appendices</h2><div class="subsection"><a name="Introduction"></a><h3>Introduction</h3><p><p></p>It is possible to include additional HTML or PDF pages as appendices in the generated
+    PDF document. Each appendix can be given a custom name / number and a label. The files
+    that should be used as appendices must be in the "doc-files" subdirectory, just as any
+    additional files referenced in a javadoc page have to.</p></div><div class="subsection"><a name="Appendix_Configuration"></a><h3>Appendix Configuration</h3><p><p></p>To define an appendix, a set of properties must be defined. These
+	properties are grouped together (for each appendix) by a number in the name
+	of the property. 
+	</p><p><p></p>
+	Here are two examples. The first shows how to include an external
+	HTML file in an appendix:
+	<pre>
+       appendix.1.name=A
+       appendix.1.title=Some Stuff
+       appendix.1.file=./doc-files/some-other-file.html
+	</pre>
+	The HTML file will be included in an appendix before the index pages.
+	</p><p><p></p>
+	The next example shows how to include pages of an external PDF document. If no page
+	numbers are specified, only the first page will be imported.
+	<pre>
+       appendix.2.name=B
+       appendix.2.title=Project Info
+       appendix.2.file=./doc-files/projectinfo.pdf,3-5
+	</pre>
+	This example imports pages 3-5 from the file "projectinfo.pdf". Page numbers can be
+	specified as a list of comma-separated entries, either single values or ranges. Here
+	are a few examples:
+	<pre>
+       appendix.2.file=./doc-files/projectinfo.pdf,1,4-8,20,25
+       appendix.2.file=./doc-files/projectinfo.pdf,1,3,5-7
+	</pre>
+	</p></div><div class="subsection"><a name="Links_To_Appendices"></a><h3>Links To Appendices</h3><p><p></p>To create a link to an appendix file (which works, of course, both in the
+	HTML javadoc as well as in the PDF file) use a link like this:
+	<pre>
+	    &lt;a href="./doc-files/some-other-file.html"&gt;link to an appendix file.&lt;/a&gt;
+	</pre>
+	This also works for PDF files (but it's not possible to link to a certain 
+	page, if more than one page has been imported).
+	</p></div></div></div></div><div class="clear"><hr></hr></div><div id="footer"><div class="xright">© 2002-2005, PDFDoclet</div><div class="clear"><hr></hr></div></div></body></html>

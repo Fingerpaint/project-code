@@ -1,0 +1,42 @@
+
+================================================================================ 
+PDFDoclet announces the PDFDoclet 0.6.0 release 
+================================================================================ 
+
+Changes in this version include:
+
+--------------------------------------------------------------------------------
+  New Features:
+--------------------------------------------------------------------------------
+- Added option for custom order of packages in the bookmarks frame (new 
+  parameter "sort", as commandline argument or as configuration parameter - 
+  see the "config_test.properties" file for an example). 
+- Added support for the {@docRoot} tag introduced in JDK 1.3. It's now being 
+  replaced with the working directory value, which is just "." if 
+  unspecified. Issue: 800912. 
+- Added option for specifying packages whose classes should not be fully 
+  qualified (new parameter "dontspec" as commandline argument or as 
+  configuration property). Example: By setting "dontspec=java.lang", a String 
+  method parameter will be printed just as "String" and not as 
+  "java.lang.String". Until now, only the packages for which the javadoc was 
+  printed were not fully qualified (which is the default behaviour of the 
+  regular javadoc). 
+- Added correct handling of inner classes. They are now connected to their 
+  containing class in the bookmarks navigation frame. Issue: 821282. 
+- Implemented the &amp;lt;EM&amp;gt; tag as a copy of the &amp;lt;I&amp;gt; tag (just italic 
+  text). 
+
+--------------------------------------------------------------------------------
+  Fixed bugs:
+--------------------------------------------------------------------------------
+- Fixed brackets missing for array method arguments in method summary. Issue: 
+  811384. 
+- Fixed all parameters in summaries have the name of the first param. Issue: 
+  833186. 
+- Also fixed the "broken" binary package of 0.5.1 (version number of JAR file 
+  was invalid in build.xml and shell script). This will not happen again as 
+  I've changed the build target which builds the binary package. It uses an 
+  ANT filter now to make sure the version number is always up-to-date. 
+
+================================================================================
+(c) PDFDoclet

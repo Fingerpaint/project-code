@@ -1,0 +1,29 @@
+
+================================================================================ 
+PDFDoclet announces the PDFDoclet 0.9.1 release 
+================================================================================ 
+
+Changes in this version include:
+
+--------------------------------------------------------------------------------
+  New Features:
+--------------------------------------------------------------------------------
+- Implemented support for HTML tables. 
+- Added support for list types in ordered lists (roman etc.). 
+
+--------------------------------------------------------------------------------
+  Fixed bugs:
+--------------------------------------------------------------------------------
+- Bulleted lists are now printed correctly in method docs again (and so are 
+  tables). 
+
+--------------------------------------------------------------------------------
+  Changes:
+--------------------------------------------------------------------------------
+- Updated to iText 1.3. 
+- Got rid of ORO package because no regexp processing is done by the 
+  PDFDoclet anymore. Those methods have been replaced by similar 
+  functionality of Sun's base doclet API itself. 
+
+================================================================================
+(c) PDFDoclet

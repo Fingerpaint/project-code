@@ -1,0 +1,17 @@
+
+================================================================================ 
+PDFDoclet announces the PDFDoclet 0.9.2 release 
+================================================================================ 
+
+Changes in this version include:
+
+--------------------------------------------------------------------------------
+  New Features:
+--------------------------------------------------------------------------------
+- Unfortunatly, some hard-coded test-output I had inserted into the overview 
+  had not been removed. I only realized that after I had just release 0.9.1, 
+  so I had to remove that release immediately and put this fixed version 
+  online. 
+
+================================================================================
+(c) PDFDoclet

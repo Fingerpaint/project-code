@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<rss version="0.91">
+  <channel>
+    <title>Changes report</title>
+    <link>https://sourceforge.net/project/showfiles.php?group_id=55507</link>
+    <description>Changes report</description>
+    <language>en-us</language>
+    <copyright>Copyright 2004 The Apache Software Foundation</copyright>
+    <item>
+      <title>4 change(s) for version 1.0.2</title>
+      <link>https://sourceforge.net/project/showfiles.php?group_id=55507/changes-report.html</link>
+      <description>
+        <table border="1">
+          <tr>
+            <th style="width:50px">Type</th>
+            <th>Changes</th>
+            <th style="width:70px">By</th>
+          </tr>
+          <tr>
+            <td>fix</td>
+            <td>Custom tag names are now handled case-sensitive (as they should be!). Fixes
+              <a href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1327157&amp;group_id=55507&amp;atid=477255">1327157</a>.</td>
+            <td>
+              <a href="https://sourceforge.net/project/showfiles.php?group_id=55507/team-list.html#marcelschoen">marcelschoen</a>
+            </td>
+          </tr>
+          <tr>
+            <td>fix</td>
+            <td>Multiple inheritance of interfaces was not handled correctly. The "extends ..." text contained only one of the inherited interfaces. Fixes
+              <a href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1313937&amp;group_id=55507&amp;atid=477255">1313937</a>.</td>
+            <td>
+              <a href="https://sourceforge.net/project/showfiles.php?group_id=55507/team-list.html#marcelschoen">marcelschoen</a>
+            </td>
+          </tr>
+          <tr>
+            <td>fix</td>
+            <td>The doclet generated a 0-length PDF file, if an invalid font was specified. An appropriate error message was printed for the missing font, but then the doclet continued and failed later with a NullPointerException, leaving a corrupt file behind. Now the doclet cancels processing if a font path is invalid and deletes the PDF file. Fixes
+              <a href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1375788&amp;group_id=55507&amp;atid=477255">1375788</a>.</td>
+            <td>
+              <a href="https://sourceforge.net/project/showfiles.php?group_id=55507/team-list.html#marcelschoen">marcelschoen</a>
+            </td>
+          </tr>
+          <tr>
+            <td>fix</td>
+            <td>Field and methods within a class bookmark entry are now sorted alphabetically. Fixes
+              <a href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1293618&amp;group_id=55507&amp;atid=477255">1293618</a>.</td>
+            <td>
+              <a href="https://sourceforge.net/project/showfiles.php?group_id=55507/team-list.html#marcelschoen">marcelschoen</a>
+            </td>
+          </tr>
+        </table>
+      </description>
+    </item>
+  </channel>
+</rss>

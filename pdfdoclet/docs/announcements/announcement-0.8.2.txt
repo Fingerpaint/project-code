@@ -1,0 +1,26 @@
+
+================================================================================ 
+PDFDoclet announces the PDFDoclet 0.8.2 release 
+================================================================================ 
+
+Changes in this version include:
+
+--------------------------------------------------------------------------------
+  New Features:
+--------------------------------------------------------------------------------
+- Included Log4j for debug/info logging. If it is called with the "-debug" 
+  flag, it prints plenty of debug output to the logfile "pdfdoclet.log" and 
+  some info log to the console. 
+
+--------------------------------------------------------------------------------
+  Fixed bugs:
+--------------------------------------------------------------------------------
+- Resolving the "inheritDoc"-inline-tag was implemented in a way which could 
+  not deal with recursive inheritance over several levels of classes 
+  (subsubclass inherits doc from subclass which inherits doc from subclass 
+  etc.). The fix implements a proper, recursive resolution. The test-pdf 
+  example has been exteded to test this (classes OtherClass, SubClass and 
+  TestClass). Issue: 1156553. 
+
+================================================================================
+(c) PDFDoclet

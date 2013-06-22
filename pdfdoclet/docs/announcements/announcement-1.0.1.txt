@@ -1,0 +1,38 @@
+
+================================================================================ 
+PDFDoclet announces the PDFDoclet 1.0.1 release 
+================================================================================ 
+
+Changes in this version include:
+
+--------------------------------------------------------------------------------
+  New Features:
+--------------------------------------------------------------------------------
+- Added support for more HTML tags: STRONG and Definition lists (DL / DT / 
+  DD). Issue: 1256563. 
+- Added support for specifying several files from which to import pages into 
+  the overview, using numbered property names, such as "overview.pdf.file.1", 
+  "overview.pdf.file.2" etc. 
+
+--------------------------------------------------------------------------------
+  Fixed bugs:
+--------------------------------------------------------------------------------
+- The spacing before some Hx-tags (like H1, H2..) was smaller than the 
+  spacing after the tag. This lead to the impression that the heading 
+  belonged to the previous parapgraph instead of the next. Issue: 1256571. 
+- Font path names were not used relative to the specified "workdir" property 
+  value. Issue: 1256540. 
+- Classes within a package in the bookmarks were not sorted alphabetically. 
+  Issue: 1256542. 
+- The CENTER tag did not work anymore. The reason was a JTidy setting which 
+  caused CENTER tags to be replaced with DIV tags. Issue: 1283004. 
+
+--------------------------------------------------------------------------------
+  Changes:
+--------------------------------------------------------------------------------
+- Made PRE (sections of preformatted code) nicer and better distinguishable 
+  from the rest of the page, by putting them into a box with a black border 
+  and light-gray background color. Issue: 1256562. 
+
+================================================================================
+(c) PDFDoclet
