@@ -163,10 +163,12 @@ public class GraphVisualisator {
 		
 		Options verGrid = Options.create();
 	    verGrid.set("color", Colour.GRAY.toHexString());
+	    verGrid.set("count", 2d);
 	    verAxisOptions.set("gridlines", verGrid);
 	    
 		Options verMinorGrid = Options.create();
 		verMinorGrid.set("color", Colour.LIGHT_GRAY.toHexString());
+		verMinorGrid.set("count", 9d);
 	    verAxisOptions.set("minorGridlines", verMinorGrid);
 		
 		options.setVAxisOptions(verAxisOptions);
